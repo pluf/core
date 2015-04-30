@@ -1,0 +1,14 @@
+{extends 'todo/base.html'}
+
+{block body}
+<form method="POST" action="{url 'Todo_Views::deleteList', array($list.id)}">
+<p>Are you sure you want to delete the todo list <em>{$list.name}</em>, with
+the following associated todo items?</p>
+<ol>
+{foreach $items as $item}
+<li>{$item.item}</li>
+{/foreach}
+</ol>
+<input type="submit" value="Yes, delete it." />
+</form>
+{/block}

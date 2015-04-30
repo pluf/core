@@ -1,0 +1,68 @@
+{extends "pluf/ab/base.html"}
+
+{block body}
+<h1>A/B Testing Dashboard</h1>
+{foreach $active as $test}
+<h2>Test {$test['_id']}</h2>
+<table summary=" ">{assign $alts=$test['stats']}
+{foreach $alts as $alt}
+<tr>
+<td>Option {$alt['alt']}</td>
+<td>{$test['alts'][$alt['alt']]|dump}</td>
+<td>{$alt['nconvr']}{if $alt['better']} ({$alt['comp']} change){/if}</td>
+{if $can_edit}
+<td>
+<form action="{url 'pluf_ab_dashboard'}" method="post">
+<input type="hidden" name="test" value="{$test['_id']}" />
+<input type="hidden" name="alt" value="{$alt['alt']}" />
+<input type="submit" name="s" value="{trans 'Use as winner'}" />
+</form>
+</td>
+{/if}
+</tr>
+
+<tr>
+<td colspan="{if $can_edit}4{else}3{/if}" class="details">
+Conv: {$alt['conv']}/{$alt['exp']}{if $alt['conf']} - Conf: {$alt['conf']}{/if}
+</td>
+</tr>
+
+{/foreach}
+</table>
+{/foreach}
+
+{if count($active) == 0}
+<p>No running tests at the moment.</p>
+{/if}
+
+<p class="note">
+The confidence is calculated with respect to the second best
+alternative to evaluate if the best alternative is significantly
+better than the second best.
+</p>
+
+<hr />
+
+{foreach $stopped as $test}
+<h2>Stopped Test {$test['_id']}</h2>
+<table summary=" ">{assign $alts=$test['stats']}
+{foreach $alts as $alt}
+<tr{if $test['winner'] == $alt['alt']} class="winner"{/if}>
+<td>{if $test['winner'] == $alt['alt']}<strong>!</strong>{/if} Option {$alt['alt']}</td>
+<td>{$test['alts'][$alt['alt']]|dump}</td>
+<td>{$alt['nconvr']}{if $alt['better']} ({$alt['comp']} change){/if}</td>
+</tr>
+
+<tr>
+<td colspan="3" class="details">
+Conv: {$alt['conv']}/{$alt['exp']}{if $alt['conf']} - Conf: {$alt['conf']}{/if}
+</td>
+</tr>
+
+{/foreach}
+</table>
+{/foreach}
+
+
+{/block}
+

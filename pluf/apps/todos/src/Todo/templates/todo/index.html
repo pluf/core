@@ -1,0 +1,16 @@
+{extends 'todo/base.html'}
+
+{block body}
+
+{if $lists}
+<ol>
+{foreach $lists as $list}
+<li><a href="{url 'Todo_Views::viewList', array($list.id)}">{$list.name}</a></li>
+{/foreach}
+</ol>
+{/if}
+
+<p><a href="{url 'Todo_Views::addList'}">Create a new list</a>.</p>
+
+
+{/block}

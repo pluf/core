@@ -1,0 +1,13 @@
+{extends 'todo/base.html'}
+
+{block body}
+<form method="POST" action="{url 'Todo_Views::updateList', array($list.id)}">
+{$form.render_p}
+<p>
+<input type="submit" value="Edit this list" /> 
+<a href="{url 'Todo_Views::viewList', array($list.id)}">Cancel</a>
+<br />
+<a href="{url 'Todo_Views::deleteList', array($list.id)}">Delete this list</a>
+</p>
+</form>
+{/block}

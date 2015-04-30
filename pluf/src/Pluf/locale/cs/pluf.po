@@ -1,0 +1,662 @@
+#
+# Czech translations of Pluf.
+# Copyright (C) 2009 Jakub Vitak and contributors
+# This file is distributed under the same license as the Pluf package.
+# Jakub Vitak <mainiak@gmail.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pluf git\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-24 17:21+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Jakub Vitak <mainiak@gmail.com>\n"
+"Language-Team: KoudyNET <jv@koudynet.cz>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Czech\n"
+"X-Poedit-Country: CZECH REPUBLIC\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: ../../../\n"
+
+#: Pluf/Translation/TemplateExtractor.php:267
+#: Pluf/Template/Compiler.php:345
+#, php-format
+msgid "Template file contains invalid characters: %s"
+msgstr "Template obsahuje neplatné znaky: %s"
+
+#: Pluf/Translation/TemplateExtractor.php:276
+#: Pluf/Template/Compiler.php:354
+#, php-format
+msgid "Template file not found: %s"
+msgstr "Template soubor nenalezen: %s"
+
+#: Pluf/Translation/TemplateExtractor.php:283
+#, php-format
+msgid "Invalid tag in translation extractor: %s"
+msgstr "Neplatný tag při extrahování překladů: %s"
+
+#: Pluf/Translation/TemplateExtractor.php:288
+#: Pluf/Template/Compiler.php:375
+#, php-format
+msgid "Invalid function syntax: %s"
+msgstr "Neplatná syntaxe funkce: %s"
+
+#: Pluf/Translation/TemplateExtractor.php:305
+#: Pluf/Template/Compiler.php:361
+#, php-format
+msgid "Invalid tag syntax: %s"
+msgstr "Neplatná syntaxe tagu: %s"
+
+#: Pluf/Translation/TemplateExtractor.php:390
+#: Pluf/Template/Compiler.php:629
+#, php-format
+msgid "Invalid syntax: (%s) %s."
+msgstr "Neplatná syntaxe: (%s) %s."
+
+#: Pluf/Translation/TemplateExtractor.php:395
+#: Pluf/Template/Compiler.php:634
+#, php-format
+msgid "Invalid character: (%s) %s."
+msgstr "Neplatný znak: (%s) %s."
+
+#: Pluf/Form.php:228
+#, php-format
+msgid "(Hidden field %1$s) %2$s"
+msgstr "(Skryté pole %1$s) %2$s"
+
+#: Pluf/Paginator.php:411
+msgid "Prev"
+msgstr "Předchozí"
+
+#: Pluf/Paginator.php:422
+msgid "Next"
+msgstr "Následující"
+
+#: Pluf/Paginator.php:578
+msgid "Name"
+msgstr "Jméno"
+
+#: Pluf/Paginator.php:622
+msgid "Sort"
+msgstr "Setřídit"
+
+#: Pluf/Paginator.php:625
+msgid "asc"
+msgstr "vzestupně"
+
+#: Pluf/Paginator.php:628
+msgid "desc"
+msgstr "sestupně"
+
+#: Pluf/Paginator.php:651
+msgid "Filter the list:"
+msgstr "Filtrovat seznam:"
+
+#: Pluf/Paginator.php:654
+msgid "Filter"
+msgstr "Filtr"
+
+#: Pluf/Paginator.php:747
+#: Pluf/Template.php:270
+#: Pluf/Template.php:272
+#: Pluf/Template.php:284
+#: Pluf/Template.php:286
+msgid "now"
+msgstr "teď"
+
+#: Pluf/Search/Occ.php:33
+msgid "occurence"
+msgstr "událost"
+
+#: Pluf/Search/Occ.php:49
+#: Pluf/Search/Word.php:33
+#: Pluf/Search/Word.php:50
+msgid "word"
+msgstr "slovo"
+
+#: Pluf/Search/Occ.php:56
+#: Pluf/Search/Stats.php:50
+#: Pluf/RowPermission.php:51
+#: Pluf/Queue.php:67
+msgid "model class"
+msgstr "třída modelu"
+
+#: Pluf/Search/Occ.php:62
+#: Pluf/Search/Stats.php:56
+#: Pluf/Queue.php:73
+msgid "model id"
+msgstr "id modelu"
+
+#: Pluf/Search/Occ.php:68
+msgid "occurences"
+msgstr "události"
+
+#: Pluf/Search/Occ.php:74
+msgid "weighted occurence"
+msgstr ""
+
+#: Pluf/Search/Stats.php:34
+msgid "search stats"
+msgstr "vyhledávací statistiky"
+
+#: Pluf/Search/Stats.php:62
+msgid "number of indexations"
+msgstr "počet indexů"
+
+#: Pluf/Search/Stats.php:69
+#: Pluf/Queue.php:98
+msgid "created at"
+msgstr "vytvořeno"
+
+#: Pluf/Search/Stats.php:75
+#: Pluf/Queue.php:104
+msgid "modified at"
+msgstr "modifikováno"
+
+#: Pluf/Error.php:93
+msgid "DB error:"
+msgstr "chyba databáze:"
+
+#: Pluf/RowPermission.php:44
+msgid "model ID"
+msgstr "ID modelu"
+
+#: Pluf/RowPermission.php:57
+msgid "owner ID"
+msgstr "ID vlastníka"
+
+#: Pluf/RowPermission.php:64
+msgid "owner class"
+msgstr "třída vlastníka"
+
+#: Pluf/RowPermission.php:65
+msgid "For example Pluf_User or Pluf_Group."
+msgstr "Například Pluf_User nebo Pluf_Group."
+
+#: Pluf/RowPermission.php:72
+msgid "do not have the permission"
+msgstr "nemám oprávnění"
+
+#: Pluf/RowPermission.php:79
+#: Pluf/Permission.php:30
+msgid "permission"
+msgstr "oprávnění"
+
+#: Pluf/Model.php:442
+msgid "Error: More than one matching item found."
+msgstr "Chyba:  Nalezen více než jeden platný výskyt."
+
+#: Pluf/Model.php:482
+#, php-format
+msgid "The view \"%s\" is not defined."
+msgstr "Pohled \"%s\" není definován."
+
+#: Pluf/Model.php:631
+#, php-format
+msgid "No matching foreign key found in model: %s for model %s"
+msgstr "Nenalezen foreign key v modelu: %s for model %s"
+
+#: Pluf/Template.php:142
+#, php-format
+msgid "Cannot write the compiled template: %s"
+msgstr "Není možne uložit zkompilovaný template: %s"
+
+#: Pluf/Test/Fixture.php:41
+#, php-format
+msgid "Fixture file not found: %s."
+msgstr "Fixture soubor nenalezen: %s."
+
+#: Pluf/Test/Fixture.php:56
+#, php-format
+msgid "Cannot load existing model <%1$s(%2$s)>."
+msgstr "Není možné načíst existující model <%1$s(%2$s)>."
+
+#: Pluf/Date.php:179
+msgid "year"
+msgid_plural "years"
+msgstr[0] "rok"
+msgstr[1] "roky"
+
+#: Pluf/Date.php:182
+msgid "month"
+msgid_plural "months"
+msgstr[0] "měsíc"
+msgstr[1] "měsíce"
+
+#: Pluf/Date.php:185
+msgid "day"
+msgid_plural "days"
+msgstr[0] "den"
+msgstr[1] "dny"
+
+#: Pluf/Date.php:188
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "hodina"
+msgstr[1] "hodiny"
+
+#: Pluf/Date.php:191
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minuta"
+msgstr[1] "minuty"
+
+#: Pluf/Date.php:194
+msgid "second"
+msgid_plural "seconds"
+msgstr[0] "sekunda"
+msgstr[1] "sekundy"
+
+#: Pluf/Date.php:206
+#, php-format
+msgid "%s ago"
+msgstr "před %s"
+
+#: Pluf/Date.php:208
+#, php-format
+msgid "%s left"
+msgstr "uběhlo %s"
+
+#: Pluf/Group.php:30
+msgid "group"
+msgstr "skupina"
+
+#: Pluf/Group.php:46
+#: Pluf/Permission.php:46
+msgid "name"
+msgstr "jméno"
+
+#: Pluf/Group.php:53
+#: Pluf/Permission.php:61
+msgid "description"
+msgstr "popis"
+
+#: Pluf/HTTP/Response/Redirect.php:34
+#: Pluf/HTTP/Response/RedirectToLogin.php:56
+#, php-format
+msgid "<a href=\"%s\">Please, click here to be redirected</a>."
+msgstr "<a href=\"%s\">Prosím, kliknět zde pro přesměrování</a>."
+
+#: Pluf/Form/Field/Url.php:35
+msgid "Enter a valid address."
+msgstr "Zadejte platnou adresu."
+
+#: Pluf/Form/Field/Date.php:46
+msgid "Enter a valid date."
+msgstr "Zadejte platné datum."
+
+#: Pluf/Form/Field/Integer.php:39
+#: Pluf/Encoder.php:138
+msgid "The value must be an integer."
+msgstr "Hodnota musí být číslo."
+
+#: Pluf/Form/Field/Integer.php:49
+#, php-format
+msgid "Ensure that this value is not greater than %1$d."
+msgstr "Ujistěte se, že tato hodnota není větší než %1$d."
+
+#: Pluf/Form/Field/Integer.php:52
+#, php-format
+msgid "Ensure that this value is not lower than %1$d."
+msgstr "Ujistěte se, že tato hodnota není menší než %1$d."
+
+#: Pluf/Form/Field/Float.php:39
+msgid "Enter a number."
+msgstr "Zadejte číslo."
+
+#: Pluf/Form/Field/Float.php:42
+#, php-format
+msgid "Ensure this value is less than or equal to %s."
+msgstr "Ujistěte se, že tato hodnota je menší nebo rovna %1$d."
+
+#: Pluf/Form/Field/Float.php:45
+#, php-format
+msgid "Ensure this value is greater than or equal to %s."
+msgstr "Ujistěte se, že tato hodnota je větší nebo rovna %1$d."
+
+#: Pluf/Form/Field/Email.php:38
+msgid "Enter a valid email address."
+msgstr "Zadejte správnou e-mailovou adresu."
+
+#: Pluf/Form/Field/File.php:43
+#: Pluf/Form/Field/File.php:63
+msgid "No files were uploaded. Please try to send the file again."
+msgstr "Nebyl nahrán žádný soubor. Prosím, zkuste to znovu."
+
+#: Pluf/Form/Field/File.php:51
+#: Pluf/Form/Field/File.php:55
+#, php-format
+msgid "The uploaded file is too large. Reduce the size of the file to %s and send it again."
+msgstr "Nahrávaný soubor je příliš velký. Zmenšete velikost souboru %s a pošlete jej znova."
+
+#: Pluf/Form/Field/File.php:59
+msgid "The upload did not complete. Please try to send the file again."
+msgstr "Nahrávání se nepovedlo. Prosím, zkuste poslat soubor znovu."
+
+#: Pluf/Form/Field/File.php:70
+msgid "The server has no temporary folder correctly configured to store the uploaded file."
+msgstr "Server nemá správně nastavení dočasný adresář pro uložení nahrávaného souboru."
+
+#: Pluf/Form/Field/File.php:73
+msgid "The uploaded file has been stopped by an extension."
+msgstr "Nahravání souboru bylo zastaveno rozšířením (extension)."
+
+#: Pluf/Form/Field/File.php:76
+msgid "An error occured when upload the file. Please try to send the file again."
+msgstr "Nastala chyba při nahrávání souboru. Prosím, zkuste soubor odeslat znovu."
+
+#: Pluf/Form/Field/File.php:79
+#, php-format
+msgid "The uploaded file is to big (%1$s). Reduce the size to less than %2$s and try again."
+msgstr "Nahrávaný soubor je příliš velký (%1$s). Zmenšete velikost tak, aby byla menší než %2$s a zkuste to znovu."
+
+#: Pluf/Form/Field/File.php:140
+msgid "An error occured when creating the upload path. Please try to send the file again."
+msgstr "Vznikla chyba při vytváření cesty pro uložení. Prosím, zkuste soubor odeslat znovu."
+
+#: Pluf/Form/Field/File.php:144
+#, php-format
+msgid "A file with the name \"%s\" has already been uploaded."
+msgstr "Soubor s jménem \"%s\" již existuje."
+
+#: Pluf/Form/Field/File.php:147
+msgid "An error occured when uploading the file. Please try to send the file again."
+msgstr "Vznikla chyba při nahrávání souboru. Prosím, zkuste soubor odeslat znovu."
+
+#: Pluf/Form/Field/Varchar.php:38
+#, php-format
+msgid "Ensure this value has at most %1$d characters (it has %2$d)."
+msgstr "Ujistěte se, že hodnota má maximálně %1$d znaků (má pouze %2$d)."
+
+#: Pluf/Form/Field/Varchar.php:41
+#, php-format
+msgid "Ensure this value has at least %1$d characters (it has %2$d)."
+msgstr "Ujistěte se, že hodnota má minimálně %1$d znaků (má pouze %2$d)."
+
+#: Pluf/Form/Field/Datetime.php:61
+msgid "Enter a valid date/time."
+msgstr "Zadejte platné datum/čas."
+
+#: Pluf/Form/Model.php:85
+msgid "Cannot save the model from an invalid form."
+msgstr "Nemohu uložit model z neplatného formuláře."
+
+#: Pluf/Form/Field.php:120
+#: Pluf/Form/Field.php:123
+msgid "This field is required."
+msgstr "Tato položka je povinná"
+
+#: Pluf/User.php:44
+#: Pluf/Message.php:45
+msgid "user"
+msgstr "uživatel"
+
+#: Pluf/User.php:61
+msgid "login"
+msgstr "login"
+
+#: Pluf/User.php:68
+msgid "first name"
+msgstr "jméno"
+
+#: Pluf/User.php:75
+msgid "last name"
+msgstr "příjmení"
+
+#: Pluf/User.php:81
+msgid "email"
+msgstr "email"
+
+#: Pluf/User.php:87
+msgid "password"
+msgstr "heslo"
+
+#: Pluf/User.php:89
+msgid "Format: [algo]:[salt]:[hash]"
+msgstr "Formát: [algo]:[salt]:[hash]"
+
+#: Pluf/User.php:108
+msgid "administrator"
+msgstr "administrátor"
+
+#: Pluf/User.php:115
+msgid "staff"
+msgstr "četa"
+
+#: Pluf/User.php:122
+msgid "active"
+msgstr "aktivní"
+
+#: Pluf/User.php:130
+msgid "language"
+msgstr "jazyk"
+
+#: Pluf/User.php:131
+msgid "Prefered language of the user for the interface. Use the 2 or 5 letter code like \"fr\", \"en\", \"fr_QC\" or \"en_US\"."
+msgstr "Preferovaný jazyk uživatele pro komunikaci. Použijte 2 nebo 5 místný kód jako \"cs\", \"fr\", \"en\", \"fr_QC\" or \"en_US\""
+
+#: Pluf/User.php:139
+msgid "time zone"
+msgstr "časová zóna"
+
+#: Pluf/User.php:140
+msgid "Time zone of the user to display the time in local time."
+msgstr "Časová zóna uživatele pro zobrazení lokálního času."
+
+#: Pluf/User.php:146
+msgid "date joined"
+msgstr "datum registrace"
+
+#: Pluf/User.php:153
+msgid "last login"
+msgstr "poslední přihlášení"
+
+#: Pluf/User.php:441
+msgid "\"user_profile_class\" setting not defined."
+msgstr "\"user_profile_class\" nebylo definováno."
+
+#: Pluf/User.php:448
+#, php-format
+msgid "No profiles available for user: %s"
+msgstr "Nebyl nalezen žádný profil pro uživatele: %s"
+
+#: Pluf/Text/LaTeX/Equation.php:243
+msgid "Unable to generate the dvi file."
+msgstr "Nepovedlo se vygenerovat dvi soubor."
+
+#: Pluf/Text/LaTeX/Equation.php:260
+msgid "Unable to generate the png file."
+msgstr "Nepovedlo se vygenerovat png soubor."
+
+#: Pluf/Text/LaTeX/Equation.php:270
+msgid "Unable to move the png file."
+msgstr "Nepovedlo se přesunout png soubor."
+
+#: Pluf/Text/LaTeX/Equation.php:308
+#, php-format
+msgid "The LaTeX tag \"%s\" is not acceptable."
+msgstr "LaTeX značka \"%s\" není povolena."
+
+#: Pluf/Queue.php:51
+msgid "message queue"
+msgstr "fronta zpráv"
+
+#: Pluf/Queue.php:80
+msgid "action"
+msgstr "akce"
+
+#: Pluf/Queue.php:86
+msgid "lock status"
+msgstr "status zámku"
+
+#: Pluf/Queue.php:89
+msgid "Free"
+msgstr "Volno"
+
+#: Pluf/Queue.php:90
+msgid "In progress"
+msgstr "Zpracovává se"
+
+#: Pluf/Queue.php:91
+msgid "Completed"
+msgstr "Hotovo"
+
+#: Pluf/Calendar.php:318
+msgid "Sunday"
+msgstr "Neděle"
+
+#: Pluf/Calendar.php:319
+msgid "Monday"
+msgstr "Pondělí"
+
+#: Pluf/Calendar.php:320
+msgid "Tuesday"
+msgstr "Úterý"
+
+#: Pluf/Calendar.php:321
+msgid "Wednesday"
+msgstr "Středa"
+
+#: Pluf/Calendar.php:322
+msgid "Thursday"
+msgstr "Čtvrtek"
+
+#: Pluf/Calendar.php:323
+msgid "Friday"
+msgstr "Pátek"
+
+#: Pluf/Calendar.php:324
+msgid "Saturday"
+msgstr "Sobota"
+
+#: Pluf/Utils.php:99
+msgid "GB"
+msgstr "GB"
+
+#: Pluf/Utils.php:101
+msgid "MB"
+msgstr "MB"
+
+#: Pluf/Utils.php:103
+msgid "kB"
+msgstr "kB"
+
+#: Pluf/Utils.php:105
+#, php-format
+msgid "%d byte"
+msgid_plural "%d bytes"
+msgstr[0] "%d byte"
+msgstr[1] "%d bytů"
+
+#: Pluf/Views.php:77
+msgid "The login or the password is not valid. The login and the password are case sensitive."
+msgstr "Login nebo heslo nejsou platné. Login a heslo rozlišují velká a malá písmena."
+
+#: Pluf/Views.php:80
+msgid "You need to enable the cookies in your browser to access this website."
+msgstr "Je třeba, abyste si zapli cookies ve vašem prohlížeči, abyste mohli prohlížet tento web."
+
+#: Pluf/Views.php:96
+msgid "Sign In"
+msgstr "Přihlásit"
+
+#: Pluf/Views.php:194
+#: Pluf/Views.php:270
+#, php-format
+msgid "The %s was created successfully."
+msgstr "%s vytvořen v pořádku."
+
+#: Pluf/Views.php:339
+#, php-format
+msgid "The %s was deleted successfully."
+msgstr "%s smazán v pořádku."
+
+#: Pluf/Template/Compiler.php:262
+#: Pluf/Template/Compiler.php:427
+#: Pluf/Template/Compiler.php:433
+#: Pluf/Template/Compiler.php:450
+#: Pluf/Template/Compiler.php:493
+#, php-format
+msgid "End tag of a block missing: %s"
+msgstr "Konec tagu nebo bloku chybí: %s"
+
+#: Pluf/Template/Compiler.php:398
+#, php-format
+msgid "Invalid modifier syntax: (%s) %s"
+msgstr "Neplatný modifikátor syntaxe: (%s) %s"
+
+#: Pluf/Template/Compiler.php:408
+#, php-format
+msgid "Unknown modifier: (%s) %s"
+msgstr "Neznámý modifikátor: (%s) %s"
+
+#: Pluf/Template/Compiler.php:462
+msgid "End tag of a block missing: literal"
+msgstr "Konec tagu nebo bloku chybí: literal"
+
+#: Pluf/Template/Compiler.php:466
+msgid "Start tag of a block missing: literal"
+msgstr "Začátek tagu nebo bloku chybí: literal"
+
+#: Pluf/Template/Compiler.php:548
+#, php-format
+msgid "The function tag \"%s\" is not allowed."
+msgstr "Funkce tag \"%s\" není povolena."
+
+#: Pluf/Template/Compiler.php:572
+#, php-format
+msgid "The function tag \"{%s ...}\" is not supported."
+msgstr "Funkce tag \"{%s ...}\" není podporována."
+
+#: Pluf/Encoder.php:62
+msgid "The value must not be empty."
+msgstr "Hodnota nesmí být prázdná."
+
+#: Pluf/Encoder.php:81
+#, php-format
+msgid "The URL <em>%s</em> is not valid."
+msgstr "Odkaz <em>%s</em> není platný."
+
+#: Pluf/Encoder.php:88
+#, php-format
+msgid "The value should not be more than <em>%s</em> characters long."
+msgstr ""
+
+#: Pluf/Encoder.php:96
+#, php-format
+msgid "The password must be at least <em>%s</em> characters long."
+msgstr "Heslo musí být alespoň <em>%s</em> znaků dlouhé."
+
+#: Pluf/Encoder.php:106
+#, php-format
+msgid "The email address \"%s\" is not valid."
+msgstr "E-mailová adresa není validní."
+
+#: Pluf/Encoder.php:146
+#, php-format
+msgid "The date and time <em>%s</em> are not valid."
+msgstr "Datum a čas <em>%s</em> není validní."
+
+#: Pluf/Encoder.php:157
+#, php-format
+msgid "The date <em>%s</em> is not valid."
+msgstr "Datum <em>%s</em> není validní."
+
+#: Pluf/Permission.php:53
+msgid "code name"
+msgstr "kódové jméno"
+
+#: Pluf/Permission.php:54
+msgid "The code name must be unique for each application. Standard permissions to manage a model in the interface are \"Model_Name-create\", \"Model_Name-update\", \"Model_Name-list\" and \"Model_Name-delete\"."
+msgstr "Kódové jméno musí být unikátní pro každou aplikaci. Standartní oprávnění pro správu model v rozhraní je \"Model_Name-create\", \"Model_Name-update\", \"Model_Name-list\" and \"Model_Name-delete\"."
+
+#: Pluf/Permission.php:68
+msgid "application"
+msgstr "aplikace"
+
+#: Pluf/Permission.php:69
+msgid "The application using this permission, for example \"YourApp\", \"CMS\" or \"SView\"."
+msgstr "Aplikace využívající opravnění, například \"YourApp\", \"CMS\" or \"SView\"."
+

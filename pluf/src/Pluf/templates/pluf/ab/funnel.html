@@ -1,0 +1,91 @@
+{extends "pluf/ab/base.html"}
+{block bodyclass} class="funnel"{/block}
+{block body}
+<p class="right">&raquo; <a href="{url 'pluf_ab_funnels'}">All funnels</a></p>
+
+<h1>Funnel {$funnel} - {$nperiod}</h1>
+
+<table summary=" " class="funnel">
+<tr>
+<td width="550">
+
+<p class="right">
+<a{if $period == 'today'} class="strong"{/if} href="{url 'pluf_ab_funnel', array($funnel), array('p'=> 'today', 'prop'=> $prop)}">Today</a> |
+<a{if $period == 'yesterday'} class="strong"{/if} href="{url 'pluf_ab_funnel', array($funnel), array('p'=> 'yesterday', 'prop'=> $prop)}">Yesterday</a> |
+<a{if $period == '7days'} class="strong"{/if} href="{url 'pluf_ab_funnel', array($funnel), array('p'=> '7days', 'prop'=> $prop)}">Last 7 days</a> |
+<a{if $period == 'all'} class="strong"{/if} href="{url 'pluf_ab_funnel', array($funnel), array('p'=> 'all', 'prop'=> $prop)}">All time</a>
+</p>
+
+
+{assign $i=1}
+{foreach $stats as $n => $step}
+{if $step}
+
+{if $i>1 and isset($step['conv'])}
+<p class="right">{$step['total']} ({$step['conv']})<span class="arrow right"></span></p>
+{/if}
+
+<h2>Step {$step['id']}: {$step['name']}</h2>
+</td>
+<td>{if $i==1}
+{if count($props)}
+<h2>Filter by visitor property</h2>
+<form method="get" action="{url 'pluf_ab_funnel', array($funnel)}">
+<select name="prop"><option value="">All</option>{foreach $props as $k=>$v}
+<option value="{$k}"{if $prop==$k} selected="selected"{/if}>{$k}</option>{/foreach}
+</select>
+<input type="hidden" name="p" value="{$period}" />
+<input type="submit" name="s" value="Filter" />
+</form>
+{/if}
+{elseif isset($step['props']) and isset($step['sprops'])}{assign $stepprops = $step['sprops']}
+<div class="stepstats">
+
+{foreach $stepprops as $k=>$t}
+<p><strong>{$k}</strong><br>{assign $nn = $t[1]}
+{$t[0]} out of {blocktrans $nn}{$nn} visitor{plural}{$nn} visitors{/blocktrans}{if $t[2]} ({$t[2]}){/if}
+{/foreach}</p>
+<span class="arrowl"></span>
+</div>
+{/if}
+</td>
+</tr>
+<tr>
+<td>
+<p>
+{if $i>1 and isset($step['conv1'])}
+<span class="percent"><span style="width:{$step['conv1']}"></span></span>
+{if $step['conv1'] != '100.00%'}<br />
+<span class="margin"><span style="width:{$step['conv1']}"></span>{$step['conv1']}</span>{/if}
+{else}
+<span class="percent"><span style="width:100%">&nbsp;</span></span>
+{/if}<br />{assign $t = $step['total']}
+{blocktrans $t}{$t} unique visitor.{plural}{$t} unique visitors.{/blocktrans}
+</p>
+
+{/if}{assign $i += 1}{/foreach}</td></tr></table>
+{if count($stats) and isset($step['conv1'])}
+<hr />
+
+<p><strong>{$step['total']}</strong> out of {$step['bigtotal']} visitors reached step {$step['id']} of this funnel.
+This is a completion rate of <strong>{$step['conv1']}</strong>.</p>
+
+{if count($props) and isset($step['sprops1'])}
+
+<div class="propsstats">{assign $stepprops = $step['sprops1']}
+<h2>Visitor Property {$prop} </h2>
+{foreach $stepprops as $k=>$t}
+<p><strong>{$k}</strong>: {assign $nn = $t[1]}
+{$t[0]} out of {blocktrans $nn}{$nn} visitor{plural}{$nn} visitors{/blocktrans}{if $t[2]} ({$t[2]}){/if}
+{/foreach}</p>
+</div>{/if}
+<p class="note">
+Note that if a user skip a given step, this can make the results a bit
+off.{if count($props)} For the overall property funnel statistics, the first step where a given 
+appears is used as the base value.{/if}
+</p>
+{else}
+<p>We do not have statistics for this period. See the statistics for <a href="{url 'pluf_ab_funnel', array($funnel), array('p'=> 'all')}">all the visitor properties and all time</a>.</p>
+{/if}
+{/block}
+

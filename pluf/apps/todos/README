@@ -1,0 +1,35 @@
+
+ Plume Framework Test Application
+----------------------------------
+
+This test application is a simple TODO list manager.
+
+This test application is here to expose in a simple way the
+functionalities of the Plume Framework aka "Pluf" and to propose a
+"best practice" example on the way to structure your application using
+Pluf.
+
+ Installation
+--------------
+
+1) In src/Todo/conf/ copy todo.php-dist as todo.php.  
+
+2) Edit src/Todo/conf/toto.php and set your database information
+   together with the 'tmp_folder'.
+
+3) Edit www/index.php and ensure that the variable $path_to_Pluf
+   is pointing to the folder where your Pluf.php file is.
+
+4) Go in the folder "src" which contains the Todo folder and type:
+
+    $ php ../../../src/migrate.php --conf=Todo/conf/todo.php -i -a -d
+
+5) Go to /testapp/index.php and enjoy this little todo application.
+
+ Uninstallation
+----------------
+
+1) Delete the files in the 'tmp_folder'.
+
+3) Delete the /Todo/conf/todo.php file.
+

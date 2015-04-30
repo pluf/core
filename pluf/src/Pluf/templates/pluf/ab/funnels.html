@@ -1,0 +1,15 @@
+{extends "pluf/ab/base.html"}
+
+{block body}
+<h1>Funnel Dashboard</h1>
+
+{if count($funnels)}
+<ul>{foreach $funnels as $funnel}
+<li><a href="{url 'pluf_ab_funnel', array($funnel)}">{$funnel}</a></li>
+{/foreach}</ul>
+{else}
+<p>You no funnel analysis running at the moment.</p>
+{/if}
+
+{/block}
+

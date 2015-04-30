@@ -1,0 +1,32 @@
+This is a multipart message in MIME format.
+--123456789
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+This is my simple message.
+--123456789
+Content-Type: image/png;
+ name="check_on.png"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="check_on.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAA3NCSVQICAjb4U/gAAAB
+OFBMVEX////0+fHz+fDy+O/y+e/g79je79bd7tTc7dTa7NHZ7M/NzszMzMyz1qLGycTF
+yMTBwsCzyaewx6SiwJSiv5OCvGaBu2R+u1+RsIKQroF8t2B4tlh0tFNttklstUdttUhp
+tEOLooBos0Jms0CLoIBmskBksj5or0RnrkNjsTxfrzdcrjRZrC9ZrDBYqy5dpzdYqTBW
+qyxRqCZRqCVapDVQpyVPpyNVoy9WpC9NpiBMpR9OpCNVny9Uni9JpBxUny9HohpGohhS
+nS1FoBhAnxBAnxFAnRI9ngxHlyA9mg9LkyY4mwdKkSY6lwwzmQA0kQYzjwVGhiYyjQRF
+giYuiAEthwEuhwFDfCZCeiYsgwArggArgQAqfgAqfQApfAApewApegAoeQAndgAmcwAm
+cQAlcAAkbAAkawDxIN8wAAAAaHRSTlP///////////////8A////////////////////
+////////////////////////////////////////////////////////////////////
+/////////////////////////////////8v/12AAAAAJcEhZcwAACxIAAAsSAdLdfvwA
+AAAWdEVYdENyZWF0aW9uIFRpbWUAMDUvMDIvMDN/5VH2AAAAIXRFWHRTb2Z0d2FyZQBN
+YWNyb21lZGlhIEZpcmV3b3JrcyA0LjDqJid1AAAAm0lEQVR4nBXNVRaCUBRA0atiP7u7
+W7C7sLsTWWCB8x+Cz799vg4ghMzeQilhwQCktYfTVLFB5/Q4bL5Ittrtt+Y9BCZ/kOyO
+p7Rat3OCJxULLDcjDchmC6DiCin5d5thoJhRglQORJ3hOEg2KyoAIn/i33uwDicOkNQu
+vCCEAJXXW3fn/hLFK/4YBocz+/x8b0YcCLlW7OMYxfgBwOkZATwRuKgAAAAASUVORK5C
+YII=
+
+--123456789-- 
+

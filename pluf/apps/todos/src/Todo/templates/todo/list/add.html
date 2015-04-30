@@ -1,0 +1,10 @@
+{extends 'todo/base.html'}
+
+{block body}
+<form method="POST" action="{url 'Todo_Views::addList'}">
+{$form.render_p|unsafe}
+<p>
+<input type="submit" value="Create the list" /> <a href="{url 'Todo_Views::main'}">Cancel</a>
+</p>
+</form>
+{/block}
