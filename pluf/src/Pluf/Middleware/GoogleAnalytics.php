@@ -22,9 +22,9 @@
 # ***** END LICENSE BLOCK ***** */
 
 /**
- * GoogleAnalytics middleware.
- *
- * Add the googleanalytics tracking code to the pages.
+ * میان افزار GoogleAnalytics را ایجادمی‌کند.
+ * 
+ *  این واسط کد دنبال کردن تحلیل‌های گوگل را به تمام سیستم اضافه می‌کند.
  */
 class Pluf_Middleware_GoogleAnalytics
 {
