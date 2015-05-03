@@ -926,6 +926,12 @@ class Pluf_Model implements JsonSerializable {
 	 */
 	function preSave($create = false) {
 	}
+	
+	/**
+	 * فراخوانی پس از ذخیره شدن
+	 * 
+	 * @param string $create
+	 */
 	function postSave($create = false) {
 	}
 	
