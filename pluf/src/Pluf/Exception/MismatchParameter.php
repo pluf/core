@@ -1,11 +1,13 @@
 <?php
 /**
- * عدم پیاده سازی فراخوانی در سیستم را تعیین می‌کند
+ * عدم مجوز دسترسی به منابع
+ * 
+ * در صورتی که اجازه دسترسی به منابع وجود نداشته باشد این خطا صادر می‌شود.
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Pluf_Exception_NotImplemented extends Pluf_Exception {
+class Pluf_Exception_MismatchParameter extends Pluf_Exception {
 	
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.
@@ -16,8 +18,8 @@ class Pluf_Exception_NotImplemented extends Pluf_Exception {
 	 */
 	public function __construct($message = null, $previous = null, $link = null, $developerMessage = null) {
 		if (! isset ( $message ) || is_null($message)) {
-			$message = __ ( 'Requested method is not implemented yet.' );
+			$message = __ ( 'ِRequired parameters are not defined.' );
 		}
-		parent::__construct ( $message, 5051, $previous, 500, $link, $developerMessage );
+		parent::__construct ( $message, 4042, $previous, 404, $link, $developerMessage );
 	}
 }

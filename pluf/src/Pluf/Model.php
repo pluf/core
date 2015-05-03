@@ -463,7 +463,7 @@ class Pluf_Model implements JsonSerializable {
 	}
 	
 	/**
-	 * Get a list of items.
+	 * یک فهرست از موجودیت‌ها را تعیین می‌کند
 	 *
 	 * The filter should be used only for simple filtering. If you want
 	 * a complex query, you should create a new view.
