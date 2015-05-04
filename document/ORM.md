@@ -1,4 +1,4 @@
-# Pluf ORM (Active Record like)
+# مدل داده‌ای
 
 At the core of Plume is the Active Record ORM. This ORM enables rapid development of extensions without the need to deal with the SQL needed to store the data into the database. It is built to support different database engines.
 

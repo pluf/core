@@ -58,8 +58,7 @@ The many to many relation must be defined only in one of the two models. You sho
 
 This would be done the following way:
 
-	 'categories' => 
-	 array(
+	 'categories' => array(
 	  'type' => 'Pluf_DB_Field_Manytomany',
 	  'blank' => false,
 	  'model' => 'Category',
