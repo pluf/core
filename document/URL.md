@@ -33,16 +33,20 @@
 
 در این نمونه تنها یک آدرس به عنوان نگاشت ایجاد شده است که شامل پارامترهای متفاوتی است. این پارامترها با کلیدهای خاصی در نظر گرفته می شود که عبارتند از:
 
-- regex: This regular expression will be evaluated against the server PATH_INFO variable using preg_match and if it matches, the corresponding view will be called.
-- base: As you very often install your PHP application in a subfolder in your document root, you can define it here. If you are not using mod_rewrite you must put /yourfolder/index.php or /index.php.
-- model and method: The class and the method defining the view.
-- name: Optionally, you can refer to a view with a name. For example, the view of your login form should have the name login_view. This is really important to use unique names for your application, especially if you want to distribute your application.
-- sub: Subtree of views. This is used if you include in your application the views of other applications. See the section on URLs and applications below.
+- regex: این عبارت منظم روی آدرس منبع ورودی با استفاده از تابع preg_match اجرا می‌شود و در صورتی که آدرس منبع منطبق با عبارت منظم بود آنگاه نمایش معادل با آن فراخوانی می‌شود.
+- base: در بسیاری از موارد شما نیاز به نصب نرم‌افزار در زیر پوشه‌هایی از سایت دارد در این حال با استفاده از این متغیر می‌توانید آدرس دهی همه نمایش‌ها با به یک آدرس دلخواه انتقال دهید. می‌توان گفت این متغیر به عنوان پیشوندی برای آدرس‌های سایت در نظر گرفته می‌شود که در انطباق عبارت منظم استفاده نمی‌شود.
 
-Important note: The regex delimiter must be the hash (#) character.
+- model and method: این دو خصوصیت به ترتیب کلاس و متد معادل با لایه نمایش را تعیین می‌کنند.
+- name: در بسیاری از موارد استفاده از یک نام یکتا برای لایه نمایش بسیار بهینه است جایی که ممکن است مسیر نمایش و یا کلاس و متد آن تغییر کند. با استفاده از این خصوصیت دیگر نیاز نیست که در کل سیستم فراخوانی لایه نمایش را تغییر دهید. به بیان ساده نام یک ارجاع مجازی به یک نمایش ایجاد می‌کند که البته باید به صورت یکتا در کل سیستم تعریف شده باشد.
+- sub: زمانی که از برنامه‌هایی دیگر به عنوان زیر برنامه‌هایی در سیستم خود استفاده می‌کنید این متغییر به کار گرفته می‌شود. در ادامه استفاده از این متغیر به صورت کامل تشریح شده است.
 
-The order in which the URLs are defined is the order in which they will be matched.
-Complex Example
+نکته مهمی که باید همواره به آن توجه داشته باشید این است که عبارت منظم ایجاد شده باید بین دو علامت # قرار بگیرد.
+
+نکته دیگری که باید به آن توجه داشته باشید این است که ترتیب در نظر گرفتن نمایش‌ها ترتیب قرار گرفتن آنها در فهرست نمایش‌ها است.
+
+## یک نمونه پیچیده
+
+به نمونه‌ای که در ادامه آورده شده است توجه کنید:
 
 	<?php
 	$base = Pluf::f('myapp_base');

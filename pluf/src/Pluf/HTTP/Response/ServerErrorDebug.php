@@ -37,7 +37,7 @@ class Pluf_HTTP_Response_ServerErrorDebug extends Pluf_HTTP_Response {
 			if (! ($exception instanceof Pluf_Exception)) {
 				$exception = new Pluf_HTTP_Error500 ( 'Unknown exception', 5000, $exception );
 			}
-			$exception->setDeveloperMessage ( $exception->getDeveloperMessage () . '\n' . $exception->getTraceAsString () );
+			$exception->setDeveloperMessage ( $exception->getDeveloperMessage () . "\n" . $exception->getTraceAsString () );
 			parent::__construct ( json_encode ( $exception ), $mimetype );
 			$this->status_code = $exception->getStatus();
 			return;
