@@ -270,7 +270,7 @@ class Pluf
             return $file;
         }
         // using a relative path on the file
-        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
+        $path = explode(PATH_SEPARATOR, get_include_path());
         foreach ($path as $dir) {
             // strip Unix '/' and Windows '\'
             $target = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.$file;
