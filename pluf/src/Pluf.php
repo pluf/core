@@ -25,6 +25,12 @@
  * The main class of the framework. From where all start.
  *
  * The __autoload function is automatically set.
+ * 
+ * @date 1394 فرآیند یافتن پرونده‌ها تنها در مسیرهایی بود که سیستم تعیین می‌کند
+ * این مسیرهای با استفاده از ini_get گرفته می‌شود. این کار منجر به بروز خطا 
+ * در اجرا برای سیستم‌های CPanel می‌شد. در این نمونه با استفاده از get_include_path
+ * این مشکل رفع شده است.
+ * 
  */
 class Pluf
 {
