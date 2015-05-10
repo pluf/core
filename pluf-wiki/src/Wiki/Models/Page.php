@@ -6,7 +6,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Models_WikiPage extends Pluf_Model implements JsonSerializable {
+class Wiki_Models_Page extends Pluf_Model {
 	
 	/**
 	 * @brief مدل داده‌ای را بارگذاری می‌کند.
@@ -15,57 +15,51 @@ class Wiki_Models_WikiPage extends Pluf_Model implements JsonSerializable {
 	 */
 	function init() {
 		$this->_a ['table'] = 'wiki_page';
-		$this->_a ['model'] = 'Wiki_Models_WikiPage';
-		$this->_model = 'Wiki_Models_WikiPage';
+		$this->_a ['model'] = 'Wiki_Models_Page';
+		$this->_model = 'Wiki_Models_Page';
 		
-		$modelid = array ();
-		$modelid ['type'] = 'Pluf_DB_Field_Sequence';
-		$modelid ['blank'] = true;
+		$cols ['id'] = array (
+				'type' => 'Pluf_DB_Field_Sequence',
+				'blank' => true 
+		);
 		
-		$title = array (
+		$cols ['title'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
 				'blank' => false,
 				'size' => 250,
 				'verbose' => __ ( 'title' ),
 				'help_text' => __ ( 'The title of the page must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.' ) 
 		);
-		$language = array (
+		$cols ['language'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
 				'blank' => false,
 				'size' => 50,
 				'verbose' => __ ( 'language' ),
 				'help_text' => __ ( 'The language of the page must only contain letters. For example: en.' ) 
 		);
-		$summary = array (
+		$cols ['summary'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
 				'blank' => false,
 				'size' => 250,
 				'verbose' => __ ( 'summary' ),
 				'help_text' => __ ( 'A one line description of the page content.' ) 
 		);
-		$content = array (
+		$cols ['content'] = array (
 				'type' => 'Pluf_DB_Field_Compressed',
 				'blank' => false,
 				'verbose' => __ ( 'content' ) 
 		);
-		$creation_dtime = array (
+		$cols ['creation_dtime'] = array (
 				'type' => 'Pluf_DB_Field_Datetime',
 				'blank' => true,
 				'verbose' => __ ( 'creation date' ) 
 		);
-		$modif_dtime = array (
+		$cols ['modif_dtime'] = array (
 				'type' => 'Pluf_DB_Field_Datetime',
 				'blank' => true,
 				'verbose' => __ ( 'modification date' ) 
 		);
 		
-		$cols ['id'] = $modelid;
-		$cols ['language'] = $language;
-		$cols ['title'] = $title;
-		$cols ['summary'] = $summary;
-		$cols ['content'] = $content;
-		$cols ['creation_dtime'] = $creation_dtime;
-		$cols ['modif_dtime'] = $modif_dtime;
 		$this->_a ['cols'] = $cols;
 	}
 	
@@ -89,23 +83,6 @@ class Wiki_Models_WikiPage extends Pluf_Model implements JsonSerializable {
 	 */
 	function postSave($create = false) {
 		//
-	}
-	
-	/**
-	 * ساختار داده‌ای این کلاس را به ساختار JSON تبدیل می‌کند.
-	 *
-	 * @see JsonSerializable::jsonSerialize()
-	 */
-	public function jsonSerialize() {
-		return [ 
-				'id' => $this->id,
-				'language' => $this->language,
-				'title' => $this->title,
-				'summary' => $this->summary,
-				'body' => $this->content,
-				'creation' => $this->creation_dtime,
-				'modifed' => $this->modif_dtime 
-		];
 	}
 	static function getWikiPageFile($title, $language) {
 		$page = new HM_Models_WikiPage ();
