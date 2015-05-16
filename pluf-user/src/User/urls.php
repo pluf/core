@@ -18,4 +18,10 @@ return array (
 				'model' => 'User_Views_User',
 				'method' => 'signup' 
 		),
+		array (
+				'regex' => '#^/profile$#',
+				'base' => $base,
+				'model' => 'User_Views_Profile',
+				'method' => 'profile' 
+		),
 );
