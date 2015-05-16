@@ -46,11 +46,6 @@ class User_Views_Authentication {
 			throw new Pluf_Exception ( __ ( 'The login or the password is not valid. The login and the password are case sensitive.' ) );
 		}
 		
-		// $request->session->createTestCookie (); // Test cookie
-		// if (! $request->session->getTestCookie ()) {
-		// throw new Pluf_Exception ( __ ( 'You need to enable the cookies in your browser to access this website.' ) );
-		// }
-		
 		$request->user = $user;
 		$request->session->clear ();
 		$request->session->setData ( 'login_time', gmdate ( 'Y-m-d H:i:s' ) );
@@ -62,10 +57,13 @@ class User_Views_Authentication {
 	}
 	
 	/**
-	 * Logout view.
+	 * کاربر را از سیستم خارج می‌کند.
+	 * 
 	 */
 	function logout($request, $match) {
 		$views = new Pluf_Views ();
-		return $views->logout ( $request, $match, Pluf::f ( 'after_logout_page' ) );
+		$views->logout ( $request, $match, Pluf::f ( 'after_logout_page' ) );
+
+		return new Pluf_HTTP_Response_Json ( array() );
 	}
 }
