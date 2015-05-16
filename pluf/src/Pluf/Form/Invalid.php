@@ -5,7 +5,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Pluf_Form_Invalid extends PLuf_Exception {
+class Pluf_Form_Invalid extends Pluf_Exception {
 	
 
 	/**
