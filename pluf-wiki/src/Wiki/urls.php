@@ -1,7 +1,7 @@
 <?php
 return array (
 		array (
-				'regex' => '#^/$#',
+				'regex' => '#^/(.+)/(.+)$#',
 				'base' => $base,
 				'model' => 'Wiki_Views_Page',
 				'method' => 'index' 

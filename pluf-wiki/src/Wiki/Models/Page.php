@@ -84,11 +84,4 @@ class Wiki_Models_Page extends Pluf_Model {
 	function postSave($create = false) {
 		//
 	}
-	static function getWikiPageFile($title, $language) {
-		$page = new HM_Models_WikiPage ();
-		$page->title = $title;
-		$page->language = $language;
-		$page->content = "This page is created for a test and will ber replaced with the actual materials as soon as possible.";
-		return $page;
-	}
 }
