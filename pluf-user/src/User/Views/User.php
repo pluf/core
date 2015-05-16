@@ -9,7 +9,7 @@ Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
  * @author maso
  *        
  */
-class HM_Views_User {
+class User_Views_User {
 	/**
 	 * پیش نیازهای دسترسی به فهرست کاربران
 	 *
@@ -27,6 +27,30 @@ class HM_Views_User {
 	 */
 	public function users($request, $match) {
 		throw new Pluf_Exception_NotImplemented ();
+	}
+	
+	/**
+	 * پیش نیازهای ثبت کاربران
+	 *
+	 * @var unknown
+	 */
+	public $signup_precond = array ();
+	
+	/**
+	 * ثبت کاربران
+	 *
+	 * @param unknown_type $request        	
+	 * @param unknown_type $match        	
+	 */
+	public function signup($request, $match) {
+		// initial page data
+		$extra = array ();
+		$form = new User_Form_User ( array_merge ( $request->POST, $request->FILES ), $extra );
+		$cuser = $form->save ();
+		$request->user->setMessage ( sprintf ( __ ( 'The user %s has been created.' ), ( string ) $cuser ) );
+		
+		// Return response
+		return new Pluf_HTTP_Response_Json ( $cuser );
 	}
 	
 	/**

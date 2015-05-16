@@ -11,5 +11,11 @@ return array (
 				'base' => $base,
 				'model' => 'User_Views_Authentication',
 				'method' => 'logout' 
-		) 
+		),
+		array (
+				'regex' => '#^/signup$#',
+				'base' => $base,
+				'model' => 'User_Views_User',
+				'method' => 'signup' 
+		),
 );
