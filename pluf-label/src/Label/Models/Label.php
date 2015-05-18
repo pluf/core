@@ -1,13 +1,14 @@
 <?php
 
 /**
+ * مدل داده‌ای برای برچسب گذاری ایجاد می‌کند.
+ * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
- *
  */
 class Label_Models_Label extends Pluf_Model {
 	
 	/**
-	 * @brief مدل داده‌ای را بارگذاری می‌کند.
+	 * مدل داده‌ای را بارگذاری می‌کند.
 	 *
 	 * @see Pluf_Model::init()
 	 */
@@ -24,26 +25,24 @@ class Label_Models_Label extends Pluf_Model {
 				'type' => 'Pluf_DB_Field_Foreignkey',
 				'model' => 'Pluf_User',
 				'blank' => false,
-				'unique' => true
 		);
-		
 		$cols ['title'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
-				'blank' => false,
+				'blank' => true,
 				'size' => 250,
 				'verbose' => __ ( 'title' ),
 				'help_text' => __ ( 'The title of the label must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.' ) 
 		);
 		$cols ['description'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
-				'blank' => false,
+				'blank' => true,
 				'size' => 500,
 				'verbose' => __ ( 'description' ),
 				'help_text' => __ ( 'The description of the label must only contain letters. For example: en.' ) 
 		);
 		$cols ['color'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
-				'blank' => false,
+				'blank' => true,
 				'size' => 100,
 				'verbose' => __ ( 'color' ),
 				'help_text' => __ ( 'A one line description of the page content.' ) 
@@ -63,7 +62,7 @@ class Label_Models_Label extends Pluf_Model {
 	}
 	
 	/**
-	 * \brief پیش ذخیره را انجام می‌دهد
+	 * پیش ذخیره را انجام می‌دهد
 	 *
 	 * @param $create حالت
 	 *        	ساخت یا به روز رسانی را تعیین می‌کند
