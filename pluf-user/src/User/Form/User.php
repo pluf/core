@@ -22,66 +22,36 @@ class User_Form_User extends Pluf_Form {
 				'required' => true,
 				'label' => __ ( 'login' ),
 				'initial' => $this->user_data->login,
-				'widget_attrs' => array (
-						'maxlength' => 50,
-						'size' => 15,
-						'placeholder' => __ ( 'first name example:user' ) 
-				),
 		) );
 		
 		$this->fields ['first_name'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'first name' ),
 				'initial' => $this->user_data->first_name,
-				'widget_attrs' => array (
-						'maxlength' => 50,
-						'size' => 15,
-						'placeholder' => __ ( 'first name example:user' ) 
-				),
 		) );
 		
 		$this->fields ['last_name'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'last name' ),
 				'initial' => $this->user_data->last_name,
-				'widget_attrs' => array (
-						'maxlength' => 50,
-						'size' => 20,
-						'placeholder' => __ ( 'last name example:user' ) 
-				) 
 		) );
 		
 		$this->fields ['language'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'language' ),
 				'initial' => $this->user_data->language,
-				'widget' => 'Pluf_Form_Widget_SelectInput',
-				'widget_attrs' => array (
-						'choices' => Pluf_L10n::getInstalledLanguages () 
-				) 
 		) );
 		
 		$this->fields ['password'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'your password' ),
 				'initial' => '',
-				'widget' => 'Pluf_Form_Widget_PasswordInput',
-				'help_text' => Pluf_Template::markSafe ( __ ( 'Leave blank if you do not want to change your password.' ) . '<br />' . __ ( 'Your password must be hard for other people to find it, but easy for you to remember.' ) ),
-				'widget_attrs' => array (
-						'autocomplete' => 'off',
-						'maxlength' => 50,
-						'size' => 15 
-				) 
 		) );
 		
 		$this->fields ['email'] = new Pluf_Form_Field_Email ( array (
 				'required' => false,
 				'label' => __ ( 'Email address' ),
 				'initial' => $this->user_data->email,
-				'widget_attrs' => array (
-						'maxlength' => 50,
-						'size' => 15 
-				) 
 		) );
 	}
 	
