@@ -5,7 +5,7 @@ Pluf::loadFunction ( 'User_Shortcuts_UserDateFactory' );
 /**
  * فرم به روز رسانی اطلاعات کاربر را ایجاد می‌کند.
  */
-class User_Form_User extends Pluf_Form {
+class User_Form_Account extends Pluf_Form {
 	public $user_data = null;
 	
 	/**
@@ -53,21 +53,6 @@ class User_Form_User extends Pluf_Form {
 				'label' => __ ( 'Email address' ),
 				'initial' => $this->user_data->email,
 		) );
-		$this->fields ['administrator'] = new Pluf_Form_Field_Boolean ( array (
-				'required' => false,
-				'label' => __ ( 'administrator' ),
-				'initial' => $this->user_data->administrator,
-		) );
-		$this->fields ['staff'] = new Pluf_Form_Field_Boolean ( array (
-				'required' => false,
-				'label' => __ ( 'staff' ),
-				'initial' => $this->user_data->staff,
-		) );
-		$this->fields ['active'] = new Pluf_Form_Field_Boolean ( array (
-				'required' => false,
-				'label' => __ ( 'active' ),
-				'initial' => $this->user_data->active,
-		) );
 	}
 	
 	// XXX: maso 1391: ارسال رایانامه برای فعال کردن کاربران
@@ -87,7 +72,7 @@ class User_Form_User extends Pluf_Form {
 		// 'user'=> $this->user_data,
 		// )
 		// );
-		// $tmpl = new Pluf_Template('mail/user/change-email.txt');
+		// $tmpl = new Pluf_Template('peechak/mail/user/changeemail-email.txt');
 		// $text_email = $tmpl->render($context);
 		// $email = new Pluf_Mail(Pluf::f('from_email'), $new_email,
 		// __('Confirm your new email address.'));

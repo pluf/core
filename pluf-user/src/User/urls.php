@@ -13,6 +13,12 @@ return array (
 				'method' => 'logout' 
 		),
 		array (
+				'regex' => '#^/account$#',
+				'base' => $base,
+				'model' => 'User_Views_User',
+				'method' => 'account' 
+		),
+		array (
 				'regex' => '#^/signup$#',
 				'base' => $base,
 				'model' => 'User_Views_User',

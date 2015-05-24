@@ -10,24 +10,40 @@ Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
  *        
  */
 class User_Views_User {
+	
 	/**
-	 * پیش نیازهای دسترسی به فهرست کاربران
+	 * پیش نیازهای حساب کاربری
 	 *
 	 * @var unknown
 	 */
-	public $users_precond = array (
-			'Pluf_Precondition::staffRequired' 
+	public $account_precond = array (
+			'Pluf_Precondition::loginRequired' 
 	);
 	
 	/**
-	 * فهرست تمام کاربران را نمایش می‌دهد
+	 * به روز رسانی و مدیریت اطلاعات خود کاربر
 	 *
-	 * @param unknown_type $request        	
-	 * @param unknown_type $match        	
-	 */
-	public function users($request, $match) {
+	 * @param unknown_type $request
+	 * @param unknown_type $match
+	*/
+	public function account($request, $match) {
+		if($request->method === 'GET'){
+			return new Pluf_HTTP_Response_Json ( $cuser );
+		}
+		if($request->method === 'POST'){
+			// initial page data
+			$extra = array ();
+			$form = new User_Form_Account ( array_merge ( $request->POST, $request->FILES ), $extra );
+			$cuser = $form->save ();
+			$request->user->setMessage ( sprintf ( __ ( 'Account data has been updated.' ), ( string ) $cuser ) );
+		
+			// Return response
+			return new Pluf_HTTP_Response_Json ( $cuser );
+		}
+
 		throw new Pluf_Exception_NotImplemented ();
 	}
+	
 	
 	/**
 	 * پیش نیازهای ثبت کاربران
@@ -54,40 +70,21 @@ class User_Views_User {
 	}
 	
 	/**
-	 * پیش نیازهای فهرست کردن کاربران فعال
+	 * پیش نیازهای دسترسی به فهرست کاربران
 	 *
 	 * @var unknown
 	 */
-	public $activeUsers_precond = array (
+	public $users_precond = array (
 			'Pluf_Precondition::staffRequired' 
 	);
 	
 	/**
-	 * فهرست تمام کاربران فعال را نمایش می‌دهد
+	 * فهرست تمام کاربران را نمایش می‌دهد
 	 *
 	 * @param unknown_type $request        	
 	 * @param unknown_type $match        	
 	 */
-	public function activeUsers($request, $match) {
-		throw new Pluf_Exception_NotImplemented ();
-	}
-	
-	/**
-	 * پیش نیازهای فهرست کردن کاربران غیر فعال
-	 *
-	 * @var unknown
-	 */
-	public $unactiveUsers_precond = array (
-			'Pluf_Precondition::staffRequired' 
-	);
-	
-	/**
-	 * فهرست تمام کاربران غیر فعال را نمایش می‌دهد
-	 *
-	 * @param unknown_type $request        	
-	 * @param unknown_type $match        	
-	 */
-	public function unactiveUsers($request, $match) {
+	public function users($request, $match) {
 		throw new Pluf_Exception_NotImplemented ();
 	}
 	
@@ -107,6 +104,10 @@ class User_Views_User {
 	 * @param unknown_type $match        	
 	 */
 	public function user($request, $match) {
+		$user_id = $match[1];
+		if($user_id === $request->user->id){
+			return $this->account($request, $match);
+		}
 		throw new Pluf_Exception_NotImplemented ();
 	}
 }
