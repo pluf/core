@@ -14,52 +14,44 @@ class User_Form_Account extends Pluf_Form {
 	 * @see Pluf_Form::initFields()
 	 */
 	public function initFields($extra = array()) {
-		if (array_key_exists ( 'user', $extra ))
-			$this->user_data = $extra ['user'];
-		$this->user_data = User_Shortcuts_UserDateFactory ( $this->user_data );
-		
-		$this->fields ['login'] = new Pluf_Form_Field_Varchar ( array (
-				'required' => true,
-				'label' => __ ( 'login' ),
-				'initial' => $this->user_data->login,
-		) );
+		$this->user_data = $extra ['user'];
 		
 		$this->fields ['first_name'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'first name' ),
-				'initial' => $this->user_data->first_name,
+				'initial' => $this->user_data->first_name 
 		) );
 		
 		$this->fields ['last_name'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'last name' ),
-				'initial' => $this->user_data->last_name,
+				'initial' => $this->user_data->last_name 
 		) );
 		
 		$this->fields ['language'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'language' ),
-				'initial' => $this->user_data->language,
+				'initial' => $this->user_data->language 
 		) );
 		
 		$this->fields ['password'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,
 				'label' => __ ( 'your password' ),
-				'initial' => '',
+				'initial' => '' 
 		) );
 		
 		$this->fields ['email'] = new Pluf_Form_Field_Email ( array (
 				'required' => false,
 				'label' => __ ( 'Email address' ),
-				'initial' => $this->user_data->email,
+				'initial' => $this->user_data->email 
 		) );
 	}
 	
 	// XXX: maso 1391: ارسال رایانامه برای فعال کردن کاربران
 	private function send_validation_mail($new_email, $secondary_mail = false) {
 		// XXX: maso 1392: use validation method
-// 		$type = "primary";
-// 		$cr = new Pluf_Crypt(md5(Pluf::f('secret_key')));
+		// $type = "primary";
+		// $cr = new Pluf_Crypt(md5(Pluf::f('secret_key')));
 		// $encrypted = trim($cr->encrypt($new_email.':'.$this->user_data->id.':'.time().':'.$type), '~');
 		// $key = substr(md5(Pluf::f('secret_key').$encrypted), 0, 2).$encrypted;
 		// $url = Pluf::f('url_base').Pluf_HTTP_URL_urlForView('Peechak_Views_User::changeEmailDo', array($key), array(), false);
@@ -78,7 +70,7 @@ class User_Form_Account extends Pluf_Form {
 		// __('Confirm your new email address.'));
 		// $email->addTextMessage($text_email);
 		// $email->sendMail();
-		$this->user_data->setMessage(sprintf(__('A validation email has been sent to "%s" to validate the email address change.'), Pluf_esc($new_email)));
+		$this->user_data->setMessage ( sprintf ( __ ( 'A validation email has been sent to "%s" to validate the email address change.' ), Pluf_esc ( $new_email ) ) );
 	}
 	
 	/**
@@ -93,24 +85,7 @@ class User_Form_Account extends Pluf_Form {
 	 * @return مدل داده‌ای ایجاد شده
 	 */
 	function save($commit = true) {
-		if (! $this->isValid ()) {
-			throw new Pluf_Exception( __ ( 'Cannot save the model from an invalid form.' ) );
-		}
-		$old_email = $this->user_data->email;
-		$new_email = $this->cleaned_data ['email'];
-		$this->user_data->email = $new_email;
-		unset ( $this->cleaned_data ['email'] );
-		if ($old_email != $new_email) {
-			$this->send_validation_mail ( $new_email );
-		}
-		$this->user_data->setFromFormData ( $this->cleaned_data );
-
-		$user_active = Pluf::f ( 'user_signup_active', false );
-		$this->user_data->active = $user_active;
-		if ($commit) {
-			$this->user_data->create ();
-		}
-		return $this->user_data;
+		throw new Pluf_Exception ( __ ( 'Cannot save the model from an invalid form.' ) );
 	}
 	
 	/**
@@ -122,13 +97,15 @@ class User_Form_Account extends Pluf_Form {
 		if (! $this->isValid ()) {
 			throw new Pluf_Exception ( __ ( 'Cannot save the model from an invalid form.' ) );
 		}
-		$old_email = $this->user_data->email;
-		$new_email = $this->cleaned_data ['email'];
-		// maso 1392: use validation method
-		$this->user_data->email = $new_email;
-		unset ( $this->cleaned_data ['email'] );
-		if ($old_email != $new_email) {
-			$this->send_validation_mail ( $new_email );
+		if (isset ( $this->cleaned_data ['email'] )) {
+			$old_email = $this->user_data->email;
+			$new_email = $this->cleaned_data ['email'];
+			// maso 1392: use validation method
+			$this->user_data->email = $new_email;
+			unset ( $this->cleaned_data ['email'] );
+			if ($old_email != $new_email) {
+				$this->send_validation_mail ( $new_email );
+			}
 		}
 		$this->user_data->setFromFormData ( $this->cleaned_data );
 		$this->user_data->update ();
@@ -161,18 +138,31 @@ class User_Form_Account extends Pluf_Form {
 		return $first_name;
 	}
 	
+	// /**
+	// * بررسی صحت رایانامه
+	// *
+	// * @throws Pluf_Form_Invalid
+	// * @return multitype:
+	// */
+	// function clean_email() {
+	// $this->cleaned_data ['email'] = mb_strtolower ( trim ( $this->cleaned_data ['email'] ) );
+	// // $user = Pluf::factory ( 'IDF_EmailAddress' )->get_user_for_email_address ( $this->cleaned_data ['email'] );
+	// // if ($user != null and $user->id != $this->user_data->id) {
+	// // throw new Pluf_Form_Invalid ( sprintf ( __ ( 'The email "%s" is already used.' ), $this->cleaned_data ['email'] ) );
+	// // }
+	// return $this->cleaned_data ['email'];
+	// }
+	
 	/**
-	 * بررسی صحت رایانامه
+	 * تمام داده‌های تهی پاک می‌شوند
 	 *
-	 * @throws Pluf_Form_Invalid
-	 * @return multitype:
+	 * @see Pluf_Form::clean()
 	 */
-	function clean_email() {
-		$this->cleaned_data ['email'] = mb_strtolower ( trim ( $this->cleaned_data ['email'] ) );
-// 		$user = Pluf::factory ( 'IDF_EmailAddress' )->get_user_for_email_address ( $this->cleaned_data ['email'] );
-// 		if ($user != null and $user->id != $this->user_data->id) {
-// 			throw new Pluf_Form_Invalid ( sprintf ( __ ( 'The email "%s" is already used.' ), $this->cleaned_data ['email'] ) );
-// 		}
-		return $this->cleaned_data ['email'];
+	public function clean() {
+		foreach ( $this->cleaned_data as $key => $value ) {
+			if (is_null ( $value ) || $value === '')
+				unset ( $this->cleaned_data [$key] );
+		}
+		return $this->cleaned_data;
 	}
 }

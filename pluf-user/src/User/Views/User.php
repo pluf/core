@@ -2,6 +2,7 @@
 Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
 Pluf::loadFunction ( 'Pluf_Shortcuts_GetObjectOr404' );
 Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
+Pluf::loadFunction ( 'User_Shortcuts_UserJsonResponse' );
 
 /**
  * لایه نمایش مدیریت کاربران را به صورت پیش فرض ایجاد می‌کند
@@ -23,27 +24,28 @@ class User_Views_User {
 	/**
 	 * به روز رسانی و مدیریت اطلاعات خود کاربر
 	 *
-	 * @param unknown_type $request
-	 * @param unknown_type $match
-	*/
+	 * @param unknown_type $request        	
+	 * @param unknown_type $match        	
+	 */
 	public function account($request, $match) {
-		if($request->method === 'GET'){
-			return new Pluf_HTTP_Response_Json ( $cuser );
+		if ($request->method === 'GET') {
+			return User_Shortcuts_UserJsonResponse ( $request->user );
 		}
-		if($request->method === 'POST'){
+		if ($request->method === 'POST') {
 			// initial page data
-			$extra = array ();
+			$extra = array (
+					'user' => $request->user 
+			);
 			$form = new User_Form_Account ( array_merge ( $request->POST, $request->FILES ), $extra );
-			$cuser = $form->save ();
+			$cuser = $form->update ();
 			$request->user->setMessage ( sprintf ( __ ( 'Account data has been updated.' ), ( string ) $cuser ) );
-		
+			
 			// Return response
-			return new Pluf_HTTP_Response_Json ( $cuser );
+			return User_Shortcuts_UserJsonResponse ( $cuser );
 		}
-
+		
 		throw new Pluf_Exception_NotImplemented ();
 	}
-	
 	
 	/**
 	 * پیش نیازهای ثبت کاربران
@@ -66,7 +68,7 @@ class User_Views_User {
 		$request->user->setMessage ( sprintf ( __ ( 'The user %s has been created.' ), ( string ) $cuser ) );
 		
 		// Return response
-		return new Pluf_HTTP_Response_Json ( $cuser );
+		return User_Shortcuts_UserJsonResponse ( $cuser );
 	}
 	
 	/**
@@ -104,9 +106,9 @@ class User_Views_User {
 	 * @param unknown_type $match        	
 	 */
 	public function user($request, $match) {
-		$user_id = $match[1];
-		if($user_id === $request->user->id){
-			return $this->account($request, $match);
+		$user_id = $match [1];
+		if ($user_id === $request->user->id) {
+			return $this->account ( $request, $match );
 		}
 		throw new Pluf_Exception_NotImplemented ();
 	}

@@ -2,6 +2,7 @@
 Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
 Pluf::loadFunction ( 'Pluf_Shortcuts_GetObjectOr404' );
 Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
+Pluf::loadFunction ( 'User_Shortcuts_UserJsonResponse' );
 
 /**
  * لایه نمایش احراز اصالت را ایجاد می‌کند
@@ -26,7 +27,7 @@ class User_Views_Authentication {
 		}
 		
 		if (! $request->user->isAnonymous ()) {
-			return new Pluf_HTTP_Response_Json ( $request->user );
+			return User_Shortcuts_UserJsonResponse ( $request->user );
 		}
 		
 		$backends = Pluf::f ( 'auth_backends', array (
@@ -53,17 +54,16 @@ class User_Views_Authentication {
 		$user->update ();
 		$request->session->deleteTestCookie ();
 		
-		return new Pluf_HTTP_Response_Json ( $user );
+		return User_Shortcuts_UserJsonResponse ( $user );
 	}
 	
 	/**
 	 * کاربر را از سیستم خارج می‌کند.
-	 * 
 	 */
 	function logout($request, $match) {
 		$views = new Pluf_Views ();
 		$views->logout ( $request, $match, Pluf::f ( 'after_logout_page' ) );
-
-		return new Pluf_HTTP_Response_Json ( array() );
+		
+		return new Pluf_HTTP_Response_Json ( array () );
 	}
 }
