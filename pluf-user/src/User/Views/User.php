@@ -61,11 +61,28 @@ class User_Views_User {
 	 * @param unknown_type $match        	
 	 */
 	public function signup($request, $match) {
-		// initial page data
+		// Create account
 		$extra = array ();
 		$form = new User_Form_User ( array_merge ( $request->POST, $request->FILES ), $extra );
 		$cuser = $form->save ();
-		$request->user->setMessage ( sprintf ( __ ( 'The user %s has been created.' ), ( string ) $cuser ) );
+		
+		// Create profile
+		$profile_model = Pluf::f ( 'user_profile_class', false );
+		$profile_form = Pluf::f ( 'user_profile_form', false );
+		if ($profile_form === false || $profile_model === false) {
+			return User_Shortcuts_UserJsonResponse ( $cuser );
+		}
+		try {
+			$profile = $cuser->getProfile ();
+		} catch ( Pluf_Exception_DoesNotExist $ex ) {
+			$profile = new $profile_model ();
+			$profile->user = $cuser;
+			$profile->create ();
+		}
+		$form = new $profile_form ( array_merge ( $request->POST, $request->FILES ), array (
+				'user_profile' => $profile 
+		) );
+		$profile = $form->update ();
 		
 		// Return response
 		return User_Shortcuts_UserJsonResponse ( $cuser );
