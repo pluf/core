@@ -10,7 +10,7 @@ function User_Shortcuts_UserDateFactory($object) {
 	// $group_model = Pluf::f ( 'pluf_custom_group', 'Pluf_Group' );
 	if ($object == null || ! isset ( $object ))
 		return new $user_model ();
-	$object;
+	return $object;
 }
 
 /**
