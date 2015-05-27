@@ -134,7 +134,7 @@ class Label_Views_Label {
 					'user' => $request->user,
 					'label' => $label
 			);
-			$form = new Label_Form_Label ( array_merge ( $request->GET, $request->FILES ), $extra );
+			$form = new Label_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
 			$cuser = $form->update ();
 			return new Pluf_HTTP_Response_Json ( $cuser );
 		}
