@@ -84,7 +84,7 @@ You can see that a many to many relation is symetric. To remove an association y
 	$article->delAssoc($category);
 	$category->delAssoc($article);
 
-## Registration of a model
+## ثبت رابطه بین مدلها
 
 Or the MyApp/relations.php file. To be able to dynamically have a method to list the Todo_Item in a Todo_List the relations between the models has to be defined. It is technically possible to load all the models and go through the definition of each model and from that build the relation map. Technically possible but not very efficient.
 

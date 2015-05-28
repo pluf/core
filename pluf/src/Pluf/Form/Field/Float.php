@@ -30,8 +30,10 @@ class Pluf_Form_Field_Float extends Pluf_Form_Field
     public function clean($value)
     {
         parent::clean($value);
+        
         if (in_array($value, $this->empty_values)) {
-            $value = '';
+            $value = 0.0;
+            return $value;
         }
         if (!is_numeric($value)) {
             throw new Pluf_Form_Invalid(__('Enter a number.'));
