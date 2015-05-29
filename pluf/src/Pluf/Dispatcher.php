@@ -162,10 +162,11 @@ class Pluf_Dispatcher {
 	}
 	
 	/**
-	 * Call the view found by self::match.
+	 * نمایشی که در فراخوانی self::match تعیین شده است را فراخوانی می‌کند.
 	 *
-	 * The called view can throw an exception. This is fine and
-	 * normal.
+	 * فراخوانی لایه نمایش ممکن است که با بروز استثنا روبرو شود که در اینجا این نکته
+	 * مورد توجه قرار گرفته است. از این رو نیازی نیست که در لایه نمایش مدیریت خطا انجام
+	 * شود.
 	 *
 	 * @param
 	 *        	Pluf_HTTP_Request Current request
