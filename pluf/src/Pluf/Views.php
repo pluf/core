@@ -364,4 +364,26 @@ class Pluf_Views
                                                $request);
     }
 
+    /**
+     * یکی از الگوها را ایجاد و آن را به عنوان نتیجه برمی‌گرداند
+     * 
+     * در بسیاری از کاربردها نرم‌افزار کاربردی به صفحه‌های متفاوتی شکسته می‌شود و بر اساس
+     * حالت کاربر یکی از صفحه‌ها نمایش داده می‌شود. به این ترتیب حجم دانلود برای هر صفحه 
+     * کم شده و توسعه هر صفحه نیز راحتر می‌شود. 
+     * 
+     * این فراخوانی این امکان را ایجاد می‌کند که در لایه نمایش به سادگی یکی از الگوها را
+     * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @return Pluf_HTTP_Response
+     */
+    function loadTemplate($request, $match){
+    	$template = $match[1];
+    	$extra_context = array();
+    	// create and show a template
+    	$context = new Pluf_Template_Context_Request($request,$extra_context);
+    	$tmpl = new Pluf_Template($template);
+    	return new Pluf_HTTP_Response($tmpl->render($context));
+    }
 }
