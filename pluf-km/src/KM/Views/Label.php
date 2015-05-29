@@ -9,7 +9,7 @@ Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  */
-class Label_Views_Label {
+class KM_Views_Label {
 	
 	/**
 	 * پیش شرط‌های دستیابی به نرم‌افزار صفحه اصلی

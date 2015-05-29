@@ -5,7 +5,7 @@ Pluf::loadFunction ( 'Label_Shortcuts_labelDateFactory' );
 /**
  * فرم به روز رسانی اطلاعات کاربر را ایجاد می‌کند.
  */
-class Label_Form_Label extends Pluf_Form {
+class KM_Form_Label extends Pluf_Form {
 	public $label_data = null;
 	public $user;
 	

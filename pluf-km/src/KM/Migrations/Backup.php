@@ -10,7 +10,7 @@
  * @param string Name of the backup (null)
  * @return int The backup was correctly written
  */
-function Label_Migrations_Backup_run($folder, $name=null)
+function Organize_Migrations_Backup_run($folder, $name=null)
 {
 //     $models = array(
 // 			'Peechak_Models_Job',
@@ -41,7 +41,7 @@ function Label_Migrations_Backup_run($folder, $name=null)
  * @param string Backup name
  * @return bool Success
  */
-function Label_Migrations_Backup_restore($folder, $name)
+function Organize_Migrations_Backup_restore($folder, $name)
 {
 
 //     $db = Pluf::db();

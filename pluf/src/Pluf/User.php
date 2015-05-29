@@ -351,13 +351,16 @@ class Pluf_User extends Pluf_Model {
 	}
 	
 	/**
-	 * Check if a user as a permission.
+	 * تعیین گواهی برای شئی تعیین شده
+	 * 
+	 * یگ گواهی برای یک مدل خاص است، در اینجا می‌توان تعیین کرد که آیا کاربر
+	 * به شئی مورد نظر این گواهی را دارد.
 	 *
 	 * @param
 	 *        	string Permission
 	 * @param
 	 *        	Object Object for row level permission (null)
-	 * @return bool True if the user has the permission.
+	 * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
 	 */
 	function hasPerm($perm, $obj = null) {
 		if (! $this->active)

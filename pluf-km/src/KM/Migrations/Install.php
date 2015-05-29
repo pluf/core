@@ -5,9 +5,10 @@
  * 
  * @param string $params
  */
-function Label_Migrations_Install_setup($params = '') {
+function KM_Migrations_Install_setup($params = '') {
 	$models = array (
-			'Label_Models_Label' 
+			'KM_Label',
+			'KM_Category'
 	);
 	$db = Pluf::db ();
 	$schema = new Pluf_DB_Schema ( $db );
@@ -22,9 +23,10 @@ function Label_Migrations_Install_setup($params = '') {
  *
  * @param string $params        	
  */
-function Label_Migrations_Install_teardown($params = '') {
+function KM_Migrations_Install_teardown($params = '') {
 	$models = array (
-			'Label_Models_Label' 
+			'KM_Label',
+			'KM_Category'
 	);
 	$db = Pluf::db ();
 	$schema = new Pluf_DB_Schema ( $db );

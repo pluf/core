@@ -5,7 +5,7 @@
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  */
-class Label_Models_Label extends Pluf_Model {
+class KM_Category extends Pluf_Model {
 	
 	/**
 	 * مدل داده‌ای را بارگذاری می‌کند.
@@ -13,9 +13,9 @@ class Label_Models_Label extends Pluf_Model {
 	 * @see Pluf_Model::init()
 	 */
 	function init() {
-		$this->_a ['table'] = 'labels';
-		$this->_a ['model'] = 'Label_Models_Label';
-		$this->_model = 'Label_Models_Label';
+		$this->_a ['table'] = 'categories';
+		$this->_a ['model'] = 'KM_Category';
+		$this->_model = 'KM_Category';
 		
 		$cols ['id'] = array (
 				'type' => 'Pluf_DB_Field_Sequence',
@@ -24,7 +24,12 @@ class Label_Models_Label extends Pluf_Model {
 		$cols ['user'] = array (
 				'type' => 'Pluf_DB_Field_Foreignkey',
 				'model' => 'Pluf_User',
-				'blank' => false,
+				'blank' => true,
+		);
+		$cols ['parent'] = array (
+				'type' => 'Pluf_DB_Field_Foreignkey',
+				'model' => 'KM_Category',
+				'blank' => true,
 		);
 		$cols ['title'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
