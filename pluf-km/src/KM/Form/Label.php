@@ -1,6 +1,6 @@
 <?php
 Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
-Pluf::loadFunction ( 'Label_Shortcuts_labelDateFactory' );
+Pluf::loadFunction ( 'KM_Shortcuts_labelDateFactory' );
 
 /**
  * فرم به روز رسانی اطلاعات کاربر را ایجاد می‌کند.
@@ -18,7 +18,7 @@ class KM_Form_Label extends Pluf_Form {
 		if (array_key_exists ( 'label', $extra ))
 			$this->label_data = $extra ['label'];
 		$this->user = $extra ['user'];
-		$this->label_data = Label_Shortcuts_labelDateFactory ( $this->label_data );
+		$this->label_data = KM_Shortcuts_labelDateFactory ( $this->label_data );
 		
 		$this->fields ['title'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => false,

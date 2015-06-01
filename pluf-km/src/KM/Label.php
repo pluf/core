@@ -26,6 +26,12 @@ class KM_Label extends Pluf_Model {
 				'model' => 'Pluf_User',
 				'blank' => false,
 		);
+		$cols ['community'] = array (
+				'type' => 'Pluf_DB_Field_Boolean',
+				'blank' => false,
+				'verbose' => __ ( 'created by community' ),
+				'help_text' => __ ( 'Define wether the location created by the community or not.' ) 
+		);
 		$cols ['title'] = array (
 				'type' => 'Pluf_DB_Field_Varchar',
 				'blank' => true,
@@ -70,6 +76,7 @@ class KM_Label extends Pluf_Model {
 	function preSave($create = false) {
 		if ($this->id == '') {
 			$this->creation_dtime = gmdate ( 'Y-m-d H:i:s' );
+			$this->community = true;
 		}
 		$this->modif_dtime = gmdate ( 'Y-m-d H:i:s' );
 	}

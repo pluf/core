@@ -42,7 +42,7 @@ class KM_Views_Label {
 		}
 		// maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
 		// Paginator to paginate messages
-		$pag = new Pluf_Paginator ( new Label_Models_Label () );
+		$pag = new Pluf_Paginator ( new KM_Label () );
 		$pag->forced_where = new Pluf_SQL ( 'user=%s', array (
 				$request->user->id 
 		) );
@@ -86,10 +86,13 @@ class KM_Views_Label {
 	 * @throws Pluf_Exception_NotImplemented
 	 */
 	public function create($request, $match) {
+		if ($request->method != 'POST') {
+			throw new Pluf_Exception_PostMethodSuported ();
+		}
 		$extra = array (
 				'user' => $request->user 
 		);
-		$form = new Label_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
+		$form = new KM_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
 		$cuser = $form->save ();
 		$request->user->setMessage ( sprintf ( __ ( 'The label %s has been created.' ), ( string ) $cuser ) );
 		
@@ -115,7 +118,7 @@ class KM_Views_Label {
 	 */
 	public function label($request, $match) {
 		$label_id = $match[1];
-		$label = Pluf_Shortcuts_GetObjectOr404('Label_Models_Label', $label_id);
+		$label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $label_id);
 		if($label->user != $request->user->id){
 			throw new Pluf_Exception_PermissionDenied(__('You are not the laberl owner.'));
 		}
@@ -134,7 +137,7 @@ class KM_Views_Label {
 					'user' => $request->user,
 					'label' => $label
 			);
-			$form = new Label_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
+			$form = new KM_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
 			$cuser = $form->update ();
 			return new Pluf_HTTP_Response_Json ( $cuser );
 		}
