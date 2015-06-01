@@ -117,25 +117,25 @@ class KM_Views_Label {
 	 * @throws Pluf_Exception_NotImplemented
 	 */
 	public function label($request, $match) {
-		$label_id = $match[1];
-		$label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $label_id);
-		if($label->user != $request->user->id){
-			throw new Pluf_Exception_PermissionDenied(__('You are not the laberl owner.'));
+		$label_id = $match [1];
+		$label = Pluf_Shortcuts_GetObjectOr404 ( 'KM_Label', $label_id );
+		if ($label->user != $request->user->id) {
+			throw new Pluf_Exception_PermissionDenied ( __ ( 'You are not the laberl owner.' ) );
 		}
 		
 		if ($request->method === 'DELETE') {
-			$label->delete();
+			$label->delete ();
 			return new Pluf_HTTP_Response_Json ( $label );
 		}
 		
-		if ($request->method === 'GET'){
+		if ($request->method === 'GET') {
 			return new Pluf_HTTP_Response_Json ( $label );
 		}
 		
-		if ($request->method === 'POST'){
+		if ($request->method === 'POST') {
 			$extra = array (
 					'user' => $request->user,
-					'label' => $label
+					'label' => $label 
 			);
 			$form = new KM_Form_Label ( array_merge ( $request->POST, $request->FILES ), $extra );
 			$cuser = $form->update ();
