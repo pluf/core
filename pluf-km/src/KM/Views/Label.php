@@ -28,6 +28,9 @@ class KM_Views_Label {
 	 *        	$match
 	 */
 	public function labels($request, $match) {
+		if ($request->method != 'GET') {
+			throw new Pluf_Exception_GetMethodSuported ();
+		}
 		/*
 		 * TODO: maso, 1394: پارامترهای جستجو استفاده نشده است.
 		 * سه پارامتر زیر باید در جستجو استفاده شود، اگر توسط کاربر تعیین شده باشد
@@ -37,12 +40,13 @@ class KM_Views_Label {
 		 */
 		$count = 20;
 		
-		if ($request->method != 'GET') {
-			throw new Pluf_Exception_GetMethodSuported ();
-		}
 		// maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
 		// Paginator to paginate messages
 		$pag = new Pluf_Paginator ( new KM_Label () );
+		$pag->list_filters = array(
+				'user', 'title', 'community'
+		);
+		$pag->setFromRequest($request);
 		$pag->forced_where = new Pluf_SQL ( 'user=%s', array (
 				$request->user->id 
 		) );
@@ -51,9 +55,11 @@ class KM_Views_Label {
 				'description' => __ ( 'description' ),
 				'color' => __ ( 'color' ) 
 		);
-		$search_fields = array ();
+		$search_fields = array (
+				'title', 'description'
+		);
 		$sort_fields = array (
-				'creation_date' 
+				'id', 'creation_date' 
 		);
 		$pag->configure ( $list_display, $search_fields, $sort_fields );
 		$pag->action = array (

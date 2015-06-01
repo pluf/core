@@ -26,11 +26,11 @@
 
 ### تشریح نمونه 
 
-This means that you will list 50 articles per page:
+یکی از گزینه‌هایی که در تنظیم صفحه بندی می‌تواند استفاده شود، تعداد گزینه‌ها در یک صفحه است. برای این کار از خصورت زیر استفاده می‌شود (که در این نمونه ۵۰ در نظر گرفته شده است):
 
 	$pag->items_per_page = 50;
 
-each page will have 3 columns with the title, last modification day and the status of the article.
+دسته‌ای از خصوصیت‌ها برای تنظیم نمایش‌ها است که در زیر آورده شده است. این تنظیم‌ها شامل خصوصیت‌هایی که باید استفاده شود، روش نمایش و عنوان آن آورده شده است:
 
 	$list_display = array(
 	       array('id', 'Pluf_Paginator_ToString', __('title')),
@@ -38,85 +38,84 @@ each page will have 3 columns with the title, last modification day and the stat
 	       array('status', 'Pluf_Paginator_DisplayVal', __('status')), 
 	                     );
 
-For example, 'id' means that the field id of your model is passed to the function Pluf_Paginator_ToString together with the item listed. This function do not used the field but directly call the method __toString of the item and returns it.
+در نمونه بالا شناسه، تاریخ تغییر داده و حالت آن به عنوان خصوصیت‌هایی آورده شده که در نمایش به کار گرفته می‌شود. در این نمونه id به این معنی است که فیلد id از مدل داده‌های باید به نمایش ارسال شود و برای نمایش آن باید از تابع Pluf_Paginator_ToString‌ برای ایجاد داده قابل نمایش استفاده شود. در نهای اخرین خصوصیت عنوانی را تعیین می‌کند که باید برای این داده به کار گرفته شود.
 
-For the second column, the 'modif_dtime' field is passed to the a function that is simply returning the timestamp formatted in YYYY-MM-DD format.
-
-The third column is displaying the 'status' of the article, the call back function here is getting the corresponding value from the available choices in the model column definition.
-
-You will be able to sort the records by status and modification time and you can search in the content of the article.
+علاوه بر این امکاناتی نیز در نظر گرفته شده که با استفاده از آن می‌توان داده‌های ایجاد شده را مرتب کرد. در زیر یک آرایه اضافه شده که از خصوصیت‌های status و modif_dtime برای مرتب کردن دادها استفاده شده است:
 
 	$pag->configure($list_display, 
 	                array('content'), 
 	                array('status', 'modif_dtime')
 	               );
 
-## Paginator configuration
+# تنظیم‌های صفحه بندی
 
-### items = null
+
+## items = null
 
 An ArrayObject of items to list. Only used if not using directly a model.
 
-### item_extra_props = array()
+## item_extra_props = array()
 
 Extra property/value for the items.
 
 This can be practical if you want some values for the edit action which are not available in the model data.
 
-### forced_where = null
+## forced_where = null
 
 The forced where clause on top of the search.
 
-### model_view = null
+## model_view = null
 
 View of the model to be used.
 
-### items_per_page = 50
+## items_per_page = 50
 
 Maximum number of items per page.
 
-### no_results_text = 'No items found'
+## no_results_text = 'No items found'
 
 Text to display when no results are found.
 
-### sort_fields = array()
+## sort_fields = array()
 
 Which fields of the model can be used to sort the dataset. To be useable these fields must be in the $list_display so that the sort links can be shown for the user to click on them and sort the list.
 
-### sort_order = array()
+## sort_order = array()
 
 Current sort order. An array with first value the field and second the order of the sort.
 
-### edit_action = ''
+## edit_action = ''
 
 Edit action, if you set it, the first column data will be linked to to view you give here.
 
 You can give a simple view like : YourApp_Views::editItem, the id of the item will be given as argument to the view. You can also decide what arguments you pass to the view, for example: array('YourApp_Views::edit-normal', 'id') will the view YourApp_Views::edit-normal with the id as first argument.
 
-### action = ''
+## action = ''
 
 Action for search/next/previous. The action is either the simple Model::views like YourApp_Views::listItems or you can give a fully defined view like array('YourApp_Views::listItems', array('value1', 'value2'))
 
-### id = ''
+## id = ''
 
 Id of the generated table.
 
-### extra = null
+## extra = null
 
 Extra parameters for the modification function call. These parameters are given as third argument to the call back functions when displaying the data.
 
-### summary = ''
+## summary = ''
 
 Summary for the table.
 
-### nb_items = 0
+## nb_items = 0
 
 Total number of items. Available only after the rendering of the paginator.
 
-## In your template
+# استفاده در الگوهای خروجی
 
 To disply the result in your template and if you have associated $pag to the template variable articles:
 
 	{$articles.render}
 
 Yes, not more complicated than that.
+
+
