@@ -32,45 +32,46 @@ class KM_Views_Label {
 			throw new Pluf_Exception_GetMethodSuported ();
 		}
 		/*
-		 * TODO: maso, 1394: پارامترهای جستجو استفاده نشده است.
+		 * maso, 1394: پارامترهای جستجو استفاده نشده است.
 		 * سه پارامتر زیر باید در جستجو استفاده شود، اگر توسط کاربر تعیین شده باشد
 		 * -after
 		 * -before
 		 * -count
 		 */
-		$count = 20;
 		
 		// maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
 		// Paginator to paginate messages
 		$pag = new Pluf_Paginator ( new KM_Label () );
-		$pag->list_filters = array(
-				'user', 'title', 'community'
+		$pag->list_filters = array (
+				'user',
+				'title',
+				'community' 
 		);
-		$pag->setFromRequest($request);
 		$pag->forced_where = new Pluf_SQL ( 'user=%s', array (
 				$request->user->id 
 		) );
+		$pag->action = array (
+				'Label_Views_Label::label' 
+		);
 		$list_display = array (
 				'title' => __ ( 'Message title' ),
 				'description' => __ ( 'description' ),
 				'color' => __ ( 'color' ) 
 		);
 		$search_fields = array (
-				'title', 'description'
+				'title',
+				'description' 
 		);
 		$sort_fields = array (
-				'id', 'creation_date' 
+				'id',
+				'title',
+				'description',
+				'color',
+				'creation_date',
+				'modif_dtime' 
 		);
 		$pag->configure ( $list_display, $search_fields, $sort_fields );
-		$pag->action = array (
-				'Label_Views_Label::label' 
-		);
-		$pag->items_per_page = $count;
-		$pag->no_results_text = __ ( 'Label queue is empty.' );
-		$pag->sort_order = array (
-				'creation_dtime',
-				'DESC' 
-		);
+		$pag->items_per_page = $this->getListCount ( $request );
 		$pag->setFromRequest ( $request );
 		return new Pluf_HTTP_Response_Json ( $pag->render_object () );
 	}
@@ -149,5 +150,24 @@ class KM_Views_Label {
 		}
 		
 		throw new Pluf_Exception_NotImplemented ();
+	}
+	
+	/**
+	 * تعداد گزینه‌های یک لیست را تعیین می‌کند.
+	 *
+	 * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
+	 *
+	 * @param unknown $request        	
+	 * @return number
+	 */
+	private function getListCount($request) {
+		$count = 20;
+		if (array_key_exists ( '_px_count', $request->GET )) {
+			$count = $request->GET ['_px_count'];
+			if ($count > 20) {
+				$count = 20;
+			}
+		}
+		return $count;
 	}
 }
