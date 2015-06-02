@@ -65,21 +65,27 @@ This would be done the following way:
 	  'verbose' => __('in categories'),
 	 ),
 
-### Automatically available methods
+### متدهایی که خودکار موجود است
 
-As the both a Category has many Article(s) and an Article many Category(s) only list() methods are available. These methods are:
+از انجا که رابطه چند به چند هر دو طرف یک فهرست از موجودیت‌های مقابل را دارند، در اینجا هر دو طرف رابطه فراخوانی دسترسی به فهرست را دارند.
+
+
+رابطه چند به چند در یکی از طرف‌های رابطه تعریف می‌شود. از این رو برای نماگذاری از دو روش جداگانه استفاده می‌شود. در جایی که رابطه تعریف شده است نام رابطه با حروف کوچک برای تعیین متد فهرست کردن استفاده می‌شود.
 
 	$article->get_categories_list();
+
+در مدلی که رابطه در آن تعریف نشده است، نام فراخوانی با حروف کوچک مدل داده‌ای تعیین می‌شود. همانند رابطه‌ای که در بالا آورده شده در اینجا نیز می‌توان با استفاده از خصوصیت relate_name نام رابطه را تغییر داد. برای نمونه در نمونه‌ای که در بالا آورده شده دسته بندی در مقاله تعریف شده از این رو دست یابی به فهرست دسته‌ها به صورت زیر خواهد بود:
+
 	$category->get_article_list();
 
-The name of the method on the article is get_categories_list() with a plural form for category because this is the name of the field. On the category it is get_article_list() with a singular for article because this is the lowercase name of the Article model. As for the many to one relation, it is possible to change this name by using the relate_name parameter.
-
-If you want to associate an article to a category you have the following methods available:
+برای ایجاد رابطه میان این دو مدل داده‌ای در رابطه نیز فراخوانی‌هایی در نظر گرفته شده است که در این نمونه این فراخوانی‌ها به صورت زیر خواهد بود:
 
 	$article->setAssoc($category);
 	$category->setAssoc($article);
 
-You can see that a many to many relation is symetric. To remove an association you simply use the delAssoc() method:
+البته به این نکته توجه داشته باشید که رابطه یک رابطه دو طرفه است بنابر این استفاده از هریک از متدهای بالا معادل با یکدیگر در نظر گرفته خواهد شد.
+
+حذف یک رابطه نیز با استفاده از فراخوانی‌هایی انجام می‌شود که به صورت خودکار به مدلهای داده‌ای اضافه می‌شود. در نمونه‌ای که در اینجا آورده شده است این کار با استفاده از فراخوانی‌های زیر انجام می‌شود.
 
 	$article->delAssoc($category);
 	$category->delAssoc($article);
