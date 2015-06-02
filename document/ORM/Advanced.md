@@ -1,14 +1,14 @@
-# Advanced Use of the Pluf ORM
+# کاربردهای پیشرفیته
 
-Before going further with the advanced usage of the ORM, you need first to have a good understanding of the ORM as described in the basic usage.
+پیش از اینکه به بررسی مباحث پیش رفته در این زمینه بپردازید بهتر است که تمام مباحث مقدماتی آن را به صورت کامل بررسی کرده و به آنها مسلط شوید.
 
-# Creating Dynamic Views
+# ایحاد نمایش پویا
 
-The Pluf ORM is really simple to keep it fast, this means it will not perform table join for you. You can create join through views. They are a bit like table views at the RDBMS level but are implemented at the ORM level.
+روش‌هایی که برای ایجاد نمایش در ایجاد استفاده شده بسیار ساده است و هدف اصلی در این سادگی ایجاد یک نمایش سریع است که در سطح مدل انجام می‌شود. به این ترتیب نه تنها در سطح مدل داده می‌توانید نمایش‌های متفاوتی ایجاد کنید بلکه می‌توانید ترکیب جدولهای داده را نیز تعریف کنید.
 
-We are going to work with a small todo list with todo items belonging to a lists to illustrate the system. Each todo item belong to one list, so we are going to create a view to join the todo item with the list.
+در اینجا تلاش می‌کنیم با استفاده از یک نمونه ساده روش‌های به کار گرفته شده برای تعریف نمایش را بررسی کنیم.
 
-Here are the two base models:
+در اینجا از دو مدل ساده استفاده می‌کنیم که یکی فهرست و دیگری گزینه‌های موجود در فهرست است.
 
 	class Todo_Item extends Pluf_Model
 	{
@@ -44,22 +44,6 @@ Here are the two base models:
 	                                  ),
 	                            );
 	        $this->_a['idx'] = array();
-	        $this->_a['views'] = array(
-	            // The name of the view is 'with_list'
-	            'with_list' => array(
-	            // We are doing a left join to join the list 
-	            'join' => 'LEFT JOIN '.$this->con->pfx.'todo_lists ON list='.$this->con->pfx.'todo_lists.id',
-	            // We want to select the name of the list from the list table
-	            // the get select will select all the fields of the current
-	            // model and we add the name
-	            'select' => $this->getSelect().', name',
-	            // we are going to add the name of the list as property of
-	            // the model when listing with this view. These will be 
-	            // read only properties. It will be available as list_name
-	            // property.
-	            'props' => array('name' => 'list_name'),
-	                         ));
-	
 	    }
 	}
 
@@ -88,11 +72,32 @@ Here are the two base models:
 	    }
 	}
 
-To use this view, you can simply select all the items.
+
+حال فرض کنید که می‌خواهیم یک نمایش جدید به مدل داده‌ای گزینه‌های یک فهرست اضافه کنیم. برای این کار کافی است که در متد مقداردهی کد زیر را اضافه کنید:
+
+	$this->_a['views'] = array(
+    	'with_list' => array(
+	    	'join' => 'LEFT JOIN '.$this->con->pfx.'todo_lists ON list='.$this->con->pfx.'todo_lists.id',
+	    	'select' => $this->getSelect().', name',
+	    	'props' => array('name' => 'list_name'),
+		)
+    );
+                 
+همانگونه که قابل مشاهده است تمام نمایش‌های یک مدل داده‌ای به صورت یک آرایه تعرفی می‌شوند که اندیس آرایه نام نمایش در نظر گرفته می‌شود. در نمونه‌ای که در بالا آورده شده است تنها یک نمایش ایجاد شده که نام آن with_list است.
+
+هر نمایش دسته‌ای از خصوصیت‌ها دارد که هر یک امکاناتی را برای نمایش فراهم می‌کنند. اولین خصوصیت join است که با استفاده از آن می‌توانید جدولهای متفاوت را با یکدیگر ترکیب کنید در اینجا گزینه‌ها با لیست مربوطه ترکیب شده اند.
+
+یکی دیگر از خصوصیت‌هایی که برای نمایش در نظر گرفته شده است select است که در آن تعیین می‌شود چه خصوصیت‌هایی باید به عنوان نتیجه در نظر گرفته شود. در این نمونه علاوه بر تمامی خصوصیت‌های یک گزینه از یک فهرست، نام فهرست نیز انتخاب شده است.
+
+خصوصیت دیگر props‌ است که تعیین می‌کند داده‌هایی که با استفاده از این نمایش انتخاب شده‌اند با چه نامی در کلاس‌های معادل ایجاد شوند. در اینجا نام انتخاب شده از جدول به صورت یک فیلد جدید به نام list_name به مدل داده‌ای اضافه شده است. 
+
+بنابر این با استفاده از این نمایش می‌توان فهرست تمام گزینه‌ها را به همراه نام فهرست معادل آنها را داشت.
+
+استفاده از یک نمایش جدید ایجاد شده نیز ساده است. برای نمونه فراخوانی نمایشی که در بالا ایجاد شده است به صورت زیر خواهد بود:
 
 	$items = Pluf::factory('Todo_Item')->getList(array('view' => 'with_list'));
 	foreach ($items as $item) {
 	    print $item->item.' in '.$item->list_name."\n";
 	}
 
-In that case you will have only one SQL query.
+همانگونه که قابل مشاهده است در این حالت تنها یک SQL Query اجرا می‌شود که منجر به افزایش کارایی خواهد شد.
