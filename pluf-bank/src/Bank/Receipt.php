@@ -24,48 +24,45 @@ class Bank_Receipt extends Pluf_Model {
 	 * @see Pluf_Model::init()
 	 */
 	function init() {
-		$this->_a ['table'] = 'hm_payment';
-		$this->_a ['model'] = 'HM_Models_Receipt';
-		$this->_model = 'HM_Models_Receipt';
+		$this->_a ['table'] = 'bank_receipt';
+		$this->_a ['model'] = 'Bank_Receipt';
+		$this->_model = 'Bank_Receipt';
 		$this->_a ['cols'] = array (
-				'sequence' => array (
+				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => true 
+						'blank' => true,
 						'verbose' => __ ( 'unique and no repreducable id fro reception' ) 
 				),
 				'amount' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'unique' => false 
+						'unique' => false,
 						'verbose' => __ ( 'amount of reception' ) 
 				),
 				'title' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 50 
+						'size' => 50,
 						'verbose' => __ ( 'title of reception' ) 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
-						'size' => 200 
+						'size' => 200,
 						'verbose' => __ ( 'description of reception' ) 
 				),
-				
 				'trans_id' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
-						'size' => 200 
+						'size' => 200,
 						'verbose' => __ ( 'successfull transaction id from bank' ) 
 				),
 				'verification' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
-						'size' => 200 
+						'size' => 200,
 						'verbose' => __ ( 'verification of the receipt from the bank' ) 
 				),
-				
-				
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => true,
@@ -77,15 +74,7 @@ class Bank_Receipt extends Pluf_Model {
 						'verbose' => __ ( 'modification date' ) 
 				) 
 		);
-		$this->_a ['views'] = array (
-				'with_apartment' => array (
-						'join' => 'LEFT JOIN ' . $this->_con->pfx . 'hm_part ON part=' . $this->_con->pfx . 'hm_part.id',
-						'select' => $this->getSelect () . ',' . $this->_con->pfx . 'hm_part.apartment as apartment',
-						'props' => array (
-								'apartment' => 'apartment' 
-						) 
-				) 
-		);
+		$this->_a ['views'] = array ();
 	}
 	
 	/**
@@ -100,7 +89,6 @@ class Bank_Receipt extends Pluf_Model {
 	function preSave($create = false) {
 		if ($this->id == '') {
 			$this->creation_dtime = gmdate ( 'Y-m-d H:i:s' );
-			$this->access_count = 0;
 		}
 		$this->modif_dtime = gmdate ( 'Y-m-d H:i:s' );
 	}
