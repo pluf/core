@@ -2,16 +2,11 @@
 Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
 
 /**
- * فرم به روز رسانی آپارتمان
- *
- * این فرم تمام داده‌های یک آپارتمان را دریافت کرده و آپارتمان معادل را
- * به روز می‌کند. در صورتی که خطایی در این سطح رخ دهد به صورت استثنا صادر
- * خواهد شد
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class HM_Form_Apartment extends Pluf_Form {
+class SaaS_Form_Application extends Pluf_Form {
 	var $apartment = null;
 	public function initFields($extra = array()) {
 		$this->apartment = $extra ['user_profile'];

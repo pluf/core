@@ -1,12 +1,11 @@
 <?php
 /**
- * مشخص نبودن دامنه فعالیت را تعیین می‌کند
  * 
  * @see HM_Middleware_Apartment
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class HM_Exception_ApartmentNotFound extends Pluf_Exception {
+class SaaS_Exception_ApplicationNotFound extends Pluf_Exception {
 	
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.
