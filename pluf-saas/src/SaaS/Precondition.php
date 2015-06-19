@@ -18,6 +18,9 @@ class SaaS_Precondition {
 	 * @return mixed
 	 */
 	static public function baseAccess($request) {
+		if($request->application == null){
+			return new Pluf_HTTP_Response_Forbidden ( $request );
+		}
 		return true;
 	}
 	

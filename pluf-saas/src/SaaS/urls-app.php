@@ -1,11 +1,5 @@
 <?php
 return array (
-		array (//  صفحه اصلی سیستم
-				'regex' => '#^/$#',
-				'base' => $base,
-				'model' => 'SaaS_Views',
-				'method' => 'index' 
-		), 
 		array (// صفحه اصلی نرم‌افزار
 				'regex' => '#^/(\d+)$#',
 				'base' => $base,
@@ -16,7 +10,7 @@ return array (
 				'regex' => '#^/(\d+)/page/(.+)$#',
 				'base' => $base,
 				'model' => 'SaaS_Views',
-				'method' => 'page' 
+				'method' => 'applicationPage' 
 		), 
 		array (// نرم‌افزارهای که تنها اعضا می‌توانند استفاده کنند
 				'regex' => '#^/(\d+)/member/(.+)$#',
@@ -35,5 +29,17 @@ return array (
 				'base' => $base,
 				'model' => 'SaaS_Views',
 				'method' => 'admin' 
-		), 
+		),
+		array (//  صفحه اصلی سیستم
+				'regex' => '#^/$#',
+				'base' => $base,
+				'model' => 'SaaS_Views',
+				'method' => 'index'
+		),
+		array (// سایر صفحه‌ها
+				'regex' => '#^/general/(.+)$#',
+				'base' => $base,
+				'model' => 'SaaS_Views',
+				'method' => 'page'
+		),
 );

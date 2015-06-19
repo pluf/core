@@ -28,6 +28,30 @@ class SaaS_Views extends Pluf_Views {
 	}
 	
 	/**
+	 * برگه‌هایی که همه به آن دسترسی دارند
+	 *
+	 * /page/{name}
+	 *
+	 * @param unknown $request        	
+	 * @param unknown $match        	
+	 * @return Pluf_HTTP_Response
+	 */
+	public function page($request, $match) {
+		$params = array ();
+		// TODO: maso, 1394: اضافه کردن تنظیم‌های
+		return Pluf_Shortcuts_RenderToResponse ( '/general/' . $match [1], $params, $request );
+	}
+	
+	/**
+	 * پیش شرط‌های دسترسی
+	 *
+	 * @var unknown
+	 */
+	public $application_precond = array (
+			'SaaS_Precondition::baseAccess' 
+	);
+	
+	/**
 	 * @breif برگه اصلی هر نرم‌افزار
 	 *
 	 * @param unknown_type $request        	
@@ -45,7 +69,7 @@ class SaaS_Views extends Pluf_Views {
 	 *
 	 * @var unknown
 	 */
-	public $page_precond = array (
+	public $applicationPage_precond = array (
 			'SaaS_Precondition::baseAccess' 
 	);
 	
@@ -60,7 +84,7 @@ class SaaS_Views extends Pluf_Views {
 	 * @param unknown $match        	
 	 * @return Pluf_HTTP_Response
 	 */
-	public function page($request, $match) {
+	public function applicationPage($request, $match) {
 		$params = array ();
 		$params ['application'] = $request->application;
 		// TODO: maso, 1394: اضافه کردن تنظیم‌های
