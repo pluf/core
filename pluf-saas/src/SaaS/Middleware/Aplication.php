@@ -1,7 +1,5 @@
 <?php
 Pluf::loadFunction ( 'Pluf_Shortcuts_GetObjectOr404' );
-Pluf::loadFunction ( 'HM_Shortcuts_apartmentFactory' );
-Pluf::loadFunction ( 'HM_Shortcuts_partFactory' );
 
 /**
  * میان افزار نرم‌افزار

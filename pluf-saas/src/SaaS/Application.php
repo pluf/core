@@ -79,4 +79,17 @@ class SaaS_Application extends Pluf_Model {
 	function postSave($create = false) {
 		//
 	}
+	
+	
+	/**
+	 * دسترسی به تنظیم های عمومی 
+	 * 
+	 * @param unknown $name
+	 * @param string $default
+	 * @return string
+	 */
+	public function getProperty($name, $default = null){
+		// XXX: maso, 1394: دسترسی به تنظیم‌های عمومی
+		return $default;
+	}
 }
