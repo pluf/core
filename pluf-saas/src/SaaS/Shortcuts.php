@@ -14,4 +14,15 @@ function SaaS_Shortcuts_aplicationFactory($object) {
 	return $object;
 }
 
+/**
+ * 
+ * @param unknown $object
+ * @return SaaS_Configuration|unknown
+ */
+function SaaS_Shortcuts_configurationFactory($object) {
+	if ($object == null || ! isset ( $object ))
+		return new SaaS_Configuration();
+	return $object;
+}
+
 

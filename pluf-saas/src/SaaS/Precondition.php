@@ -17,9 +17,9 @@ class SaaS_Precondition {
 	 *        	Pluf_HTTP_Request
 	 * @return mixed
 	 */
-	static public function baseAccess($request) {
-		if($request->application == null){
-			return new Pluf_HTTP_Response_Forbidden ( $request );
+	static public function baseAccess($request, $app = null) {
+		if ($request->application == null && $app === null) {
+			throw new Pluf_Exception_PermissionDenied ();
 		}
 		return true;
 	}
@@ -31,15 +31,21 @@ class SaaS_Precondition {
 	 *        	Pluf_HTTP_Request
 	 * @return mixed
 	 */
-	static public function applicationOwner($request) {
-		$res = Pluf_Precondition::loginRequired ( $request );
+	static public function applicationOwner($request, $app = null) {
+		$res = Pluf_Precondition::loginRequired ( $request, $app );
 		if (true !== $res) {
 			return $res;
 		}
-		if ($request->user->hasPerm ( 'SaaS.software-owner', $request->application )) {
+		if ($app === null) {
+			$app = $request->application;
+		}
+		if ($request->user->administrator) {
 			return true;
 		}
-		return new Pluf_HTTP_Response_Forbidden ( $request );
+		if ($request->user->hasPerm ( 'SaaS.software-owner', $app )) {
+			return true;
+		}
+		throw new Pluf_Exception_PermissionDenied ();
 	}
 	
 	/**
@@ -49,14 +55,20 @@ class SaaS_Precondition {
 	 *        	Pluf_HTTP_Request
 	 * @return mixed
 	 */
-	static public function applicationMemberOrOwner($request) {
+	static public function applicationMemberOrOwner($request, $app = null) {
 		$res = Pluf_Precondition::loginRequired ( $request );
 		if (true !== $res) {
 			return $res;
 		}
-		if ($request->user->hasPerm ( 'SaaS.software-owner', $request->application ) or $request->user->hasPerm ( 'SaaS.software-member', $request->application )) {
+		if ($app === null) {
+			$app = $request->application;
+		}
+		if ($request->user->administrator) {
 			return true;
 		}
-		return new Pluf_HTTP_Response_Forbidden ( $request );
+		if ($request->user->hasPerm ( 'SaaS.software-owner', $app ) || $request->user->hasPerm ( 'SaaS.software-member', $app )) {
+			return true;
+		}
+		throw new Pluf_Exception_PermissionDenied ();
 	}
 }
