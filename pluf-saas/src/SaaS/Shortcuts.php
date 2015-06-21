@@ -3,14 +3,14 @@
 Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
 
 /**
- * یک ساختار داده‌ای برای یک اپارتمان ایجاد می‌کند
+ * یک ساختار داده‌ای برای یک نرم‌افزار ایجاد می‌کند
  * 
  * @param unknown $object
- * @return HM_Models_Apartment|unknown
+ * @return SaaS_Application|unknown
  */
-function SaaS_Shortcuts_apartmentFactory($object) {
+function SaaS_Shortcuts_aplicationFactory($object) {
 	if ($object == null || ! isset ( $object ))
-		return new HM_Models_Apartment();
+		return new SaaS_Application();
 	return $object;
 }
 

@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
+Pluf::loadFunction ( 'SaaS_Shortcuts_aplicationFactory' );
 
 /**
  *
@@ -7,7 +8,7 @@ Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
  *        
  */
 class SaaS_Form_Application extends Pluf_Form {
-	var $apartment = null;
+	var $application = null;
 	public function initFields($extra = array()) {
 		$this->apartment = $extra ['user_profile'];
 		
