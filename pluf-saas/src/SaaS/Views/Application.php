@@ -13,7 +13,7 @@ class SaaS_Views_Application extends Pluf_Views {
 	
 	/**
 	 * پیش شرط‌های دسترسی به فهرست نرم‌افزارها
-	 * 
+	 *
 	 * @var unknown
 	 */
 	public $applications_precond = array ();
@@ -36,7 +36,7 @@ class SaaS_Views_Application extends Pluf_Views {
 			throw new Pluf_Exception_GetMethodSuported ();
 		}
 		// maso, 1394: گرفتن فهرست مناسبی از آپارتمان‌ها
-		$pag = new Pluf_Paginator ( new SaaS_Application() );
+		$pag = new Pluf_Paginator ( new SaaS_Application () );
 		$list_display = array (
 				'id' => __ ( 'application id' ),
 				'title' => __ ( 'title' ),
@@ -58,4 +58,22 @@ class SaaS_Views_Application extends Pluf_Views {
 		return new Pluf_HTTP_Response_Json ( $pag->render_object () );
 	}
 	
+	/**
+	 *
+	 * @var unknown
+	 */
+	public $members_precond = array (
+			'Pluf_Precondition::loginRequired'
+	);
+	
+	/**
+	 *
+	 * @param unknown $request        	
+	 * @param unknown $match        	
+	 */
+	public function members($request, $match) {
+		$application_id = $match[1];
+		$application = Pluf_Shortcuts_GetObjectOr404 ( 'SaaS_Application', $application_id );
+		return new Pluf_HTTP_Response_Json ( $application->getMembershipData('txt') );
+	}
 }

@@ -1,9 +1,15 @@
 <?php
 return array (
-		array (//  صفحه اصلی سیستم
+		array (//  فهرستی از تمام نرم‌افزارهای موجود
 				'regex' => '#^/app/list$#',
 				'base' => $base,
-				'model' => 'Saas_Views_Application',
+				'model' => 'SaaS_Views_Application',
 				'method' => 'applications' 
+		), 
+		array (//  فهرستی از تمام اعضا
+				'regex' => '#^/app/(\d+)/member/list$#',
+				'base' => $base,
+				'model' => 'SaaS_Views_Application',
+				'method' => 'members' 
 		), 
 );

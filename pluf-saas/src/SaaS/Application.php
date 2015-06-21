@@ -80,16 +80,100 @@ class SaaS_Application extends Pluf_Model {
 		//
 	}
 	
-	
 	/**
-	 * دسترسی به تنظیم های عمومی 
-	 * 
-	 * @param unknown $name
-	 * @param string $default
+	 * دسترسی به تنظیم های عمومی
+	 *
+	 * @param unknown $name        	
+	 * @param string $default        	
 	 * @return string
 	 */
-	public function getProperty($name, $default = null){
+	public function getProperty($name, $default = null) {
 		// XXX: maso, 1394: دسترسی به تنظیم‌های عمومی
 		return $default;
+	}
+	
+	/**
+	 * داده‌های مربوط به اعضای یک نرم‌افزار را تعیین می‌کند
+	 *
+	 * نتیجه این فراخوانی یک آرایه با سه کلید است: 'members'، 'owners' و 'authorized'.
+	 *
+	 * این ارائه بر اساس داده‌های که در جدول اجازها به وجود آمده است تعیینن می‌شوند.
+	 * به این نکته توجه داشته باشید در صورتی که کاربر مدیر کلی سیستم باشد
+	 * دسترسی‌های کلی به تمام نرم‌افزارها را دارد اما در این فهرست آورده نمی‌شود.
+	 *
+	 * @param
+	 *        	string Format ('objects'), 'string'.
+	 * @return mixed Array of Pluf_User or newline separated list of logins.
+	 */
+	public function getMembershipData($fmt = 'objects') {
+		$mperm = Pluf_Permission::getFromString ( 'SaaS.software-member' );
+		$operm = Pluf_Permission::getFromString ( 'SaaS.software-owner' );
+		$aperm = Pluf_Permission::getFromString ( 'SaaS.software-authorized-user' );
+		$grow = new Pluf_RowPermission ();
+		$db = & Pluf::db ();
+		$false = Pluf_DB_BooleanToDb ( false, $db );
+		$sql = new Pluf_SQL ( 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' . $false, array (
+				'SaaS_Application',
+				$this->id,
+				'Pluf_User',
+				$operm->id 
+		) );
+		$owners = new Pluf_Template_ContextVars ( array () );
+		foreach ( $grow->getList ( array (
+				'filter' => $sql->gen () 
+		) ) as $row ) {
+			if ($fmt == 'objects') {
+				$owners [] = Pluf::factory ( 'Pluf_User', $row->owner_id );
+			} else {
+				$owners [] = Pluf::factory ( 'Pluf_User', $row->owner_id )->login;
+			}
+		}
+		$sql = new Pluf_SQL ( 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' . $false, array (
+				'SaaS_Application',
+				$this->id,
+				'Pluf_User',
+				$mperm->id 
+		) );
+		$members = new Pluf_Template_ContextVars ( array () );
+		foreach ( $grow->getList ( array (
+				'filter' => $sql->gen () 
+		) ) as $row ) {
+			if ($fmt == 'objects') {
+				$members [] = Pluf::factory ( 'Pluf_User', $row->owner_id );
+			} else {
+				$members [] = Pluf::factory ( 'Pluf_User', $row->owner_id )->login;
+			}
+		}
+		$authorized = new Pluf_Template_ContextVars ( array () );
+		if ($aperm != false) {
+			$sql = new Pluf_SQL ( 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' . $false, array (
+					'SaaS_Application',
+					$this->id,
+					'Pluf_User',
+					$aperm->id 
+			) );
+			foreach ( $grow->getList ( array (
+					'filter' => $sql->gen () 
+			) ) as $row ) {
+				if ($fmt == 'objects') {
+					$authorized [] = Pluf::factory ( 'Pluf_User', $row->owner_id );
+				} else {
+					$authorized [] = Pluf::factory ( 'Pluf_User', $row->owner_id )->login;
+				}
+			}
+		}
+		if ($fmt == 'objects') {
+			return new Pluf_Template_ContextVars ( array (
+					'members' => $members,
+					'owners' => $owners,
+					'authorized' => $authorized 
+			) );
+		} else {
+			return array (
+					'members' => $members,
+					'owners' => $owners,
+					'authorized' => $authorized 
+			);
+		}
 	}
 }
