@@ -31,7 +31,7 @@
 
 فراخوانی زیر برای این کار در نظر گرفته شده است:
 
-	/saas/app/{application id}/memeber/list
+	/app/{application id}/memeber/list
 
 یک نمونه خروجی این فراخوانی در زیر آورده شده است.
 

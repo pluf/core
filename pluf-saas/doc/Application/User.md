@@ -8,50 +8,24 @@
 - member
 - owner
 
-	templates/index.html
 
-## صحفه‌های عمومی 
-
-برخی از صفحه توسط همه در دسترس است و جزئی از نرم‌افزار نیست. برای نمونه صفحه ثبت نام یک نرم‌افزار و یا راهنمای کاربری صفحه‌هایی عمومی هستند که در اختیار همه قرار می‌گیرند. این قسمت از نرم‌افزارها در مسیر زیر ایجاد می‌شوند
-
-	templates/general
-
-مسیر دسترسی به این صفحه‌ها نیز به صورت زیر است:
-
-	/general/{page name}
-
-
-
-## page
+## صفحه اصلی
 
 همه به آن دسترسی دارند. 
-
-در مسیر زیر قرار می‌گیرند:
-
-	templates/page
 
 نرم‌افزار پیش فرض زیر نیز در نظر گرفته شده:
 
 	templates/application.html
 
-سایر صفحه‌هایی که مربوط به سایت اصلی است و هر کسی می‌تواند آنها را مشاهده کند به صورت زیر ایجاد می‌شوند
+## page
 
-	templates/{page name}
-
-این صفحه‌ها با آدرس زیر قابل دسترسی هستند
-
-	/page/{page name}
-
-
-## member
-
-	templates/member
-
-## owner
-
-	templates/owner
+	templates/application/{page name}
 
 ## admin
 
-	templates/admin
+	templates/application/member/{page name}
+
+## owner
+
+	templates/application/owner/{page name}
 

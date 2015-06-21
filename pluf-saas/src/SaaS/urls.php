@@ -24,5 +24,4 @@ return array(
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'create'
         )
-)
-;
+);

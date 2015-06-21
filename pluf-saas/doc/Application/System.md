@@ -23,11 +23,11 @@
 
 این نرم‌افزارهای عمومی در مسیر زیر ایجاد می‌شوند:
 
-	templates/general/{page name}
+	templates/page/{page name}
 
 دسترسی به این نرم‌افزارها نیز با مسیر زیر است:
 
-	/general/{page name}
+	/page/{page name}
 
 این صفحه‌ها برای هر فردی قابل دسترسی است.
 
