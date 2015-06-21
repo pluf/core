@@ -7,10 +7,6 @@
  */
 function User_Migrations_Install_setup($params = '') {
 // 	$models = array (
-// 			'HM_Models_WikiPage',
-// 			'HM_Models_Apartment',
-// 			'HM_Models_Message',
-// 			'HM_Models_Part'
 // 	);
 // 	$db = Pluf::db ();
 // 	$schema = new Pluf_DB_Schema ( $db );
@@ -30,18 +26,6 @@ function User_Migrations_Install_setup($params = '') {
 // 	$users->administrator = true;
 // 	$users->staff = true;
 // 	$users->create ();
-	
-// 	$apartment = new HM_Models_Apartment();
-// 	$apartment->user = $users;
-// 	$apartment->title = 'Admin demo apartment';
-// 	$apartment->address = '';
-// 	$apartment->create();
-	
-// 	$message = new HM_Models_Message();
-// 	$message->title = 'Welcome to Apartment manager';
-// 	$message->message = 'This is the welcome message from DPQ';
-// 	$message->apartment = $apartment;
-// 	$message->create();
 }
 
 /**
