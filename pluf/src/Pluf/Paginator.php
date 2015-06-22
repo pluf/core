@@ -434,6 +434,10 @@ class Pluf_Paginator {
 		} else {
 			$items = $this->items;
 		}
+		
+		$items['current_page'] = $this->current_page;
+		$items['items_per_page'] = $this->items_per_page;
+		$items['page_number'] = $this->page_number;
 		return $items;
 	}
 	

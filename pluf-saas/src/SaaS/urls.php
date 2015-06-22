@@ -6,6 +6,12 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'currentApplication'
         ),
+        array( // اطلاعات نرم‌افزار مورد نظر
+                'regex' => '#^/app/(\d+)$#',
+                'base' => $base,
+                'model' => 'SaaS_Views_Application',
+                'method' => 'application'
+        ),
         array( // فهرستی از تمام نرم‌افزارهای موجود
                 'regex' => '#^/app/list$#',
                 'base' => $base,
