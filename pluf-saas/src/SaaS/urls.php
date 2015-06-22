@@ -1,5 +1,11 @@
 <?php
 return array(
+        array( // اطلاعات نرم‌افزار جاری
+                'regex' => '#^/app$#',
+                'base' => $base,
+                'model' => 'SaaS_Views_Application',
+                'method' => 'currentApplication'
+        ),
         array( // فهرستی از تمام نرم‌افزارهای موجود
                 'regex' => '#^/app/list$#',
                 'base' => $base,

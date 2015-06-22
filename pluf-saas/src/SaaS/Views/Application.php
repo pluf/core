@@ -59,6 +59,24 @@ class SaaS_Views_Application extends Pluf_Views {
 	}
 	
 	/**
+	 * 
+	 * @param unknown $request
+	 * @param unknown $match
+	 * @throws Pluf_Exception_GetMethodSuported
+	 * @throws Pluf_Exception
+	 * @return Pluf_HTTP_Response_Json
+	 */
+	public function currentApplication($request, $match) {
+		if ($request->method != 'GET') {
+		    throw new Pluf_Exception_GetMethodSuported ();
+		}
+		if(isset($request->application)){
+			return new Pluf_HTTP_Response_Json ( $request->application );
+		}
+		throw new Pluf_Exception("Application is not set!");
+	}
+	
+	/**
 	 *
 	 * @var unknown
 	 */
