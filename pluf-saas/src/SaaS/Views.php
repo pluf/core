@@ -65,7 +65,6 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         $params['application'] = $request->application;
-        $request->session->setData("application", $request->application->id);
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
         return Pluf_Shortcuts_RenderToResponse('application.html', $params, 
                 $request);
