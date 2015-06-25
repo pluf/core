@@ -112,10 +112,50 @@ Total number of items. Available only after the rendering of the paginator.
 
 # استفاده در الگوهای خروجی
 
-To disply the result in your template and if you have associated $pag to the template variable articles:
+داده‌های که با استفاده از صفحه بندی ایجاد می‌شود را می‌توان به دو مدل استفاد کرد که عبارتند از:
 
-	{$articles.render}
+- فهرست اشیا
+- ارایه خصوصیت‌ها
 
-Yes, not more complicated than that.
+در فهرست اشیا تمام خصوصیت‌های یک موجودیت ارسال می‌شود. برای تولید این نوع خروجی از فراخوانی زیر استفاده می‌شود.
 
+	$paginator->render_object();
 
+یک نمونه از خروجی این فراخوانی در زیر آورده شده است:
+
+	{
+	    "0": {
+	        "id": 1,
+	        "receipts": "",
+	        "verified": false,
+	        "deleted": false,
+	        "part": 1,
+	        "amount": 1000,
+	        "title": "example of payment",
+	        "description": "",
+	        "creation_dtime": "2015-06-25 00:52:23",
+	        "modif_dtime": "2015-06-25 00:52:23"
+	    },
+	    "counts": 1,
+	    "current_page": 1,
+	    "items_per_page": 20,
+	    "page_number": 1
+	}
+
+در مدل ارایه خصوصیت‌ها، تمام خصوصیت‌های صفحه بر اساس تنظیم‌های انجام شده فیلتر شده و در نهایت یک آرایه از خصوصیت‌ها به عنوان خروجی ایجاد می‌شود. این خروجی با روش زیر تولید می‌شود:
+
+	$paginator->render_array();
+
+یک نمونه از خروجی این فراخوانی در زیر آورده شده است:
+
+	[
+	    {
+	        "id": 1,
+	        "title": "example of payment",
+	        "amount": 1000,
+	        "creation_dtime": "2015-06-25 00:52:23",
+	        "modif_dtime": "2015-06-25 00:52:23"
+	    }
+	]
+
+دو نمونه‌ای که در بالا آورده شده است دقیقا خروجی یک صفحه بندی هستند که در اولی تمام اشیا به عنوان خروجی در نظر گرفته شده است در حالی که در نمونه دوم تنها خصوصیت‌های محدودی از آن در خرجی قرار گرفته است.
