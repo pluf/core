@@ -49,7 +49,7 @@ class SaaS_Middleware_Aplication
             $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
                     $application_id);
             $request->application = $application;
-            $request->session->getData('application', $application->id);
+            $request->session->setData('application', $application->id);
         } catch (Pluf_Exception $ex) {
             $request->application = null;
         }
