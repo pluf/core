@@ -178,6 +178,30 @@ class SaaS_Views extends Pluf_Views
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
         return Pluf_Shortcuts_RenderToResponse(
-                'application/admin/' . $match[1], $params, $request);
+                'admin/' . $match[1], $params, $request);
+    }
+
+    /**
+     * پیش شرط‌های دسترسی
+     *
+     * @var unknown
+     */
+    public $user_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    /**
+     * نرم افزارهای مدیریت را تعیین می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response
+     */
+    public function user ($request, $match)
+    {
+        $params = array();
+        // TODO: maso, 1394: اضافه کردن تنظیم‌های
+        return Pluf_Shortcuts_RenderToResponse(
+                'user/' . $match[1], $params, $request);
     }
 }

@@ -37,6 +37,12 @@ return array (
 				'method' => 'admin' 
 		),
 		array (// سایر صفحه‌ها
+				'regex' => '#^/user/(.+)$#',
+				'base' => $base,
+				'model' => 'SaaS_Views',
+				'method' => 'user'
+		),
+		array (// سایر صفحه‌ها
 				'regex' => '#^/page/(.+)$#',
 				'base' => $base,
 				'model' => 'SaaS_Views',

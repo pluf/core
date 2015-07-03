@@ -17,9 +17,7 @@ class User_Views_User {
 	 *
 	 * @var unknown
 	 */
-	public $account_precond = array (
-			'Pluf_Precondition::loginRequired' 
-	);
+	public $account_precond = array ();
 	
 	/**
 	 * به روز رسانی و مدیریت اطلاعات خود کاربر
@@ -31,6 +29,7 @@ class User_Views_User {
 		if ($request->method === 'GET') {
 			return User_Shortcuts_UserJsonResponse ( $request->user );
 		}
+		// XXX: maso, check user is logined
 		if ($request->method === 'POST') {
 			// initial page data
 			$extra = array (
