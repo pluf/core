@@ -97,11 +97,20 @@ class SaaS_Views_Application extends Pluf_Views
      */
     public function application ($request, $match)
     {
-        $application_id = $match[1];
         $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $application_id);
+                $match[1]);
         if ($request->method == 'GET') {
             return new Pluf_HTTP_Response_Json($application);
+        }
+        if($request->method == 'POST') {
+            SaaS_Precondition::applicationOwner($request, $application);
+            $params = array(
+                    'application' => $application,
+            );
+            $form = new SaaS_Form_Application(
+                    array_merge($request->POST, $request->FILES), $params);
+            $app = $form->update();
+            return new Pluf_HTTP_Response_Json($app);
         }
         throw new Pluf_Exception_GetMethodSuported();
     }

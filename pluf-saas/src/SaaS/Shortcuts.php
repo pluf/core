@@ -8,7 +8,7 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
  * @param unknown $object
  * @return SaaS_Application|unknown
  */
-function SaaS_Shortcuts_aplicationFactory($object) {
+function SaaS_Shortcuts_applicationFactory($object) {
 	if ($object == null || ! isset ( $object ))
 		return new SaaS_Application();
 	return $object;

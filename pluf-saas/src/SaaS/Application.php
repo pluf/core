@@ -49,6 +49,16 @@ class SaaS_Application extends Pluf_Model
                         'blank' => true,
                         'size' => 250
                 ),
+                'logo' => array(
+                        'type' => 'Pluf_DB_Field_File',
+                        'blank' => true,
+                        'verbose' => __('logo')
+                ),
+                'background' => array(
+                        'type' => 'Pluf_DB_Field_File',
+                        'blank' => true,
+                        'verbose' => __('background image')
+                ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true
@@ -70,8 +80,26 @@ class SaaS_Application extends Pluf_Model
     {
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
+            
+            // $file = Pluf::f('upload_issue_path').'/'.$this->attachment;
+            // $this->filesize = filesize($file);
+            // // remove .dummy
+            // $this->filename = substr(basename($file), 0, -6);
+            // $img_extensions = array('jpeg', 'jpg', 'png', 'gif');
+            // $info = pathinfo($this->filename);
+            // if (!isset($info['extension'])) $info['extension'] = '';
+            // if (in_array(strtolower($info['extension']), $img_extensions)) {
+            // $this->type = 'img';
+            // } else {
+            // $this->type = 'other';
+            // }
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
+    }
+
+    function preDelete ()
+    {
+        // @unlink(Pluf::f('upload_issue_path').'/'.$this->attachment);
     }
 
     /**

@@ -46,6 +46,11 @@ class SaaS_Views_Configuration extends Pluf_Views
                                 SaaS_ConfigurationType::GENERAL
                         )));
     }
+    
+
+    public $configuration_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
 
     /**
      *
@@ -54,9 +59,8 @@ class SaaS_Views_Configuration extends Pluf_Views
      */
     public function configuration ($request, $match)
     {
-        $application_id = $match[1];
         $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $application_id);
+                $match[1]);
         if ($request->user->isAnonymous() ||
                  ! $request->user->hasPerm('SaaS.software-owner', $application)) {
             throw new Pluf_Exception_PermissionDenied();
@@ -70,6 +74,11 @@ class SaaS_Views_Configuration extends Pluf_Views
         return new Pluf_HTTP_Response_Json(
                 $application->getConfiguration(SaaS_ConfigurationType::SYSTEM));
     }
+    
+
+    public $create_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
 
     /**
      *
@@ -80,9 +89,8 @@ class SaaS_Views_Configuration extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        $application_id = $match[1];
         $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $application_id);
+                $match[1]);
         SaaS_Precondition::applicationOwner($request, $application);
         $extra = array(
                 'application' => $application
