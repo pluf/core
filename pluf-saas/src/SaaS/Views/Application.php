@@ -51,7 +51,7 @@ class SaaS_Views_Application extends Pluf_Views
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();
-        $pag->items_per_page = 10;
+        $pag->items_per_page = $this->getListCount($request);
         $pag->no_results_text = __('No apartment is added yet.');
         $pag->sort_order = array(
                 'creation_dtime',
@@ -126,5 +126,27 @@ class SaaS_Views_Application extends Pluf_Views
                 $application_id);
         return new Pluf_HTTP_Response_Json(
                 $application->getMembershipData('txt'));
+    }
+    
+
+
+    /**
+     * تعداد گزینه‌های یک لیست را تعیین می‌کند.
+     *
+     * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
+     *
+     * @param unknown $request
+     * @return number
+     */
+    private function getListCount ($request)
+    {
+        $count = 5;
+        if (array_key_exists('_px_count', $request->GET)) {
+            $count = $request->GET['_px_count'];
+            if ($count > 20) {
+                $count = 20;
+            }
+        }
+        return $count;
     }
 }
