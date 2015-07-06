@@ -96,7 +96,7 @@ class SaaS_Views_Configuration extends Pluf_Views
                 'application' => $application
         );
         $form = new SaaS_Form_Configuration(
-                array_merge($request->GET, $request->FILES), $extra);
+                array_merge($request->POST, $request->FILES), $extra);
         $cuser = $form->save();
         return new Pluf_HTTP_Response_Json($cuser);
     }

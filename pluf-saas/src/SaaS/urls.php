@@ -4,13 +4,22 @@ return array(
                 'regex' => '#^/app$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Application',
-                'method' => 'currentApplication'
+                'method' => 'currentApplication',
+                'http-method' => 'GET'
         ),
         array( // اطلاعات نرم‌افزار مورد نظر
                 'regex' => '#^/app/(\d+)$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Application',
-                'method' => 'application'
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array( // اطلاعات نرم‌افزار مورد نظر
+                'regex' => '#^/app/(\d+)$#',
+                'base' => $base,
+                'model' => 'SaaS_Views_Application',
+                'method' => 'update',
+                'http-method' => 'POST'
         ),
         array( // فهرستی از تمام نرم‌افزارهای موجود
                 'regex' => '#^/app/list$#',
@@ -18,22 +27,24 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'applications'
         ),
+        /* دسترسی‌ها به نرم‌افزار */
         array( // فهرستی از تمام اعضا
                 'regex' => '#^/app/(\d+)/member/list$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Application',
                 'method' => 'members'
         ),
+        /* تنظیم‌ها */
         array( // فهرستی از تنظیم‌ها
                 'regex' => '#^/app/(\d+)/config/list$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'configurations'
         ),
-        array( // ایجاد تنظیم‌ها
-                'regex' => '#^/app/(\d+)/config/create$#',
+        array( // دسترسی به تنظیم‌ها
+                'regex' => '#^/app/(\d+)/config$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Configuration',
-                'method' => 'create'
+                'method' => 'configuration'
         )
 );

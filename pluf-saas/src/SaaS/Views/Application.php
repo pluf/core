@@ -13,13 +13,6 @@ class SaaS_Views_Application extends Pluf_Views
 {
 
     /**
-     * پیش شرط‌های دسترسی به فهرست نرم‌افزارها
-     *
-     * @var unknown
-     */
-    public $applications_precond = array();
-
-    /**
      * فهرستی از نرم‌افزارها ایجاد می‌کند
      *
      * @param unknown_type $request            
@@ -35,9 +28,6 @@ class SaaS_Views_Application extends Pluf_Views
          * -before
          * -count
          */
-        if ($request->method != 'GET') {
-            throw new Pluf_Exception_GetMethodSuported();
-        }
         // maso, 1394: گرفتن فهرست مناسبی از آپارتمان‌ها
         $pag = new Pluf_Paginator(new SaaS_Application());
         $list_display = array(
@@ -71,13 +61,7 @@ class SaaS_Views_Application extends Pluf_Views
      */
     public function currentApplication ($request, $match)
     {
-        if ($request->method != 'GET') {
-            throw new Pluf_Exception_GetMethodSuported();
-        }
-        if (isset($request->application)) {
-            return new Pluf_HTTP_Response_Json($request->application);
-        }
-        throw new Pluf_Exception("Application is not set!");
+        return new Pluf_HTTP_Response_Json($request->application);
     }
 
     /**
@@ -85,34 +69,55 @@ class SaaS_Views_Application extends Pluf_Views
      *
      * @var unknown
      */
-    public $application_precond = array();
+    public $get_precond = array();
 
     /**
-     * دسترسی به یک نرم‌افزار کاربردی
+     * یک نرم‌افزار را تعیین می‌کند
+     *
+     * با استفاده از این فراخوانی داده‌های یک نرم‌افزار به دست می‌آید.
      *
      * @param unknown $request            
      * @param unknown $match            
      * @throws Pluf_Exception_GetMethodSuported
      * @return Pluf_HTTP_Response_Json
      */
-    public function application ($request, $match)
+    public function get ($request, $match)
     {
         $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
                 $match[1]);
-        if ($request->method == 'GET') {
-            return new Pluf_HTTP_Response_Json($application);
-        }
-        if($request->method == 'POST') {
-            SaaS_Precondition::applicationOwner($request, $application);
-            $params = array(
-                    'application' => $application,
-            );
-            $form = new SaaS_Form_Application(
-                    array_merge($request->POST, $request->FILES), $params);
-            $app = $form->update();
-            return new Pluf_HTTP_Response_Json($app);
-        }
-        throw new Pluf_Exception_GetMethodSuported();
+        return new Pluf_HTTP_Response_Json($application);
+    }
+
+    /**
+     * پیش شرط‌های به روز رسانی را تعیین می‌کند
+     *
+     * @var unknown
+     */
+    public $update_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    /**
+     * یک نرم‌افزار را به روز می‌کند.
+     * 
+     * این کنترل حتما باید با متد POST فراخوانی شود.
+     * 
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function update ($request, $match)
+    {
+        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
+                $match[1]);
+        SaaS_Precondition::applicationOwner($request, $application);
+        $params = array(
+                'application' => $application
+        );
+        $form = new SaaS_Form_Application(
+                array_merge($request->POST, $request->FILES), $params);
+        $app = $form->update();
+        return new Pluf_HTTP_Response_Json($app);
     }
 
     /**
@@ -136,15 +141,13 @@ class SaaS_Views_Application extends Pluf_Views
         return new Pluf_HTTP_Response_Json(
                 $application->getMembershipData('txt'));
     }
-    
-
 
     /**
      * تعداد گزینه‌های یک لیست را تعیین می‌کند.
      *
      * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
      *
-     * @param unknown $request
+     * @param unknown $request            
      * @return number
      */
     private function getListCount ($request)
