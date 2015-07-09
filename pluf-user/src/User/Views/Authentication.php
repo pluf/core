@@ -13,7 +13,7 @@ Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class User_Views_Authentication
+class User_Views_Authentication extends Pluf_Views
 {
 
     /**
@@ -25,10 +25,6 @@ class User_Views_Authentication
      */
     public function login ($request, $match)
     {
-        if ($request->method == 'GET') {
-            throw new Pluf_Exception_PostMethodSuported();
-        }
-        
         if (! $request->user->isAnonymous()) {
             return User_Shortcuts_UserJsonResponse($request->user);
         }
@@ -49,8 +45,7 @@ class User_Views_Authentication
         }
         
         if (false === $user) {
-            throw new Pluf_Exception(
-                    __('user.authentication.login.incorrect'));
+            throw new Pluf_Exception(__('user.authentication.login.incorrect'));
         }
         
         $request->user = $user;
@@ -70,7 +65,6 @@ class User_Views_Authentication
     {
         $views = new Pluf_Views();
         $views->logout($request, $match, Pluf::f('after_logout_page'));
-        
         return new Pluf_HTTP_Response_Json(new Pluf_User());
     }
 }

@@ -57,4 +57,6 @@ class User_Views_Profile {
 		
 		throw  new Pluf_Exception("Curent REST method is not supported");
 	}
+	
+	
 }

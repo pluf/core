@@ -152,7 +152,8 @@ class Pluf_Dispatcher
                     $methods = $ctl['http-method'];
                     if ((! is_array($methods) &&
                              $ctl['http-method'] !== $req->method) ||
-                             (is_array($methods) && ! in_array($methods, $req->method))) {
+                             (is_array($methods) &&
+                             ! in_array($req->method, $methods))) {
                         $i ++;
                         continue;
                     }
