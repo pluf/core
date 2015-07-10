@@ -31,16 +31,25 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST'
         ),
-        array(
+        array( // ثبت یک کاربر جدید
                 'regex' => '#^/signup$#',
                 'base' => $base,
                 'model' => 'User_Views_User',
-                'method' => 'signup'
+                'method' => 'signup',
+                'http-method' => 'POST'
         ),
-        array(
+        array( // دریافت پروفایل کاربر
                 'regex' => '#^/profile$#',
                 'base' => $base,
                 'model' => 'User_Views_Profile',
-                'method' => 'profile'
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array( // به روز رسانی پروفایل کاربری
+                'regex' => '#^/profile$#',
+                'base' => $base,
+                'model' => 'User_Views_Profile',
+                'method' => 'update',
+                'http-method' => 'POST'
         )
 );
