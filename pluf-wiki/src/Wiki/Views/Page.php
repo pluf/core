@@ -51,6 +51,6 @@ class Wiki_Views_Page {
 				return new Pluf_HTTP_Response_Json ( $page );
 			}
 		}
-		throw new Pluf_Exception_NotImplemented ();
+		throw new Pluf_Exception ("Page not found.");
 	}
 }
