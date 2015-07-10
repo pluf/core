@@ -89,6 +89,34 @@ class SaaS_Views_Application extends Pluf_Views
     }
 
     /**
+     * پیش شرط‌های ایجاد نرم‌افزار را تعیین می‌کند
+     *
+     * @var unknown
+     */
+    public $create_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    /**
+     * یک نرم‌افزار را ایجاد می‌کند.
+     * 
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function create ($request, $match)
+    {
+        $params = array(
+                'application' => null
+        );
+        $form = new SaaS_Form_Application(
+                array_merge($request->POST, $request->FILES), $params);
+        $app = $form->save();
+        Pluf_RowPermission::add($request->user, $app, 'SaaS.software-owner');
+        return new Pluf_HTTP_Response_Json($app);
+    }
+
+    /**
      * پیش شرط‌های به روز رسانی را تعیین می‌کند
      *
      * @var unknown

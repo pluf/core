@@ -1,12 +1,5 @@
 <?php
 return array(
-        array( // اطلاعات نرم‌افزار جاری
-                'regex' => '#^/app$#',
-                'base' => $base,
-                'model' => 'SaaS_Views_Application',
-                'method' => 'currentApplication',
-                'http-method' => 'GET'
-        ),
         array( // اطلاعات نرم‌افزار مورد نظر
                 'regex' => '#^/app/(\d+)$#',
                 'base' => $base,
@@ -28,6 +21,20 @@ return array(
                 'method' => 'applications'
         ),
         /* دسترسی‌ها به نرم‌افزار */
+        array( // اطلاعات نرم‌افزار جاری
+                'regex' => '#^/app$#',
+                'base' => $base,
+                'model' => 'SaaS_Views_Application',
+                'method' => 'currentApplication',
+                'http-method' => 'GET'
+        ),
+        array( // ایجاد یک نرم‌افزار جدید
+                'regex' => '#^/app$#',
+                'base' => $base,
+                'model' => 'SaaS_Views_Application',
+                'method' => 'create',
+                'http-method' => 'POST'
+        ),
         array( // فهرستی از تمام اعضا
                 'regex' => '#^/app/(\d+)/member/list$#',
                 'base' => $base,
