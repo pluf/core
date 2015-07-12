@@ -1,25 +1,4 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2010 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
 
 /**
  * Template tag <code>regroup</code>.
@@ -114,51 +93,58 @@
  */
 class Pluf_Template_Tag_Regroup extends Pluf_Template_Tag
 {
+
     /**
+     *
      * @see Pluf_Template_Tag::start()
-     * @param mixed $data The object to group.
-     * @param string $by The attribute ti group by.
-     * @param string $assign The name of the resulting object.
+     * @param mixed $data
+     *            The object to group.
+     * @param string $by
+     *            The attribute ti group by.
+     * @param string $assign
+     *            The name of the resulting object.
      * @throws InvalidArgumentException If no argument is provided.
      */
-    public function start($data, $by, $assign)
+    public function start ($data, $by, $assign)
     {
         $grouped = array();
         $tmp = array();
-
+        
         foreach ($data as $group) {
             if (is_object($group)) {
                 if (is_subclass_of($group, 'Pluf_Model')) {
                     $raw = $group->getData();
-                    if (!array_key_exists($by, $raw)) {
+                    if (! array_key_exists($by, $raw)) {
                         continue;
                     }
                 } else {
                     $ref = new ReflectionObject($group);
-                    if (!$ref->hasProperty($by)) {
+                    if (! $ref->hasProperty($by)) {
                         continue;
                     }
                 }
                 $key = $group->$by;
                 $list = $group;
             } else {
-                if (!array_key_exists($by, $group)) {
+                if (! array_key_exists($by, $group)) {
                     continue;
                 }
                 $key = $group[$by];
                 $list = new ArrayObject($group, ArrayObject::ARRAY_AS_PROPS);
             }
-
-            if (!array_key_exists($key, $tmp)) {
+            
+            if (! array_key_exists($key, $tmp)) {
                 $tmp[$key] = array();
             }
             $tmp[$key][] = $list;
         }
-
+        
         foreach ($tmp as $key => $list) {
-            $grouped[] = new ArrayObject(array('grouper' => $key,
-                                               'list' => $list),
-                                         ArrayObject::ARRAY_AS_PROPS);
+            $grouped[] = new ArrayObject(
+                    array(
+                            'grouper' => $key,
+                            'list' => $list
+                    ), ArrayObject::ARRAY_AS_PROPS);
         }
         $this->context->set(trim($assign), $grouped);
     }

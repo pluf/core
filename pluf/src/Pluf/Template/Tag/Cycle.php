@@ -1,39 +1,18 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2010 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
 
 /**
  * Template tag <code>cycle</code>.
  *
- * Cycle among the given strings or variables each time this tag is 
+ * Cycle among the given strings or variables each time this tag is
  * encountered.
  *
  * Within a loop, cycles among the given strings each time through the loop:
  *
  * <code>
  * {foreach $some_list as $obj}
- *     <tr class="{cycle 'row1', 'row2'}">
- *         ...
- *     </tr>
+ * <tr class="{cycle 'row1', 'row2'}">
+ * ...
+ * </tr>
  * {/foreach}
  * </code>
  *
@@ -43,9 +22,9 @@
  *
  * <code>
  * {foreach $some_list as $obj}
- *     <tr class="{cycle $rowvalue1, $rowvalue2}">
- *         ...
- *     </tr>
+ * <tr class="{cycle $rowvalue1, $rowvalue2}">
+ * ...
+ * </tr>
  * {/foreach}
  * </code>
  *
@@ -53,9 +32,9 @@
  *
  * <code>
  * {foreach $some_list as $obj}
- *     <tr class="{cycle 'row1', rowvalue2, 'row3'}">
- *         ...
- *     </tr>
+ * <tr class="{cycle 'row1', rowvalue2, 'row3'}">
+ * ...
+ * </tr>
  * {/foreach}
  * </code>
  *
@@ -78,24 +57,25 @@
  */
 class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
 {
+
     /**
+     *
      * @see Pluf_Template_Tag::start()
      * @throws InvalidArgumentException If no argument is provided.
      */
-    public function start()
+    public function start ()
     {
         $nargs = func_num_args();
         if (1 > $nargs) {
             throw new InvalidArgumentException(
-                '`cycle` tag requires at least one argument'
-            );
+                    '`cycle` tag requires at least one argument');
         }
-
+        
         $result = '';
-        list($key, $index) = $this->_computeIndex(func_get_args());
-
+        list ($key, $index) = $this->_computeIndex(func_get_args());
+        
         switch ($nargs) {
-            # (array or mixed) argument
+            // (array or mixed) argument
             case 1:
                 $arg = func_get_arg(0);
                 if (is_array($arg)) {
@@ -104,8 +84,8 @@ class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
                     $result = $arg;
                 }
                 break;
-
-            # (array) arguments, (string) assign
+            
+            // (array) arguments, (string) assign
             case 2:
                 $args = func_get_args();
                 if (is_array($args[0])) {
@@ -113,41 +93,48 @@ class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
                     if (is_string($last) && '' === $this->context->get($last)) {
                         $value = Pluf_Utils::flattenArray($args[0]);
                         $this->context->set($last, $value);
-
-                        list($assign_key, $assign_index) = $this->_computeIndex(array($value));
+                        
+                        list ($assign_key, $assign_index) = $this->_computeIndex(
+                                array(
+                                        $value
+                                ));
                         $result = $value[0];
                     }
                     break;
                 }
-
-            # considers all the arguments as a value to use in the cycle
+            
+            // considers all the arguments as a value to use in the cycle
             default:
                 $args = Pluf_Utils::flattenArray(func_get_args());
                 $result = $args[$index % count($args)];
                 break;
         }
-
+        
         echo Pluf_Template::markSafe((string) $result);
     }
 
     /**
      * Compute an index for the given array.
      *
-     * @param array
+     * @param
+     *            array
      * @return array A array of two elements: key and index.
      */
-    protected function _computeIndex($args)
+    protected function _computeIndex ($args)
     {
-        if (!isset($this->context->__cycle_stack)) {
+        if (! isset($this->context->__cycle_stack)) {
             $this->context->__cycle_stack = array();
         }
-
+        
         $key = serialize($args);
-        $this->context->__cycle_stack[$key] = (array_key_exists($key, $this->context->__cycle_stack)) ?
-                                            1 + $this->context->__cycle_stack[$key] :
-                                            0;
+        $this->context->__cycle_stack[$key] = (array_key_exists($key, 
+                $this->context->__cycle_stack)) ? 1 +
+                 $this->context->__cycle_stack[$key] : 0;
         $index = $this->context->__cycle_stack[$key];
-
-        return array($key, $index);
+        
+        return array(
+                $key,
+                $index
+        );
     }
 }
