@@ -1,25 +1,4 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
 
 /**
  * A class to manage the migration of the code from one version to
@@ -49,30 +28,53 @@
  */
 class Pluf_Migration
 {
-    protected $app = ''; /**< Application beeing migrated. */
-    public $apps = array(); /**< Applications which are going to be migrated. */
-    public $to_version = null; /**< Target version for the migration. */
-    public $dry_run = false; /**< Set to true to not act. */
-    public $display = false; /**< Display on the console what is done. */
 
+    protected $app = '';
+
+    /**
+     * < Application beeing migrated.
+     */
+    public $apps = array();
+
+    /**
+     * < Applications which are going to be migrated.
+     */
+    public $to_version = null;
+
+    /**
+     * < Target version for the migration.
+     */
+    public $dry_run = false;
+
+    /**
+     * < Set to true to not act.
+     */
+    public $display = false;
+
+    /**
+     * < Display on the console what is done.
+     */
+    
     /**
      * Create a new migration.
      *
-     * @param mixed Application or array of applications to migrate.
+     * @param
+     *            mixed Application or array of applications to migrate.
      */
-    public function __construct($app=null)
+    public function __construct ($app = null)
     {
-        if (!is_null($app)) {
+        if (! is_null($app)) {
             if (is_array($app)) {
                 $this->apps = $app;
             } else {
-                $this->apps = array($app);
+                $this->apps = array(
+                        $app
+                );
             }
         } else {
             $this->apps = Pluf::f('installed_apps');
         }
     }
-
 
     /**
      * Install the application.
@@ -80,7 +82,7 @@ class Pluf_Migration
      * Basically run the base install function for each application
      * and then set the version to the latest migration.
      */
-    public function install()
+    public function install ()
     {
         foreach ($this->apps as $app) {
             $this->installApp($app);
@@ -91,7 +93,7 @@ class Pluf_Migration
     /**
      * Uninstall the application.
      */
-    public function unInstall()
+    public function unInstall ()
     {
         $apps = array_reverse($this->apps);
         foreach ($apps as $app) {
@@ -102,57 +104,60 @@ class Pluf_Migration
     /**
      * Backup the application.
      *
-     * @param string Path to the backup folder
-     * @param string Backup name (null)
+     * @param
+     *            string Path to the backup folder
+     * @param
+     *            string Backup name (null)
      */
-    public function backup($path, $name=null)
+    public function backup ($path, $name = null)
     {
         foreach ($this->apps as $app) {
-            $func = $app.'_Migrations_Backup_run';
+            $func = $app . '_Migrations_Backup_run';
             Pluf::loadFunction($func);
             if ($this->display) {
-                echo($func."\n");
+                echo ($func . "\n");
             }
-            if (!$this->dry_run) {
-                $ret = $func($path, $name); 
+            if (! $this->dry_run) {
+                $ret = $func($path, $name);
             }
         }
         return true;
     }
-    
+
     /**
      * Restore the application.
      *
-     * @param string Path to the backup folder
-     * @param string Backup name 
+     * @param
+     *            string Path to the backup folder
+     * @param
+     *            string Backup name
      */
-    public function restore($path, $name)
+    public function restore ($path, $name)
     {
         foreach ($this->apps as $app) {
-            $func = $app.'_Migrations_Backup_restore';
+            $func = $app . '_Migrations_Backup_restore';
             Pluf::loadFunction($func);
             if ($this->display) {
-                echo($func."\n");
+                echo ($func . "\n");
             }
-            if (!$this->dry_run) {
-                $ret = $func($path, $name); 
+            if (! $this->dry_run) {
+                $ret = $func($path, $name);
             }
         }
         return true;
     }
-    
+
     /**
      * Run the migration.
-     *
      */
-    public function migrate($to_version=null)
+    public function migrate ($to_version = null)
     {
         $this->to_version = $to_version;
         foreach ($this->apps as $app) {
             $this->app = $app;
             $migrations = $this->findMigrations();
             // The run will throw an exception in case of error.
-            $this->runMigrations($migrations); 
+            $this->runMigrations($migrations);
         }
         return true;
     }
@@ -160,25 +165,27 @@ class Pluf_Migration
     /**
      * Un/Install the given application.
      *
-     * @param string Application to install.
-     * @param bool Uninstall (false)
+     * @param
+     *            string Application to install.
+     * @param
+     *            bool Uninstall (false)
      */
-    public function installApp($app, $uninstall=false)
+    public function installApp ($app, $uninstall = false)
     {
         if ($uninstall) {
-            $func = $app.'_Migrations_Install_teardown';
+            $func = $app . '_Migrations_Install_teardown';
         } else {
-            $func = $app.'_Migrations_Install_setup';
+            $func = $app . '_Migrations_Install_setup';
         }
         $ret = true;
         Pluf::loadFunction($func);
         if ($this->display) {
-            echo($func."\n");
+            echo ($func . "\n");
         }
-        if (!$this->dry_run) {
+        if (! $this->dry_run) {
             $ret = $func(); // Run the install/uninstall
-            if (!$uninstall) {
-                // 
+            if (! $uninstall) {
+                //
                 $this->app = $app;
                 $migrations = $this->findMigrations();
                 if (count($migrations) > 0) {
@@ -198,23 +205,22 @@ class Pluf_Migration
         return $ret;
     }
 
-
     /**
      * Find the migrations for the current app.
      *
      * @return array Migrations names indexed by order.
      */
-    public function findMigrations()
+    public function findMigrations ()
     {
         $migrations = array();
-        if (false !== ($mdir = Pluf::fileExists($this->app.'/Migrations'))) {
+        if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
             $dir = new DirectoryIterator($mdir);
-            foreach($dir as $file) {
+            foreach ($dir as $file) {
                 $matches = array();
-                if (!$file->isDot() && !$file->isDir()
-                    && preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
+                if (! $file->isDot() && ! $file->isDir() &&
+                         preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
                     $info = pathinfo($file->getFilename());
-                    $migrations[(int)$matches[1]] = $info['filename'];
+                    $migrations[(int) $matches[1]] = $info['filename'];
                 }
             }
         }
@@ -229,9 +235,10 @@ class Pluf_Migration
      * will run the migrations in the right order or do nothing if
      * nothing to be done.
      *
-     * @param array Possible migrations.
+     * @param
+     *            array Possible migrations.
      */
-    public function runMigrations($migrations)
+    public function runMigrations ($migrations)
     {
         if (empty($migrations)) {
             return;
@@ -258,14 +265,20 @@ class Pluf_Migration
         }
         // Filter the migrations
         $to_run = array();
-        foreach ($migrations as $order=>$name) {
+        foreach ($migrations as $order => $name) {
             if ($order < $min or $order > $max) {
                 continue;
             }
             if ($the_way == 'up') {
-                $to_run[] = array($order, $name);
+                $to_run[] = array(
+                        $order,
+                        $name
+                );
             } else {
-                array_unshift($to_run, array($order, $name));
+                array_unshift($to_run, array(
+                        $order,
+                        $name
+                ));
             }
         }
         asort($to_run);
@@ -278,36 +291,40 @@ class Pluf_Migration
     /**
      * Run the given migration.
      */
-    public function runMigration($migration, $the_way='up')
+    public function runMigration ($migration, $the_way = 'up')
     {
-        $target_version = ($the_way == 'up') ? $migration[0] : $migration[0]-1;
+        $target_version = ($the_way == 'up') ? $migration[0] : $migration[0] - 1;
         if ($this->display) {
-            echo($migration[0].' '.$migration[1].' '.$the_way."\n");
+            echo ($migration[0] . ' ' . $migration[1] . ' ' . $the_way . "\n");
         }
-        if (!$this->dry_run) {
+        if (! $this->dry_run) {
             if ($the_way == 'up') {
-                $func = $this->app.'_Migrations_'.$migration[1].'_up';
+                $func = $this->app . '_Migrations_' . $migration[1] . '_up';
             } else {
-                $func = $this->app.'_Migrations_'.$migration[1].'_down';
+                $func = $this->app . '_Migrations_' . $migration[1] . '_down';
             }
             Pluf::loadFunction($func);
             $func(); // Real migration run
             $this->setAppVersion($this->app, $target_version);
-        } 
+        }
     }
 
     /**
      * Set the application version.
      *
-     * @param string Application
-     * @param int Version
+     * @param
+     *            string Application
+     * @param
+     *            int Version
      * @return true
      */
-    public function setAppVersion($app, $version)
+    public function setAppVersion ($app, $version)
     {
         $gschema = new Pluf_DB_SchemaInfo();
         $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array('filter' => $sql->gen()));
+        $appinfo = $gschema->getList(array(
+                'filter' => $sql->gen()
+        ));
         if ($appinfo->count() == 1) {
             $appinfo[0]->version = $version;
             $appinfo[0]->update();
@@ -323,33 +340,37 @@ class Pluf_Migration
     /**
      * Remove the application information.
      *
-     * @param string Application
+     * @param
+     *            string Application
      * @return true
      */
-    public function delAppInfo($app)
+    public function delAppInfo ($app)
     {
         $gschema = new Pluf_DB_SchemaInfo();
         $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array('filter' => $sql->gen()));
+        $appinfo = $gschema->getList(array(
+                'filter' => $sql->gen()
+        ));
         if ($appinfo->count() == 1) {
             $appinfo[0]->delete();
         }
         return true;
     }
 
-    
-
     /**
      * Get the current version of the app.
      *
-     * @param string Application.
+     * @param
+     *            string Application.
      * @return int Version.
      */
-    public function getAppVersion($app)
+    public function getAppVersion ($app)
     {
         try {
-            $db =& Pluf::db();
-            $res = $db->select('SELECT version FROM '.$db->pfx.'schema_info WHERE application='.$db->esc($app));
+            $db = & Pluf::db();
+            $res = $db->select(
+                    'SELECT version FROM ' . $db->pfx .
+                             'schema_info WHERE application=' . $db->esc($app));
             return (int) $res[0]['version'];
         } catch (Exception $e) {
             // We should not be here, only in the case of nothing

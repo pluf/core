@@ -1,25 +1,4 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
 
 /**
  * Generate and send multipart emails.
@@ -94,45 +73,55 @@
  */
 class Pluf_Mail
 {
+
     public $headers = array();
+
     public $message;
+
     public $encoding = 'utf-8';
+
     public $to_address = '';
 
     /**
      * Construct the base email.
      *
-     * @param string The email of the sender.
-     * @param string The destination email.
-     * @param string The subject of the message.
-     * @param string Encoding of the message ('UTF-8')
-     * @param string End of line type ("\n")
+     * @param
+     *            string The email of the sender.
+     * @param
+     *            string The destination email.
+     * @param
+     *            string The subject of the message.
+     * @param
+     *            string Encoding of the message ('UTF-8')
+     * @param
+     *            string End of line type ("\n")
      */
-    function __construct($src, $dest, $subject, $encoding='UTF-8', $crlf="\n")
+    function __construct ($src, $dest, $subject, $encoding = 'UTF-8', $crlf = "\n")
     {
         // Note that the Pluf autoloader will correctly load this PEAR
         // object.
-        $this->message = new Mail_mime($crlf); 
+        $this->message = new Mail_mime($crlf);
         $this->message->_build_params['html_charset'] = $encoding;
         $this->message->_build_params['text_charset'] = $encoding;
-        $this->message->_build_params['head_charset'] = $encoding;        
-        $this->message->_build_params['ignore-iconv'] = true;        
-
+        $this->message->_build_params['head_charset'] = $encoding;
+        $this->message->_build_params['ignore-iconv'] = true;
         
         $this->to_address = $dest;
-        $this->headers = array('From' => $src,
-                               'To' => $dest,
-                               'Date' => date(DATE_RFC2822),
-                               'Subject' => $subject,
-                               );
+        $this->headers = array(
+                'From' => $src,
+                'To' => $dest,
+                'Date' => date(DATE_RFC2822),
+                'Subject' => $subject
+        );
     }
 
     /**
      * Add the base plain text message to the email.
      *
-     * @param string The message
+     * @param
+     *            string The message
      */
-    function addTextMessage($msg)
+    function addTextMessage ($msg)
     {
         $this->message->setTXTBody($msg);
     }
@@ -140,9 +129,10 @@ class Pluf_Mail
     /**
      * Set the return path for the email.
      *
-     * @param string Email
+     * @param
+     *            string Email
      */
-    function setReturnPath($email)
+    function setReturnPath ($email)
     {
         $this->headers['Return-Path'] = $email;
     }
@@ -150,9 +140,10 @@ class Pluf_Mail
     /**
      * Add headers to an email.
      *
-     * @param array Array of headers
+     * @param
+     *            array Array of headers
      */
-    function addHeaders($hdrs)
+    function addHeaders ($hdrs)
     {
         $this->headers = array_merge($this->headers, $hdrs);
     }
@@ -160,9 +151,10 @@ class Pluf_Mail
     /**
      * Add the alternate HTML message to the email.
      *
-     * @param string The HTML message
+     * @param
+     *            string The HTML message
      */
-    function addHtmlMessage($msg)
+    function addHtmlMessage ($msg)
     {
         $this->message->setHTMLBody($msg);
     }
@@ -173,11 +165,13 @@ class Pluf_Mail
      * The file to attach must be available on disk and you need to
      * provide the mimetype of the attachment manually.
      *
-     * @param string Path to the file to be added.
-     * @param string Mimetype of the file to be added ('text/plain').
+     * @param
+     *            string Path to the file to be added.
+     * @param
+     *            string Mimetype of the file to be added ('text/plain').
      * @return bool True.
      */
-    function addAttachment($file, $ctype='text/plain')
+    function addAttachment ($file, $ctype = 'text/plain')
     {
         $this->message->addAttachment($file, $ctype);
     }
@@ -185,21 +179,24 @@ class Pluf_Mail
     /**
      * Effectively sends the email.
      */
-    function sendMail()
+    function sendMail ()
     {
         $body = $this->message->get();
         $hdrs = $this->message->headers($this->headers);
-
+        
         $params = Pluf::pf('mail_', true); // strip the prefix 'mail_'
         unset($params['backend']);
         $gmail = new Mail();
-        $mail = $gmail->factory(Pluf::f('mail_backend', 'mail'),
-                                $params);
+        $mail = $gmail->factory(Pluf::f('mail_backend', 'mail'), $params);
         if (Pluf::f('send_emails', true)) {
             $mail->send($this->to_address, $hdrs, $body);
         }
         if (defined('IN_UNIT_TESTS')) {
-            $GLOBALS['_PX_UNIT_TESTS']['emails'][] = array($this->to_address, $hdrs, $body);
+            $GLOBALS['_PX_UNIT_TESTS']['emails'][] = array(
+                    $this->to_address,
+                    $hdrs,
+                    $body
+            );
         }
     }
 }

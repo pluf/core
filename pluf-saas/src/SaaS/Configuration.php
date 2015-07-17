@@ -8,6 +8,10 @@
 class SaaS_Configuration extends Pluf_Model
 {
 
+    public $data = array();
+
+    public $touched = false;
+
     /**
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
@@ -97,6 +101,58 @@ class SaaS_Configuration extends Pluf_Model
                                 'Modification date of the configuration.')
                 )
         );
+        $this->_a['idx'] = array(
+                'key_idx' => array(
+                        'type' => 'unique',
+                        'col' => 'key'
+                )
+        );
+        $this->_a['views'] = array();
+    }
+
+    /**
+     * تعیین یک داده در تنظیم‌ها
+     *
+     * @param
+     *            کلید داده
+     * @param
+     *            داده مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
+     *            حذف است.
+     */
+    function setData ($key, $value = null)
+    {
+        if (is_null($value)) {
+            unset($this->data[$key]);
+        } else {
+            $this->data[$key] = $value;
+        }
+        $this->touched = true;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * 
+     * @see Pluf_Model::getData()
+     */
+    function getData ($key = null, $default = '')
+    {
+        if (is_null($key)) {
+            return parent::getData();
+        }
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        } else {
+            return $default;
+        }
+    }
+
+    /**
+     * تمام داده‌های موجود را پاک می‌کند.
+     */
+    function clear ()
+    {
+        $this->data = array();
+        $this->touched = true;
     }
 
     /**
@@ -107,22 +163,22 @@ class SaaS_Configuration extends Pluf_Model
      */
     function preSave ($create = false)
     {
+        $this->value = serialize($this->data);
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
-
+    
     /**
-     * حالت کار ایجاد شده را به روز می‌کند
-     *
-     * @see Pluf_Model::postSave()
+     * (non-PHPdoc)
+     * @see Pluf_Model::restore()
      */
-    function postSave ($create = false)
+    function restore ()
     {
-        //
+        $this->data = unserialize($this->session_data);
     }
-
+    
     /**
      * Check if a user is anonymous.
      *
