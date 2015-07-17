@@ -9,7 +9,8 @@ function SaaS_Migrations_Install_setup($params = null) {
 	// ایجاد پایگاه داده
 	$models = array (
 			'SaaS_Application',
-			'SaaS_Configuration'
+			'SaaS_Configuration',
+	        'SaaS_Resource'
 	);
 	$db = Pluf::db ();
 	$schema = new Pluf_DB_Schema ( $db );
@@ -59,7 +60,8 @@ function SaaS_Migrations_Install_teardown($params = null) {
 	// حذف پایگاه داده
 	$models = array (
 			'SaaS_Application',
-			'SaaS_Configuration'
+			'SaaS_Configuration',
+	        'SaaS_Resource'
 	);
 	$db = Pluf::db ();
 	$schema = new Pluf_DB_Schema ( $db );

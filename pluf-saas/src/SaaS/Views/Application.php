@@ -112,6 +112,7 @@ class SaaS_Views_Application extends Pluf_Views
         $form = new SaaS_Form_Application(
                 array_merge($request->POST, $request->FILES), $params);
         $app = $form->save();
+        SaaS_Util::initConfiguration($app);
         Pluf_RowPermission::add($request->user, $app, 'SaaS.software-owner');
         return new Pluf_HTTP_Response_Json($app);
     }
