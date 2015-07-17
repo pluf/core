@@ -1,49 +1,33 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
-
 /**
- * testrunner for your application.
+ * فرآیند اجرای تست
+ * 
  */
-set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
-function usage($script)
+set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+
+function usage ($script)
 {
-    echo($script.' YourApp [path/to/config/file.php]'."\n");
-    echo(' If no config file given, will use the following:'."\n");
-    echo(' YourApp/conf/yourapp.test.php'."\n");
-    echo(' If you are using SQLite, we recommend the ":memory:" database.'."\n");
-    echo(' [installed apps]/Migrations/Install.php will be used to setup/teardown'."\n");
-    echo(' the database before/after the run.'."\n");
+    echo ($script . ' YourApp [path/to/config/file.php]' . "\n");
+    echo (' If no config file given, will use the following:' . "\n");
+    echo (' YourApp/conf/yourapp.test.php' . "\n");
+    echo (' If you are using SQLite, we recommend the ":memory:" database.' .
+             "\n");
+    echo (' [installed apps]/Migrations/Install.php will be used to setup/teardown' .
+             "\n");
+    echo (' the database before/after the run.' . "\n");
 }
-function e($m) 
+
+function e ($m)
 {
-    echo($m."\n");
+    echo ($m . "\n");
 }
-function getTestDirs($dir='./')
+
+function getTestDirs ($dir = './')
 {
     $file = new DirectoryIterator($dir);
     $res = array();
     while ($file->valid()) {
-        if ($file->isDir() && !$file->isDot()) {
+        if ($file->isDir() && ! $file->isDot()) {
             $res[] = $file->getPathName();
         }
         $file->next();
@@ -51,14 +35,18 @@ function getTestDirs($dir='./')
     return $res;
 }
 
-function getTestFiles($dir='')
+function getTestFiles ($dir = '')
 {
     $file = new DirectoryIterator($dir);
     $res = array();
     while ($file->valid()) {
-        if ($file->isFile() && substr($file->getPathName(), -4) == '.php') {
-            $class = str_replace(DIRECTORY_SEPARATOR, '_', substr($file->getPathName(), 0, -4));
-            $res[] = array($file->getPathName(), $class);
+        if ($file->isFile() && substr($file->getPathName(), - 4) == '.php') {
+            $class = str_replace(DIRECTORY_SEPARATOR, '_', 
+                    substr($file->getPathName(), 0, - 4));
+            $res[] = array(
+                    $file->getPathName(),
+                    $class
+            );
         }
         $file->next();
     }
@@ -74,18 +62,19 @@ if (PHP_SAPI == 'cli') {
     if ($argc >= 3) {
         $config = $argv[2];
     } else {
-        $config = $app.'/conf/'.strtolower($app).'.test.php';
+        $config = $app . '/conf/' . strtolower($app) . '.test.php';
     }
 } else {
-    echo('Error: This script can only be run from the command line.'."\n");
+    echo ('Error: This script can only be run from the command line.' . "\n");
     exit(1);
 }
-echo(sprintf('Application: %s ', $app));
-if (!file_exists($config)) {
-    echo(sprintf("\n".'Error, the config file does not exists: %s'."\n", $config));
+echo (sprintf('Application: %s ', $app));
+if (! file_exists($config)) {
+    echo (sprintf("\n" . 'Error, the config file does not exists: %s' . "\n", 
+            $config));
     exit(1);
 } else {
-    echo(sprintf('(%s)'."\n", $config));
+    echo (sprintf('(%s)' . "\n", $config));
 }
 define('IN_UNIT_TESTS', true);
 require 'Pluf.php';
@@ -101,15 +90,15 @@ if (false == $simple_test) {
     e('For example: $cfg[\'simple_test_path\'] = \'/home/you/simpletest\'; ');
     exit(1);
 }
-$testfolder = $app.'/Tests/';
-if (!file_exists($testfolder)) {
-    e(sprintf('The test folder does not exists: %s.', $app.'/Tests/'));
+$testfolder = $app . '/Tests/';
+if (! file_exists($testfolder)) {
+    e(sprintf('The test folder does not exists: %s.', $app . '/Tests/'));
     exit(1);
 }
 
-define('SIMPLE_TEST', $simple_test.'/');
-require_once(SIMPLE_TEST.'unit_tester.php');
-require_once(SIMPLE_TEST.'reporter.php');
+define('SIMPLE_TEST', $simple_test . '/');
+require_once (SIMPLE_TEST . 'unit_tester.php');
+require_once (SIMPLE_TEST . 'reporter.php');
 
 $files = getTestFiles($testfolder);
 $dirs = getTestDirs($testfolder);
@@ -120,18 +109,18 @@ foreach ($dirs as $dir) {
 }
 $test = &new GroupTest(sprintf('All tests for application %s.', $app));
 foreach ($files as $t) {
-    if (!function_exists('apc_store') && 'Pluf_Tests_Cache_Apc' === $t[1]) {
+    if (! function_exists('apc_store') && 'Pluf_Tests_Cache_Apc' === $t[1]) {
         continue;
     }
     $test->addTestCase(new $t[1]());
 }
-$reporter = new TextReporter(); 
+$reporter = new TextReporter();
 $mig = new Pluf_Migration(null);
 $mig->display = false;
 $mig->install();
 // If available, load an initialisation file.
-if (file_exists($app.'/Tests/init.json')) {
-    $created = Pluf_Test_Fixture::loadFile($app.'/Tests/init.json');
+if (file_exists($app . '/Tests/init.json')) {
+    $created = Pluf_Test_Fixture::loadFile($app . '/Tests/init.json');
 } else {
     $created = array();
 }

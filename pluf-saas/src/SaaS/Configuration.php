@@ -46,6 +46,38 @@ class SaaS_Configuration extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false
                 ),
+                'owner_write' => array( // owner can write
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'owner_read' => array( // owner can read
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'member_write' => array( // member can write
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'member_read' => array( // member can read
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'authorized_write' => array( // authorized can write
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'authorized_read' => array( // authorized can read
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'other_write' => array( // other can write
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
+                'other_read' => array( // other can read
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false
+                ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
