@@ -46,12 +46,14 @@ return array(
                 'regex' => '#^/app/(\d+)/config/list$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Configuration',
-                'method' => 'configurations'
+                'method' => 'configurations',
+                'http-method' => 'GET'
         ),
         array( // دسترسی به تنظیم‌ها
-                'regex' => '#^/app/(\d+)/config$#',
+                'regex' => '#^/app/(\d+)/config/(\d+)$#',
                 'base' => $base,
                 'model' => 'SaaS_Views_Configuration',
-                'method' => 'configuration'
+                'method' => 'get',
+                'http-method' => 'GET'
         )
 );

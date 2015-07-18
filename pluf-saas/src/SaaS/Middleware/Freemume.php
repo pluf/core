@@ -1,0 +1,43 @@
+<?php
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+
+/**
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *        
+ */
+class SaaS_Middleware_Aplication
+{
+    
+    /**
+     * تقاضای وارد شده را بررسی می‌کند.
+     *
+     * @param
+     *            Pluf_HTTP_Request The request
+     * @return bool false
+     */
+    function process_request (&$request)
+    {
+        $application_id = null;
+        
+        if (preg_match('#^/(\d+)|(\d+)/(.+)$#', $request->query, $match)) {
+            $application_id = $match[1];
+        } else {
+            $application_id = $request->session->getData('application', '');
+            if ($application_id === '') {
+                $application_id = null;
+            }
+        }
+        
+        try {
+            $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
+                    $application_id);
+            $request->application = $application;
+            $request->session->setData('application', $application->id);
+        } catch (Pluf_Exception $ex) {
+            $request->application = null;
+        }
+        
+        // دامه در کوکی نیز قرار داده می‌شود
+        return false;
+    }
+}

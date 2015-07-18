@@ -107,7 +107,11 @@ class SaaS_Configuration extends Pluf_Model
                         'col' => 'key'
                 )
         );
-        $this->_a['views'] = array();
+        $this->_a['views'] = array(
+                'list' => array (
+                        'select' => 'id, saas_configuration.key, type,description, creation_dtime, modif_dtime',
+                )
+        );
     }
 
     /**
@@ -176,7 +180,7 @@ class SaaS_Configuration extends Pluf_Model
      */
     function restore ()
     {
-        $this->data = unserialize($this->session_data);
+        $this->data = unserialize($this->value);
     }
     
     /**

@@ -1,7 +1,4 @@
 <?php
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
-Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
@@ -13,7 +10,7 @@ Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class User_Views_Authentication extends Pluf_Views
+class User_Views_Authentication
 {
 
     /**

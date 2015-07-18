@@ -1109,7 +1109,8 @@ class Pluf_Model implements JsonSerializable
     {
         $coded = array();
         foreach ($this->_data as $col => $val) {
-            $coded[$col] = $val;
+            if($val)
+              $coded[$col] = $val;
         }
         return $coded;
     }

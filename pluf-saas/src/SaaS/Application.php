@@ -44,6 +44,11 @@ class SaaS_Application extends Pluf_Model
                         'blank' => true,
                         'size' => 100
                 ),
+                'domain' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 100
+                ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
@@ -234,7 +239,7 @@ class SaaS_Application extends Pluf_Model
      * @return unknown
      */
     public function getConfigurationList (
-            $types = array(SaaS_ConfigurationType::GENERAL))
+            $types = array(SaaS_ConfigurationType::GENERAL), $access = array())
     {
         $sql = new Pluf_SQL('application=%s ', 
                 array(
@@ -251,9 +256,21 @@ class SaaS_Application extends Pluf_Model
             }
             $sql = $sql->SAnd($typSql);
         }
+        if(sizeof($access) >= 1){
+            $typSql = new Pluf_SQL();
+            foreach ($access as $key => $value) {
+                $typSql = $typSql->SAnd(
+                        new Pluf_SQL($key.'=%s ',
+                                array(
+                                        $value
+                                )));
+            }
+            $sql = $sql->SAnd($typSql);
+        }
         $configs = Pluf::factory('SaaS_Configuration')->getList(
                 array(
-                        'filter' => $sql->gen()
+                        'filter' => $sql->gen(),
+                        'view' => 'list'
                 ));
         return $configs;
     }
