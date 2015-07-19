@@ -176,7 +176,7 @@ class SaaS_Configuration extends Pluf_Model
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see Pluf_Model::restore()
      */
     function restore ()

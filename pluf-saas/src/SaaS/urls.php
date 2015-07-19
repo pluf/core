@@ -7,8 +7,8 @@ return array(
                 'method' => 'get',
                 'http-method' => 'GET',
                 'saas' => array(
-                    'match-application' => 1,      
-                ),
+                        'match-application' => 1
+                )
         ),
         array( // اطلاعات نرم‌افزار مورد نظر
                 'regex' => '#^/app/(\d+)$#',
@@ -17,8 +17,8 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST',
                 'saas' => array(
-                    'match-application' => 1,      
-                ),
+                        'match-application' => 1
+                )
         ),
         array( // فهرستی از تمام نرم‌افزارهای موجود
                 'regex' => '#^/app/list$#',
@@ -47,8 +47,8 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'members',
                 'saas' => array(
-                    'match-application' => 1,      
-                ),
+                        'match-application' => 1
+                )
         ),
         /* تنظیم‌ها */
         array( // فهرستی از تنظیم‌ها
@@ -58,8 +58,8 @@ return array(
                 'method' => 'configurations',
                 'http-method' => 'GET',
                 'saas' => array(
-                    'match-application' => 1,      
-                ),
+                        'match-application' => 1
+                )
         ),
         array( // دسترسی به تنظیم‌ها با شناسه
                 'regex' => '#^/app/(\d+)/config/(\d+)$#',
@@ -68,10 +68,10 @@ return array(
                 'method' => 'get',
                 'http-method' => 'GET',
                 'saas' => array(
-                    'match-application' => 1,      
+                        'match-application' => 1
                 ),
                 'freemium' => array(
-                        'level' => Pluf::f('saas_freemium_full', 5),
+                        'level' => Pluf::f('saas_freemium_full', 5)
                 )
         ),
         array( // دسترسی به تنظیم‌ها با نام
@@ -81,8 +81,8 @@ return array(
                 'method' => 'getByName',
                 'http-method' => 'GET',
                 'saas' => array(
-                    'match-application' => 1,      
-                ),
+                        'match-application' => 1
+                )
         ),
         array( // ایجاد یک تنظیم جدید
                 'regex' => '#^/app/(\d+)/config/create$#',
@@ -91,10 +91,10 @@ return array(
                 'method' => 'create',
                 'http-method' => 'POST',
                 'saas' => array(
-                    'match-application' => 1,      
+                        'match-application' => 1
                 ),
                 'freemium' => array(
-                        'level' => Pluf::f('saas_freemium_full', 5),
+                        'level' => Pluf::f('saas_freemium_full', 5)
                 )
         )
 );

@@ -23,7 +23,11 @@ class SaaS_Precondition
         }
         
         $config = $request->application->fetchConfiguration("system");
-        
+        $level = $config->getData('level', 0);
+        if (isset($request->view['ctrl']['freemium']['level']) &&
+                 $level < $request->view['ctrl']['freemium']['level']) {
+            throw new Pluf_Exception_PermissionDenied("Application level is low");
+        }
         return true;
     }
 
@@ -98,8 +102,10 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.software-owner', $request->application) ||
-                 $request->user->hasPerm('SaaS.software-member', $request->application)) {
+        if ($request->user->hasPerm('SaaS.software-owner', 
+                $request->application) ||
+                 $request->user->hasPerm('SaaS.software-member', 
+                        $request->application)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
