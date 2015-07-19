@@ -1105,6 +1105,23 @@ class Pluf_Model implements JsonSerializable
         }
     }
 
+
+    /**
+     * بررسی می‌کند که آیا مدل داده‌ای وجود دارد یا نه
+     * 
+     * در صورتی که مدل داده‌ای ذخیره نشده باشد به عنوان داده بی نام و نشان در نظر
+     * گرفته می‌شود. در مورد کاربران این تابع کاربرد فراوان دارد.
+     *
+     * @return bool True if the user is anonymous.
+     */
+    function isAnonymous() {
+        return (0 === ( int ) $this->id);
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see JsonSerializable::jsonSerialize()
+     */
     public function jsonSerialize ()
     {
         $coded = array();

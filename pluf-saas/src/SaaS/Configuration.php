@@ -108,8 +108,8 @@ class SaaS_Configuration extends Pluf_Model
                 )
         );
         $this->_a['views'] = array(
-                'list' => array (
-                        'select' => 'id, saas_configuration.key, type,description, creation_dtime, modif_dtime',
+                'list' => array(
+                        'select' => 'id, saas_configuration.key, type,description, creation_dtime, modif_dtime'
                 )
         );
     }
@@ -135,7 +135,7 @@ class SaaS_Configuration extends Pluf_Model
 
     /**
      * (non-PHPdoc)
-     * 
+     *
      * @see Pluf_Model::getData()
      */
     function getData ($key = null, $default = '')
@@ -173,16 +173,17 @@ class SaaS_Configuration extends Pluf_Model
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
-    
+
     /**
      * (non-PHPdoc)
+     * 
      * @see Pluf_Model::restore()
      */
     function restore ()
     {
         $this->data = unserialize($this->value);
     }
-    
+
     /**
      * Check if a user is anonymous.
      *

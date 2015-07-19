@@ -200,7 +200,9 @@ class Pluf_Dispatcher
     {
         $req->view = array(
                 $ctl,
-                $match
+                $match,
+                'ctrl'=>$ctl,
+                'match' => $match
         );
         $m = new $ctl['model']();
         if (isset($m->{$ctl['method'] . '_precond'})) {

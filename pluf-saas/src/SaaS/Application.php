@@ -256,11 +256,11 @@ class SaaS_Application extends Pluf_Model
             }
             $sql = $sql->SAnd($typSql);
         }
-        if(sizeof($access) >= 1){
+        if (sizeof($access) >= 1) {
             $typSql = new Pluf_SQL();
             foreach ($access as $key => $value) {
                 $typSql = $typSql->SAnd(
-                        new Pluf_SQL($key.'=%s ',
+                        new Pluf_SQL($key . '=%s ', 
                                 array(
                                         $value
                                 )));
@@ -276,12 +276,20 @@ class SaaS_Application extends Pluf_Model
     }
 
     /**
-     *
-     * @param unknown $key            
+     * تنظیم‌تعیین شده با کلید را تعیین می‌کند.
+     * 
+     * در صورتی که تنظیم مورد نظر در سیستم تعریف نشده باشد یک خطا
+     * تولید می‌شود.
+     * 
+     * @param unknown $key
+     * @param string $default
+     * @throws Pluf_Exception در صورتی که تنظیم‌تعیین شده وجود نداشته باشد. 
+     * @return تنظیم‌های مورد نظر
      */
     public function getConfiguration ($key, $default = null)
     {
-        $sql = new Pluf_SQL('application=%s AND key=%s', 
+        $sql = new Pluf_SQL(
+                'saas_configuration.application=%s AND saas_configuration.key=%s', 
                 array(
                         $this->id,
                         $key
@@ -292,10 +300,30 @@ class SaaS_Application extends Pluf_Model
                         'filter' => $sql->gen()
                 ));
         if ($configs->count() < 1) {
-            $config->key = $key;
-            $config->value = $default;
-            return $config;
+            throw new Pluf_Exception();
         }
         return $configs[0];
+    }
+
+    /**
+     * تنظیم با کلید تعیین شده را بر می‌گرداند
+     *
+     * در صورتی که تنظیم‌ها با کلید تعیین شده وجود نداشته باشد تنظیم پیش فرض
+     * ایجاد شده به عنوان نتیجه برگردانده می‌شود.
+     *
+     * @param unknown $key            
+     * @return Ambigous <string, SaaS_Configuration>
+     */
+    public function fetchConfiguration ($key)
+    {
+        try {
+            return $this->getConfiguration($key);
+        } catch (Pluf_Exception $ex) {
+            $config = SaaS_Util::configurationFactory();
+            $config->key = $key;
+            $config->application = $this;
+            $config->create();
+            return $config;
+        }
     }
 }

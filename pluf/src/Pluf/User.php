@@ -282,15 +282,6 @@ class Pluf_User extends Pluf_Model {
 	}
 	
 	/**
-	 * Check if a user is anonymous.
-	 *
-	 * @return bool True if the user is anonymous.
-	 */
-	function isAnonymous() {
-		return (0 === ( int ) $this->id);
-	}
-	
-	/**
 	 * Get all the permissions of a user.
 	 *
 	 * @param

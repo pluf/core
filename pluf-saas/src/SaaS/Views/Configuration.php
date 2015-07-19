@@ -1,17 +1,19 @@
 <?php
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
-Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Views_Configuration extends Pluf_Views
+class SaaS_Views_Configuration
 {
 
+
+    public $configurations_precond = array(
+            'SaaS_Precondition::baseAccess'
+    );
+    
     /**
      *
      * @param unknown_type $request            
@@ -19,12 +21,11 @@ class SaaS_Views_Configuration extends Pluf_Views
      */
     public function configurations ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
         if ($request->user->isAnonymous() ||
-                 ! $request->user->hasPerm('SaaS.software-owner', $application)) {
+                 ! $request->user->hasPerm('SaaS.software-owner', 
+                        $request->application)) {
             return new Pluf_HTTP_Response_Json(
-                    $application->getConfigurationList(
+                    $request->application->getConfigurationList(
                             array(
                                     SaaS_ConfigurationType::SYSTEM,
                                     SaaS_ConfigurationType::APPLICATION,
@@ -36,7 +37,7 @@ class SaaS_Views_Configuration extends Pluf_Views
         }
         if (! $request->user->administrator) {
             return new Pluf_HTTP_Response_Json(
-                    $application->getConfigurationList(
+                    $request->application->getConfigurationList(
                             array(
                                     SaaS_ConfigurationType::SYSTEM,
                                     SaaS_ConfigurationType::APPLICATION,
@@ -47,7 +48,7 @@ class SaaS_Views_Configuration extends Pluf_Views
                             )));
         }
         return new Pluf_HTTP_Response_Json(
-                $application->getConfigurationList(
+                $request->application->getConfigurationList(
                         array(
                                 SaaS_ConfigurationType::SYSTEM,
                                 SaaS_ConfigurationType::APPLICATION,
@@ -55,19 +56,30 @@ class SaaS_Views_Configuration extends Pluf_Views
                         )));
     }
 
-    public $get_precond = array();
+    public $get_precond = array(
+            'SaaS_Precondition::baseAccess'
+    );
 
     public function get ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
         $config = Pluf_Shortcuts_GetObjectOr404('SaaS_Configuration', $match[2]);
         // XXX: maso, 1394: بررسی نکات امنیتی
         return new Pluf_HTTP_Response_Json($config->data);
     }
 
-    public $configuration_precond = array(
-            'Pluf_Precondition::loginRequired'
+    public $getByName_precond = array(
+            'SaaS_Precondition::baseAccess'
+    );
+
+    public function getByName ($request, $match)
+    {
+        $config = $request->application->fetchConfiguration($match[2]);
+        // XXX: maso, 1394: بررسی نکات امنیتی
+        return new Pluf_HTTP_Response_Json($config->data);
+    }
+
+    public $update_precond = array(
+            'SaaS_Precondition::applicationOwner'
     );
 
     /**
@@ -75,26 +87,26 @@ class SaaS_Views_Configuration extends Pluf_Views
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function configuration ($request, $match)
+    public function update ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
         if ($request->user->isAnonymous() ||
-                 ! $request->user->hasPerm('SaaS.software-owner', $application)) {
+                 ! $request->user->hasPerm('SaaS.software-owner', 
+                        $request->application)) {
             throw new Pluf_Exception_PermissionDenied();
         }
         
         if (! $request->user->administrator) {
             return new Pluf_HTTP_Response_Json(
-                    $application->getConfiguration(
+                    $request->application->getConfiguration(
                             SaaS_ConfigurationType::APPLICATION));
         }
         return new Pluf_HTTP_Response_Json(
-                $application->getConfiguration(SaaS_ConfigurationType::SYSTEM));
+                $request->application->getConfiguration(
+                        SaaS_ConfigurationType::SYSTEM));
     }
 
     public $create_precond = array(
-            'Pluf_Precondition::loginRequired'
+            'SaaS_Precondition::applicationOwner'
     );
 
     /**
@@ -106,11 +118,8 @@ class SaaS_Views_Configuration extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
-        SaaS_Precondition::applicationOwner($request, $application);
         $extra = array(
-                'application' => $application
+                'application' => $request->application
         );
         $form = new SaaS_Form_Configuration(
                 array_merge($request->POST, $request->FILES), $extra);

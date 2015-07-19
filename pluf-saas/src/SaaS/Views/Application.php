@@ -1,15 +1,12 @@
 <?php
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
-Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Views_Application extends Pluf_Views
+class SaaS_Views_Application
 {
 
     /**
@@ -69,7 +66,9 @@ class SaaS_Views_Application extends Pluf_Views
      *
      * @var unknown
      */
-    public $get_precond = array();
+    public $get_precond = array(
+            'SaaS_Precondition::baseAccess'
+    );
 
     /**
      * یک نرم‌افزار را تعیین می‌کند
@@ -83,9 +82,7 @@ class SaaS_Views_Application extends Pluf_Views
      */
     public function get ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
-        return new Pluf_HTTP_Response_Json($application);
+        return new Pluf_HTTP_Response_Json($request->application);
     }
 
     /**
@@ -123,7 +120,7 @@ class SaaS_Views_Application extends Pluf_Views
      * @var unknown
      */
     public $update_precond = array(
-            'Pluf_Precondition::loginRequired'
+            'SaaS_Precondition::applicationOwner'
     );
 
     /**
@@ -137,11 +134,8 @@ class SaaS_Views_Application extends Pluf_Views
      */
     public function update ($request, $match)
     {
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $match[1]);
-        SaaS_Precondition::applicationOwner($request, $application);
         $params = array(
-                'application' => $application
+                'application' => $request->application
         );
         $form = new SaaS_Form_Application(
                 array_merge($request->POST, $request->FILES), $params);
@@ -154,7 +148,7 @@ class SaaS_Views_Application extends Pluf_Views
      * @var unknown
      */
     public $members_precond = array(
-            'Pluf_Precondition::loginRequired'
+            'SaaS_Precondition::applicationOwner'
     );
 
     /**
@@ -164,11 +158,8 @@ class SaaS_Views_Application extends Pluf_Views
      */
     public function members ($request, $match)
     {
-        $application_id = $match[1];
-        $application = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
-                $application_id);
         return new Pluf_HTTP_Response_Json(
-                $application->getMembershipData('txt'));
+                $request->application->getMembershipData('txt'));
     }
 
     /**

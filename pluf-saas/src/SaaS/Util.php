@@ -2,7 +2,27 @@
 
 class SaaS_Util
 {
-    public static function initConfiguration($app){
+
+    public static function configurationFactory ($configuration = null)
+    {
+        if ($configuration != null) {
+            return $configuration;
+        }
+        $sysConfig = new SaaS_Configuration();
+        $sysConfig->type = SaaS_ConfigurationType::GENERAL;
+        $sysConfig->owner_write = true;
+        $sysConfig->member_write = false;
+        $sysConfig->authorized_write = false;
+        $sysConfig->other_write = false;
+        $sysConfig->owner_read = true;
+        $sysConfig->member_read = true;
+        $sysConfig->authorized_read = false;
+        $sysConfig->other_read = false;
+        return $sysConfig;
+    }
+
+    public static function initConfiguration ($app)
+    {
         // System configuration
         $sysConfig = new SaaS_Configuration();
         $sysConfig->application = $app;
