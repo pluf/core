@@ -42,7 +42,7 @@ class User_Views_Authentication
         }
         
         if (false === $user) {
-            throw new Pluf_Exception(__('user.authentication.login.incorrect'));
+            throw new Pluf_Exception(__('user authentication incorrect'));
         }
         
         $request->user = $user;
@@ -50,7 +50,6 @@ class User_Views_Authentication
         $request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
         $user->last_login = gmdate('Y-m-d H:i:s');
         $user->update();
-        $request->session->deleteTestCookie();
         
         return User_Shortcuts_UserJsonResponse($user);
     }
@@ -60,8 +59,10 @@ class User_Views_Authentication
      */
     function logout ($request, $match)
     {
-        $views = new Pluf_Views();
-        $views->logout($request, $match, Pluf::f('after_logout_page'));
+        $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
+        $request->user = new $user_model();
+        $request->session->clear();
+        $request->session->setData('logout_time', gmdate('Y-m-d H:i:s'));
         return new Pluf_HTTP_Response_Json(new Pluf_User());
     }
 }

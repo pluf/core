@@ -1,5 +1,8 @@
 <?php
 return array(
+        /*
+         * کاربردهای عمومی
+         */
         array( // ورود کاربر به سیستم است
                 'regex' => '#^/login$#',
                 'base' => $base,
@@ -51,5 +54,15 @@ return array(
                 'model' => 'User_Views_Profile',
                 'method' => 'update',
                 'http-method' => 'POST'
-        )
+        ),
+        /*
+         * مدیریت سیستم
+         */
+        array( // ورود کاربر به سیستم است
+                'regex' => '#^/user/list$#',
+                'base' => $base,
+                'model' => 'User_Views_User',
+                'method' => 'users',
+                'http-method' => 'GET'
+        ),
 );

@@ -14,8 +14,6 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
  * <code>
  * $model = new Pluf_Permission();
  * $pag = new Pluf_Paginator($model);
- * // Set the action to the page listing the permissions
- * $pag->action = 'view_name';
  * // Get the paginator parameters from the request
  * $pag->setFromRequest($request);
  * print $pag->render();
