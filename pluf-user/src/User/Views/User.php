@@ -10,7 +10,7 @@ Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
  * @author maso
  *        
  */
-class User_Views_User extends Pluf_Views
+class User_Views_User
 {
 
     /**
@@ -126,46 +126,36 @@ class User_Views_User extends Pluf_Views
     {
         $pag = new Pluf_Paginator(new Pluf_User());
         $pag->list_filters = array(
-                'id',
-                'login'
+                'administrator',
+                'staff',
+                'active'
         );
         $list_display = array(
-                'login' => __('User name')
+                'login' => __('User name'),
+                'first_name' => __('First name'),
+                'last_name' => __('Last name')
         );
         $search_fields = array(
-                'id',
                 'login',
+                'first_name',
+                'last_name',
+                'email'
         );
         $sort_fields = array(
                 'id',
                 'login',
+                'first_name',
+                'last_name',
+                'date_joined',
+                'last_login'
         );
-        $pag->model_view = 'list';
+        $pag->model_view = 'secure';
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = 10;
+        $pag->items_per_page = $this->getListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
-    /**
-     * تمام داده‌های امنیتی را از فهرست انتخاب حذف می‌کند.
-     */
-    function getUserListSelect ()
-    {
-        if (isset($this->_cache['getSelect']))
-            return $this->_cache['getSelect'];
-        $select = array();
-        $table = $this->getSqlTable();
-        foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany') {
-                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
-                        $this->_con->qn($col);
-            }
-        }
-        $this->_cache['getSelect'] = implode(', ', $select);
-        return $this->_cache['getSelect'];
-    }
-    
     /**
      * پیش نیازهای فهرست کردن کاربران
      *
@@ -188,5 +178,22 @@ class User_Views_User extends Pluf_Views
             return $this->account($request, $match);
         }
         throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     * تعداد گزینه‌های یک لیست را تعیین می‌کند.
+     *
+     * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
+     *
+     * @param unknown $request            
+     * @return number
+     */
+    private function getListCount ($request)
+    {
+        $count = 10;
+        if (array_key_exists('_px_count', $request->GET)) {
+            $count = $request->GET['_px_count'];
+        }
+        return $count;
     }
 }
