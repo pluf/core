@@ -14,6 +14,18 @@ function User_Shortcuts_UserDateFactory($object) {
 }
 
 /**
+ * 
+ * @param unknown $object
+ * @return unknown
+ */
+function User_Shortcuts_UserProfileDateFactory($object) {
+    $user_model = Pluf::f ( 'user_profile_class', 'User_Profile' );
+    if ($object == null || ! isset ( $object ))
+        return new $user_model ();
+    return $object;
+}
+
+/**
  * داده‌های کاربر را با در نظر گرفتن امنیت ارسال می‌کند.
  *
  * @param unknown $object        	
