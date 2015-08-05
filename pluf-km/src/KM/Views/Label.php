@@ -92,8 +92,8 @@ class KM_Views_Label
         $extra = array(
                 'user' => $request->user
         );
-        $form = new KM_Form_Label(
-                array_merge($request->POST, $request->FILES), $extra);
+        $form = new KM_Form_Label(array_merge($request->POST, $request->FILES), 
+                $extra);
         $cuser = $form->save();
         $request->user->setMessage(
                 sprintf(__('The label %s has been created.'), (string) $cuser));
