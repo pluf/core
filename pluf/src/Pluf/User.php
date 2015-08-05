@@ -3,6 +3,9 @@
 /**
  * مدل داده‌ای کاربر
  * 
+ * این مدل داده‌ای، یک مدل داده‌ای کلی است و همواره به صورت پیش فرض استفاده می‌شود.
+ * در صورت تمایل می‌توان از ساختارهای داده‌ای دیگر به عنوان مدل داده‌ای برای کاربران
+ * استفاده کرد.
  */
 class Pluf_User extends Pluf_Model
 {
@@ -136,11 +139,11 @@ class Pluf_User extends Pluf_Model
                 )
         );
         $this->_a['views'] = array(
-                'all' => array (
-                        'select' => $this->getSelect(),
+                'all' => array(
+                        'select' => $this->getSelect()
                 ),
                 'secure' => array(
-                        'select' => $this->getSecureSelect(),
+                        'select' => $this->getSecureSelect()
                 )
         );
         if (Pluf::f('pluf_custom_user', false))
@@ -285,9 +288,10 @@ class Pluf_User extends Pluf_Model
     function checkCreditentials ($login, $password)
     {
         $where = 'login = ' . $this->_toDb($login, 'login');
-        $users = $this->getList(array(
-                'filter' => $where
-        ));
+        $users = $this->getList(
+                array(
+                        'filter' => $where
+                ));
         if ($users === false or count($users) !== 1) {
             return false;
         }
@@ -306,9 +310,10 @@ class Pluf_User extends Pluf_Model
     function getUser ($login)
     {
         $where = 'login = ' . $this->_toDb($login, 'login');
-        $users = $this->getList(array(
-                'filter' => $where
-        ));
+        $users = $this->getList(
+                array(
+                        'filter' => $where
+                ));
         if ($users === false or count($users) !== 1) {
             return false;
         }
@@ -449,9 +454,10 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * Set a message.
+     * تعیین پیام برای کاربر
      *
-     * The user must not be anonymous.
+     * یک پیام جدید را ایجاد کرده و به کاربر اضافه می‌کند. در صورتی که کاربر در
+     * سیستم ایجاد نشده باشد یک خطا صادر خواهد شد.
      *
      * @param
      *            string Message
@@ -460,7 +466,8 @@ class Pluf_User extends Pluf_Model
     function setMessage ($message)
     {
         if ($this->isAnonymous()) {
-            return false;
+            throw new Pluf_Exception_DoesNotExist(
+                    __("User not exist, while you are trying to add message?!"));
         }
         $m = new Pluf_Message();
         $m->user = $this;
@@ -469,16 +476,18 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * Get messages and delete them.
+     * دریافت و حذف پیام‌ها
      *
-     * The user must not be anonymous.
+     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند. در
+     * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
      *
-     * @return mixed False if anonymous, else ArrayObject
+     * @return ArrayObject
      */
     function getAndDeleteMessages ()
     {
         if ($this->isAnonymous()) {
-            return false;
+            throw new Pluf_Exception_DoesNotExist(
+                    __("User not exist, while you are trying to get messages?!"));
         }
         $messages = new ArrayObject();
         $ms = $this->get_pluf_message_list();
@@ -490,7 +499,7 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * Get profile.
+     * پروفایل کاربر را تعیین می‌کند.
      *
      * Retrieve the profile of the current user. If not profile in the
      * database a Pluf_Exception_DoesNotExist exception is thrown,
