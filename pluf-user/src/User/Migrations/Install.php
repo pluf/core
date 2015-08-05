@@ -8,7 +8,7 @@
 function User_Migrations_Install_setup ($params = '')
 {
     $models = array(
-//             'User_Profile'
+            'User_Profile'
     );
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
@@ -26,7 +26,7 @@ function User_Migrations_Install_setup ($params = '')
 function User_Migrations_Install_teardown ($params = '')
 {
     $models = array(
-//             'User_Profile'
+            'User_Profile'
     );
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
