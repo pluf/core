@@ -3,6 +3,11 @@
 
 	var wikiMadule = angular.module('pluf.wiki', [ 'pluf' ]);
 
+	/**
+	 * مدیریت صفحه‌های ویکی را ایجاد می‌کند
+	 * 
+	 * این مدیریت قادر است یک صفحه ویکی را در اختیار کاربران قرار دهد.
+	 */
 	wikiMadule.factory('WikiManager', function($rootScope, $http, $window, $q,
 			WikiPage) {
 		var partService = {
