@@ -49,6 +49,54 @@ class SaaS_Views_Application
     }
 
     /**
+     * پیش نیاز تعیین نرم‌افزارهای کاربر
+     * 
+     * @var unknown
+     */
+    public $userApplications_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    /**
+     * نرم‌افزارهای کاربردی که به نوعی با کاربر در رابطه هستند
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function userApplications ($request, $match)
+    {
+        // maso, 1394: گرفتن فهرست مناسبی از آپارتمان‌ها
+        $pag = new Pluf_Paginator(new SaaS_Application());
+        $pag->model_view = 'user_model_permission';
+        $pag->forced_where = new Pluf_SQL(
+                'model_class=%s AND owner_class=%s AND owner_id=%s', 
+                array(
+                        'SaaS_Application',
+                        'Pluf_User',
+                        $request->user->id
+                ));
+        $list_display = array(
+                'id' => __('application id'),
+                'title' => __('title'),
+                'creation_dtime' => __('create')
+        );
+        $search_fields = array();
+        $sort_fields = array(
+                'creation_dtime'
+        );
+        $pag->configure($list_display, $search_fields, $sort_fields);
+        $pag->items_per_page = $this->getListCount($request);
+        $pag->no_results_text = __('No apartment is added yet.');
+        $pag->sort_order = array(
+                'creation_dtime',
+                'DESC'
+        );
+        $pag->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($pag->render_object());
+    }
+
+    /**
      *
      * @param unknown $request            
      * @param unknown $match            
@@ -96,7 +144,7 @@ class SaaS_Views_Application
 
     /**
      * یک نرم‌افزار را ایجاد می‌کند.
-     * 
+     *
      * @param unknown $request            
      * @param unknown $match            
      * @return Pluf_HTTP_Response_Json
@@ -125,9 +173,9 @@ class SaaS_Views_Application
 
     /**
      * یک نرم‌افزار را به روز می‌کند.
-     * 
+     *
      * این کنترل حتما باید با متد POST فراخوانی شود.
-     * 
+     *
      * @param unknown $request            
      * @param unknown $match            
      * @return Pluf_HTTP_Response_Json

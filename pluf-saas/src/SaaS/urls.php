@@ -23,6 +23,11 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'applications'
         ),
+        array( // فهرستی از تمام نرم‌افزارهایی که با کاربر در رابطه است
+                'regex' => '#^/app/user/list$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'userApplications'
+        ),
         /* دسترسی‌ها به نرم‌افزار */
         array( // اطلاعات نرم‌افزار جاری
                 'regex' => '#^/app$#',

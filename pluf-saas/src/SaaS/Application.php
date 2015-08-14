@@ -73,6 +73,15 @@ class SaaS_Application extends Pluf_Model
                         'blank' => true
                 )
         );
+        $this->_a['views'] = array(
+                'user_model_permission' => array(
+        	    	'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_application.id='.$this->_con->pfx.'rowpermissions.model_id',
+        	    	'select' => $this->getSelect().', permission',
+        	    	'props' => array(
+        	    	        'permission' => 'permission'
+        	    	),
+                )
+        );
     }
 
     /**
@@ -277,13 +286,13 @@ class SaaS_Application extends Pluf_Model
 
     /**
      * تنظیم‌تعیین شده با کلید را تعیین می‌کند.
-     * 
+     *
      * در صورتی که تنظیم مورد نظر در سیستم تعریف نشده باشد یک خطا
      * تولید می‌شود.
-     * 
-     * @param unknown $key
-     * @param string $default
-     * @throws Pluf_Exception در صورتی که تنظیم‌تعیین شده وجود نداشته باشد. 
+     *
+     * @param unknown $key            
+     * @param string $default            
+     * @throws Pluf_Exception در صورتی که تنظیم‌تعیین شده وجود نداشته باشد.
      * @return تنظیم‌های مورد نظر
      */
     public function getConfiguration ($key, $default = null)

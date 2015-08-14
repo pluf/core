@@ -77,7 +77,8 @@
 
 	$this->_a['views'] = array(
     	'with_list' => array(
-	    	'join' => 'LEFT JOIN '.$this->con->pfx.'todo_lists ON list='.$this->con->pfx.'todo_lists.id',
+	    	'join' => 'LEFT JOIN '.$this->_con->pfx.
+	    		'todo_lists ON list='.$this->_con->pfx.'todo_lists.id',
 	    	'select' => $this->getSelect().', name',
 	    	'props' => array('name' => 'list_name'),
 		)
@@ -104,5 +105,6 @@
 
 
 - select: پارامترهایی که باید انتخاب شود
+- join  : برای ترکیب دوتا جدول
 - group : خصوصیتی که بر اساس آن باید دسته بندی شود
 - props : خصوصیت‌هایی اضافه که باید نمایش داده شود

@@ -60,13 +60,30 @@ Extra property/value for the items.
 
 This can be practical if you want some values for the edit action which are not available in the model data.
 
-## forced_where = null
+## عبارت جستجوی اجباری
 
-The forced where clause on top of the search.
+همانگونه که گفته شد، صفحه بندی راهکارهایی خاص را برای اجرای جستجوها در نظر می‌گیرد. اما گاهی نیاز است علاوه بر اجرای عبارت‌های ورودی یک عبارت اجباری نیز به جستجو اضافه کردم. 
 
-## model_view = null
+برای تعیین یک عبارت خاص در فرآیند جستجو از این خصوصیت استفاده می‌شود. برای نمونه در زیر یک عبارت برای فهرست کردن و دسته بندی موجودیت‌هایی اورده شده که در آنها نرم‌افزار یک شناسه خاص دارد.
 
-View of the model to be used.
+	$paginator->forced_where = new Pluf_SQL('application=%s', 
+                array(
+                        $request->application->id
+                ));
+
+به صورت پیش فرض این عبارت تهی بوده و به صورت زیر تعیین می‌شود:
+
+	forced_where = null
+
+## نمایش خاص داده
+
+هر مدل می‌تواند از نمایش‌های متفاوت پایگاه داده استفاده کند. این نمایش‌ها ساختارهای داده‌ای پیچیده‌تری را ایجاد می‌کنند و یا حتی برخی از خصوصیت‌های موجودیت‌ها را حذف می‌کنند. با استفاده از این خصوصیت می‌توان تعیین کرد که کدام نمایش پایگاه داده در جستجو استفاده شود:
+
+	$paginator->model_view='view name';
+
+به صورت پیش فرض این مقدار به صورت زیر تعریف می‌شود:
+
+	model_view = null
 
 ## items_per_page = 50
 
