@@ -223,7 +223,7 @@ class SaaS_Views_Application
         $count = 5;
         if (array_key_exists('_px_count', $request->GET)) {
             $count = $request->GET['_px_count'];
-            if ($count > 20) {
+            if ($count > 20 || $count < 1) {
                 $count = 20;
             }
         }
