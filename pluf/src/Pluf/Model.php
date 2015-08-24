@@ -10,7 +10,7 @@ class Pluf_Model implements JsonSerializable
 {
 
     public $_model = __CLASS__;
- // set it to your model name
+    // set it to your model name
     
     /**
      * Database connection.
@@ -50,7 +50,7 @@ class Pluf_Model implements JsonSerializable
      * Storage cached data for methods_get
      */
     protected $_cache = array();
- // We should use a global cache.
+    // We should use a global cache.
     
     /**
      * List of the foreign keys.
@@ -69,7 +69,7 @@ class Pluf_Model implements JsonSerializable
             'get' => array(), // foreign keys
             'extra' => array()
     );
- // added by some fields
+    // added by some fields
     function __construct ($pk = null, $values = array())
     {
         $this->_init();
@@ -222,9 +222,8 @@ class Pluf_Model implements JsonSerializable
         sort($hay);
         $table = $hay[0] . '_' . $hay[1] . '_assoc';
         $req = 'INSERT INTO ' . $this->_con->pfx . $table . "\n";
-        $req .= '(' .
-                 $this->_con->qn(strtolower($this->_a['model']) . '_id') . ', ' .
-                 $this->_con->qn(strtolower($model->_a['model']) . '_id') .
+        $req .= '(' . $this->_con->qn(strtolower($this->_a['model']) . '_id') .
+                 ', ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') .
                  ') VALUES ' . "\n";
         $req .= '(' . $this->_toDb($this->_data['id'], 'id') . ', ';
         $req .= $this->_toDb($model->id, 'id') . ')';
@@ -385,10 +384,11 @@ class Pluf_Model implements JsonSerializable
             } else {
                 $model = $this->_m['list'][$method];
             }
-            $args = array_merge(array(
-                    $model,
-                    $method
-            ), $args);
+            $args = array_merge(
+                    array(
+                            $model,
+                            $method
+                    ), $args);
             return call_user_func_array(
                     array(
                             $this,
@@ -406,7 +406,9 @@ class Pluf_Model implements JsonSerializable
             Pluf::loadFunction($this->_m['extra'][$method][1]);
             return call_user_func_array($this->_m['extra'][$method][1], $args);
         }
-        throw new Exception(sprintf('Method "%s" not available.', $method));
+        throw new Pluf_Exception(
+                sprintf('Method "%s" not available in model.', $method, 
+                        $this->_a['model']));
     }
 
     /**
@@ -428,8 +430,7 @@ class Pluf_Model implements JsonSerializable
         }
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']();
-            if ($field->type != 'manytomany' &&
-                     array_key_exists($col, $rs[0])) {
+            if ($field->type != 'manytomany' && array_key_exists($col, $rs[0])) {
                 $this->_data[$col] = $this->_fromDb($rs[0][$col], $col);
             }
         }
@@ -516,8 +517,7 @@ class Pluf_Model implements JsonSerializable
                 'count' => false
         );
         $p = array_merge($default, $p);
-        if (! is_null($p['view']) &&
-                 ! isset($this->_a['views'][$p['view']])) {
+        if (! is_null($p['view']) && ! isset($this->_a['views'][$p['view']])) {
             throw new Exception(
                     sprintf(__('The view "%s" is not defined.'), $p['view']));
         }
@@ -1105,29 +1105,31 @@ class Pluf_Model implements JsonSerializable
         }
     }
 
-
     /**
      * بررسی می‌کند که آیا مدل داده‌ای وجود دارد یا نه
-     * 
-     * در صورتی که مدل داده‌ای ذخیره نشده باشد به عنوان داده بی نام و نشان در نظر
+     *
+     * در صورتی که مدل داده‌ای ذخیره نشده باشد به عنوان داده بی نام و نشان در
+     * نظر
      * گرفته می‌شود. در مورد کاربران این تابع کاربرد فراوان دارد.
      *
      * @return bool True if the user is anonymous.
      */
-    function isAnonymous() {
-        return (0 === ( int ) $this->id);
+    function isAnonymous ()
+    {
+        return (0 === (int) $this->id);
     }
 
     /**
      * (non-PHPdoc)
+     * 
      * @see JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize ()
     {
         $coded = array();
         foreach ($this->_data as $col => $val) {
-            if($val)
-              $coded[$col] = $val;
+            if ($val)
+                $coded[$col] = $val;
         }
         return $coded;
     }

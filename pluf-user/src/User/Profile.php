@@ -130,22 +130,4 @@ class User_Profile extends Pluf_Model {
 		}
 		$this->modif_dtime = gmdate ( 'Y-m-d H:i:s' );
 	}
-	
-	/**
-	 * حالت آپارتمان ایجاد شده را به روز می‌کند
-	 *
-	 * @see Pluf_Model::postSave()
-	 */
-	function postSave($create = false) {
-		//
-	}
-	
-	/**
-	 * Check if a apartment is anonymous.
-	 *
-	 * @return bool True if the user is anonymous.
-	 */
-	function isAnonymous() {
-		return (0 === ( int ) $this->id);
-	}
 }

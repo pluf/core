@@ -9,7 +9,8 @@ function KM_Migrations_Install_setup ($params = '')
 {
     $models = array(
             'KM_Label',
-            'KM_Category'
+            'KM_Category',
+            'KM_Comment'
     );
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);

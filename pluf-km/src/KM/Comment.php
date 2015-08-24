@@ -1,46 +1,36 @@
 <?php
 
-/**
- * ساختار داده‌ای یک خانه را تعیین می‌کند.
- * 
- * @author maso <mostafa.barmshory@dpq.co.ir>
- *
- */
-class Inbox_Message extends Pluf_Model
+class KM_Comment extends Pluf_Model
 {
 
-    /**
-     * @brief مدل داده‌ای را بارگذاری می‌کند.
-     *
-     * @see Pluf_Model::init()
-     */
+    public $_model = 'KM_Comment';
+
     function init ()
     {
-        $this->_a['table'] = 'inbox_message';
-        $this->_a['model'] = 'Inbox_Message';
-        $this->_model = 'Inbox_Message';
+        $this->_a['table'] = 'km-comment';
+        $this->_a['model'] = 'KM_Comment';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'from_id' => array(
+                'model_id' => array(
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false,
                         'verbose' => __('model ID')
                 ),
-                'from_class' => array(
+                'model_class' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 50,
                         'verbose' => __('model class')
                 ),
-                'to_id' => array(
+                'owner_id' => array(
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false,
                         'verbose' => __('owner ID')
                 ),
-                'to_class' => array(
+                'owner_class' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 50,
@@ -48,26 +38,11 @@ class Inbox_Message extends Pluf_Model
                         'help_text' => __(
                                 'For example Pluf_User or Pluf_Group.')
                 ),
-                'title' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                'visible' => array(
+                        'type' => 'Pluf_DB_Field_Boolean',
                         'blank' => false,
-                        'size' => 250,
-                        'verbose' => __('title'),
-                        'help_text' => __(
-                                'The title of the page must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.')
-                ),
-                'summery' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 250,
-                        'verbose' => __('summery'),
-                        'help_text' => __(
-                                'A one line description of the message content.')
-                ),
-                'content' => array(
-                        'type' => 'Pluf_DB_Field_Compressed',
-                        'blank' => false,
-                        'verbose' => __('content')
+                        'default' => false,
+                        'verbose' => __('do not have the permission')
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
@@ -78,12 +53,29 @@ class Inbox_Message extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('modification date')
+                ),
+                'comment' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 1024,
+                        'verbose' => __('comment text')
+                )
+        );
+        $this->_a['idx'] = array(
+                'common_combo_idx' => array(
+                        'type' => 'unique',
+                        'col' => 'model_id, model_class, owner_id, owner_class'
                 )
         );
     }
 
     /**
-     * \brief پیش ذخیره را انجام می‌دهد
+     * پیش ذخیره را انجام می‌دهد
+     *
+     * در این فرآیند نیازهای ابتدایی سیستم به آن اضافه می‌شود. این نیازها
+     * مقادیری هستند که
+     * در زمان ایجاد باید تعیین شوند. از این جمله می‌توان به کاربر و تاریخ اشاره
+     * کرد.
      *
      * @param $create حالت
      *            ساخت یا به روز رسانی را تعیین می‌کند
@@ -92,27 +84,30 @@ class Inbox_Message extends Pluf_Model
     {
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
+            $this->access_count = 0;
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
-    
+
     /**
-     * یک نمونه جدید پیام ایجاد می‌کند.
+     * یک نمونه جدید از این کلاس ایجاد می‌کند
+     * 
+     * نمونه ایجاد شده به عنوان نتیجه فراخوانی بازگردانده می‌شود.
      * 
      * @param unknown $owner
      * @param unknown $object
-     * @param unknown $title
-     * @param unknown $content
+     * @param unknown $comment
+     * @param string $visible
      */
-    public static function add ($owner, $object, $title, $content)
+    public static function add ($owner, $object, $comment, $visible = true)
     {
-        $nperm = new Inbox_Message();
-        $nperm->from_id = $owner->id;
-        $nperm->from_class = $owner->_a['model'];
-        $nperm->to_id = $object->id;
-        $nperm->to_class = $object->_a['model'];
-        $nperm->title = $title;
-        $nperm->content = $content;
+        $nperm = new Pluf_RowPermission();
+        $nperm->owner_id = $owner->id;
+        $nperm->owner_class = $owner->_a['model'];
+        $nperm->model_id = $object->id;
+        $nperm->model_class = $object->_a['model'];
+        $nperm->comment = $comment;
+        $nperm->visible = $visible;
         $nperm->create();
         return $nperm;
     }
