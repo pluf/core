@@ -233,7 +233,7 @@
         if (this._current === null) {
           var scope = this;
           $http.get('/api/user/account').then(function(data) {
-            var user = new User(data);
+            var user = new User(data.data);
             deferred.resolve(user);
             scope._setCurrent(user);
           }, function(data) {

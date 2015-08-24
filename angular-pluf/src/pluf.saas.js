@@ -5,7 +5,7 @@
 	 * مدیریت نرم‌افزارها را انجام می‌دهد
 	 */
 	saasMadule.factory('SaaSManager', function($rootScope, $http, $q, $window,
-	        PException,PaginatorPage, PaginatorParameter, Application) {
+	        PNotify, PException,PaginatorPage, PaginatorParameter, Application) {
 		var manager = {
 			_pool : {},
 			_default : 0,
