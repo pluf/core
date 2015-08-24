@@ -57,12 +57,25 @@ class Pluf_Exception extends Exception implements JsonSerializable
 
     public function jsonSerialize ()
     {
-        return [
-                'code' => $this->code,
-                'status' => $this->status,
-                'link' => $this->link,
-                'message' => $this->message,
-                'developerMessage' => $this->developerMessage
-        ];
+        if (Pluf::f('debug', false)) {
+            return [
+                    'code' => $this->code,
+                    'status' => $this->status,
+                    'link' => $this->link,
+                    'message' => $this->message,
+                    'developerMessage' => $this->developerMessage,
+                    'stack' => $this->getTrace()
+            ];
+        } else {
+            return [
+                    'code' => $this->code,
+                    'status' => $this->status,
+                    'link' => $this->link,
+                    'message' => $this->message
+            ];
+        }
     }
 }
+
+
+

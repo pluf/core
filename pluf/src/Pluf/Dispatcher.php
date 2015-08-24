@@ -69,11 +69,7 @@ class Pluf_Dispatcher
                         $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             }
         } catch (Exception $e) {
-            if (Pluf::f('debug', false) == true) {
-                $response = new Pluf_HTTP_Response_ServerErrorDebug($e);
-            } else {
-                $response = new Pluf_HTTP_Response_ServerError($e);
-            }
+            $response = new Pluf_HTTP_Response_ServerError($e);
             $response->render(
                     $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             if (defined('IN_UNIT_TESTS')) {

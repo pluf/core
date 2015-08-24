@@ -1,4 +1,5 @@
 <?php
+
 /* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
  * # ***** BEGIN LICENSE BLOCK *****
@@ -21,59 +22,76 @@
  * #
  * # ***** END LICENSE BLOCK *****
  */
-class Pluf_HTTP_Response_ServerErrorDebug extends Pluf_HTTP_Response {
-	/**
-	 * Debug version of a server error.
-	 *
-	 * @param
-	 *        	Exception The exception being raised.
-	 * @param
-	 *        	string Mime type
-	 */
-	function __construct($exception, $mimetype = null) {
-		$this->status_code = 500;
-		if (Pluf::f ( 'rest', false )) {
-			$mimetype = Pluf::f ( 'mimetype_json', 'application/json' ) . '; charset=utf-8';
-			if (! ($exception instanceof Pluf_Exception)) {
-				$exception = new Pluf_HTTP_Error500 ( 'Unknown exception', 5000, $exception );
-			}
-			$exception->setDeveloperMessage ( $exception->getDeveloperMessage () . "\n" . $exception->getTraceAsString () );
-			parent::__construct ( json_encode ( $exception ), $mimetype );
-			$this->status_code = $exception->getStatus();
-			return;
-		}
-		$this->content = Pluf_HTTP_Response_ServerErrorDebug_Pretty ( $exception );
-	}
+ /**
+  * @deprecated
+  * @author maso
+  *
+  */
+class Pluf_HTTP_Response_ServerErrorDebug extends Pluf_HTTP_Response
+{
+
+    /**
+     * Debug version of a server error.
+     *
+     * @param
+     *            Exception The exception being raised.
+     * @param
+     *            string Mime type
+     */
+    function __construct ($exception, $mimetype = null)
+    {
+        $this->status_code = 500;
+        if (Pluf::f('rest', false)) {
+            $mimetype = Pluf::f('mimetype_json', 'application/json') .
+                     '; charset=utf-8';
+            if (! ($exception instanceof Pluf_Exception)) {
+                $exception = new Pluf_HTTP_Error500('Unknown exception', 5000, 
+                        $exception);
+            }
+            $exception->setDeveloperMessage(
+                    $exception->getDeveloperMessage() . "\n" .
+                             $exception->getTraceAsString());
+            parent::__construct(json_encode($exception), $mimetype);
+            $this->status_code = $exception->getStatus();
+            return;
+        }
+        $this->content = Pluf_HTTP_Response_ServerErrorDebug_Pretty($exception);
+    }
 }
 
 /**
  * @credits http://www.sitepoint.com/blogs/2006/04/04/pretty-blue-screen/
  */
-function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
-	$o = create_function ( '$in', 'return htmlspecialchars($in);' );
-	$sub = create_function ( '$f', '$loc="";if(isset($f["class"])){
+function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
+{
+    $o = create_function('$in', 'return htmlspecialchars($in);');
+    $sub = create_function('$f', 
+            '$loc="";if(isset($f["class"])){
         $loc.=$f["class"].$f["type"];}
         if(isset($f["function"])){$loc.=$f["function"];}
         if(!empty($loc)){$loc=htmlspecialchars($loc);
-        $loc="<strong>$loc</strong>";}return $loc;' );
-	$parms = create_function ( '$f', '$params=array();if(isset($f["function"])){
+        $loc="<strong>$loc</strong>";}return $loc;');
+    $parms = create_function('$f', 
+            '$params=array();if(isset($f["function"])){
         try{if(isset($f["class"])){
         $r=new ReflectionMethod($f["class"]."::".$f["function"]);}
         else{$r=new ReflectionFunction($f["function"]);}
         return $r->getParameters();}catch(Exception $e){}}
-        return $params;' );
-	$src2lines = create_function ( '$file', '$src=nl2br(highlight_file($file,TRUE));
-        return explode("<br />",$src);' );
-	$clean = create_function ( '$line', 'return trim(strip_tags($line));' );
-	$desc = get_class ( $e ) . " making " . $_SERVER ['REQUEST_METHOD'] . " request to " . $_SERVER ['REQUEST_URI'];
-	$out = '
+        return $params;');
+    $src2lines = create_function('$file', 
+            '$src=nl2br(highlight_file($file,TRUE));
+        return explode("<br />",$src);');
+    $clean = create_function('$line', 'return trim(strip_tags($line));');
+    $desc = get_class($e) . " making " . $_SERVER['REQUEST_METHOD'] .
+             " request to " . $_SERVER['REQUEST_URI'];
+    $out = '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
   "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <meta name="robots" content="NONE,NOARCHIVE" />
-     <title>' . $o ( $desc ) . '</title>
+     <title>' . $o($desc) . '</title>
   <style type="text/css">
     html * { padding:0; margin:0; }
     body * { padding:10px 20px; }
@@ -184,20 +202,24 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
 <body>
 
 <div id="summary">
-  <h1>' . $o ( $desc ) . '</h1>
+  <h1>' . $o($desc) . '</h1>
   <h2>';
-	if ($e->getCode ()) {
-		$out .= $o ( $e->getCode () ) . ' : ';
-	}
-	$out .= ' ' . $o ( $e->getMessage () ) . '</h2>
+    if ($e->getCode()) {
+        $out .= $o($e->getCode()) . ' : ';
+    }
+    $out .= ' ' . $o($e->getMessage()) .
+             '</h2>
   <table>
     <tr>
       <th>PHP</th>
-      <td>' . $o ( $e->getFile () ) . ', line ' . $o ( $e->getLine () ) . '</td>
+      <td>' .
+             $o($e->getFile()) . ', line ' . $o($e->getLine()) .
+             '</td>
     </tr>
     <tr>
       <th>URI</th>
-      <td>' . $o ( $_SERVER ['REQUEST_METHOD'] . ' ' . $_SERVER ['REQUEST_URI'] ) . '</td>
+      <td>' .
+             $o($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']) . '</td>
     </tr>
   </table>
 </div>
@@ -207,21 +229,23 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
     <a href=\'#\' onclick="return sectionToggle(\'tb_switch\',\'tb_list\')">
     <span id="tb_switch">▶</span></a></h2>
   <ul id="tb_list" class="traceback">';
-	$frames = $e->getTrace ();
-	foreach ( $frames as $frame_id => $frame ) {
-		if (! isset ( $frame ['file'] )) {
-			$frame ['file'] = 'No File';
-			$frame ['line'] = '0';
-		}
-		$out .= '<li class="frame">' . $sub ( $frame ) . '
-        [' . $o ( $frame ['file'] ) . ', line ' . $o ( $frame ['line'] ) . ']';
-		if (isset ( $frame ['args'] ) && count ( $frame ['args'] ) > 0) {
-			$params = $parms ( $frame );
-			$out .= '
+    $frames = $e->getTrace();
+    foreach ($frames as $frame_id => $frame) {
+        if (! isset($frame['file'])) {
+            $frame['file'] = 'No File';
+            $frame['line'] = '0';
+        }
+        $out .= '<li class="frame">' . $sub($frame) . '
+        [' .
+                 $o($frame['file']) . ', line ' . $o($frame['line']) . ']';
+        if (isset($frame['args']) && count($frame['args']) > 0) {
+            $params = $parms($frame);
+            $out .= '
           <div class="commands">
-              <a href=\'#\' onclick="return varToggle(this, \'' . $o ( $frame_id ) . '\',\'v\')"><span>▶</span> Args</a>
+              <a href=\'#\' onclick="return varToggle(this, \'' .
+                     $o($frame_id) . '\',\'v\')"><span>▶</span> Args</a>
           </div>
-          <table class="vars" id="v' . $o ( $frame_id ) . '">
+          <table class="vars" id="v' . $o($frame_id) . '">
             <thead>
               <tr>
                 <th>Arg</th>
@@ -230,53 +254,64 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
               </tr>
             </thead>
             <tbody>';
-			foreach ( $frame ['args'] as $k => $v ) {
-				$name = (isset ( $params [$k] ) and isset ( $params [$k]->name )) ? '$' . $params [$k]->name : '?';
-				$out .= '
+            foreach ($frame['args'] as $k => $v) {
+                $name = (isset($params[$k]) and isset($params[$k]->name)) ? '$' .
+                         $params[$k]->name : '?';
+                $out .= '
                 <tr>
-                  <td>' . $o ( $k ) . '</td>
-                  <td>' . $o ( $name ) . '</td>
+                  <td>' . $o($k) . '</td>
+                  <td>' . $o($name) . '</td>
                   <td class="code">
-                    <pre>' . Pluf_esc ( print_r ( $v, true ) ) . '</pre>
+                    <pre>' .
+                         Pluf_esc(print_r($v, true)) . '</pre>
                   </td>
                   </tr>';
-			}
-			$out .= '</tbody></table>';
-		}
-		if (is_readable ( $frame ['file'] )) {
-			$out .= '
+            }
+            $out .= '</tbody></table>';
+        }
+        if (is_readable($frame['file'])) {
+            $out .= '
         <div class="commands">
-            <a href=\'#\' onclick="return varToggle(this, \'' . $o ( $frame_id ) . '\',\'c\')"><span>▶</span> Src</a>
+            <a href=\'#\' onclick="return varToggle(this, \'' .
+                     $o($frame_id) . '\',\'c\')"><span>▶</span> Src</a>
         </div>
-        <div class="context" id="c' . $o ( $frame_id ) . '">';
-			$lines = $src2lines ( $frame ['file'] );
-			$start = $frame ['line'] < 5 ? 0 : $frame ['line'] - 5;
-			$end = $start + 10;
-			$out2 = '';
-			foreach ( $lines as $k => $line ) {
-				if ($k > $end) {
-					break;
-				}
-				$line = trim ( strip_tags ( $line ) );
-				if ($k < $start && isset ( $frames [$frame_id + 1] ["function"] ) && preg_match ( '/function( )*' . preg_quote ( $frames [$frame_id + 1] ["function"] ) . '/', $line )) {
-					$start = $k;
-				}
-				if ($k >= $start) {
-					if ($k != $frame ['line']) {
-						$out2 .= '<li><code>' . $clean ( $line ) . '</code></li>' . "\n";
-					} else {
-						$out2 .= '<li class="current-line"><code>' . $clean ( $line ) . '</code></li>' . "\n";
-					}
-				}
-			}
-			$out .= "<ol start=\"$start\">\n" . $out2 . "</ol>\n";
-			$out .= '</div>';
-		} else {
-			$out .= '<div class="commands">No src available</div>';
-		}
-		$out .= '</li>';
-	} // End of foreach $frames
-	$out .= '
+        <div class="context" id="c' .
+                     $o($frame_id) . '">';
+            $lines = $src2lines($frame['file']);
+            $start = $frame['line'] < 5 ? 0 : $frame['line'] - 5;
+            $end = $start + 10;
+            $out2 = '';
+            foreach ($lines as $k => $line) {
+                if ($k > $end) {
+                    break;
+                }
+                $line = trim(strip_tags($line));
+                if ($k < $start && isset($frames[$frame_id + 1]["function"]) &&
+                         preg_match(
+                                '/function( )*' .
+                                 preg_quote(
+                                        $frames[$frame_id + 1]["function"]) . '/', 
+                                $line)) {
+                    $start = $k;
+                }
+                if ($k >= $start) {
+                    if ($k != $frame['line']) {
+                        $out2 .= '<li><code>' . $clean($line) . '</code></li>' .
+                                 "\n";
+                    } else {
+                        $out2 .= '<li class="current-line"><code>' .
+                                 $clean($line) . '</code></li>' . "\n";
+                    }
+                }
+            }
+            $out .= "<ol start=\"$start\">\n" . $out2 . "</ol>\n";
+            $out .= '</div>';
+        } else {
+            $out .= '<div class="commands">No src available</div>';
+        }
+        $out .= '</li>';
+    } // End of foreach $frames
+    $out .= '
   </ul>
   
 </div>
@@ -286,43 +321,43 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
     <a href=\'#\' onclick="return sectionToggle(\'req_switch\',\'req_list\')">
     <span id="req_switch">▶</span></a></h2>
   <div id="req_list" class="section">';
-	if (function_exists ( 'apache_request_headers' )) {
-		$out .= '<h3>Request <span>(raw)</span></h3>';
-		$req_headers = apache_request_headers ();
-		$out .= '<h4>HEADERS</h4>';
-		if (count ( $req_headers ) > 0) {
-			$out .= '<p class="headers">';
-			foreach ( $req_headers as $req_h_name => $req_h_val ) {
-				$out .= $o ( $req_h_name . ': ' . $req_h_val );
-				$out .= '<br>';
-			}
-			$out .= '</p>';
-		} else {
-			$out .= '<p>No headers.</p>';
-		}
-		$req_body = file_get_contents ( 'php://input' );
-		if (strlen ( $req_body ) > 0) {
-			$out .= '
+    if (function_exists('apache_request_headers')) {
+        $out .= '<h3>Request <span>(raw)</span></h3>';
+        $req_headers = apache_request_headers();
+        $out .= '<h4>HEADERS</h4>';
+        if (count($req_headers) > 0) {
+            $out .= '<p class="headers">';
+            foreach ($req_headers as $req_h_name => $req_h_val) {
+                $out .= $o($req_h_name . ': ' . $req_h_val);
+                $out .= '<br>';
+            }
+            $out .= '</p>';
+        } else {
+            $out .= '<p>No headers.</p>';
+        }
+        $req_body = file_get_contents('php://input');
+        if (strlen($req_body) > 0) {
+            $out .= '
       <h4>Body</h4>
       <p class="req" style="padding-bottom: 2em"><code>
-       ' . $o ( $req_body ) . '
+       ' . $o($req_body) . '
       </code></p>';
-		}
-	}
-	$out .= '
+        }
+    }
+    $out .= '
     <h3>Request <span>(parsed)</span></h3>';
-	$superglobals = array (
-			'$_GET',
-			'$_POST',
-			'$_COOKIE',
-			'$_SERVER',
-			'$_ENV' 
-	);
-	foreach ( $superglobals as $sglobal ) {
-		$sfn = create_function ( '', 'return ' . $sglobal . ';' );
-		$out .= '<h4>' . $sglobal . '</h4>';
-		if (count ( $sfn () ) > 0) {
-			$out .= '
+    $superglobals = array(
+            '$_GET',
+            '$_POST',
+            '$_COOKIE',
+            '$_SERVER',
+            '$_ENV'
+    );
+    foreach ($superglobals as $sglobal) {
+        $sfn = create_function('', 'return ' . $sglobal . ';');
+        $out .= '<h4>' . $sglobal . '</h4>';
+        if (count($sfn()) > 0) {
+            $out .= '
       <table class="req">
         <thead>
           <tr>
@@ -331,28 +366,29 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
           </tr>
         </thead>
         <tbody>';
-			foreach ( $sfn () as $k => $v ) {
-				$out .= '<tr>
-              <td>' . $o ( $k ) . '</td>
+            foreach ($sfn() as $k => $v) {
+                $out .= '<tr>
+              <td>' . $o($k) . '</td>
               <td class="code">
-                <div>' . $o ( print_r ( $v, TRUE ) ) . '</div>
+                <div>' .
+                         $o(print_r($v, TRUE)) . '</div>
                 </td>
             </tr>';
-			}
-			$out .= '
+            }
+            $out .= '
         </tbody>
       </table>';
-		} else {
-			$out .= '
+        } else {
+            $out .= '
       <p class="whitemsg">No data</p>';
-		}
-	}
-	$out .= '
+        }
+    }
+    $out .= '
       
   </div>
 </div>';
-	if (function_exists ( 'headers_list' )) {
-		$out .= '
+    if (function_exists('headers_list')) {
+        $out .= '
 <div id="response">
 
   <h2>Response
@@ -362,26 +398,26 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty($e) {
   <div id="resp_list" class="section">
 
     <h3>Headers</h3>';
-		$resp_headers = headers_list ();
-		if (count ( $resp_headers ) > 0) {
-			$out .= '
+        $resp_headers = headers_list();
+        if (count($resp_headers) > 0) {
+            $out .= '
     <p class="headers">';
-			foreach ( $resp_headers as $resp_h ) {
-				$out .= $o ( $resp_h );
-				$out .= '<br>';
-			}
-			$out .= '    </p>';
-		} else {
-			$out .= '
+            foreach ($resp_headers as $resp_h) {
+                $out .= $o($resp_h);
+                $out .= '<br>';
+            }
+            $out .= '    </p>';
+        } else {
+            $out .= '
       <p>No headers.</p>';
-		}
-		$out .= '
+        }
+        $out .= '
 </div>';
-	}
-	$out .= '
+    }
+    $out .= '
 </body>
 </html>
 ';
-	return $out;
+    return $out;
 }
 

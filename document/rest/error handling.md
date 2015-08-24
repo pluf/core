@@ -50,7 +50,7 @@
 	   "status": 400,
 	   "code": 4000,
 	   "message": "Provided data not sufficient for insertion",
-	   "link": "http://www.codingpedia.org/ama/tutorial-rest-aon-with-jersey-and-spring",
+	   "link": "http://dpq.co.ir/error",
 	   "developerMessage": "Please verify that the feed is properly generated/set"
 	}
 
@@ -194,9 +194,9 @@ AdvisorException باشند، با استفاده از این مبدل، به پ
 	{
 	   "status": 404,
 	   "code": 404,
-	   "message": "The podcast you requested with id 22 was not found in the database",
-	   "link": "http://www.codingpedia.org/ama/tutorial-rest-api-design-anng/",
-	   "developerMessage": "Verify the existence of the podcast with the id 22 in the database"
+	   "message": "The podcast you requested with id 22 was not found",
+	   "link": "http://dpq.co.ir/error",
+	   "developerMessage": "Verify the existence of the podcast with the id 22"
 	}
 
 همانگونه که در نمونه بالا قابل مشاهده است، نتیجه به صورت مناسب در ساختارهای
