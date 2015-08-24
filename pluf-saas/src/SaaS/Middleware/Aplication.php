@@ -51,7 +51,7 @@ class SaaS_Middleware_Aplication
             $request->application = $application;
             $request->session->setData('application', $application->id);
         } catch (Pluf_Exception $ex) {
-            $request->application = null;
+            $request->application = new SaaS_Application();
         }
         
         // دامه در کوکی نیز قرار داده می‌شود

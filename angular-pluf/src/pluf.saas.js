@@ -5,7 +5,7 @@
 	 * مدیریت نرم‌افزارها را انجام می‌دهد
 	 */
 	saasMadule.factory('SaaSManager', function($rootScope, $http, $q, $window,
-			PaginatorPage, PaginatorParameter, Application) {
+	        PException,PaginatorPage, PaginatorParameter, Application) {
 		var manager = {
 			_pool : {},
 			_default : 0,
@@ -65,6 +65,10 @@
 										'SaaSManager.Default.Changed', app);
 							}).error(function() {
 						deferred.reject();
+					}).catch(function(data){
+            PNotify.debug('fail to get current app', data);
+            deferred.reject(data);
+            throw new PException(data);
 					});
 				} else {
 					deferred.resolve(this._search(this._default));
@@ -95,9 +99,11 @@
 							.success(function(members) {
 								$application.members = members;
 								deferred.resolve($application.members);
-							}).error(function() {
-								deferred.reject();
-							});
+							}).catch(function(data){
+		            PNotify.debug('fail to get members', data);
+		            deferred.reject(data);
+		            throw new PException(data);
+		          });
 				}
 				return deferred.promise;
 			},
@@ -131,9 +137,11 @@
 				}).then(function(res) {
 					var page = new PaginatorPage(res.data);
 					deferred.resolve(page);
-				}, function(res) {
-					deferred.reject(res.data);
-				});
+				}).catch(function(data){
+          PNotify.debug('fails to get user apps', data);
+          deferred.reject(data);
+          throw new PException(data);
+        });
 				return deferred.promise;
 			},
 			/**
@@ -153,9 +161,11 @@
 				}).then(function(res) {
 					var page = new PaginatorPage(res.data);
 					deferred.resolve(page);
-				}, function(res) {
-					deferred.reject(res.data);
-				});
+				}).catch(function(data){
+          PNotify.debug('fails to get search apps', data);
+          deferred.reject(data);
+          throw new PException(data);
+        });
 				return deferred.promise;
 			},
 			/**
@@ -178,9 +188,11 @@
 					var data = res.data;
 					var message = scope._retrieveInstance(data.id, data);
 					deferred.resolve(message);
-				}, function(res) {
-					deferred.reject();
-				});
+				}).catch(function(data){
+          PNotify.debug('fail to update app', data);
+          deferred.reject(data);
+          throw new PException(data);
+        });
 				return deferred.promise;
 			},
 			/**
@@ -204,9 +216,11 @@
 					var data = res.data;
 					var message = scope._retrieveInstance(data.id, data);
 					deferred.resolve(message);
-				}, function(res) {
-					deferred.reject();
-				});
+				}).catch(function(data){
+          PNotify.debug('fails to create app', data);
+          deferred.reject(data);
+          throw new PException(data);
+        });
 				return deferred.promise;
 			}
 		};

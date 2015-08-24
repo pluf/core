@@ -8,21 +8,40 @@
    * کاربردهای عمومی دارند و می‌تواند در جاهای متفاوت استفاده شوند.
    */
   var coreModel = angular.module("pluf.core", []);
+  
+  /**
+   * ساختار داده‌ای مورد نیاز برای تولید خطا و مدیریت آن را ایجاد
+   * می‌کند.
+   */
+  coreModel.factory('PException', function() {
+    var object = function(data) {
+      if (data) {
+        this.setData(data);
+      }
+    };
+    object.prototype = {
+      setData: function(data) {
+        angular.extend(this, data);
+      },
+    };
+    return object;
+  });
+  
   /**
    * این ماژول برای کش کردن داده‌ها استفاده می‌شود. حالتی را تصور کنید که در آن
    * داده‌ها از اینترنت دانلود می‌شود. اگر داده‌هایی که دانلود شده را دیگر
    * دانلود نکنیم کار بسیار ساده‌تر خواهد بود.
    */
-  coreModel.factory('PCache', function() {
-    var object = function(paginatorParam) {
-      if (paginatorParam) {
-        this.setData(paginatorParam);
+  coreModel.factory('PCache', function($cacheFactory) {
+    var object = function($cacheName) {
+      if ($cacheName) {
+        this._pool = $cacheFactory($cacheName);
       }
     };
     object.prototype = {
-      _pool: {},
+      _pool: null,
       _search: function(id) {
-        return this._pool[id];
+        return this._pool.get(id);
       },
     }
     return object;
@@ -166,19 +185,19 @@
    * ساختار داده‌ای نرم‌افزار را ایجاد می‌کند.
    */
   paginatorModeul.factory('PaginatorPage', function() {
-    var object = function(paginatorData) {
-      if (paginatorData) {
-        this.setData(paginatorData);
+    var object = function(pd) {
+      if (pd) {
+        this.setData(pd);
       }
     };
     object.prototype = {
       list: [],
-      setData: function(paginatorData) {
-        angular.extend(this, paginatorData);
+      setData: function(pd) {
+        angular.extend(this, pd);
         this.list = [];
-        for (var i = 0; i < paginatorData.items_per_page; i++) {
-          if (!(typeof paginatorData[i] === "object")) break;
-          this.list.push(paginatorData[i]);
+        for (var i = 0; i < pd.items_per_page; i++) {
+          if (!(typeof pd[i] === "object")) break;
+          this.list.push(pd[i]);
         }
       },
     };
@@ -194,18 +213,13 @@
    * می‌شود.
    */
   userModule.factory('UserManager', function($http, $q, $window, $cacheFactory,
-          PNotify, User, UserProfile) {
+          PNotify,PException, User, UserProfile) {
     var manager = {
-      _cache: $cacheFactory('PUserManager'),
+      //_cache: $cacheFactory('PUser'),
       _current: null,
       _retrieveInstance: function(id, data) {
-        var instance = this._cache.get(id);
-        if (instance) {
-          instance.setData(data);
-        } else {
-          instance = new User(data);
-          this._cache.put(id, instance);
-        }
+        instance = new User(data);
+        this._cache.put(id, instance);
         return instance;
       },
       _setCurrent: function(user) {
@@ -218,12 +232,14 @@
         var deferred = $q.defer();
         if (this._current === null) {
           var scope = this;
-          $http.get('/api/user/account').success(function(data) {
-            var user = scope._retrieveInstance(data.login, data);
+          $http.get('/api/user/account').then(function(data) {
+            var user = new User(data);
             deferred.resolve(user);
             scope._setCurrent(user);
-          }).error(function() {
-            deferred.reject();
+          }, function(data) {
+            PNotify.debug('fail to get current user', data);
+            deferred.reject(data);
+            throw new PException(data);
           });
         } else {
           deferred.resolve(this._search(this._current));
@@ -243,11 +259,13 @@
         } else {
           var scope = this;
           $http.get('/api/user/logout').success(function(data) {
-            var user = scope._retrieveInstance(data.login, data);
+            var user = new User(data);
             deferred.resolve(user);
             scope._setCurrent(user);
-          }).error(function() {
-            deferred.reject();
+          }).error(function(data) {
+            PNotify.debug('fail to logout', data);
+            deferred.reject(data);
+            throw new PException(data);
           });
         }
         return deferred.promise;
@@ -269,10 +287,14 @@
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          }).then(function(res) {
-            var user = scope._retrieveInstance(res.data.login, res.data);
+          }).then(function(data) {
+            var user = new User(data);
             deferred.resolve(user);
             scope._setCurrent(user);
+          }, function(data){
+            PNotify.debug('fail to login', data);
+            deferred.reject(data);
+            throw new PException(data);
           });
         } else {
           deferred.resolve(this._current);
@@ -296,12 +318,14 @@
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         }) // با به روز شدن خصوصیت
-        .then(function(res) {
-          var user = scope._retrieveInstance(res.data.login, res.data);
+        .then(function(data) {
+          var user = new User(data);
           deferred.resolve(user);
           scope._setCurrent(user);
-        }, function(reason) {
-          defeered.reject(reason);
+        }, function(data) {
+          Notify.debug('Fail to update user', data);
+          deferred.reject(data);
+          throw new PException(data);
         });
         return deferred.promise;
       },
@@ -324,12 +348,13 @@
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
-        }).then(function(res) {
-          var data = res.data;
-          var user = scope._retrieveInstance(data.login, data);
+        }).then(function(data) {
+          var user = new User(data);
           deferred.resolve(user);
-        }, function(reason) {
-          deferred.reject(reason);
+        }, function(data) {
+          PNotify.debug('Fail to signup', data);
+          deferred.reject(data);
+          throw new PException(data);
         });
         return deferred.promise;
       },
@@ -345,11 +370,13 @@
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          }).then(function(res) {
-            var profile = new UserProfile(res.data);
+          }).then(function(data) {
+            var profile = new UserProfile(data);
             deferred.resolve(profile);
-          }, function(res) {
-            deferred.reject();
+          }, function(data) {
+            PNotify.debug('Fail to get user profile', data);
+            deferred.reject(data);
+            throw new PException(data);
           });
         } else {
           deferred.reject();
@@ -373,11 +400,13 @@
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          }).then(function(res) {
-            var profile = new UserProfile(res.data);
+          }).then(function(data) {
+            var profile = new UserProfile(data);
             deferred.resolve(profile);
-          }, function(res) {
-            deferred.reject();
+          }, function(data) {
+            PNotify.debug('Fail to update user profile', data);
+            deferred.reject(data);
+            throw new PException(data);
           });
         } else {
           deferred.reject();

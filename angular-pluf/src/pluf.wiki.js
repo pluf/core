@@ -8,7 +8,7 @@
 	 * 
 	 * این مدیریت قادر است یک صفحه ویکی را در اختیار کاربران قرار دهد.
 	 */
-	wikiMadule.factory('WikiManager', function($rootScope, $http, $window, $q,
+	wikiMadule.factory('WikiManager', function($rootScope, $http, $window, $q, PNotify, PException, 
 			WikiPage) {
 		var partService = {
 			_pool : {},
@@ -35,9 +35,11 @@
 					var data = res.data;
 					var message = scope._retrieveInstance(data.id, data);
 					deferred.resolve(message);
-				}, function(res) {
-					deferred.reject();
-				});
+				}).catch(function(data){
+          PNotify.debug('failsF to load page', data);
+          deferred.reject(data);
+          throw new PException(data);
+        });
 			},
 			/* فراخوانی‌های عمومی */
 			/**
