@@ -1116,7 +1116,7 @@ class Pluf_Model implements JsonSerializable
      */
     function isAnonymous ()
     {
-        return (0 === (int) $this->id);
+        return ($this->id == '' || 0 === (int) $this->id);
     }
 
     /**
