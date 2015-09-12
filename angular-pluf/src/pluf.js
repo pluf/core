@@ -145,12 +145,15 @@
     var object = function(paginatorParam) {
       if (paginatorParam) {
         this.setData(paginatorParam);
+      } else {
+        this.setData({});
       }
     };
     object.prototype = {
       param: {},
       setData: function(paginatorParam) {
-        angular.extend(param, paginatorParam);
+        //angular.extend(this.param, paginatorParam);
+        this.param = paginatorParam;
       },
       setSize: function($size) {
         this.param['_px_count'] = $size;
@@ -432,6 +435,9 @@
       },
       isAnonymous: function() {
         return (typeof this.id === 'undefined') || this.id === '';
+      }, 
+      isAdmin : function() {
+        return this.administrator === 1;
       }
     };
     return object;

@@ -94,7 +94,7 @@
 				var deferred = $q.defer();
 				if ($application.members) {
 					deferred.resolve($application.members);
-				} else {
+				} else if($application.id){
 					$http.get('/api/saas/app/' + $application.id + '/member/list')
 							.success(function(members) {
 								$application.members = members;
@@ -104,6 +104,9 @@
 		            deferred.reject(data);
 		            throw new PException(data);
 		          });
+				} else {
+					// Application is not loaded
+					deferred.reject();
 				}
 				return deferred.promise;
 			},
