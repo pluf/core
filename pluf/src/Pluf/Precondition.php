@@ -22,10 +22,12 @@ class Pluf_Precondition
     static public function loginRequired ($request)
     {
         if (! isset($request->user) or $request->user->isAnonymous()) {
-            return new Pluf_HTTP_Response_RedirectToLogin($request);
+            throw new Pluf_Exception("Login required", 4001, null, 400, '', 
+                    'login is required, or cocki is not enabled');
         }
         if (! $request->user->active) {
-            return new Pluf_HTTP_Response_Forbidden($request);
+            throw new Pluf_Exception('user is not active', 4002, null, 400, '', 
+                    'user is not active');
         }
         return true;
     }
@@ -46,7 +48,8 @@ class Pluf_Precondition
         if ($request->user->administrator or $request->user->staff) {
             return true;
         }
-        return new Pluf_HTTP_Response_Forbidden($request);
+        throw new Pluf_Exception('staff required', 4003, null, 400, '', 
+                'staff required');
     }
 
     /**
@@ -65,7 +68,8 @@ class Pluf_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        return new Pluf_HTTP_Response_Forbidden($request);
+        throw new Pluf_Exception('admin required', 4004, null, 400, '', 
+                'admin required');
     }
 
     /**
@@ -86,7 +90,8 @@ class Pluf_Precondition
         if ($request->user->hasPerm($permission)) {
             return true;
         }
-        return new Pluf_HTTP_Response_Forbidden($request);
+        throw new Pluf_Exception('you do not have permission', 4005, null, 400, '', 
+                'you do not have permission');
     }
 
     /**
