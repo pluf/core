@@ -15,13 +15,12 @@ class SaaS_Precondition
      *
      * @param unknown $request            
      */
-    public static function freemium ($request)
+    static public function freemium ($request)
     {
         if (! isset($request->application) || $request->application == null ||
                  $request->application->isAnonymous()) {
             throw new Pluf_Exception("Application is not defined.");
         }
-        
         $config = $request->application->fetchConfiguration("system");
         $level = $config->getData('level', 0);
         if (isset($request->view['ctrl']['freemium']['level']) &&
@@ -46,14 +45,15 @@ class SaaS_Precondition
         if ($request->application == null) {
             $request->application = $app;
         }
-        if ($request->application == null &&
+        if (($request->application == null ||
+                 $request->application->isAnonymous()) &&
                  isset($request->view['ctrl']['saas']['match-application'])) {
             $request->application = Pluf_Shortcuts_GetObjectOr404(
                     'SaaS_Application', 
                     $request->view['match'][$request->view['ctrl']['saas']['match-application']]);
         }
         if ($request->application == null) {
-            throw new Pluf_Exception_PermissionDenied();
+            throw new Pluf_Exception("Application is not defined.");
         }
         if (Pluf::f('saas_freemium_enable', false)) {
             SaaS_Precondition::freemium($request);
@@ -103,9 +103,8 @@ class SaaS_Precondition
             return true;
         }
         if ($request->user->hasPerm('SaaS.software-owner', 
-                $request->application) ||
-                 $request->user->hasPerm('SaaS.software-member', 
-                        $request->application)) {
+                $request->application) || $request->user->hasPerm(
+                'SaaS.software-member', $request->application)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
