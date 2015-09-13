@@ -65,7 +65,7 @@
 										'SaaSManager.Default.Changed', app);
 							}).error(function() {
 						deferred.reject();
-					}).catch(function(data){
+					},function(data){
             PNotify.debug('fail to get current app', data);
             deferred.reject(data);
             throw new PException(data);
@@ -99,7 +99,7 @@
 							.success(function(members) {
 								$application.members = members;
 								deferred.resolve($application.members);
-							}).catch(function(data){
+							},function(data){
 		            PNotify.debug('fail to get members', data);
 		            deferred.reject(data);
 		            throw new PException(data);
@@ -140,7 +140,7 @@
 				}).then(function(res) {
 					var page = new PaginatorPage(res.data);
 					deferred.resolve(page);
-				}).catch(function(data){
+				},function(data){
           PNotify.debug('fails to get user apps', data);
           deferred.reject(data);
           throw new PException(data);
@@ -164,7 +164,7 @@
 				}).then(function(res) {
 					var page = new PaginatorPage(res.data);
 					deferred.resolve(page);
-				}).catch(function(data){
+				},function(data){
           PNotify.debug('fails to get search apps', data);
           deferred.reject(data);
           throw new PException(data);
@@ -191,7 +191,7 @@
 					var data = res.data;
 					var message = scope._retrieveInstance(data.id, data);
 					deferred.resolve(message);
-				}).catch(function(data){
+				},function(data){
           PNotify.debug('fail to update app', data);
           deferred.reject(data);
           throw new PException(data);
@@ -219,7 +219,7 @@
 					var data = res.data;
 					var message = scope._retrieveInstance(data.id, data);
 					deferred.resolve(message);
-				}).catch(function(data){
+				},function(data){
           PNotify.debug('fails to create app', data);
           deferred.reject(data);
           throw new PException(data);
