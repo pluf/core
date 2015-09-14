@@ -16,6 +16,13 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 class SaaS_Views extends Pluf_Views
 {
 
+    public function appcache ($request, $match)
+    {
+        $params = array();
+        return Pluf_Shortcuts_RenderToResponse('saas.appcache', $params, 
+                $request);
+    }
+
     /**
      * @breif برگه اصلی هر نرم‌افزار
      *
@@ -153,8 +160,8 @@ class SaaS_Views extends Pluf_Views
         $params = array();
         $params['application'] = $request->application;
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse(
-                'application/owner/' . $match[2], $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('application/owner/' . $match[2], 
+                $params, $request);
     }
 
     /**
@@ -177,8 +184,8 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse(
-                'admin/' . $match[1], $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('admin/' . $match[1], $params, 
+                $request);
     }
 
     /**
@@ -201,7 +208,7 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse(
-                'user/' . $match[1], $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('user/' . $match[1], $params, 
+                $request);
     }
 }
