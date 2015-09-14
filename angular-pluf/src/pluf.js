@@ -8,10 +8,9 @@
    * کاربردهای عمومی دارند و می‌تواند در جاهای متفاوت استفاده شوند.
    */
   var coreModel = angular.module("pluf.core", []);
-  
+
   /**
-   * ساختار داده‌ای مورد نیاز برای تولید خطا و مدیریت آن را ایجاد
-   * می‌کند.
+   * ساختار داده‌ای مورد نیاز برای تولید خطا و مدیریت آن را ایجاد می‌کند.
    */
   coreModel.factory('PException', function() {
     var object = function(data) {
@@ -26,7 +25,7 @@
     };
     return object;
   });
-  
+
   /**
    * این ماژول برای کش کردن داده‌ها استفاده می‌شود. حالتی را تصور کنید که در آن
    * داده‌ها از اینترنت دانلود می‌شود. اگر داده‌هایی که دانلود شده را دیگر
@@ -51,7 +50,7 @@
    * یک سیستم ساده است برای اعلام پیام در سیستم. با استفاده از این کلاس می‌توان
    * پیام‌های متفاوتی که در سیستم وجود دارد را به صورت همگانی اعلام کرد.
    */
-  coreModel.factory('PNotify', function($rootScope) {
+  coreModel.factory('PNotify', function($rootScope, $timeout, $q) {
     var object = {
       /*
        * فهرست شنودگرهای
@@ -60,6 +59,16 @@
       _warning: [],
       _debug: [],
       _error: [],
+      _fire: function(list, args) {
+        var deferred = $q.defer();
+        $timeout(function() {
+          for (var i = 0; i < list.length; i++) {
+            list[i].apply(list[i], args);
+          }
+          deferred.resolve();
+        }, 10);
+        return deferred.promise;
+      },
       /*
        * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
        */
@@ -72,9 +81,7 @@
        * ورودی آگاه می‌کند.
        */
       info: function() {
-        for (var i = 0; i < this._info.length; i++){
-          this._info[i].apply(this._info[i], arguments);
-        }
+        return this._fire(this._info, arguments);
       },
       /*
        * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
@@ -88,9 +95,7 @@
        * ارسال کرده و آنها را از بروز آن آگاه می‌کند.
        */
       warning: function() {
-        for (var i = 0; i < this._warning.length; i++){
-          this._warning[i].apply(this._info[i], arguments);
-        }
+        return this._fire(this._warning, arguments);
       },
       /*
        * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
@@ -100,13 +105,11 @@
         return this;
       },
       /**
-       * تمام پیام‌هایی که برای رفع خطا در سیستم تولید می‌شود را برای تمام شنودگرهای
-       * اضافه شده ارسال می‌کند.
+       * تمام پیام‌هایی که برای رفع خطا در سیستم تولید می‌شود را برای تمام
+       * شنودگرهای اضافه شده ارسال می‌کند.
        */
       debug: function() {
-        for (var i = 0; i < this._debug.length; i++){
-          this._debug[i].apply(this._info[i], arguments);
-        }
+        return this._fire(this._debug, arguments);
       },
       /*
        * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
@@ -116,13 +119,11 @@
         return this;
       },
       /**
-       * تمام پیام‌های خطای تولید شده در سیتسم را برای تمام شوندگرهایی خطا صادر کرده
-       * و آنها را از آن مطلع می‌کند.
+       * تمام پیام‌های خطای تولید شده در سیتسم را برای تمام شوندگرهایی خطا صادر
+       * کرده و آنها را از آن مطلع می‌کند.
        */
       error: function() {
-        for (var i = 0; i < this._error.length; i++){
-          this._error[i].apply(this._info[i], arguments);
-        }
+        return this._fire(this._error, arguments);
       },
       /*
        * یک رویداد خاص را در کل فضای نرم افزار انتشار می‌دهد. اولین پارامتر
@@ -152,7 +153,7 @@
     object.prototype = {
       param: {},
       setData: function(paginatorParam) {
-        //angular.extend(this.param, paginatorParam);
+        // angular.extend(this.param, paginatorParam);
         this.param = paginatorParam;
       },
       setSize: function($size) {
@@ -216,9 +217,8 @@
    * می‌شود.
    */
   userModule.factory('UserManager', function($http, $q, $window, $cacheFactory,
-          PNotify,PException, User, UserProfile) {
+          PNotify, PException, User, UserProfile) {
     var manager = {
-      //_cache: $cacheFactory('PUser'),
       _current: null,
       _retrieveInstance: function(id, data) {
         instance = new User(data);
@@ -227,7 +227,7 @@
       },
       _setCurrent: function(user) {
         this._current = user;
-        PNotify.broadcast('UserManager.User.Changed', user);
+        PNotify.broadcast('UserManager.User.Changed', this._current);
       },
       /* متدهای عمومی */
       /* یک نرم‌افزار را بر اساس شناسه آن تعیین می‌کند */
@@ -237,15 +237,13 @@
           var scope = this;
           $http.get('/api/user/account').then(function(data) {
             var user = new User(data.data);
-            deferred.resolve(user);
             scope._setCurrent(user);
+            deferred.resolve(user);
           }, function(data) {
-            PNotify.debug('fail to get current user', data);
-            deferred.reject(data);
             throw new PException(data);
           });
         } else {
-          deferred.resolve(this._search(this._current));
+          deferred.resolve(this._current);
         }
         return deferred.promise;
       },
@@ -263,11 +261,10 @@
           var scope = this;
           $http.get('/api/user/logout').success(function(data) {
             var user = new User(data);
-            deferred.resolve(user);
+//             deferred.resolve(user);
             scope._setCurrent(user);
+            return user;
           }).error(function(data) {
-            PNotify.debug('fail to logout', data);
-            deferred.reject(data);
             throw new PException(data);
           });
         }
@@ -291,12 +288,11 @@
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           }).then(function(data) {
-            var user = new User(data);
-            deferred.resolve(user);
+            var user = new User(data.data);
             scope._setCurrent(user);
-          }, function(data){
-            PNotify.debug('fail to login', data);
-            deferred.reject(data);
+//             deferred.resolve(user);
+            return user;
+          }, function(data) {
             throw new PException(data);
           });
         } else {
@@ -326,8 +322,6 @@
           deferred.resolve(user);
           scope._setCurrent(user);
         }, function(data) {
-          Notify.debug('Fail to update user', data);
-          deferred.reject(data);
           throw new PException(data);
         });
         return deferred.promise;
@@ -355,8 +349,6 @@
           var user = new User(data);
           deferred.resolve(user);
         }, function(data) {
-          PNotify.debug('Fail to signup', data);
-          deferred.reject(data);
           throw new PException(data);
         });
         return deferred.promise;
@@ -377,8 +369,6 @@
             var profile = new UserProfile(data);
             deferred.resolve(profile);
           }, function(data) {
-            PNotify.debug('Fail to get user profile', data);
-            deferred.reject(data);
             throw new PException(data);
           });
         } else {
@@ -407,8 +397,6 @@
             var profile = new UserProfile(data);
             deferred.resolve(profile);
           }, function(data) {
-            PNotify.debug('Fail to update user profile', data);
-            deferred.reject(data);
             throw new PException(data);
           });
         } else {
@@ -435,8 +423,8 @@
       },
       isAnonymous: function() {
         return (typeof this.id === 'undefined') || this.id === '';
-      }, 
-      isAdmin : function() {
+      },
+      isAdmin: function() {
         return this.administrator === 1;
       }
     };
