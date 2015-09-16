@@ -30,8 +30,18 @@ return array (
 				'model' => 'SaaS_Views',
 				'method' => 'index'
 		),
+		array (// سایر صفحه‌ها
+				'regex' => '#^/page/(.+)$#',
+				'model' => 'SaaS_Views',
+				'method' => 'page'
+		),
 		array (//  صفحه اصلی مدیریت سیستم
 				'regex' => '#^/admin/(.+)$#',
+				'model' => 'SaaS_Views',
+				'method' => 'admin' 
+		),
+		array (//  صفحه اصلی مدیریت سیستم
+				'regex' => '#^/admin$#',
 				'model' => 'SaaS_Views',
 				'method' => 'admin' 
 		),
@@ -41,8 +51,8 @@ return array (
 				'method' => 'user'
 		),
 		array (// سایر صفحه‌ها
-				'regex' => '#^/page/(.+)$#',
+				'regex' => '#^/user$#',
 				'model' => 'SaaS_Views',
-				'method' => 'page'
+				'method' => 'user'
 		),
 );
