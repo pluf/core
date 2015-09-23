@@ -51,12 +51,12 @@ angular.module("pluf.core", [])
   /**
    * دستور با شناسه تعیین شده را بر می‌گرداند.
    */
-  this.getCommand = function(id){
+  this.getCommand = function(id) {
     var def = $q.defer();
     var scope = this;
     $timeout(function() {
-      for(var i = 0; i < scope._commands.length; i++){
-        if(scope._commands[i].id == id){
+      for (var i = 0; i < scope._commands.length; i++) {
+        if (scope._commands[i].id == id) {
           def.resolve(scope._commands[i]);
           return;
         }
@@ -84,13 +84,17 @@ angular.module("pluf.core", [])
    */
   this.command = function($c) {
     this._commands.push($c);
-    if( !('visible' in $c)){
-      $c.visible = function(){return true;};
+    if (!('visible' in $c)) {
+      $c.visible = function() {
+        return true;
+      };
     }
-    if( !('enable' in $c)){
-      $c.enable = function(){return true;};
+    if (!('enable' in $c)) {
+      $c.enable = function() {
+        return true;
+      };
     }
-    if(!('priority' in $c)){
+    if (!('priority' in $c)) {
       $c.priority = 0;
     }
     if ($c.category) {
@@ -127,6 +131,8 @@ angular.module("pluf.core", [])
   this.execute = function($ci) {
     var def = $q.defer();
     var scope = this;
+    var args = Array.prototype.slice.call(arguments);
+    args = args.slice(1);
     $timeout(function() {
       if (!($ci in scope._handlers)) {
         def.reject(new PException({
@@ -136,9 +142,10 @@ angular.module("pluf.core", [])
         }));
         return;
       }
+      // TODO: maso, 11394:‌ با استفاده از متد slice پیاده سازی شود.
       for (var i = 0; i in scope._handlers[$ci]; i++) {
         var handler = scope._handlers[$ci][i];
-        handler['handle'].apply(handler['handle'], arguments);
+        handler['handle'].apply(handler, args);
       }
     }, 1);
     return def.promise;
@@ -147,9 +154,9 @@ angular.module("pluf.core", [])
 /**
  * مدیریت منوها را ایجاد می‌کند
  */
-.service('$menu', function($q, $timeout, $act){
+.service('$menu', function($q, $timeout, $act) {
   this._menus = [];
-  this.menu = function(id){
+  this.menu = function(id) {
     var def = $q.defer();
     var scope = this;
     $timeout(function() {
@@ -160,39 +167,52 @@ angular.module("pluf.core", [])
     }, 1);
     return def.promise;
   }
-  this.add = function (id, menu){
-    if(!(id in this._menus)){
+  this.add = function(id, menu) {
+    if (!(id in this._menus)) {
       this._menus[id] = [];
     }
-    if('command' in menu){
+    if ('command' in menu) {
       var scope = this;
-      $act.getCommand(menu.command).then(function(command){
-        if(!('active' in menu)){
-        menu.active = function(){
-          return $act.execute(menu.command);
+      $act.getCommand(menu.command).then(function(command) {
+        menu.active = function() {
+          if(menu.params instanceof Array){
+            var args = [];
+            args.push(menu.command);
+            for(var i = 0; i < menu.params.length; i++){
+              args.push(menu.params[i]);
+            }
+            return $act.execute.apply($act, args); 
+          } else{
+            return $act.execute(menu.command); 
+          }
         }
-      }
-      if( !('visible' in menu)){
-        menu.visible = function(){
-          return command.visible();
+        if (!('visible' in menu)) {
+          menu.visible = function() {
+            return command.visible();
+          }
         }
-      }
-      if( !('enable' in menu)){
-        menu.enable = function(){
-          return command.enable;
+        if (!('enable' in menu)) {
+          menu.enable = function() {
+            return command.enable;
+          }
         }
-      }
-      if(!('label' in menu) && ('label' in command)){
-        menu.label = command.label;
-      }
-      if(!('priority' in menu)){
-        menu.priority = command.priority;
+        if (!('label' in menu) && ('label' in command)) {
+          menu.label = command.label;
+        }
+        if (!('priority' in menu)) {
+          menu.priority = command.priority;
+        }
+        // XXX: maso, 1394: خصوصیت‌های دیگر اضافه شود.
+        scope._menus[id].push(menu);
+      });
+    } else if ('action' in menu) {
+      menu.active = function() {
+        return menu.action();
       }
       // XXX: maso, 1394: خصوصیت‌های دیگر اضافه شود.
-    scope._menus[id].push(menu);
-      });
-       }
-          return this;
+      this._menus[id].push(menu);
+    }
+    return this;
   }
 })
 /**
@@ -359,7 +379,7 @@ angular.module("pluf.paginator", []).factory('PaginatorParameter', function() {
  * نیاز است ارائه می‌کند. برای نمونه ورود به سیستم، خروج و یا به روز کردن
  * تنظیم‌های کاربری. مدیریت کاربران در سطح سیستم در سرویس‌های دیگر ارائه می‌شود.
  */
-angular.module("pluf.user", []).factory('$usr', function($http, $q) {
+angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PException) {
   /**
    * یک نمونه جدید از این کلاس ایجاد می‌کند.
    */
@@ -369,7 +389,7 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q) {
      * داده‌های کلاس را تعیین می‌کند
      */
     setData: function(data) {
-      angular.extend(this.data, data);
+      this.data= data;
     },
     /**
      * ورود کاربر به سیستم
@@ -481,7 +501,8 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q) {
      * وارد بودن در سیستم را تعیین می‌کند
      */
     isAnonymous: function() {
-      return (typeof this.data.id === 'undefined') || this.data.id === '';
+      return ! (this.data.id && this.data.id > 0);
+//       return value;
     },
     /**
      * مدیریت پروفایل کاربر را ایجاد می‌کند
@@ -548,5 +569,40 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q) {
       },
     },
   };
+  
+  /*
+   * اضافه کردن دستورهای و دستگیره‌های سرویس
+   */
+  $act.command({
+    id: 'pluf.user.login',
+    label: 'login',
+    description: 'login a user',
+    visible : function (){
+      return !userService.isAnonymous();
+    },
+    category: 'usr',
+  }).commandHandler({
+    commandId: 'pluf.user.login',
+    handle: function() {
+      if(arguments.length < 1){
+        throw new PException('credentioal are not pass into the command.');
+      }
+      var args = arguments[0];
+      return userService.login(args.username, args.password);
+    }
+  }).command({
+    id: 'pluf.user.logout',
+    label: 'logout',
+    description: 'logout the user',
+    visible : function (){
+      return !userService.isAnonymous();
+    },
+    category: 'usr',
+  }).commandHandler({
+    commandId: 'pluf.user.logout',
+    handle: function() {
+      return userService.logout(); 
+    }
+  })
   return userService;
 });

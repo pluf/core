@@ -7,7 +7,7 @@ angular.module('pluf.saas', ['pluf'])
  * یک نسخه نصب شده از نرم افزار را تعیین می‌کند که شامل دسته از کاربران،
  * تنظیم‌ها، و داده‌ها می‌شود.
  */
-.factory('$tenant', function($http, $q, PaginatorPage) {
+.factory('$tenant', function($http, $q, $act, $window, PException, PaginatorPage) {
   var tenantService = {
     data: {},
     setData: function(appData) {
@@ -156,6 +156,25 @@ angular.module('pluf.saas', ['pluf'])
       },
     },
   };
+  /**
+   * اضافه کردن دستورها و دستگیره‌ها
+   */
+  $act.command({
+    id: 'pluf.saas.app.goto',
+    label: 'application',
+    description: 'go to an application page',
+    category: 'saas',
+  }).commandHandler({
+    commandId: 'pluf.saas.app.goto',
+    handle: function() {
+      if(arguments.length < 1){
+        throw new PException('application id is not defined');
+      }
+      var args = arguments[0];
+      // XXX: maso, 1394: باید نرم افزار معادل بازیابی و اجرا شود.
+      return $window.location.href = "/"+args;
+    }
+  });
   return tenantService;
 })
 /**
