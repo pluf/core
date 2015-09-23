@@ -49,7 +49,7 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('/page/' . $match[1], $params, 
+        return Pluf_Shortcuts_RenderToResponse('/page/' . $match[1].'.html', $params, 
                 $request);
     }
 
