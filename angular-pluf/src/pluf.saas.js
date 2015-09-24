@@ -122,6 +122,20 @@ angular.module('pluf.saas', ['pluf'])
         throw new PException(data);
       });
     },
+    
+    $app : {
+      list : function(){
+        // return list of applications
+      },
+      get : function(i){
+        
+      },
+      lunch: function (i) {
+        // XXX: maso, 1394: باید نرم افزار معادل بازیابی و اجرا شود.
+        return $window.location.href = "/"+i;
+      }
+    },
+    
     /*
      * مدیریت اعضای سیستم
      */
@@ -170,9 +184,8 @@ angular.module('pluf.saas', ['pluf'])
       if(arguments.length < 1){
         throw new PException('application id is not defined');
       }
-      var args = arguments[0];
-      // XXX: maso, 1394: باید نرم افزار معادل بازیابی و اجرا شود.
-      return $window.location.href = "/"+args;
+      var a = arguments[0];
+      return tenantService.$app.lunch(a);
     }
   });
   return tenantService;

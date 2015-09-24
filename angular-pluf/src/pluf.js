@@ -513,7 +513,7 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PExcep
         angular.extend(this.data, data);
       },
       session: function() {
-        if (service.isAnonymous()) {
+        if (userService.isAnonymous()) {
           var deferred = $q.defer();
           deferred.reject();
           return deferred.promise;
@@ -525,8 +525,8 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PExcep
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
-        }).then(function(data) {
-          scope.setData(data);
+        }).then(function(res) {
+          scope.setData(res.data);
           return scope;
         }, function(res) {
           throw new PException(res.data);
@@ -536,7 +536,7 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PExcep
        * به روز رسانی پروفایل کاربری
        */
       update: function(key, value) {
-        if (service.isAnonymous()) {
+        if (userService.isAnonymous()) {
           var deferred = $q.defer();
           deferred.reject();
           return deferred.promise;
@@ -587,8 +587,8 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PExcep
       if(arguments.length < 1){
         throw new PException('credentioal are not pass into the command.');
       }
-      var args = arguments[0];
-      return userService.login(args.username, args.password);
+      var a = arguments[0];
+      return userService.login(a.username, a.password);
     }
   }).command({
     id: 'pluf.user.logout',
@@ -602,6 +602,22 @@ angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PExcep
     commandId: 'pluf.user.logout',
     handle: function() {
       return userService.logout(); 
+    }
+  }).command({
+    id : 'pluf.user.update',
+    label : 'update',
+    description : 'update the current user',
+    visible : function (){
+      return !userService.isAnonymous();
+    },
+  }).commandHandler({
+    commandId: 'pluf.user.update',
+    handle : function() {
+      if(arguments.length < 1){
+        throw new PException('first param must be {key, value}');
+      }
+      var a = arguments[0];
+      return userService.update(a.key, a.value)
     }
   })
   return userService;
