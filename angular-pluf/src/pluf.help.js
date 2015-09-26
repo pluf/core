@@ -47,12 +47,12 @@ angular.module('pluf.help', ['pluf'])
         return d.promise;
       }
       if (!('language' in $p)) {
-        p.language = 'fa';
+        $p.language = 'fa';
       }
       var scope = this;
       return $http({
         method: 'GET',
-        url: '/api/wiki/' + p.language + '/' + p.id,
+        url: '/api/wiki/' + $p.language + '/' + $p.id,
       }).then(function(res) {
         var m = scope._ret(res.data.id, res.data);
         return m;
@@ -89,9 +89,9 @@ angular.module('pluf.help', ['pluf'])
       return false;
     },
     render: function() {
-      if (typeof (this.content) === 'undefined' || this.content == null)
-        return;
-      return markdown.toHTML(this.content);
+      if (this.data.content){
+        return markdown.toHTML(this.data.content);
+      }
     }
   };
   return wikiPage;
