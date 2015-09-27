@@ -18,6 +18,13 @@ return array(
                         'GET'
                 )
         ),
+        /**
+         * مدیریت داده‌های شخصی
+         *
+         * دسته‌ای از فراخوانی‌ها برای مدیریت داده‌های کاربر جاری در نظر گرفته
+         * شده است. این فراخوانی‌ها
+         * برای کاربران نهایی بسیار پرکاربرد هستند.
+         */
         array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
                 'regex' => '#^/account$#',
                 'model' => 'User_Views_User',
@@ -50,11 +57,39 @@ return array(
         ),
         /*
          * مدیریت سیستم
+         * 
+         * این دسته از فراخوانی‌ها برای مدیریت کاربران و پروفایل‌های آنها در نظر گرفته شده است. تنها کاربر ریشه است که
+         * می‌تواند از این فراخوانی‌ها استفاده کند و داده‌های کاربران را دستکاری کند.
          */
-        array( // ورود کاربر به سیستم است
-                'regex' => '#^/user/list$#',
-                'model' => 'User_Views_User',
+        array( // فهرست کاربران
+                'regex' => '#^/list$#',
+                'model' => 'User_Views_UserAdmin',
                 'method' => 'users',
                 'http-method' => 'GET'
+        ),
+        array( // گرفتن اطلاعات کاربر
+                'regex' => '#^/(\d+)$#',
+                'model' => 'User_Views_UserAdmin',
+                'method' => 'getUser',
+                'http-method' => 'GET'
+        ),
+        array( // به روز کردن اطلاعات کاربر
+                'regex' => '#^/(\d+)$#',
+                'model' => 'User_Views_UserAdmin',
+                'method' => 'updateUser',
+                'http-method' => 'POST'
+        ),
+        array( // گرفتن پروفایل کاربر
+                'regex' => '#^/(\d+)/profile$#',
+                'model' => 'User_Views_ProfileAdmin',
+                'method' => 'getProfile',
+                'http-method' => 'GET'
+        ),
+        array( // به روز کردن پروفایل کاربر
+                'regex' => '#^/(\d+)/profile$#',
+                'model' => 'User_Views_ProfileAdmin',
+                'method' => 'updateProfile',
+                'http-method' => 'POST'
         )
-);
+)
+;
