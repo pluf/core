@@ -1,5 +1,11 @@
-package ir.co.dpq.pluf;
+package ir.co.dpq.pluf.user;
 
+/**
+ * ساختار داده‌ای کاربر را تعیین می‌کند.
+ * 
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *
+ */
 public class PUser {
 
 	long id;

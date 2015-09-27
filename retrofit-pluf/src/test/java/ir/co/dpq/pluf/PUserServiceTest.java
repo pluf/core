@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import ir.co.dpq.pluf.user.IPUserService;
+import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 
