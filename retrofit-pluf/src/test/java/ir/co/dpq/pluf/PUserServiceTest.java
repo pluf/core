@@ -11,7 +11,6 @@ import org.junit.Test;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 
 public class PUserServiceTest {
 
@@ -24,41 +23,43 @@ public class PUserServiceTest {
 		CookieHandler.setDefault(cookieManager);
 
 		String API_URL = "http://localhost:1396";
-		RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API_URL).build();
+		RestAdapter restAdapter = new RestAdapter.Builder()
+				// تعیین کنترل کننده خطا
+				.setErrorHandler(new PErrorHandler())
+				// تعیین آدرس سایت مورد نظر
+				.setEndpoint(API_URL)
+				// ایجاد یک نمونه
+				.build();
 		this.usr = restAdapter.create(IPUserService.class);
 	}
-	
-	
+
 	@Test
-	public void getSessionUser(){
+	public void getSessionUser() {
 		PUser user = usr.getSessionUser();
 		Assert.assertNotNull(user);
 	}
-	
+
 	@Test
-	public void login(){
+	public void login() {
 		PUser user = usr.login("admin", "admin");
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getLogin());
 	}
-	
-	@Test(expected=RetrofitError.class)
-	public void loginFail(){
+
+	@Test(expected = PException.class)
+	public void loginFail() {
 		PUser user = usr.login("Non user name", "bad password");
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getLogin());
 	}
-	
+
 	@Test
-	public void logout(){
-		// Login 
+	public void logout() {
+		// Login
 		PUser user = usr.login("admin", "admin");
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getLogin());
-		
+
 		usr.logout();
 	}
 }
-
-
-
