@@ -29,7 +29,8 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/login")
-	void login(@Field("login") String username, @Field("password") String password, Callback<PUser> callback);
+	void login(@Field("login") String username,
+			@Field("password") String password, Callback<PUser> callback);
 
 	/**
 	 * ورود کاربر به سیستم
@@ -41,7 +42,8 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/login")
-	PUser login(@Field("login") String username, @Field("password") String password);
+	PUser login(@Field("login") String username,
+			@Field("password") String password);
 
 	/**
 	 * خروج کاربر از سیستم
@@ -158,8 +160,10 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/account")
-	void update(@Field("first_name") String firstName, @Field("last_name") String lastName,
-			@Field("email") String email, @Field("password") String password, @Field("language") String language,
+	void update(@Field("first_name") String firstName,
+			@Field("last_name") String lastName, @Field("email") String email,
+			@Field("password") String password,
+			@Field("language") String language,
 			@Field("timezone") String timezone, Callback<PUser> callback);
 
 	/**
@@ -175,8 +179,10 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/account")
-	PUser update(@Field("first_name") String firstName, @Field("last_name") String lastName,
-			@Field("email") String email, @Field("password") String password, @Field("language") String language,
+	PUser update(@Field("first_name") String firstName,
+			@Field("last_name") String lastName, @Field("email") String email,
+			@Field("password") String password,
+			@Field("language") String language,
 			@Field("timezone") String timezone);
 
 	/**
@@ -191,8 +197,10 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/signup")
-	void signup(@Field("login") String uername, @Field("password") String password,
-			@Field("first_name") String firstName, @Field("last_name") String lastName, @Field("email") String email,
+	void signup(@Field("login") String uername,
+			@Field("password") String password,
+			@Field("first_name") String firstName,
+			@Field("last_name") String lastName, @Field("email") String email,
 			Callback<PUser> callBack);
 
 	/**
@@ -207,6 +215,8 @@ public interface IPUserService {
 	@Deprecated
 	@FormUrlEncoded
 	@POST("/api/user/signup")
-	PUser signup(@Field("login") String uername, @Field("password") String password,
-			@Field("first_name") String firstName, @Field("last_name") String lastName, @Field("email") String email);
+	PUser signup(@Field("login") String uername,
+			@Field("password") String password,
+			@Field("first_name") String firstName,
+			@Field("last_name") String lastName, @Field("email") String email);
 }
