@@ -1,5 +1,7 @@
 package ir.co.dpq.pluf.user;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * ساختار داده‌ای کاربر را تعیین می‌کند.
  * 
@@ -8,19 +10,36 @@ package ir.co.dpq.pluf.user;
  */
 public class PUser {
 
+	@SerializedName("id")
 	long id;
+
+	@SerializedName("login")
 	String login;
-	String first_name;
-	String last_name;
+	
+	@SerializedName("first_name")
+	String firstName;
+	
+	@SerializedName("last_name")
+	String lastName;
+	
+	@SerializedName("email")
 	String email;
+	
+	@SerializedName("administrator")
 	boolean administrator;
+	
+	@SerializedName("staff")
 	boolean staff;
+	
+	@SerializedName("active")
 	boolean active;
+	
+	@SerializedName("language")
 	String language;
+	
+	@SerializedName("timezone")
 	String timezone;
 
-	// date_joined: "2015-08-30 02:25:34"
-	// last_login: "2015-09-26 14:09:24"
 	public long getId() {
 		return id;
 	}
@@ -37,20 +56,20 @@ public class PUser {
 		this.login = login;
 	}
 
-	public String getFirst_name() {
-		return first_name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLast_name() {
-		return last_name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -100,5 +119,4 @@ public class PUser {
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
-
 }
