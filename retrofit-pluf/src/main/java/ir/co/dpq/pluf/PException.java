@@ -6,7 +6,7 @@ package ir.co.dpq.pluf;
  * 
  * تمام خطا‌هایی که در این بسته تولید می‌شوند همگی توسعه یافته از این کلاس هستند.
  * 
- * @author maso
+ * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
 public class PException extends RuntimeException {

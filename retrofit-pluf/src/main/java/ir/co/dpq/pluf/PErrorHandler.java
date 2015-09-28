@@ -13,7 +13,7 @@ import retrofit.RetrofitError;
  * هستند و اطلاعات مناسبی را برای کاربر دارند. این پیام در بدنه برای کاربر ارسال
  * می‌شود. در اینجا این پیام دریافت شده و به ساختارهای مناسب تبدیل می‌شود.
  * 
- * @author maso
+ * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
 public class PErrorHandler implements ErrorHandler {

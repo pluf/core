@@ -3,6 +3,12 @@ package ir.co.dpq.pluf;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * برخی از فراخوانی‌های پرکاربرد سیستم را ایجاد می‌کند.
+ * 
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *
+ */
 public class Util {
 
 	/**

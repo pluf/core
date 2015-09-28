@@ -33,4 +33,22 @@ class Inbox_Views_System
         return new Pluf_HTTP_Response_Json(
                 $request->user->getAndDeleteMessages());
     }
+
+    /**
+     * یک پیام تست را برای کاربر ایجاد می‌کند.
+     *
+     * این فراخوانی تنها در حالت رفع خطا قابل استفاده است و در سایر حالت تولید
+     * استثنا می‌کند.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     */
+    public function testMessage ($request, $match)
+    {
+        if(!Pluf::f ('debug', false)){
+            throw new Pluf_Exception(__('not possible to add test message'));
+        }
+        return new Pluf_HTTP_Response_Json(
+                $request->user->setMessage("this is example"));
+    }
 }

@@ -11,8 +11,9 @@
 این فراخوانی باید با متد GET انجام شود. که در زیر یک نمونه خروجی از آن آورده شده است.
 
 
-	{
-		"0":"This is an example message",
-		"1":"This is an example message"
-	}
+	[
+		{"id":71,"user":1,"message":"this is example"},
+		{"id":72,"user":1,"message":"this is example"}
+	]
 
+در حقیقت نتیجه این فراخوانی یک فهرست از پیام‌های سیستم است.

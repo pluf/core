@@ -472,7 +472,11 @@ class Pluf_User extends Pluf_Model
         $m = new Pluf_Message();
         $m->user = $this;
         $m->message = $message;
-        return $m->create();
+        if(!$m->create()){
+            throw new Pluf_Exception(
+                    __("not possible to create a message"));
+        }
+        return $m;
     }
 
     /**
@@ -489,10 +493,11 @@ class Pluf_User extends Pluf_Model
             throw new Pluf_Exception_DoesNotExist(
                     __("User not exist, while you are trying to get messages?!"));
         }
-        $messages = new ArrayObject();
+        $messages = array();
         $ms = $this->get_pluf_message_list();
         foreach ($ms as $m) {
-            $messages[] = $m->message;
+            $ms = new Pluf_Message($m->id);
+            array_push($messages, $ms);
             $m->delete();
         }
         return $messages;
