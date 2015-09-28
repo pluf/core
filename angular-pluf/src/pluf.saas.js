@@ -3,209 +3,214 @@
  * مدیریت نرم‌افزارها را انجام می‌دهد
  */
 angular.module('pluf.saas', ['pluf'])
-/**
- * یک نسخه نصب شده از نرم افزار را تعیین می‌کند که شامل دسته از کاربران،
- * تنظیم‌ها، و داده‌ها می‌شود.
- */
-.factory('$tenant', function($http, $q, $act, $window, PException, PaginatorPage) {
-  var tenantService = {
-    data: {},
-    setData: function(appData) {
-      angular.extend(this.data, appData);
-    },
-    isAnonymous: function() {
-      return (typeof this.id === 'undefined') || this.id === '';
-    },
-    load: function() {
-      var scope = this;
-      return $http.get('/api/saas/app').then(function(res) {
-        scope.setData(res.data);
-        return scope;
-      }, function(res) {
-        throw new PException(res.data);
-      });
-    },
-    setApp: function(id) {
-      var scope = this;
-      $http.get('/api/saas/app/' + id).then(function(res) {
-        scope.setData(res.data);
-        return scope;
-      },function(res) {
-        throw new PException(res.data);
-      });
-    },
-    /**
-     * جستجوی نرم‌افزارهای کاربردی با امکان صفحه بندی. از این راهکار برای فهرست
-     * کردن و جستجو استفاده می‌شود که کاربردهای فراوانی دارد.
-     */
-    search: function($params) {
-      var scope = this;
-      return $http({
-        method: 'GET',
-        url: '/api/saas/app/list',
-        params: $params.getParameter(),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(res) {
-        var page = new PaginatorPage(res.data);
-        return page;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
-    /**
-     * امکان جستجو روی نرم‌افزارهای کاربردی فراهم می‌کند که کاربر به نوعی مجوز
-     * دسترسی به آن را دارد. این مجوزها به صورت یک خصویت اضافه می‌شوند. برای
-     * دریافت خصوصیت‌های هر مجوز باید از واسطه‌های تعیین شده در pluf_user
-     * استفاده شود.
-     */
-    list: function($params) {
-      var scope = this;
-      return $http({
-        method: 'GET',
-        url: '/api/saas/app/user/list',
-        params: $params.getParameter(),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(res) {
-        var page = new PaginatorPage(res.data);
-        return page;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
 
-    /**
-     * با استفاده از این فراخوانی یکی از خصوصیت‌های یک نرم‌افزار کاربردی به روز
-     * می‌شود.
-     */
-    update: function(app, key, value) {
-      var scope = this;
-      var par = {};
-      par[key] = value;
-      return $http({
-        method: 'POST',
-        url: '/api/saas/app/' + this.data.id,
-        data: $.param(par),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(res) {
-        scope.setData(res.data);
-        return scope;
-      }, function(data) {
-        throw new PException(data);
-      });
-      return deferred.promise;
-    },
-    /**
-     * با استفاده از این فراخوانی یکی نرم افزار کاربردی جدید ایجاد می‌شود.
-     */
-    create: function(t, d) {
-      var scope = this;
-      return $http({
-        method: 'POST',
-        url: '/api/saas/app',
-        data: $.param({
-          'title': t,
-          'description': d,
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(res) {
-        scope.setData(res);
-        return scope;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
-    
-    $app : {
-      list : function(){
-        // return list of applications
-      },
-      get : function(i){
-        
-      },
-      lunch: function (i) {
-        // XXX: maso, 1394: باید نرم افزار معادل بازیابی و اجرا شود.
-        return $window.location.href = "/"+i;
-      }
-    },
-    
-    /*
-     * مدیریت اعضای سیستم
-     */
-    $member: {
-      data: {},
-      setData: function(appData) {
-        angular.extend(this.data, appData);
-      },
-      /**
-       * اعضای یک نرم‌افزار کاربردی را تعیین می‌کند.
-       */
-      load: function() {
-        if (this.isAnonymous() || this.memberLoaded()) {
-          var deferred = $q.defer();
-          if (this.isAnonymous())
-            deferred.reject('authentication requried');
-          else
-            deferred.resolve(this.$member.data);
-          return deferred.promise;
-        }
-        var scope = tenantService;
-        return $http({
-          method: 'GET',
-          url: '/api/saas/app/' + $application.id + '/member/list'
-        }).then(function(res) {
-          scope.$member.setData(res.data);
-          return scope.$member;
-        }, function(data) {
-          $notify.debug('fail to get members', data);
-          throw new PException(data);
-        });
-      },
-    },
+/**
+ * ساختار داده‌ای یک ملک را تعیین می‌کنه
+ */
+.factory('PTenant', function($http, $q, PObject, PProfile) {
+  var pTenant = function() {
+    PObject.apply(this, arguments);
   };
+  pTenant.prototype = new PObject();
+
   /**
-   * اضافه کردن دستورها و دستگیره‌ها
+   * با استفاده از این فراخوانی یکی از خصوصیت‌های یک نرم‌افزار کاربردی به روز
+   * می‌شود.
    */
-  $act.command({
-    id: 'pluf.saas.app.goto',
-    label: 'application',
-    description: 'go to an application page',
-    category: 'saas',
-  }).commandHandler({
-    commandId: 'pluf.saas.app.goto',
-    handle: function() {
-      if(arguments.length < 1){
-        throw new PException('application id is not defined');
+  pTenant.prototype.update = function(key, value) {
+    var scope = this;
+    var par = {};
+    par[key] = value;
+    return $http({
+      method: 'POST',
+      url: '/api/saas/app/' + this.id,
+      data: $.param(par),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-      var a = arguments[0];
-      return tenantService.$app.lunch(a);
+    }).then(function(res) {
+      scope.setData(res.data);
+      return scope;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+
+  /**
+   * اعضای یک نرم‌افزار کاربردی را تعیین می‌کند.
+   */
+  pTenant.prototype.members = function() {
+    if (this.isAnonymous() || this.memberLoaded()) {
+      var deferred = $q.defer();
+      if (this.isAnonymous())
+        deferred.reject('authentication requried');
+      else
+        deferred.resolve(this._member);
+      return deferred.promise;
     }
-  });
-  return tenantService;
+    var scope = tenantService;
+    return $http({
+      method: 'GET',
+      url: '/api/saas/app/' + $application.id + '/member/list'
+    }).then(function(res) {
+      scope.$member.setData(res.data);
+      return scope.$member;
+    }, function(data) {
+      $notify.debug('fail to get members', data);
+      throw new PException(data);
+    });
+  }
+
+  /**
+   * فهرست تمام نرم‌افزارهایی را تعیین می‌کند که این ناحیه حق استفاده از آنها را
+   * دارد.
+   */
+  pTenant.prototype.apps = function() {
+    // FIXME: maso, 1394: فهرست نرم‌افزارها تعیین شود
+  }
+  return pTenant;
 })
 /**
  * هر نسخه می‌تواند از یک نوع نرم افزار خاص نصب شده استفاده کند. البته نرم
  * افزارهای باید تنها از خدمات ارائه شده در نسخه نصبی استفاده کنند. هر نرم افزار
  * می‌تواند شامل تنظیم‌های متفاتی باشد.
  */
-.factory('$application', function() {
-  var appService = function() {
-    // بار گزاری سرویس
+.factory('PApplication', function($http, $q, PObject, PProfile) {
+  var pApplication = function() {
+    PObject.apply(this, arguments);
   };
-  appService.prototype = {
-    setData: function(applicationData) {
-      angular.extend(this, applicationData);
-    },
-    isAnonymous: function() {
-      return (typeof this.id === 'undefined') || this.id === '';
-    },
-  };
-  return service;
-});
+  pApplication.prototype = new PObject();
+
+  pApplication.prototype.lunch = function() {
+    // XXX: maso, 1394: باید نرم افزار معادل بازیابی و اجرا شود.
+    return $window.location.href = "/" + i;
+  }
+  return pApplication;
+})
+/**
+ * یک نسخه نصب شده از نرم افزار را تعیین می‌کند که شامل دسته از کاربران،
+ * تنظیم‌ها، و داده‌ها می‌شود.
+ */
+.service(
+        '$tenant',
+        function($http, $q, $act, $window, PTenant, PApplication, PException,
+                PaginatorPage) {
+          this._pool = [];
+          this.ret = function(d) {
+            if (d.id in this._pool) {
+              var t = this._pool[d.id];
+              t.setData(d);
+              return t;
+            }
+            var t = new PTenant(d);
+            this._pool[t.id] = t;
+            return t;
+          }
+          this.session = function() {
+            var scope = this;
+            return $http.get('/api/saas/app').then(function(res) {
+              return scope.ret(res.data);
+            }, function(res) {
+              throw new PException(res.data);
+            });
+          }
+          this.get = function(id) {
+            var scope = this;
+            $http.get('/api/saas/app/' + id).then(function(res) {
+              return scope.ret(res.data);
+            }, function(res) {
+              throw new PException(res.data);
+            });
+          }
+          /**
+           * جستجوی نرم‌افزارهای کاربردی با امکان صفحه بندی. از این راهکار برای
+           * فهرست کردن و جستجو استفاده می‌شود که کاربردهای فراوانی دارد.
+           */
+          this.search = function($params) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/saas/app/list',
+              params: $params.getParameter(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              // XXX: maso, 1394: Create list of tenant object
+              var page = new PaginatorPage(res.data);
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+          /**
+           * امکان جستجو روی نرم‌افزارهای کاربردی فراهم می‌کند که کاربر به نوعی
+           * مجوز دسترسی به آن را دارد. این مجوزها به صورت یک خصویت اضافه
+           * می‌شوند. برای دریافت خصوصیت‌های هر مجوز باید از واسطه‌های تعیین شده
+           * در pluf_user استفاده شود.
+           */
+          this.list = function($params) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/saas/app/user/list',
+              params: $params.getParameter(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              // XXX: maso, 1394: Create list of tenant object
+              var page = new PaginatorPage(res.data);
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+          /**
+           * با استفاده از این فراخوانی یکی نرم افزار کاربردی جدید ایجاد می‌شود.
+           */
+          this.create = function(t, d) {
+            var scope = this;
+            return $http({
+              method: 'POST',
+              url: '/api/saas/app',
+              data: $.param({
+                'title': t,
+                'description': d,
+              }),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              return scope.ret(res.data);
+            }, function(res) {
+              throw new PException(res.data);
+            });
+          }
+        })
+
+/**
+ *
+ */
+.run(
+        function($act, $tenant) {
+          /**
+           * اضافه کردن دستورها و دستگیره‌ها
+           */
+          $act.command({
+            id: 'pluf.saas.app.goto',
+            label: 'application',
+            description: 'go to an application page',
+            category: 'saas',
+          }).commandHandler(
+                  {
+                    commandId: 'pluf.saas.app.goto',
+                    handle: function() {
+                      if (arguments.length < 1) { throw new PException(
+                              'application id is not defined'); }
+                      var a = arguments[0];
+                      return $tenant.$app.lunch(a);
+                    }
+                  });
+        });

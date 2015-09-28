@@ -8,32 +8,60 @@ angular.module('pluf', ['pluf.paginator', 'pluf.user', 'pluf.core']);
 angular.module("pluf.core", [])
 
 /**
- * ساختار پایه گزارش خطا در سیستم.
+ * ساختارهای پایه برای تمام اشیا سیستم را ایجاد می‌کند. با استفاده از کلاس
+ * بسیاری از فراخوانی‌های مشترک در یک کلاس جمع خواهد شد.
  */
-.factory('PException', function() {
-  var pexception = function(data) {
+.factory('PObject', function() {
+  var pObject = function(data) {
     if (data) {
       this.setData(data);
     }
   };
-  pexception.prototype = {
+  pObject.prototype = {
+    /*
+     * داده‌های دریافتی را تعیین می‌کند
+     */
     setData: function(data) {
       angular.extend(this, data);
     },
+    /**
+     * تعیین می‌کند که آیا ساختارهای داده‌ای نشان دارند. زمانی که یک ساختار
+     * داده‌ای شناسه معتبر داشته باشد و سمت کارگذار ذخیره شده باشد به عنوان یک
+     * داده نشان دار در نظر گرفته می‌شود.
+     * 
+     * @returns {Boolean}
+     */
+    isAnonymous: function() {
+      return !(this.id && this.id > 0);
+    },
+    /**
+     * تعیین می‌کنه که آیا داده‌های کاربر منقضی شده یا نه. در صورتی که داده‌ها
+     * منقضی شده باشه دیگه نباید از آنها استفاده کرد.
+     */
+    expire: function() {
+      return false;
+    }
   };
-  return pexception;
+  return pObject;
+})
+
+/**
+ * ساختار پایه گزارش خطا در سیستم.
+ */
+.factory('PException', function(PObject) {
+  var pException = function() {
+    PObject.apply(this, arguments);
+  };
+  pException.prototype = new PObject();
+  return pException;
 })
 
 /**
  * مدیریت داده‌های محلی کاربر را انجام می‌دهد. این داده‌ها به صورت محلی در
  * مرورگر ذخیره سازی می‌شوند.‌
  */
-.factory('$preference', function() {
-  var prefService = function() {
-    // بار گزاری سرویس
-  };
-  prefService.prototype = {};
-  return prefService;
+.service('$preference', function() {
+  return this;
 })
 
 /**
@@ -175,15 +203,15 @@ angular.module("pluf.core", [])
       var scope = this;
       $act.getCommand(menu.command).then(function(command) {
         menu.active = function() {
-          if(menu.params instanceof Array){
+          if (menu.params instanceof Array) {
             var args = [];
             args.push(menu.command);
-            for(var i = 0; i < menu.params.length; i++){
+            for (var i = 0; i < menu.params.length; i++) {
               args.push(menu.params[i]);
             }
-            return $act.execute.apply($act, args); 
-          } else{
-            return $act.execute(menu.command); 
+            return $act.execute.apply($act, args);
+          } else {
+            return $act.execute(menu.command);
           }
         }
         if (!('visible' in menu)) {
@@ -219,97 +247,98 @@ angular.module("pluf.core", [])
  * یک سیستم ساده است برای اعلام پیام در سیستم. با استفاده از این کلاس می‌توان
  * پیام‌های متفاوتی که در سیستم وجود دارد را به صورت همگانی اعلام کرد.
  */
-.factory('$notify', function($rootScope, $timeout, $q) {
-  var notifyService = {
-    /*
-     * فهرست شنودگرهای
-     */
-    _info: [],
-    _warning: [],
-    _debug: [],
-    _error: [],
-    _fire: function(list, args) {
-      var deferred = $q.defer();
-      $timeout(function() {
-        for (var i = 0; i < list.length; i++) {
-          list[i].apply(list[i], args);
-        }
-        deferred.resolve();
-      }, 10);
-      return deferred.promise;
-    },
-    /*
-     * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
-     */
-    onInfo: function(listener) {
-      this._info.push(listener);
-      return this;
-    },
-    /**
-     * تمام واسطه‌های تعیین شده برای پیام را فراخوانی کرده و آنها را پیام ورودی
-     * آگاه می‌کند.
-     */
-    info: function() {
-      return this._fire(this._info, arguments);
-    },
-    /*
-     * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
-     */
-    onWarning: function(listener) {
-      this._warning.push(listener);
-      return this;
-    },
-    /**
-     * تمام پیام‌های اخطاری که در سیستم تولید شده است را به سایر شنودگرها ارسال
-     * کرده و آنها را از بروز آن آگاه می‌کند.
-     */
-    warning: function() {
-      return this._fire(this._warning, arguments);
-    },
-    /*
-     * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
-     */
-    onDebug: function(listener) {
-      this._debug.push(listener);
-      return this;
-    },
-    /**
-     * تمام پیام‌هایی که برای رفع خطا در سیستم تولید می‌شود را برای تمام
-     * شنودگرهای اضافه شده ارسال می‌کند.
-     */
-    debug: function() {
-      return this._fire(this._debug, arguments);
-    },
-    /*
-     * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
-     */
-    onError: function(listener) {
-      this._error.push(listener);
-      return this;
-    },
-    /**
-     * تمام پیام‌های خطای تولید شده در سیتسم را برای تمام شوندگرهایی خطا صادر
-     * کرده و آنها را از آن مطلع می‌کند.
-     */
-    error: function() {
-      return this._fire(this._error, arguments);
-    },
-    /*
-     * یک رویداد خاص را در کل فضای نرم افزار انتشار می‌دهد. اولین پارامتر ورودی
-     * این تابع به عنوان نام و شناسه در نظر گرفت می‌شود و سایر پارامترها به
-     * عنوان پارامترهای ورودی آن.
-     */
-    broadcast: function() {
-      return $rootScope.$broadcast.apply($rootScope, arguments);
-    }
-  };
-  return notifyService;
+.service('$notify', function($rootScope, $timeout, $q) {
+  /*
+   * فهرست شنودگرهای
+   */
+  this._info = [];
+  this._warning = [];
+  this._debug = [];
+  this._error = [];
+  this._fire = function(list, args) {
+    var deferred = $q.defer();
+    $timeout(function() {
+      for (var i = 0; i < list.length; i++) {
+        list[i].apply(list[i], args);
+      }
+      deferred.resolve();
+    }, 10);
+    return deferred.promise;
+  }
+  /*
+   * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
+   */
+  this.onInfo = function(listener) {
+    this._info.push(listener);
+    return this;
+  }
+  /**
+   * تمام واسطه‌های تعیین شده برای پیام را فراخوانی کرده و آنها را پیام ورودی
+   * آگاه می‌کند.
+   */
+  this.info = function() {
+    return this._fire(this._info, arguments);
+  }
+  /*
+   * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
+   */
+  this.onWarning = function(listener) {
+    this._warning.push(listener);
+    return this;
+  }
+  /**
+   * تمام پیام‌های اخطاری که در سیستم تولید شده است را به سایر شنودگرها ارسال
+   * کرده و آنها را از بروز آن آگاه می‌کند.
+   */
+  this.warning = function() {
+    return this._fire(this._warning, arguments);
+  }
+  /*
+   * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
+   */
+  this.onDebug = function(listener) {
+    this._debug.push(listener);
+    return this;
+  }
+  /**
+   * تمام پیام‌هایی که برای رفع خطا در سیستم تولید می‌شود را برای تمام شنودگرهای
+   * اضافه شده ارسال می‌کند.
+   */
+  this.debug = function() {
+    return this._fire(this._debug, arguments);
+  }
+  /*
+   * یک شنودگر جدید به فهرست شنودگرها اضافه می‌کند.
+   */
+  this.onError = function(listener) {
+    this._error.push(listener);
+    return this;
+  }
+  /**
+   * تمام پیام‌های خطای تولید شده در سیتسم را برای تمام شوندگرهایی خطا صادر کرده
+   * و آنها را از آن مطلع می‌کند.
+   */
+  this.error = function() {
+    return this._fire(this._error, arguments);
+  }
+  /*
+   * یک رویداد خاص را در کل فضای نرم افزار انتشار می‌دهد. اولین پارامتر ورودی
+   * این تابع به عنوان نام و شناسه در نظر گرفت می‌شود و سایر پارامترها به عنوان
+   * پارامترهای ورودی آن.
+   */
+  this.broadcast = function() {
+    return $rootScope.$broadcast.apply($rootScope, arguments);
+  }
 });
 
 /**
  * ساختار داده‌ای برای جستجو را تعیین می‌کند.
  */
-angular.module("pluf.paginator", []).factory('PaginatorParameter', function() {
+angular.module("pluf.paginator", [])
+/**
+ * 
+ */
+.factory('PaginatorParameter', function() {
   var pagParam = function(paginatorParam) {
     if (paginatorParam) {
       this.setData(paginatorParam);
@@ -354,24 +383,12 @@ angular.module("pluf.paginator", []).factory('PaginatorParameter', function() {
 /**
  * ساختار داده‌ای نرم‌افزار را ایجاد می‌کند.
  */
-.factory('PaginatorPage', function() {
-  var pagPage = function(pd) {
-    if (pd) {
-      this.setData(pd);
-    }
+.factory('PaginatorPage', function(PObject) {
+  var paginatorPage = function() {
+    PObject.apply(this, arguments);
   };
-  pagPage.prototype = {
-    list: [],
-    setData: function(pd) {
-      angular.extend(this, pd);
-      this.list = [];
-      for (var i = 0; i < pd.items_per_page; i++) {
-        if (!(typeof pd[i] === "object")) break;
-        this.list.push(pd[i]);
-      }
-    },
-  };
-  return pagPage;
+  paginatorPage.prototype = new PObject();
+  return paginatorPage;
 });
 
 /**
@@ -379,246 +396,294 @@ angular.module("pluf.paginator", []).factory('PaginatorParameter', function() {
  * نیاز است ارائه می‌کند. برای نمونه ورود به سیستم، خروج و یا به روز کردن
  * تنظیم‌های کاربری. مدیریت کاربران در سطح سیستم در سرویس‌های دیگر ارائه می‌شود.
  */
-angular.module("pluf.user", []).factory('$usr', function($http, $q, $act, PException) {
+angular.module("pluf.user", [])
+/**
+ * 
+ */
+.factory('PProfile', function($http, $q, PObject, PException) {
   /**
-   * یک نمونه جدید از این کلاس ایجاد می‌کند.
+   * یک نمونه جدید از این موجودیت ایجاد می کند.
    */
-  var userService = {
-    data: {},
-    /**
-     * داده‌های کلاس را تعیین می‌کند
-     */
-    setData: function(data) {
-      this.data= data;
-    },
-    /**
-     * ورود کاربر به سیستم
-     */
-    login: function($login, $password) {
-      if (!this.isAnonymous()) {
-        var deferred = $q.defer();
-        deferred.resolve(this);
-        return deferred.promise;
-      }
-      var scope = this;
-      return $http({
-        method: 'POST',
-        url: '/api/user/login',
-        data: $.param({
-          'login': $login,
-          'password': $password
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(data) {
-        scope.setData(data.data);
-        return scope;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
-    /**
-     * کاربری که در نشست تعیین شده است را بازیابی می‌کند.
-     * 
-     * @returns
-     */
-    session: function() {
-      var scope = this;
-      return $http.get('/api/user/account').then(function(data) {
-        scope.setData(data.data);
-        return scope.data;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
-    /**
-     * خروج از سیستم
-     */
-    logout: function() {
-      if (this.isAnonymous()) {
-        var deferred = $q.defer();
-        deferred.resolve(this);
-        return deferred.promise;
-      }
-      var scope = this;
-      return $http.get('/api/user/logout').success(function(data) {
-        scope.setData(data);
-        return scope;
-      }).error(function(data) {
-        throw new PException(data);
-      });
-    },
-    /**
-     * به روز کردن اطلاعات کاربر
-     */
-    update: function(key, value) {
-      var deferred = $q.defer();
-      var scope = this;
-      var param = {};
-      param[key] = value;
-      return $http({
-        method: 'POST',
-        url: '/api/user/account',
-        data: $.param(param),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(data) {
-        scope.setData(data.data);
-        return scope;
-      }, function(data) {
-        throw new PException(data);
-      });
-      return deferred.promise;
-    },
-    /**
-     * ثبت نام یک کاربر جدید
-     */
-    signup: function(login, firstName, lastName, email, password) {
-      var scope = this;
-      return $http({
-        method: 'POST',
-        url: '/api/user/signup',
-        data: $.param({
-          'login': login,
-          'first_name': firstName,
-          'last_name': lastName,
-          'email': email,
-          'password': password
-        }),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }).then(function(data) {
-        scope.setData(data.data);
-        return scope;
-      }, function(data) {
-        throw new PException(data);
-      });
-    },
-    /**
-     * وارد بودن در سیستم را تعیین می‌کند
-     */
-    isAnonymous: function() {
-      return ! (this.data.id && this.data.id > 0);
-//       return value;
-    },
-    /**
-     * مدیریت پروفایل کاربر را ایجاد می‌کند
-     */
-    $profile: {
-      data: {},
-      setData: function(data) {
-        angular.extend(this.data, data);
-      },
-      session: function() {
-        if (userService.isAnonymous()) {
-          var deferred = $q.defer();
-          deferred.reject();
-          return deferred.promise;
-        }
-        var scope = this;
-        return $http({
-          method: 'GET',
-          url: '/api/user/profile',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).then(function(res) {
-          scope.setData(res.data);
-          return scope;
-        }, function(res) {
-          throw new PException(res.data);
-        });
-      },
-      /**
-       * به روز رسانی پروفایل کاربری
-       */
-      update: function(key, value) {
-        if (userService.isAnonymous()) {
-          var deferred = $q.defer();
-          deferred.reject();
-          return deferred.promise;
-        }
-        var scope = this;
-        var param = {};
-        param[key] = value;
-        return $http({
-          method: 'POST',
-          url: '/api/user/profile',
-          data: $.param(param),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }).then(function(data) {
-          scope.setData(data);
-          return scope;
-        }, function(data) {
-          throw new PException(data);
-        });
-      }
-    },
-    /**
-     * مدیریت گروه‌های کاربر را ایجاد می‌کند
-     */
-    $group: {
-      data: {},
-      setData: function(data) {
-        angular.extend(this.data, data);
-      },
-    },
+  var pProfile = function() {
+    PObject.apply(this, arguments);
   };
-  
-  /*
-   * اضافه کردن دستورهای و دستگیره‌های سرویس
+  pProfile.prototype = new PObject();
+
+  /**
+   * به روز رسانی پروفایل کاربری
    */
-  $act.command({
-    id: 'pluf.user.login',
-    label: 'login',
-    description: 'login a user',
-    visible : function (){
-      return !userService.isAnonymous();
-    },
-    category: 'usr',
-  }).commandHandler({
-    commandId: 'pluf.user.login',
-    handle: function() {
-      if(arguments.length < 1){
-        throw new PException('credentioal are not pass into the command.');
+  pProfile.prototype.update = function(key, value) {
+    if (this.user.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.reject();
+      return deferred.promise;
+    }
+    var scope = this;
+    var param = {};
+    param[key] = value;
+    return $http({
+      method: 'POST',
+      url: '/api/user/profile',
+      data: $.param(param),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-      var a = arguments[0];
-      return userService.login(a.username, a.password);
-    }
-  }).command({
-    id: 'pluf.user.logout',
-    label: 'logout',
-    description: 'logout the user',
-    visible : function (){
-      return !userService.isAnonymous();
-    },
-    category: 'usr',
-  }).commandHandler({
-    commandId: 'pluf.user.logout',
-    handle: function() {
-      return userService.logout(); 
-    }
-  }).command({
-    id : 'pluf.user.update',
-    label : 'update',
-    description : 'update the current user',
-    visible : function (){
-      return !userService.isAnonymous();
-    },
-  }).commandHandler({
-    commandId: 'pluf.user.update',
-    handle : function() {
-      if(arguments.length < 1){
-        throw new PException('first param must be {key, value}');
+    }).then(function(data) {
+      scope.setData(data);
+      return scope;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+
+  return pProfile;
+})
+/**
+ * 
+ */
+.factory('PUser', function($http, $q, PObject, PProfile, PException) {
+  var pUser = function() {
+    PObject.apply(this, arguments);
+  };
+  pUser.prototype = new PObject();
+
+  /**
+   * به روز کردن اطلاعات کاربر
+   */
+  pUser.prototype.update = function(key, value) {
+    var deferred = $q.defer();
+    var scope = this;
+    var param = {};
+    param[key] = value;
+    return $http({
+      method: 'POST',
+      url: '/api/user/' + this.id,
+      data: $.param(param),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-      var a = arguments[0];
-      return userService.update(a.key, a.value)
+    }).then(function(data) {
+      scope.setData(data.data);
+      return scope;
+    }, function(data) {
+      throw new PException(data);
+    });
+    return deferred.promise;
+  }
+
+  /**
+   * پروفایل کاربر را تعیین می‌کند.
+   * 
+   * @returns
+   */
+  pUser.prototype.profile = function() {
+    if (this.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.reject();
+      return deferred.promise;
     }
-  })
-  return userService;
-});
+    if (this._prof && !this._prof.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.resolve(this._prof);
+      return deferred.promise;
+    }
+    var scope = this;
+    return $http({
+      method: 'GET',
+      url: '/api/user/' + this.id + '/profile',
+    }).then(function(res) {
+      scope._prof = new PProfile(res.data);
+      scope._prof.user = scope;
+      return scope._prof;
+    }, function(res) {
+      throw new PException(res.data);
+    });
+  }
+  return pUser;
+})
+
+/**
+ * 
+ */
+.service('$usr', function($http, $q, $act, PUser, PException) {
+  /**
+   * تعیین می‌کنه که آیا کاربر جاری وارد سیستم شده یا نه.
+   */
+  this.isAnonymous = function() {
+    return (this._su == null) || this._su.isAnonymous();
+  }
+  /**
+   * ورود کاربر به سیستم
+   */
+  this.login = function($login, $password) {
+    if (!this.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.resolve(this);
+      return deferred.promise;
+    }
+    var scope = this;
+    return $http({
+      method: 'POST',
+      url: '/api/user/login',
+      data: $.param({
+        'login': $login,
+        'password': $password
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function(data) {
+      scope._su = new PUser(data.data);
+      return scope._su;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+  /**
+   * کاربری که در نشست تعیین شده است را بازیابی می‌کند.
+   * 
+   * @returns
+   */
+  this.session = function() {
+    var scope = this;
+    if (!this.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.resolve(this._su);
+      return deferred.promise;
+    }
+    return $http.get('/api/user/account').then(function(data) {
+      scope._su = new PUser(data.data);
+      return scope._su;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+  /**
+   * خروج از سیستم
+   */
+  this.logout = function() {
+    if (this.isAnonymous()) {
+      var deferred = $q.defer();
+      deferred.resolve(this);
+      return deferred.promise;
+    }
+    var scope = this;
+    return $http.get('/api/user/logout').success(function(data) {
+      scope._su = null;
+      return scope._su;
+    }).error(function(data) {
+      throw new PException(data);
+    });
+  }
+
+  /**
+   * ثبت نام یک کاربر جدید
+   */
+  this.signup = function(detail) {
+    var scope = this;
+    return $http({
+      method: 'POST',
+      url: '/api/user/signup',
+      data: $.param(detail),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }).then(function(data) {
+      var user = new PUser(data.data);
+      return user;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+})
+
+/**
+ * 
+ */
+.run(
+        function($usr, $act) {
+          /*
+           * وارد شدن به عنوان یک کاربر به سیستم.
+           */
+          $act.command({
+            id: 'pluf.user.login',
+            label: 'login',
+            description: 'login a user',
+            visible: function() {
+              return !$usr.isAnonymous();
+            },
+            category: 'usr',
+          }).commandHandler(
+                  {
+                    commandId: 'pluf.user.login',
+                    handle: function() {
+                      if (arguments.length < 1) { throw new PException(
+                              'credentioal are not pass into the command.'); }
+                      var a = arguments[0];
+                      return $usr.login(a.username, a.password);
+                    }
+                  });
+
+          /**
+           * خروج کاربر جاری از سیستم
+           */
+          $act.command({
+            id: 'pluf.user.logout',
+            label: 'logout',
+            description: 'logout the user',
+            visible: function() {
+              return !$usr.isAnonymous();
+            },
+            category: 'usr',
+          }).commandHandler({
+            commandId: 'pluf.user.logout',
+            handle: function() {
+              return $usr.logout();
+            }
+          });
+
+          /**
+           * دستور به روز کردن اطلاعات کاربر جاری
+           */
+          $act.command({
+            id: 'pluf.user.update',
+            label: 'update',
+            description: 'update the current user',
+            visible: function() {
+              return !$usr.isAnonymous();
+            },
+          }).commandHandler(
+                  {
+                    commandId: 'pluf.user.update',
+                    handle: function() {
+                      if (arguments.length < 1) { throw new PException(
+                              'first param must be {key, value}'); }
+                      var a = arguments[0];
+                      return $usr.session().then(function(user) {
+                        return user.update(a.key, a.value);
+                      });
+                    }
+                  });
+
+          $act.command({
+            id: 'pluf.user.profile.update',
+            label: 'update profile',
+            description: 'update the current user profile',
+            visible: function() {
+              return !$usr.isAnonymous();
+            },
+          }).commandHandler(
+                  {
+                    commandId: 'pluf.user.profile.update',
+                    handle: function() {
+                      if (arguments.length < 1) { throw new PException(
+                              'first param must be {key, value}'); }
+                      var a = arguments[0];
+                      return $usr.session().then(function(user) {
+                        return user.profile();
+                      }).then(function(profile) {
+                        return profile.update(a.key, a.value);
+                      });
+                    }
+                  });
+        });
