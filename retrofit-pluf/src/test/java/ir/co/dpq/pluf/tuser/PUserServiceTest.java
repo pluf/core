@@ -1,4 +1,4 @@
-package ir.co.dpq.pluf;
+package ir.co.dpq.pluf.tuser;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -8,14 +8,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import ir.co.dpq.pluf.user.IPProfileAdministrator;
+import ir.co.dpq.pluf.PErrorHandler;
+import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.user.IPUserService;
-import ir.co.dpq.pluf.user.PProfile;
 import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
 
-public class PProfileAdminTest {
-	private IPProfileAdministrator profileAdmin;
+public class PUserServiceTest {
+
 	private IPUserService usr;
 
 	@Before
@@ -32,16 +32,36 @@ public class PProfileAdminTest {
 				.setEndpoint(API_URL)
 				// ایجاد یک نمونه
 				.build();
-		this.profileAdmin = restAdapter.create(IPProfileAdministrator.class);
 		this.usr = restAdapter.create(IPUserService.class);
 	}
 
 	@Test
-	public void getUserProfile(){
+	public void getSessionUser() {
+		PUser user = usr.getSessionUser();
+		Assert.assertNotNull(user);
+	}
+
+	@Test
+	public void login() {
 		PUser user = usr.login("admin", "admin");
 		Assert.assertNotNull(user);
-		
-		PProfile profile = profileAdmin.getProfile(user.getId());
-		Assert.assertNotNull(profile);
+		Assert.assertEquals("admin", user.getLogin());
+	}
+
+	@Test(expected = PException.class)
+	public void loginFail() {
+		PUser user = usr.login("Non user name", "bad password");
+		Assert.assertNotNull(user);
+		Assert.assertEquals("admin", user.getLogin());
+	}
+
+	@Test
+	public void logout() {
+		// Login
+		PUser user = usr.login("admin", "admin");
+		Assert.assertNotNull(user);
+		Assert.assertEquals("admin", user.getLogin());
+
+		usr.logout();
 	}
 }
