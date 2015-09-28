@@ -11,9 +11,7 @@ import org.junit.Test;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.inbox.IPSystemMessageService;
 import ir.co.dpq.pluf.inbox.PSystemMessage;
-import ir.co.dpq.pluf.user.IPProfileAdministrator;
 import ir.co.dpq.pluf.user.IPUserService;
-import ir.co.dpq.pluf.user.PProfile;
 import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
 
