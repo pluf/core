@@ -25,11 +25,9 @@ public class TestSettings {
 		
 		admin = new PUser();
 		admin.setLogin("admin");
-		
-		
 		adminPassword = "admin";
 		
 		
-		apiUrl = "http://jahanjoo.ir";
+		apiUrl = "http://localhost:1396";
 	}
 }

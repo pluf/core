@@ -25,13 +25,21 @@ public class PNonAdminUserServiceTest {
 		CookieHandler.setDefault(cookieManager);
 
 		RestAdapter restAdapter = new RestAdapter.Builder()
-		// تعیین کنترل کننده خطا
+				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())
 				// تعیین آدرس سایت مورد نظر
 				.setEndpoint(testSettings.apiUrl)
 				// ایجاد یک نمونه
 				.build();
 		this.usr = restAdapter.create(IPUserService.class);
+
+		try {
+			usr.signup(testSettings.user.getLogin(), testSettings.password, testSettings.user.getFirstName(),
+					testSettings.user.getLastName(), testSettings.user.getEmail());
+		} catch (Exception ex) {
+			// TODO:
+		}
+		
 	}
 
 	@Test
@@ -42,12 +50,10 @@ public class PNonAdminUserServiceTest {
 
 	@Test
 	public void login() {
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 		Assert.assertNotNull(user);
 		Assert.assertEquals(testSettings.user.getLogin(), user.getLogin());
-		Assert.assertEquals(testSettings.user.getFirstName(),
-				user.getFirstName());
+		Assert.assertEquals(testSettings.user.getFirstName(), user.getFirstName());
 		Assert.assertEquals(testSettings.user.getLastName(), user.getLastName());
 		// Assert.assertEquals(testSettings.user.getEmail(), user.getEmail());
 		Assert.assertEquals(testSettings.user.getLanguage(), user.getLanguage());
@@ -57,8 +63,7 @@ public class PNonAdminUserServiceTest {
 	@Test
 	public void logout() {
 		// Login
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 		Assert.assertNotNull(user);
 		Assert.assertEquals(testSettings.user.getLogin(), user.getLogin());
 
@@ -69,59 +74,46 @@ public class PNonAdminUserServiceTest {
 
 	@Test
 	public void updateFirstName() {
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 
 		// Test updating first_name
 		String updatedField = "updated_first_name";
 		usr.update(updatedField, null, null, null, null, null);
-		Assert.assertNotEquals("Update first_name failed.",
-				testSettings.user.getFirstName(), updatedField);
+		Assert.assertNotEquals("Update first_name failed.", testSettings.user.getFirstName(), updatedField);
 
-		usr.update(testSettings.user.getFirstName(), null, null, null, null,
-				null);
-		Assert.assertNotEquals("Reset first_name failed.", updatedField,
-				testSettings.user.getFirstName());
+		usr.update(testSettings.user.getFirstName(), null, null, null, null, null);
+		Assert.assertNotEquals("Reset first_name failed.", updatedField, testSettings.user.getFirstName());
 	}
 
 	@Test
 	public void updateLastName() {
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 
 		// Test updating first_name
 		String updatedField = "updated_last_name";
 		usr.update(updatedField, null, null, null, null, null);
-		Assert.assertNotEquals("Update last_name failed.",
-				testSettings.user.getLastName(), updatedField);
+		Assert.assertNotEquals("Update last_name failed.", testSettings.user.getLastName(), updatedField);
 
-		usr.update(testSettings.user.getFirstName(), null, null, null, null,
-				null);
-		Assert.assertNotEquals("Reset last_name failed.", updatedField,
-				testSettings.user.getLastName());
+		usr.update(testSettings.user.getFirstName(), null, null, null, null, null);
+		Assert.assertNotEquals("Reset last_name failed.", updatedField, testSettings.user.getLastName());
 	}
 
 	@Test
 	public void updateEmail() {
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 
 		// Test updating first_name
 		String updatedField = "updated@mail.com";
 		usr.update(updatedField, null, null, null, null, null);
-		Assert.assertNotEquals("Update email failed.",
-				testSettings.user.getEmail(), updatedField);
+		Assert.assertNotEquals("Update email failed.", testSettings.user.getEmail(), updatedField);
 
-		usr.update(testSettings.user.getFirstName(), null, null, null, null,
-				null);
-		Assert.assertNotEquals("Reset email failed.", updatedField,
-				testSettings.user.getEmail());
+		usr.update(testSettings.user.getFirstName(), null, null, null, null, null);
+		Assert.assertNotEquals("Reset email failed.", updatedField, testSettings.user.getEmail());
 	}
 
 	@Test
 	public void getUserInfo() {
-		PUser user = usr.login(testSettings.user.getLogin(),
-				testSettings.password);
+		PUser user = usr.login(testSettings.user.getLogin(), testSettings.password);
 
 		PUser user2 = usr.getUserInfo(user.getId());
 		Assert.assertNotNull(user);
