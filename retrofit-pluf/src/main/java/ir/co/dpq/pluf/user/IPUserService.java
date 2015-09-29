@@ -8,6 +8,7 @@ import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 
 /**
  * تمام ابزارهای مدیریت کاربر را شامل می‌شود.
@@ -77,9 +78,27 @@ public interface IPUserService {
 	 * @see #getSessionUser(Callback)
 	 * @return کاربر جاری
 	 */
+	@GET("/api/user/{userId}")
+	PUser getUserInfo(@Path("userId") long userId);
+
+	/**
+	 * کاربر جاری را تعیین می‌کند.
+	 * 
+	 * @see #getSessionUser(Callback)
+	 * @return کاربر جاری
+	 */
+	@GET("/api/user/{userId}")
+	void getUserInfo(@Path("userId") long userId, Callback<PUser> callback);
+	
+	/**
+	 * کاربر جاری را تعیین می‌کند.
+	 * 
+	 * @see #getSessionUser(Callback)
+	 * @return کاربر جاری
+	 */
 	@GET("/api/user/account")
 	PUser getSessionUser();
-
+	
 	/**
 	 * به روز کردن خصوصیت‌های کاربر.
 	 * 
