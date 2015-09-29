@@ -357,12 +357,16 @@ class Pluf_Paginator
             $this->nb_items = $this->items->count();
         }
         $this->page_number = ceil($this->nb_items / $this->items_per_page);
-        
-        $items['counts'] = $items->count();
-        $items['current_page'] = $this->current_page;
-        $items['items_per_page'] = $this->items_per_page;
-        $items['page_number'] = $this->page_number;
-        return $items;
+        /**
+         * ایجاد ساختار داده‌ای نهایی
+         */
+        return array(
+                'items' => $items,
+                'counts' => $items->count(),
+                'current_page' => $this->current_page,
+                'items_per_page' => $this->items_per_page,
+                'page_number' => $this->page_number,
+        );
     }
 
     /**

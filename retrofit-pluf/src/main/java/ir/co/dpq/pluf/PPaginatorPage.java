@@ -2,25 +2,79 @@ package ir.co.dpq.pluf;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PPaginatorPage<T> {
 
-	public List<T> getList() {
-		return null;
-	}
+	/**
+	 * تعداد گزینه‌های لیست را تعیین می‌کند
+	 */
+	int counts;
 
-	public int getPageIndex() {
-		return 0;
-	}
+	/**
+	 * اندیس صفحه جاری را تعیین می‌کند
+	 */
+	@SerializedName("current_p")
+	int currentPage;
 
-	public int getPageCount() {
-		return 0;
-	}
+	/**
+	 * تعداد گزینه‌های در صفحه را تعیین می‌کند
+	 */
+	@SerializedName("items_per_page")
+	int itemsPerPage;
 
-	public int getItemPerPage() {
-		return 0;
-	}
+	/**
+	 * تعداد کل صفحه‌ها را تعیینن می‌کند.
+	 */
+	@SerializedName("page_number")
+	int pageNumber;
+	
+	@SerializedName("page_items")
+	List<T> items;
+
 
 	public boolean isEmpty() {
-		return false;
+		return items == null || items.isEmpty();
 	}
+
+	public int getCounts() {
+		return counts;
+	}
+
+	public void setCounts(int counts) {
+		this.counts = counts;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public int getItemsPerPage() {
+		return itemsPerPage;
+	}
+
+	public void setItemsPerPage(int itemsPerPage) {
+		this.itemsPerPage = itemsPerPage;
+	}
+
+	public int getPageNumber() {
+		return pageNumber;
+	}
+
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+
+	public List<T> getItems() {
+		return items;
+	}
+
+	public void setItems(List<T> items) {
+		this.items = items;
+	}
+
 }
