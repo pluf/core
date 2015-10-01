@@ -237,6 +237,11 @@ angular.module("pluf.core", [])
       menu.active = function() {
         return menu.action();
       }
+      if (!('visible' in menu)) {
+          menu.visible = function() {
+            return true;
+          }
+        }
       // XXX: maso, 1394: خصوصیت‌های دیگر اضافه شود.
       this._menus[id].push(menu);
     }

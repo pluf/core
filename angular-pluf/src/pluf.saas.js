@@ -7,7 +7,7 @@ angular.module('pluf.saas', ['pluf'])
 /**
  * ساختار داده‌ای یک ملک را تعیین می‌کنه
  */
-.factory('PTenant', function($http, $q, PObject, PProfile) {
+.factory('PTenant', function($http, $window, $q, PObject, PProfile) {
   var pTenant = function() {
     PObject.apply(this, arguments);
   };
@@ -68,6 +68,13 @@ angular.module('pluf.saas', ['pluf'])
   pTenant.prototype.apps = function() {
     // FIXME: maso, 1394: فهرست نرم‌افزارها تعیین شود
   }
+  
+  /**
+   * نرم افزار اصلی برنامه را اجرا می‌کند.
+   */
+  pTenant.prototype.load = function() {
+    return $window.location.href = "/" + this.id;
+  }
   return pTenant;
 })
 /**
@@ -93,8 +100,8 @@ angular.module('pluf.saas', ['pluf'])
  */
 .service(
         '$tenant',
-        function($http, $q, $act, $window, PTenant, PApplication, PException,
-                PaginatorPage) {
+        function($http, $q, $act, $usr, $window, PTenant, PApplication, PException,
+                PaginatorParameter, PaginatorPage) {
           this._pool = [];
           this.ret = function(d) {
             if (d.id in this._pool) {
@@ -116,7 +123,7 @@ angular.module('pluf.saas', ['pluf'])
           }
           this.get = function(id) {
             var scope = this;
-            $http.get('/api/saas/app/' + id).then(function(res) {
+            return $http.get('/api/saas/app/' + id).then(function(res) {
               return scope.ret(res.data);
             }, function(res) {
               throw new PException(res.data);
@@ -166,6 +173,32 @@ angular.module('pluf.saas', ['pluf'])
               throw new PException(data);
             });
           }
+          /**
+           * فهرست نرم افزارهای کاربر را تعیین می‌کند
+           */
+          this.mine = function(param){
+            if(!param){
+              param = new PaginatorParameter();
+            }
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url : '/api/saas/app/user/list',
+              params : param.getParameter(),
+            }).then(function(res) {
+              // XXX: maso, 1394: Create list of tenant object
+              var page = new PaginatorPage(res.data);
+              var items = [];
+              for(var i = 0; i < page.counts; i++){
+                var t = scope.ret(page.items[i]);
+                items.push(t);
+              }
+              page.items = items;
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
 
           /**
            * با استفاده از این فراخوانی یکی نرم افزار کاربردی جدید ایجاد می‌شود.
@@ -173,8 +206,8 @@ angular.module('pluf.saas', ['pluf'])
           this.create = function(t, d) {
             var scope = this;
             return $http({
-              method: 'POST',
-              url: '/api/saas/app',
+              method: 'GET',
+              url: '/api/saas/app/user/list',
               data: $.param({
                 'title': t,
                 'description': d,
@@ -194,7 +227,7 @@ angular.module('pluf.saas', ['pluf'])
  *
  */
 .run(
-        function($act, $tenant) {
+        function($window, $act, $tenant) {
           /**
            * اضافه کردن دستورها و دستگیره‌ها
            */
@@ -210,7 +243,7 @@ angular.module('pluf.saas', ['pluf'])
                       if (arguments.length < 1) { throw new PException(
                               'application id is not defined'); }
                       var a = arguments[0];
-                      return $tenant.$app.lunch(a);
+                      return $window.location.href = "/" + a;
                     }
                   });
         });
