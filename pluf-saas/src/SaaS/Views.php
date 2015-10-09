@@ -49,8 +49,8 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('/page/' . $match[1].'.html', $params, 
-                $request);
+        return Pluf_Shortcuts_RenderToResponse('/page/' . $match[1] . '.html', 
+                $params, $request);
     }
 
     /**
@@ -73,8 +73,8 @@ class SaaS_Views extends Pluf_Views
         $params = array();
         $params['application'] = $request->application;
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('application/index.html', $params, 
-                $request);
+        return Pluf_Shortcuts_RenderToResponse('application/index.html', 
+                $params, $request);
     }
 
     /**
@@ -160,7 +160,12 @@ class SaaS_Views extends Pluf_Views
         $params = array();
         $params['application'] = $request->application;
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('application/owner/' . $match[2], 
+        if (array_key_exists(2, $match)) {
+            return Pluf_Shortcuts_RenderToResponse(
+                    'application/owner/' . $match[2] . '.html', $params, 
+                    $request);
+        }
+        return Pluf_Shortcuts_RenderToResponse('application/owner/index.html', 
                 $params, $request);
     }
 
@@ -184,13 +189,12 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        
-        if(array_key_exists(1, $match)){
-            return Pluf_Shortcuts_RenderToResponse('admin/' . $match[1], $params, 
-                    $request);
+        if (array_key_exists(1, $match)) {
+            return Pluf_Shortcuts_RenderToResponse('admin/' . $match[1], 
+                    $params, $request);
         }
         return Pluf_Shortcuts_RenderToResponse('admin/index.html', $params, 
-                    $request);
+                $request);
     }
 
     /**
@@ -213,11 +217,11 @@ class SaaS_Views extends Pluf_Views
     {
         $params = array();
         // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        if(array_key_exists(1, $match)){
+        if (array_key_exists(1, $match)) {
             return Pluf_Shortcuts_RenderToResponse('user/' . $match[1], $params, 
-                $request);
+                    $request);
         }
-        return Pluf_Shortcuts_RenderToResponse('user/index.html', $params,
+        return Pluf_Shortcuts_RenderToResponse('user/index.html', $params, 
                 $request);
     }
 }

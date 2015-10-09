@@ -7,76 +7,79 @@ angular.module('pluf.saas', ['pluf'])
 /**
  * ساختار داده‌ای یک ملک را تعیین می‌کنه
  */
-.factory('PTenant', function($http, $window, $q, PObject, PProfile) {
-  var pTenant = function() {
-    PObject.apply(this, arguments);
-  };
-  pTenant.prototype = new PObject();
+.factory(
+        'PTenant',
+        function($http, $httpParamSerializerJQLike, $window, $q, PObject,
+                PProfile) {
+          var pTenant = function() {
+            PObject.apply(this, arguments);
+          };
+          pTenant.prototype = new PObject();
 
-  /**
-   * با استفاده از این فراخوانی یکی از خصوصیت‌های یک نرم‌افزار کاربردی به روز
-   * می‌شود.
-   */
-  pTenant.prototype.update = function(key, value) {
-    var scope = this;
-    var par = {};
-    par[key] = value;
-    return $http({
-      method: 'POST',
-      url: '/api/saas/app/' + this.id,
-      data: $.param(par),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    }).then(function(res) {
-      scope.setData(res.data);
-      return scope;
-    }, function(data) {
-      throw new PException(data);
-    });
-  }
+          /**
+           * با استفاده از این فراخوانی یکی از خصوصیت‌های یک نرم‌افزار کاربردی
+           * به روز می‌شود.
+           */
+          pTenant.prototype.update = function(key, value) {
+            var scope = this;
+            var par = {};
+            par[key] = value;
+            return $http({
+              method: 'POST',
+              url: '/api/saas/app/' + this.id,
+              data: $httpParamSerializerJQLike(par),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              scope.setData(res.data);
+              return scope;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
 
-  /**
-   * اعضای یک نرم‌افزار کاربردی را تعیین می‌کند.
-   */
-  pTenant.prototype.members = function() {
-    if (this.isAnonymous() || this.memberLoaded()) {
-      var deferred = $q.defer();
-      if (this.isAnonymous())
-        deferred.reject('authentication requried');
-      else
-        deferred.resolve(this._member);
-      return deferred.promise;
-    }
-    var scope = tenantService;
-    return $http({
-      method: 'GET',
-      url: '/api/saas/app/' + $application.id + '/member/list'
-    }).then(function(res) {
-      scope.$member.setData(res.data);
-      return scope.$member;
-    }, function(data) {
-      $notify.debug('fail to get members', data);
-      throw new PException(data);
-    });
-  }
+          /**
+           * اعضای یک نرم‌افزار کاربردی را تعیین می‌کند.
+           */
+          pTenant.prototype.members = function() {
+            if (this.isAnonymous() || this.memberLoaded()) {
+              var deferred = $q.defer();
+              if (this.isAnonymous())
+                deferred.reject('authentication requried');
+              else
+                deferred.resolve(this._member);
+              return deferred.promise;
+            }
+            var scope = tenantService;
+            return $http({
+              method: 'GET',
+              url: '/api/saas/app/' + $application.id + '/member/list'
+            }).then(function(res) {
+              scope.$member.setData(res.data);
+              return scope.$member;
+            }, function(data) {
+              $notify.debug('fail to get members', data);
+              throw new PException(data);
+            });
+          }
 
-  /**
-   * فهرست تمام نرم‌افزارهایی را تعیین می‌کند که این ناحیه حق استفاده از آنها را
-   * دارد.
-   */
-  pTenant.prototype.apps = function() {
-    // FIXME: maso, 1394: فهرست نرم‌افزارها تعیین شود
-  }
-  
-  /**
-   * نرم افزار اصلی برنامه را اجرا می‌کند.
-   */
-  pTenant.prototype.load = function() {
-    return $window.location.href = "/" + this.id;
-  }
-  return pTenant;
-})
+          /**
+           * فهرست تمام نرم‌افزارهایی را تعیین می‌کند که این ناحیه حق استفاده از
+           * آنها را دارد.
+           */
+          pTenant.prototype.apps = function() {
+            // FIXME: maso, 1394: فهرست نرم‌افزارها تعیین شود
+          }
+
+          /**
+           * نرم افزار اصلی برنامه را اجرا می‌کند.
+           */
+          pTenant.prototype.load = function() {
+            return $window.location.href = "/" + this.id;
+          }
+          return pTenant;
+        })
 /**
  * هر نسخه می‌تواند از یک نوع نرم افزار خاص نصب شده استفاده کند. البته نرم
  * افزارهای باید تنها از خدمات ارائه شده در نسخه نصبی استفاده کنند. هر نرم افزار
@@ -100,8 +103,9 @@ angular.module('pluf.saas', ['pluf'])
  */
 .service(
         '$tenant',
-        function($http, $q, $act, $usr, $window, PTenant, PApplication, PException,
-                PaginatorParameter, PaginatorPage) {
+        function($http, $httpParamSerializerJQLike, $q, $act, $usr, $window,
+                PTenant, PApplication, PException, PaginatorParameter,
+                PaginatorPage) {
           this._pool = [];
           this.ret = function(d) {
             if (d.id in this._pool) {
@@ -176,20 +180,20 @@ angular.module('pluf.saas', ['pluf'])
           /**
            * فهرست نرم افزارهای کاربر را تعیین می‌کند
            */
-          this.mine = function(param){
-            if(!param){
+          this.mine = function(param) {
+            if (!param) {
               param = new PaginatorParameter();
             }
             var scope = this;
             return $http({
               method: 'GET',
-              url : '/api/saas/app/user/list',
-              params : param.getParameter(),
+              url: '/api/saas/app/user/list',
+              params: param.getParameter(),
             }).then(function(res) {
               // XXX: maso, 1394: Create list of tenant object
               var page = new PaginatorPage(res.data);
               var items = [];
-              for(var i = 0; i < page.counts; i++){
+              for (var i = 0; i < page.counts; i++) {
                 var t = scope.ret(page.items[i]);
                 items.push(t);
               }
@@ -208,7 +212,7 @@ angular.module('pluf.saas', ['pluf'])
             return $http({
               method: 'GET',
               url: '/api/saas/app/user/list',
-              data: $.param({
+              data: $httpParamSerializerJQLike({
                 'title': t,
                 'description': d,
               }),

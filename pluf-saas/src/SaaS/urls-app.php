@@ -20,6 +20,11 @@ return array (
 				'model' => 'SaaS_Views',
 				'method' => 'owner' 
 		),
+		array (// نرم‌افزارهایی که تنها مربوط به مالک است
+				'regex' => '#^/(\d+)/owner$#',
+				'model' => 'SaaS_Views',
+				'method' => 'owner' 
+		),
 		array (// سایر صفحه‌های نرم‌افزار
 				'regex' => '#^/(\d+)/(.+)$#',
 				'model' => 'SaaS_Views',

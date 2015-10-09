@@ -405,7 +405,7 @@ angular.module("pluf.user", [])
 /**
  * 
  */
-.factory('PProfile', function($http, $q, PObject, PException) {
+.factory('PProfile', function($http, $httpParamSerializerJQLike, $q, PObject, PException) {
   /**
    * یک نمونه جدید از این موجودیت ایجاد می کند.
    */
@@ -429,7 +429,7 @@ angular.module("pluf.user", [])
     return $http({
       method: 'POST',
       url: '/api/user/profile',
-      data: $.param(param),
+      data: $httpParamSerializerJQLike(param),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -446,7 +446,7 @@ angular.module("pluf.user", [])
 /**
  * 
  */
-.factory('PUser', function($http, $q, PObject, PProfile, PException) {
+.factory('PUser', function($http, $q, $httpParamSerializerJQLike, PObject, PProfile, PException) {
   var pUser = function() {
     PObject.apply(this, arguments);
   };
@@ -463,7 +463,7 @@ angular.module("pluf.user", [])
     return $http({
       method: 'POST',
       url: '/api/user/' + this.id,
-      data: $.param(param),
+      data: $httpParamSerializerJQLike(param),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -510,7 +510,7 @@ angular.module("pluf.user", [])
 /**
  * 
  */
-.service('$usr', function($http, $q, $act, PUser, PException) {
+.service('$usr', function($http,$httpParamSerializerJQLike, $q, $act, PUser, PException) {
   /**
    * تعیین می‌کنه که آیا کاربر جاری وارد سیستم شده یا نه.
    */
@@ -530,7 +530,7 @@ angular.module("pluf.user", [])
     return $http({
       method: 'POST',
       url: '/api/user/login',
-      data: $.param({
+      data: $httpParamSerializerJQLike({
         'login': $login,
         'password': $password
       }),
@@ -589,7 +589,7 @@ angular.module("pluf.user", [])
     return $http({
       method: 'POST',
       url: '/api/user/signup',
-      data: $.param(detail),
+      data: $httpParamSerializerJQLike(detail),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }

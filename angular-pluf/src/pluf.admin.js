@@ -9,7 +9,7 @@
    * تنظیم‌های کاربری. مدیریت کاربران در سطح سیستم در سرویس‌های دیگر ارائه
    * می‌شود.
    */
-  userAdmin.factory('AdminUserManager', function($rootScope, $http, $q,
+  userAdmin.factory('AdminUserManager', function($rootScope, $http, $httpParamSerializerJQLike, $q,
           $window, User, PaginatorPage) {
     var manager = {
       _pool: {},
