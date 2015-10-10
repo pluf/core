@@ -6,3 +6,18 @@
 
 	/api/user/account/change_user_email/b5z5OkpKOipMiYop7Q2KtwlWqXaWxpZ2Joam5pnNPUmtHDpKo
 
+
+
+## الگوی ایمیل
+
+الگوی ایمیل در مسیر زیر تعیین می‌شود:
+
+	email/usr/changeemail-email.html
+
+این ایمیل به عنوان متن در نظر گرفته می‌شود که می‌تواند متغییرهای زیر را تعریف کند.
+
+
+{$user},
+{$email}
+{$url}
+{$key}
