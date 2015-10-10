@@ -14,6 +14,11 @@ public class PProfile {
 
 	long user;
 
+	/**
+	 * سطح یک کار بر را تعیین می‌کند.
+	 * 
+	 * @see #getLevel()
+	 */
 	long level;
 
 	@SerializedName("access_count")
@@ -63,10 +68,28 @@ public class PProfile {
 		this.user = user;
 	}
 
+	/**
+	 * سطح کاربر را تعیین می‌کند.
+	 * 
+	 * کاربرها بر اساس فعالیت‌ها و یا پرداخت‌هایی که در سیستم دارند، یک سطح خاص
+	 * برای آنها تعیین می‌شود. سطح کاربر در دسترسی آنها و نحوه استفاده آنها از
+	 * سیستم تاثیر گذار است.
+	 * 
+	 * میزان تاثیر سطح کاربر در دسترسی آن بر اساس نوع سیاست‌های نرم افزارها تعیین
+	 * می‌شود.
+	 * 
+	 * @return
+	 */
 	public long getLevel() {
 		return level;
 	}
 
+	/**
+	 * سطح کاربر را تعیین می‌کند.
+	 * 
+	 * @see #getLevel()
+	 * @param level
+	 */
 	public void setLevel(long level) {
 		this.level = level;
 	}

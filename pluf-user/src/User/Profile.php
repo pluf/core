@@ -130,4 +130,41 @@ class User_Profile extends Pluf_Model {
 		}
 		$this->modif_dtime = gmdate ( 'Y-m-d H:i:s' );
 	}
+	
+
+
+	/**
+	 * سطح کاربر را ارتقا می‌دهد.
+	 *
+	 * نوع عمل عمل انجام شده می‌توان سطح کاربر را افزایش و یا کاهش داد. این
+	 * فراخوانی
+	 * امکان افزایش سطح کاربر را تعیین می‌کند.
+	 *
+	 * برای این کار باید یک عمل به عنوان عمل انجام شده تعیین شود. هر عمل به صورت
+	 * یک
+	 * متغیر در سیستم در نظر گرفته می‌شود، و در صورتی که یک درجه برای عمل تعیین
+	 * شده
+	 * باشد به اندازه همان درجه به کاربر اضافه یا شاید کم می‌شود.
+	 *
+	 * پارامتر بعد تعیین کاهش و یا افزایش است که با یک مقدار درستی و یا نا درستی
+	 * تعیین
+	 * می‌شود.
+	 */
+	public function updateLevel ($action, $decrease = true)
+	{
+	    $values = Pluf::f ( 'user_profile_level_values', array() );
+	    if(! array_key_exists($action, $values)){
+	        return;
+	    }
+	    $value = $values[$action];
+	    if($value == 0){
+	        return;
+	    }
+	    if($decrease){
+	        $this->level += $value;
+	    } else {
+	        $this->level -= $value;
+	    }
+	    $this->update();
+	}
 }

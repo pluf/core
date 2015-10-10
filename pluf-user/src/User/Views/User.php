@@ -106,4 +106,48 @@ class User_Views_User
         // Return response
         return User_Shortcuts_UserJsonResponse($cuser);
     }
+
+    /**
+     * پیش نیازهای فراخوانی تغییر ایمیل
+     *
+     * @var unknown
+     */
+    public $changeEmail_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    /**
+     * با استفاده از این فراخوانی ایمیل کاربر تغییر می‌کند.
+     *
+     * زمانی که کاربر ایمیل خود را تغییر دهد یک پیام برای ایمیل ارسال می‌شود در
+     * صورتی
+     * که ایمیل درست باشد، ایمیل کاربر تغییر می‌کند.
+     */
+    public function changeEmail ($request, $match)
+    {
+        $key = $match[1];
+        list ($email, $id, $time) = User_Form_UserChangeEmail::validateKey($key);
+        if ($id != $request->user->id) {
+            throw new Pluf_Exception('user not match');
+        }
+        // Now we have a change link coming from the right user.
+        if ($request->user->email == $email){
+            return User_Shortcuts_UserJsonResponse($request->user);
+        }
+        
+        $request->user->email = $email;
+        $request->user->update();
+        $request->user->setMessage(
+                sprintf(
+                        __(
+                                'Your new email address "%s" has been validated. Thank you!'), 
+                        Pluf_esc($email)));
+        try {
+            User_Shortcuts_UpdateLeveFor($request->user, 'user_email_registerd');
+        } catch (Exception $e) {
+            echo $e;
+        }
+        // Return response
+        return User_Shortcuts_UserJsonResponse($request->user);
+    }
 }

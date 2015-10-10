@@ -37,6 +37,15 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST'
         ),
+        array( // اطلاعات کاربر را به روز می‌کند
+                'regex' => '#^/account/change_user_email/(.+)$#',
+                'model' => 'User_Views_User',
+                'method' => 'changeEmail',
+                'http-method' => array(
+                        'POST',
+                        'GET'
+                )
+        ),
         array( // ثبت یک کاربر جدید
                 'regex' => '#^/signup$#',
                 'model' => 'User_Views_User',
@@ -91,5 +100,4 @@ return array(
                 'method' => 'updateProfile',
                 'http-method' => 'POST'
         )
-)
-;
+);
