@@ -71,14 +71,14 @@ class User_Form_Account extends Pluf_Form
                 array(
                         $key
                 ), array(), false);
-//         $urlik = Pluf::f('url_base') .
-//                  Pluf_HTTP_URL_urlForView(
-//                         'Peechak_Views_User::changeEmailInputKey', array(), array(), false);
+        // $urlik = Pluf::f('url_base') .
+        // Pluf_HTTP_URL_urlForView(
+        // 'Peechak_Views_User::changeEmailInputKey', array(), array(), false);
         $context = new Pluf_Template_Context(
                 array(
                         'key' => Pluf_Template::markSafe($key),
                         'url' => Pluf_Template::markSafe($url),
-//                         'urlik' => Pluf_Template::markSafe($urlik),
+                        // 'urlik' => Pluf_Template::markSafe($urlik),
                         'email' => $new_email,
                         'user' => $this->user_data
                 ));
@@ -130,7 +130,7 @@ class User_Form_Account extends Pluf_Form
             $old_email = $this->user_data->email;
             $new_email = $this->cleaned_data['email'];
             // maso 1392: use validation method
-            $this->user_data->email = $new_email;
+            // $this->user_data->email = $new_email;
             unset($this->cleaned_data['email']);
             if ($old_email != $new_email) {
                 $this->send_validation_mail($new_email);

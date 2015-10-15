@@ -131,7 +131,7 @@ class User_Views_User
             throw new Pluf_Exception('user not match');
         }
         // Now we have a change link coming from the right user.
-        if ($request->user->email == $email){
+        if ($request->user->email == $email) {
             return User_Shortcuts_UserJsonResponse($request->user);
         }
         
@@ -142,11 +142,7 @@ class User_Views_User
                         __(
                                 'Your new email address "%s" has been validated. Thank you!'), 
                         Pluf_esc($email)));
-        try {
-            User_Shortcuts_UpdateLeveFor($request->user, 'user_email_registerd');
-        } catch (Exception $e) {
-            echo $e;
-        }
+        User_Shortcuts_UpdateLeveFor($request->user, 'user_email_registerd');
         // Return response
         return User_Shortcuts_UserJsonResponse($request->user);
     }
