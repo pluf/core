@@ -26,8 +26,8 @@ class Pluf_Exception extends Exception implements JsonSerializable
      * @param string $code            
      * @param string $previous            
      */
-    public function __construct ($message = "Unknown exception", $code = 4000, $previous = null, 
-            $status = 400, $link = null, $developerMessage = null)
+    public function __construct ($message = "Unknown exception", $code = 5000, $previous = null, 
+            $status = 500, $link = null, $developerMessage = null)
     {
         parent::__construct($message, $code, $previous);
         $this->status = $status;

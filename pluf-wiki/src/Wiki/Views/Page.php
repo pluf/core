@@ -39,7 +39,7 @@ class Wiki_Views_Page {
 		foreach ( $repos as $name => $path ) {
 			$filename = $path . DIRECTORY_SEPARATOR . $languate . DIRECTORY_SEPARATOR . $pageTitle . ".md";
 			if (is_readable ( $filename )) {
-				$page = new Wiki_Models_Page ();
+				$page = new Wiki_Page ();
 				$page->title = $pageTitle;
 				$page->language = $languate;
 				$page->summary = "";
@@ -51,6 +51,6 @@ class Wiki_Views_Page {
 				return new Pluf_HTTP_Response_Json ( $page );
 			}
 		}
-		throw new Pluf_Exception ("Page not found.");
+		throw new Wiki_PageNotFoundException(__('requeisted page not found.'));
 	}
 }

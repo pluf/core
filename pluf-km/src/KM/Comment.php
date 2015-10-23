@@ -59,12 +59,23 @@ class KM_Comment extends Pluf_Model
                         'blank' => false,
                         'size' => 1024,
                         'verbose' => __('comment text')
+                ),
+                'changes' => array(
+                        'type' => 'Pluf_DB_Field_Serialized',
+                        'blank' => true,
+                        'verbose' => __('changes'),
+                        'help_text' => __(
+                                'serialized array of the changes in the issue.')
                 )
         );
         $this->_a['idx'] = array(
                 'common_combo_idx' => array(
                         'type' => 'unique',
                         'col' => 'model_id, model_class, owner_id, owner_class'
+                ),
+                'creation_dtime_idx' => array(
+                        'col' => 'creation_dtime',
+                        'type' => 'normal'
                 )
         );
     }
@@ -91,13 +102,13 @@ class KM_Comment extends Pluf_Model
 
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند
-     * 
+     *
      * نمونه ایجاد شده به عنوان نتیجه فراخوانی بازگردانده می‌شود.
-     * 
-     * @param unknown $owner
-     * @param unknown $object
-     * @param unknown $comment
-     * @param string $visible
+     *
+     * @param unknown $owner            
+     * @param unknown $object            
+     * @param unknown $comment            
+     * @param string $visible            
      */
     public static function add ($owner, $object, $comment, $visible = true)
     {
@@ -111,5 +122,4 @@ class KM_Comment extends Pluf_Model
         $nperm->create();
         return $nperm;
     }
-
 }
