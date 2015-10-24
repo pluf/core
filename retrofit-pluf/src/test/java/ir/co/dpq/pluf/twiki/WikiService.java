@@ -13,6 +13,9 @@ import ir.co.dpq.pluf.wiki.IPWikiService;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import retrofit.RestAdapter;
 
+
+import static ir.co.dpq.pluf.TestConstant.*;
+
 public class WikiService {
 
 	private IPWikiService wikiService;
@@ -23,7 +26,6 @@ public class WikiService {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 
-		String API_URL = "http://localhost:1396";
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())

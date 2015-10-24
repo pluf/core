@@ -32,6 +32,11 @@ class Wiki_Page extends Pluf_Model
                         'blank' => false,
                         'unique' => false
                 ),
+                'state' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'unique' => false
+                ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,

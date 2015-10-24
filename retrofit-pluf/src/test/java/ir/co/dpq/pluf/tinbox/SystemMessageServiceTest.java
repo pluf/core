@@ -1,5 +1,9 @@
 package ir.co.dpq.pluf.tinbox;
 
+import static ir.co.dpq.pluf.TestConstant.ADMIN_LOGIN;
+import static ir.co.dpq.pluf.TestConstant.ADMIN_PASSWORD;
+import static ir.co.dpq.pluf.TestConstant.API_URL;
+
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -25,7 +29,6 @@ public class SystemMessageServiceTest {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 
-		String API_URL = "http://localhost:1396";
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())
@@ -39,7 +42,7 @@ public class SystemMessageServiceTest {
 
 	@Test
 	public void getUserProfile() {
-		PUser user = usr.login("admin", "admin");
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		Assert.assertNotNull(user);
 
 		PSystemMessage message = systemMessageService.newTestMessage();

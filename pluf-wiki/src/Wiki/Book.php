@@ -27,6 +27,11 @@ class Wiki_Book extends Pluf_Model
                         'blank' => true
                 ),
                 // فیلدها
+                'state' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'unique' => false
+                ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,

@@ -15,6 +15,8 @@ import ir.co.dpq.pluf.user.PProfile;
 import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
 
+import static ir.co.dpq.pluf.TestConstant.*;
+
 public class PProfileAdminTest {
 	private IPProfileAdministrator profileAdmin;
 	private IPUserService usr;
@@ -25,7 +27,6 @@ public class PProfileAdminTest {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 
-		String API_URL = "http://localhost:1396";
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())
@@ -38,10 +39,10 @@ public class PProfileAdminTest {
 	}
 
 	@Test
-	public void getUserProfile(){
-		PUser user = usr.login("admin", "admin");
+	public void getUserProfile() {
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		Assert.assertNotNull(user);
-		
+
 		PProfile profile = profileAdmin.getProfile(user.getId());
 		Assert.assertNotNull(profile);
 	}

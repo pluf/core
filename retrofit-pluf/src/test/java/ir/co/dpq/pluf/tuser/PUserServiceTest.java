@@ -1,6 +1,9 @@
 package ir.co.dpq.pluf.tuser;
 
 import java.net.CookieHandler;
+
+import static ir.co.dpq.pluf.TestConstant.*;
+
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.HashMap;
@@ -26,7 +29,6 @@ public class PUserServiceTest {
 		cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(cookieManager);
 
-		String API_URL = "http://localhost:1396";
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())
@@ -45,7 +47,7 @@ public class PUserServiceTest {
 
 	@Test
 	public void login() {
-		PUser user = usr.login("admin", "admin");
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 	}
@@ -59,8 +61,7 @@ public class PUserServiceTest {
 
 	@Test
 	public void logout() {
-		// Login
-		PUser user = usr.login("admin", "admin");
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 
@@ -69,7 +70,7 @@ public class PUserServiceTest {
 
 	@Test
 	public void updateUserFirstName() {
-		PUser user = usr.login("admin", "admin");
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 
@@ -81,15 +82,15 @@ public class PUserServiceTest {
 		assertNotNull(nuser);
 		assertEquals(name, nuser.getFirstName());
 	}
-	
+
 	@Test
 	public void updateUserEmail() {
-		PUser user = usr.login("admin", "admin");
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
-		assertEquals("admin", user.getLogin());
-		
+		assertEquals(ADMIN_LOGIN, user.getLogin());
+
 		String email = "mostafa.barmshory@dpq.co.ir";
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("email", email);
 		PUser nuser = usr.update(params);

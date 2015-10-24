@@ -13,6 +13,8 @@ import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
 import retrofit.RestAdapter;
 
+import static ir.co.dpq.pluf.TestConstant.*;
+
 public class PNonAdminUserServiceTest {
 
 	private IPUserService usr;
@@ -28,7 +30,7 @@ public class PNonAdminUserServiceTest {
 				// تعیین کنترل کننده خطا
 				.setErrorHandler(new PErrorHandler())
 				// تعیین آدرس سایت مورد نظر
-				.setEndpoint(testSettings.apiUrl)
+				.setEndpoint(API_URL)
 				// ایجاد یک نمونه
 				.build();
 		this.usr = restAdapter.create(IPUserService.class);
@@ -39,7 +41,7 @@ public class PNonAdminUserServiceTest {
 		} catch (Exception ex) {
 			// TODO:
 		}
-		
+
 	}
 
 	@Test

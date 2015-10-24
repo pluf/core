@@ -1,5 +1,30 @@
 # ویکی صفحه
 
+## فهرست صفحه‌ها
+
+	/page/list
+	method: GET
+
+## ایجاد صفحه
+
+	/page/create
+	method: PUT
+
+## حذف یک صفحه
+
+	/page/{page id}
+	method: DELETE
+
+## به روز کردن یک صفحه
+
+	/page/{page id}
+	method: POST
+
+## گرفتن صفحه
+
+	/page/{page id}
+	method: GET
+
 ## گرفتن محتوی یک صفحه
 
 برای گرفتن محتوای یک صفحه فراخوانی زیر در نظر گرفته شده است:
