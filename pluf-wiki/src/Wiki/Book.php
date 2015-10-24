@@ -66,6 +66,7 @@ class Wiki_Book extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Manytomany',
                         'model' => 'Pluf_User',
                         'blank' => true,
+                        'relate_name' => 'interested',
                         'verbose' => __('interested users'),
                         'help_text' => __(
                                 'interested users will get an email notification when the wiki page is changed.')
