@@ -14,6 +14,12 @@
 
 الگو ساختارهای داده‌ای را تعیین می‌کند که باید برای کاربران ارسال شود.
 
+
+## معماری
+
+![modules](document/img/component diagram.png)
+
+
 ## امکانات
 
 - Multi tenant support
