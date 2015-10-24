@@ -9,13 +9,12 @@ class KM_Label extends Pluf_Model
 {
 
     /**
-     * مدل داده‌ای را بارگذاری می‌کند.
-     *
+     * {@inheritDoc}
      * @see Pluf_Model::init()
      */
     function init ()
     {
-        $this->_a['table'] = 'labels';
+        $this->_a['table'] = 'km_label';
         $this->_a['model'] = 'KM_Label';
         $this->_model = 'KM_Label';
         

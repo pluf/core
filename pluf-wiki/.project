@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>pluf-wiki</name>
-	<comment></comment>
+	<comment>یک ماژول کلی برای ایجاد سندهایی به صورت ویکی ارائه می‌کند. این
+		ماژول بر اساس ساختارهایی ایجاد شده که مدل ابری را حمایت کند.
+	</comment>
 	<projects>
+		<project>pluf</project>
+		<project>pluf-km</project>
+		<project>pluf-saas</project>
+		<project>pluf-user</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

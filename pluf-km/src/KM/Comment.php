@@ -1,13 +1,22 @@
 <?php
 
+/**
+ * ساختار داده‌ای کامنت را ایجاد می‌کند.
+ * 
+ * @author maso
+ *
+ */
 class KM_Comment extends Pluf_Model
 {
 
-    public $_model = 'KM_Comment';
-
+    /**
+     * {@inheritDoc}
+     * @see Pluf_Model::init()
+     */
     function init ()
     {
-        $this->_a['table'] = 'km-comment';
+        $this->_model = 'KM_Comment';
+        $this->_a['table'] = 'km_comment';
         $this->_a['model'] = 'KM_Comment';
         $this->_a['cols'] = array(
                 'id' => array(

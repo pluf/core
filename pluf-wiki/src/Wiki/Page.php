@@ -21,16 +21,16 @@ class Wiki_Page extends Pluf_Model
         $this->_a['table'] = 'wiki_page';
         $this->_a['model'] = 'Wiki_Page';
         $this->_a['cols'] = array(
+                // کلید
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'submitter' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_User',
+                // فیلدها
+                'priority' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false,
-                        'verbose' => __('submitter'),
-                        'relate_name' => 'submitted_wikipages'
+                        'unique' => false
                 ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -61,6 +61,14 @@ class Wiki_Page extends Pluf_Model
                         'blank' => false,
                         'verbose' => __('content')
                 ),
+                'content_type' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50,
+                        'verbose' => __('content type'),
+                        'help_text' => __(
+                                'the content type of the page is a mime type. For example: text/plain.')
+                ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
@@ -70,6 +78,33 @@ class Wiki_Page extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('modification date')
+                ),
+                // رابطه‌ها
+                'submitter' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_User',
+                        'blank' => false,
+                        'verbose' => __('submitter')
+                ),
+                'book' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_Book',
+                        'blank' => true,
+                        'verbose' => __('book')
+                ),
+                'label' => array(
+                        'type' => 'Pluf_DB_Field_Manytomany',
+                        'model' => 'KM_Label',
+                        'blank' => true,
+                        'verbose' => __('labels'),
+                        'help_text' => __('lables')
+                ),
+                'category' => array(
+                        'type' => 'Pluf_DB_Field_Manytomany',
+                        'model' => 'KM_Category',
+                        'blank' => true,
+                        'verbose' => __('categories'),
+                        'help_text' => __('categories')
                 )
         );
     }

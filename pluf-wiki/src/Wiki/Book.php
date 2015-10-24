@@ -21,17 +21,12 @@ class Wiki_Book extends Pluf_Model
         $this->_a['table'] = 'wiki_book';
         $this->_a['model'] = 'Wiki_Book';
         $this->_a['cols'] = array(
+                // شناسه‌ها
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'submitter' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_User',
-                        'blank' => false,
-                        'verbose' => __('submitter'),
-                        'relate_name' => 'submitted_wikipages'
-                ),
+                // فیلدها
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
@@ -56,13 +51,6 @@ class Wiki_Book extends Pluf_Model
                         'help_text' => __(
                                 'a one line description of the page content.')
                 ),
-                'interested' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'model' => 'Pluf_User',
-                        'blank' => true,
-                        'verbose' => __('interested users'),
-                        'help_text' => 'interested users will get an email notification when the wiki page is changed.'
-                ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
@@ -72,6 +60,36 @@ class Wiki_Book extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('modification date')
+                ),
+                // رابطه‌ها
+                'interested' => array(
+                        'type' => 'Pluf_DB_Field_Manytomany',
+                        'model' => 'Pluf_User',
+                        'blank' => true,
+                        'verbose' => __('interested users'),
+                        'help_text' => __(
+                                'interested users will get an email notification when the wiki page is changed.')
+                ),
+                'submitter' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_User',
+                        'blank' => false,
+                        'verbose' => __('submitter'),
+                        'relate_name' => 'submitted_wikipages'
+                ),
+                'label' => array(
+                        'type' => 'Pluf_DB_Field_Manytomany',
+                        'model' => 'KM_Label',
+                        'blank' => true,
+                        'verbose' => __('labels'),
+                        'help_text' => __('lables')
+                ),
+                'category' => array(
+                        'type' => 'Pluf_DB_Field_Manytomany',
+                        'model' => 'KM_Category',
+                        'blank' => true,
+                        'verbose' => __('categories'),
+                        'help_text' => __('categories')
                 )
         );
     }

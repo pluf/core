@@ -9,16 +9,14 @@ class KM_Category extends Pluf_Model
 {
 
     /**
-     * مدل داده‌ای را بارگذاری می‌کند.
-     *
+     * {@inheritDoc}
      * @see Pluf_Model::init()
      */
     function init ()
     {
-        $this->_a['table'] = 'categories';
-        $this->_a['model'] = 'KM_Category';
         $this->_model = 'KM_Category';
-        
+        $this->_a['table'] = 'km_category';
+        $this->_a['model'] = 'KM_Category';
         $cols['id'] = array(
                 'type' => 'Pluf_DB_Field_Sequence',
                 'blank' => true
