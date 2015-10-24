@@ -8,7 +8,7 @@
 ## ایجاد صفحه
 
 	/page/create
-	method: PUT
+	method: POST
 
 ## حذف یک صفحه
 

@@ -90,7 +90,7 @@ public class PWikiPage {
 		map.put("periority", getPriority());
 		map.put("title", getTitle());
 		map.put("language", getLanguage());
-		map.put("summery", getSummary());
+		map.put("summary", getSummary());
 		map.put("content", getContent());
 		map.put("content_type", getContentType());
 

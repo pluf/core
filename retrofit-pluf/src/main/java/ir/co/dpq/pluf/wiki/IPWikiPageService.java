@@ -2,12 +2,15 @@ package ir.co.dpq.pluf.wiki;
 
 import java.util.Map;
 
+import ir.co.dpq.pluf.PPaginatorPage;
 import retrofit.Callback;
+import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.PUT;
+import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.QueryMap;
 
 /**
  * دسترسی به صفحه‌های ویکی را فراهم می‌کند
@@ -44,10 +47,16 @@ public interface IPWikiPageService {
 	PWikiPage getWikiPage(@Path("language") String lang, @Path("pageId") String pageId);
 
 	@FormUrlEncoded
-	@PUT("/api/wiki/page/create")
+	@POST("/api/wiki/page/create")
 	PWikiPage createWikiPage(@FieldMap Map<String, Object> params);
 
 	@GET("/api/wiki/page/{pageId}")
 	PWikiPage getWikiPage(@Path("pageId") long id);
+	
+	@DELETE("/api/wiki/page/{pageId}")
+	PWikiPage deleteWikiPage(@Path("pageId") long id);
+	
+	@GET("/api/wiki/page/find")
+	PPaginatorPage<PWikiPage> findWikiPage(@QueryMap Map<String, Object> params);
 
 }
