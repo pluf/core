@@ -25,7 +25,7 @@ return array (
                 'regex' => '#^/page/create$#',
                 'model' => 'Wiki_Views_Page',
                 'method' => 'create',
-                'http-method' => 'PUT'
+                'http-method' => 'POST'
         ),
         array (
                 'regex' => '#^/page/list$#',

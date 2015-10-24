@@ -1,7 +1,12 @@
 package ir.co.dpq.pluf.wiki;
 
+import java.util.Map;
+
 import retrofit.Callback;
+import retrofit.http.FieldMap;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
 /**
@@ -15,7 +20,7 @@ import retrofit.http.Path;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPWikiService {
+public interface IPWikiPageService {
 
 	/**
 	 * یک صفحه ویکی را بازیابی می‌کند.
@@ -37,4 +42,12 @@ public interface IPWikiService {
 	 */
 	@GET("/api/wiki/{language}/{pageId}")
 	PWikiPage getWikiPage(@Path("language") String lang, @Path("pageId") String pageId);
+
+	@FormUrlEncoded
+	@PUT("/api/wiki/page/create")
+	PWikiPage createWikiPage(@FieldMap Map<String, Object> params);
+
+	@GET("/api/wiki/page/{pageId}")
+	PWikiPage getWikiPage(@Path("pageId") long id);
+
 }
