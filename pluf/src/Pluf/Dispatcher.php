@@ -197,15 +197,28 @@ class Pluf_Dispatcher
         $req->view = array(
                 $ctl,
                 $match,
-                'ctrl'=>$ctl,
+                'ctrl' => $ctl,
                 'match' => $match
         );
         $m = new $ctl['model']();
-        if (isset($m->{$ctl['method'] . '_precond'})) {
+        
+        if (
+        /*
+         * XXX: maso, 1394: این مدل در آیند حذف خواهد شد
+         * 
+         * پیش شرط‌ها در خود کنترل باید تعیین شده باشد.
+         */
+                isset($m->{$ctl['method'] . '_precond'}) ||
+                // روش اصلی
+                isset($ctl['precond'])) {
             // Here we have preconditions to respects. If the "answer"
             // is true, then ok go ahead, if not then it a response so
             // return it or an exception so let it go.
-            $preconds = $m->{$ctl['method'] . '_precond'};
+            if (isset($m->{$ctl['method'] . '_precond'})) {
+                $preconds = $m->{$ctl['method'] . '_precond'};
+            } else {
+                $preconds = $ctl['precond'];
+            }
             if (! is_array($preconds)) {
                 $preconds = array(
                         $preconds
@@ -229,6 +242,7 @@ class Pluf_Dispatcher
                 }
             }
         }
+        
         if (! isset($ctl['params'])) {
             return $m->$ctl['method']($req, $match);
         } else {
