@@ -1,20 +1,51 @@
 <?php
 return array(
+        /*
+         * کار با برچسب‌ها
+         */
         array(
-                'regex' => '#^/label/list$#',
+                'regex' => '#^/label/find$#',
                 'model' => 'KM_Views_Label',
-                'method' => 'labels'
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
         ),
         array(
                 'regex' => '#^/label/create$#',
                 'model' => 'KM_Views_Label',
-                'method' => 'create'
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                )
         ),
         array(
                 'regex' => '#^/label/(\d+)$#',
                 'model' => 'KM_Views_Label',
-                'method' => 'label'
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
         ),
+        array(
+                'regex' => '#^/label/(\d+)$#',
+                'model' => 'KM_Views_Label',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/label/(\d+)$#',
+                'model' => 'KM_Views_Label',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
+        /*
+         * کار با دسته‌ها
+         */
         array(
                 'regex' => '#^/category/list$#',
                 'model' => 'KM_Views_Category',

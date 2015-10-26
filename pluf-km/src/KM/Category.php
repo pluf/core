@@ -9,7 +9,9 @@ class KM_Category extends Pluf_Model
 {
 
     /**
+     *
      * {@inheritDoc}
+     *
      * @see Pluf_Model::init()
      */
     function init ()
@@ -17,55 +19,56 @@ class KM_Category extends Pluf_Model
         $this->_model = 'KM_Category';
         $this->_a['table'] = 'km_category';
         $this->_a['model'] = 'KM_Category';
-        $cols['id'] = array(
-                'type' => 'Pluf_DB_Field_Sequence',
-                'blank' => true
+        $this->_a['cols'] = array(
+                'id' => array(
+                        'type' => 'Pluf_DB_Field_Sequence',
+                        'blank' => true
+                ),
+                'user' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_User',
+                        'blank' => true
+                ),
+                'parent' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'KM_Category',
+                        'blank' => true
+                ),
+                'title' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 250,
+                        'verbose' => __('title'),
+                        'help_text' => __(
+                                'The title of the label must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.')
+                ),
+                'description' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 500,
+                        'verbose' => __('description'),
+                        'help_text' => __(
+                                'The description of the label must only contain letters. For example: en.')
+                ),
+                'color' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 100,
+                        'verbose' => __('color'),
+                        'help_text' => __(
+                                'A one line description of the page content.')
+                ),
+                'creation_dtime' => array(
+                        'type' => 'Pluf_DB_Field_Datetime',
+                        'blank' => true,
+                        'verbose' => __('creation date')
+                ),
+                'modif_dtime' => array(
+                        'type' => 'Pluf_DB_Field_Datetime',
+                        'blank' => true,
+                        'verbose' => __('modification date')
+                )
         );
-        $cols['user'] = array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'Pluf_User',
-                'blank' => true
-        );
-        $cols['parent'] = array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'KM_Category',
-                'blank' => true
-        );
-        $cols['title'] = array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => true,
-                'size' => 250,
-                'verbose' => __('title'),
-                'help_text' => __(
-                        'The title of the label must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.')
-        );
-        $cols['description'] = array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => true,
-                'size' => 500,
-                'verbose' => __('description'),
-                'help_text' => __(
-                        'The description of the label must only contain letters. For example: en.')
-        );
-        $cols['color'] = array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => true,
-                'size' => 100,
-                'verbose' => __('color'),
-                'help_text' => __('A one line description of the page content.')
-        );
-        $cols['creation_dtime'] = array(
-                'type' => 'Pluf_DB_Field_Datetime',
-                'blank' => true,
-                'verbose' => __('creation date')
-        );
-        $cols['modif_dtime'] = array(
-                'type' => 'Pluf_DB_Field_Datetime',
-                'blank' => true,
-                'verbose' => __('modification date')
-        );
-        
-        $this->_a['cols'] = $cols;
     }
 
     /**

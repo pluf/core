@@ -17,7 +17,7 @@ class KM_Views_Label
      *
      * @var array $house_precond
      */
-    public $labels_precond = array(
+    public $find_precond = array(
             'Pluf_Precondition::loginRequired'
     );
 
@@ -28,7 +28,7 @@ class KM_Views_Label
      * @param
      *            $match
      */
-    public function labels ($request, $match)
+    public function find ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
         // Paginator to paginate messages
@@ -38,10 +38,10 @@ class KM_Views_Label
                 'title',
                 'community'
         );
-        $pag->forced_where = new Pluf_SQL('user=%s', 
-                array(
-                        $request->user->id
-                ));
+//         $pag->forced_where = new Pluf_SQL('user=%s', 
+//                 array(
+//                         $request->user->id
+//                 ));
         $pag->action = array(
                 'Label_Views_Label::label'
         );
@@ -102,12 +102,27 @@ class KM_Views_Label
         return new Pluf_HTTP_Response_Json($cuser);
     }
 
-    /**
-     * پیش نیازهای دستکاری یک برچسب را تعیین می‌کند.
-     *
-     * @var unknown
-     */
-    public $label_precond = array(
+    public $get_precond = array();
+
+    public function get ($request, $match)
+    {
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        return new Pluf_HTTP_Response_Json($label);
+    }
+
+    public $delete_precond = array(
+            'Pluf_Precondition::loginRequired'
+    );
+
+    public function delete ($request, $match)
+    {
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        $labelR = new KM_Label($label->id);
+        $label->delete();
+        return new Pluf_HTTP_Response_Json($labelR);
+    }
+
+    public $update_precond = array(
             'Pluf_Precondition::loginRequired'
     );
 
@@ -118,36 +133,21 @@ class KM_Views_Label
      * @param unknown $match            
      * @throws Pluf_Exception_NotImplemented
      */
-    public function label ($request, $match)
+    public function update ($request, $match)
     {
-        $label_id = $match[1];
-        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $label_id);
-        if ($label->user != $request->user->id) {
-            throw new Pluf_Exception_PermissionDenied(
-                    __('You are not the laberl owner.'));
-        }
-        
-        if ($request->method === 'DELETE') {
-            $label->delete();
-            return new Pluf_HTTP_Response_Json($label);
-        }
-        
-        if ($request->method === 'GET') {
-            return new Pluf_HTTP_Response_Json($label);
-        }
-        
-        if ($request->method === 'POST') {
-            $extra = array(
-                    'user' => $request->user,
-                    'label' => $label
-            );
-            $form = new KM_Form_Label(
-                    array_merge($request->POST, $request->FILES), $extra);
-            $cuser = $form->update();
-            return new Pluf_HTTP_Response_Json($cuser);
-        }
-        
-        throw new Pluf_Exception_NotImplemented();
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        // if ($label->user != $request->user->id) {
+        // throw new Pluf_Exception_PermissionDenied(
+        // __('You are not the laberl owner.'));
+        // }
+        $extra = array(
+                'user' => $request->user,
+                'label' => $label
+        );
+        $form = new KM_Form_Label(array_merge($request->POST, $request->FILES), 
+                $extra);
+        $cuser = $form->update();
+        return new Pluf_HTTP_Response_Json($cuser);
     }
 
     /**
