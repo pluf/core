@@ -28,7 +28,7 @@ public interface IPCategoryService {
 	@FormUrlEncoded
 	@POST("/api/km/category/create")
 	PCategory createCategory(@FieldMap Map<String, Object> params);
-	
+
 	/**
 	 * یک دسته در دسته تعیین شده ایجاد می‌کند.
 	 * 
@@ -38,8 +38,7 @@ public interface IPCategoryService {
 	@FormUrlEncoded
 	@POST("/api/km/category/{categoryId}/create")
 	PCategory createCategory(@Path("categoryId") long parentId, @FieldMap Map<String, Object> params);
-	
-	
+
 	@GET("/api/km/category/root")
 	PCategory getRootCategory();
 
@@ -48,14 +47,10 @@ public interface IPCategoryService {
 
 	@GET("/api/km/category/{categoryId}/children")
 	PPaginatorPage<PCategory> getSubCategory(@Path("categoryId") long id, @QueryMap Map<String, Object> params);
-	
-	
-	
-	
-	
+
 	@FormUrlEncoded
 	@POST("/api/km/category/{categoryId}")
-	PCategory updateCategory(@FieldMap Map<String, Object> params, @Path("categoryId") long id);
+	PCategory updateCategory( @Path("categoryId") long id, @FieldMap Map<String, Object> params);
 
 	@DELETE("/api/km/category/{categoryId}")
 	PCategory deleteCategory(@Path("categoryId") long id);

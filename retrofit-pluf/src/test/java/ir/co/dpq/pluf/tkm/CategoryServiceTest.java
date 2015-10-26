@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
+import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorPage;
 import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.km.IPCategoryService;
@@ -203,6 +204,99 @@ public class CategoryServiceTest {
 			assertEquals(category.getDescription(), sub.getDescription());
 			assertEquals(category2.getId(), sub.getParent());
 		}
+	}
+	
+
+	@Test
+	public void updateCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getDescription(), category2.getDescription());
+		assertEquals(category.getColor(), category2.getColor());
+		
+		category.setTitle("Title:"+Math.random());
+		category.setDescription("description:"+Math.random());
+		category.setColor("#ffffff:"+Math.random());
+
+		PCategory categoryt = categoryService.updateCategory(category2.getId(), category.toMap());
+		assertNotNull(categoryt);
+		assertEquals(category.getTitle(), categoryt.getTitle());
+		assertEquals(category.getDescription(), categoryt.getDescription());
+		assertEquals(category.getColor(), categoryt.getColor());
+		
+		
+		PCategory category3 = categoryService.deleteCategory(category2.getId());
+		assertNotNull(category3);
+		assertEquals(category.getTitle(), category3.getTitle());
+	}
+	
+	
+	@Test
+	public void deleteCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		
+		PCategory category3 = categoryService.deleteCategory(category2.getId());
+		assertNotNull(category3);
+		assertEquals(category.getTitle(), category3.getTitle());
+	}
+	
+	@Test(expected = PException.class)
+	public void deleteCategoryTest01() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		
+		PCategory category3 = categoryService.deleteCategory(category2.getId());
+		assertNotNull(category3);
+		assertEquals(category.getTitle(), category3.getTitle());
+		
+		categoryService.deleteCategory(category2.getId());
+	}
+	
+	@Test
+	public void find00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		PPaginatorParameter param = new PPaginatorParameter();
+		PPaginatorPage<PCategory> childrens = categoryService.findCategory(param.toMap());
+		assertNotNull(childrens);
+		assertNotNull(childrens.getItems());
+		assertTrue(childrens.getItems().size() > 0x0);
 	}
 
 }

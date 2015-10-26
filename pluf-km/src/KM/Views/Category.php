@@ -52,7 +52,7 @@ class KM_Views_Category
                 'user' => $request->user,
                 'parent' => $parent
         );
-        $form = new KM_Form_Category(
+        $form = new KM_Form_CategoryCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $cat = $form->save();
         return new Pluf_HTTP_Response_Json($cat);
@@ -65,9 +65,31 @@ class KM_Views_Category
                 'user' => $request->user,
                 'parent' => $parent
         );
-        $form = new KM_Form_Category(
+        $form = new KM_Form_CategoryCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $cat = $form->save();
+        return new Pluf_HTTP_Response_Json($cat);
+    }
+
+    public function update ($request, $match)
+    {
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $extra = array(
+                'user' => $request->user,
+                'parent' => null,
+                'category' => $cat
+        );
+        $form = new KM_Form_CategoryUpdate(
+                array_merge($request->REQUEST, $request->FILES), $extra);
+        $cat = $form->update();
+        return new Pluf_HTTP_Response_Json($cat);
+    }
+
+    public function delete ($request, $match)
+    {
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $d = new KM_Category($cat->id);
+        $d->delete();
         return new Pluf_HTTP_Response_Json($cat);
     }
 

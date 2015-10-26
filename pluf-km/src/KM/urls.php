@@ -68,7 +68,7 @@ return array(
                 'model' => 'KM_Views_Category',
                 'method' => 'create',
                 'precond' => array(
-                        'Pluf_Precondition::loginRequired'
+                        'Pluf_Precondition::adminRequired'
                 ),
                 'http-method' => array(
                         'POST'
@@ -79,14 +79,34 @@ return array(
                 'model' => 'KM_Views_Category',
                 'method' => 'createSubCategory',
                 'precond' => array(
-                        'Pluf_Precondition::loginRequired'
+                        'Pluf_Precondition::adminRequired'
                 ),
                 'http-method' => array(
                         'POST'
                 ),
         ),
-        
-        
+        array(
+                'regex' => '#^/category/(\d+)$#',
+                'model' => 'KM_Views_Category',
+                'method' => 'update',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                ),
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/category/(\d+)$#',
+                'model' => 'KM_Views_Category',
+                'method' => 'delete',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                ),
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
         array(
                 'regex' => '#^/category/root$#',
                 'model' => 'KM_Views_Category',
