@@ -32,7 +32,7 @@ import ir.co.dpq.pluf.wiki.PWikiPage;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
-public class LabelService {
+public class LabelServiceTest {
 
 	private IPLabelService labelService;
 	private IPUserService usr;

@@ -481,7 +481,7 @@ class Pluf_Model implements JsonSerializable
         if ($items->count() == 0) {
             return null;
         }
-        throw new Exception(__('Error: More than one matching item found.'));
+        throw new Pluf_Exception(__('Error: More than one matching item found.'));
     }
 
     /**

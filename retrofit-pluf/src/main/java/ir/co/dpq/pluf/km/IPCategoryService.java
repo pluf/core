@@ -19,20 +19,41 @@ import retrofit.http.QueryMap;
  */
 public interface IPCategoryService {
 
+	/**
+	 * یک دسته در ریشه ایجاد می‌کند.
+	 * 
+	 * @param params
+	 * @return
+	 */
 	@FormUrlEncoded
 	@POST("/api/km/category/create")
-	PCategory createLabel(@FieldMap Map<String, Object> params);
+	PCategory createCategory(@FieldMap Map<String, Object> params);
+	
+	/**
+	 * یک دسته در دسته تعیین شده ایجاد می‌کند.
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@FormUrlEncoded
+	@POST("/api/km/category/{categoryId}/create")
+	PCategory createCategory(@Path("categoryId") long parentId, @FieldMap Map<String, Object> params);
+	
+	
+	
+	
+	
 
 	@GET("/api/km/category/{categoryId}")
-	PCategory getLabel(@Path("categoryId") long id);
-	
+	PCategory getCategory(@Path("categoryId") long id);
+
 	@FormUrlEncoded
 	@POST("/api/km/category/{categoryId}")
-	PCategory createLabel(@FieldMap Map<String, Object> params, @Path("categoryId") long id);
-	
+	PCategory updateCategory(@FieldMap Map<String, Object> params, @Path("categoryId") long id);
+
 	@DELETE("/api/km/category/{categoryId}")
-	PCategory deleteLabel(@Path("categoryId") long id);
-	
+	PCategory deleteCategory(@Path("categoryId") long id);
+
 	@GET("/api/km/category/find")
-	PPaginatorPage<PCategory> findWikiPage(@QueryMap Map<String, Object> params);
+	PPaginatorPage<PCategory> findCategory(@QueryMap Map<String, Object> params);
 }

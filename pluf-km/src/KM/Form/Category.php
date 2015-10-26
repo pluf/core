@@ -8,9 +8,9 @@ Pluf::loadFunction('KM_Shortcuts_categoryDateFactory');
 class KM_Form_Category extends Pluf_Form
 {
 
-    public $category_date = null;
+    public $category = null;
 
-    public $category_parent = null;
+    public $parent = null;
 
     public $user;
 
@@ -21,32 +21,32 @@ class KM_Form_Category extends Pluf_Form
      */
     public function initFields ($extra = array())
     {
-        if (array_key_exists('category', $extra))
-            $this->category_date = $extra['category'];
-        $this->$category_parent = $extra['parent'];
+        $this->parent = $extra['parent'];
         $this->user = $extra['user'];
-        $this->category_date = KM_Shortcuts_categoryDateFactory(
-                $this->category_date);
+        if (array_key_exists('category', $extra))
+            $this->category = $extra['category'];
+        $this->category = KM_Shortcuts_categoryDateFactory(
+                $this->category);
         
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('title'),
-                        'initial' => $this->category_date->title
+                        'initial' => $this->category->title
                 ));
         
         $this->fields['description'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('description'),
-                        'initial' => $this->category_date->description
+                        'initial' => $this->category->description
                 ));
         
         $this->fields['color'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('color'),
-                        'initial' => $this->category_date->color
+                        'initial' => $this->category->color
                 ));
     }
 
@@ -69,12 +69,14 @@ class KM_Form_Category extends Pluf_Form
             throw new Pluf_Exception(
                     __('Cannot save the label from an invalid form.'));
         }
-        $this->category_date->setFromFormData($this->cleaned_data);
-        $this->category_date->user = $this->user;
+        $this->category->setFromFormData($this->cleaned_data);
+        $this->category->community = true;
+        $this->category->user = $this->user;
+        $this->category->parent = $this->parent;
         if ($commit) {
-            $this->category_date->create();
+            $this->category->create();
         }
-        return $this->category_date;
+        return $this->category;
     }
 
     /**
@@ -88,25 +90,12 @@ class KM_Form_Category extends Pluf_Form
             throw new Pluf_Exception(
                     __('Cannot update the label from an invalid form.'));
         }
-        $this->category_date->setFromFormData($this->cleaned_data);
-        // $this->category_date->user = $this->user;
+        $this->category->setFromFormData($this->cleaned_data);
+        // $this->category->user = $this->user;
         if ($commit) {
-            $this->category_date->update();
+            $this->category->update();
         }
-        return $this->category_date;
+        return $this->category;
     }
 
-    /**
-     * تمام داده‌های تهی پاک می‌شوند
-     *
-     * @see Pluf_Form::clean()
-     */
-    public function clean ()
-    {
-        foreach ($this->cleaned_data as $key => $value) {
-            if (is_null($value) || $value === '')
-                unset($this->cleaned_data[$key]);
-        }
-        return $this->cleaned_data;
-    }
 }

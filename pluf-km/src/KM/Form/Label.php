@@ -91,18 +91,4 @@ class KM_Form_Label extends Pluf_Form
         }
         return $this->label_data;
     }
-
-    /**
-     * تمام داده‌های تهی پاک می‌شوند
-     *
-     * @see Pluf_Form::clean()
-     */
-    public function clean ()
-    {
-        foreach ($this->cleaned_data as $key => $value) {
-            if (is_null($value) || $value === '')
-                unset($this->cleaned_data[$key]);
-        }
-        return $this->cleaned_data;
-    }
 }

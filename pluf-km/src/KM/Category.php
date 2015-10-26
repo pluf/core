@@ -29,6 +29,13 @@ class KM_Category extends Pluf_Model
                         'model' => 'Pluf_User',
                         'blank' => true
                 ),
+                'community' => array(
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false,
+                        'verbose' => __('created by community'),
+                        'help_text' => __(
+                                'Define wether the location created by the community or not.')
+                ),
                 'parent' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'KM_Category',

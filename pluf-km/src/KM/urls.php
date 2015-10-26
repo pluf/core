@@ -15,6 +15,9 @@ return array(
                 'regex' => '#^/label/create$#',
                 'model' => 'KM_Views_Label',
                 'method' => 'create',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
                 'http-method' => array(
                         'POST'
                 )
@@ -31,6 +34,9 @@ return array(
                 'regex' => '#^/label/(\d+)$#',
                 'model' => 'KM_Views_Label',
                 'method' => 'update',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
                 'http-method' => array(
                         'POST'
                 )
@@ -39,6 +45,9 @@ return array(
                 'regex' => '#^/label/(\d+)$#',
                 'model' => 'KM_Views_Label',
                 'method' => 'delete',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
                 'http-method' => array(
                         'DELETE'
                 )
@@ -47,18 +56,41 @@ return array(
          * کار با دسته‌ها
          */
         array(
-                'regex' => '#^/category/list$#',
+                'regex' => '#^/category/find$#',
                 'model' => 'KM_Views_Category',
-                'method' => 'categories'
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
         ),
         array(
                 'regex' => '#^/category/create$#',
                 'model' => 'KM_Views_Category',
-                'method' => 'create'
+                'method' => 'create',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/category/(\d+)/create$#',
+                'model' => 'KM_Views_Category',
+                'method' => 'createSubCategory',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => array(
+                        'POST'
+                ),
         ),
         array(
                 'regex' => '#^/category/(\d+)$#',
                 'model' => 'KM_Views_Category',
-                'method' => 'category'
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
         )
 );
