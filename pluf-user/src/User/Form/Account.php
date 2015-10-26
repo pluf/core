@@ -84,7 +84,6 @@ class User_Form_Account extends Pluf_Form
                 ));
         $tmpl = new Pluf_Template('email/usr/changeemail-email.html');
         $text_email = $tmpl->render($context);
-        echo $text_email;
         $email = new Pluf_Mail(Pluf::f('from_email'), $new_email, 
                 __('Confirm your new email address.'));
         $email->addTextMessage($text_email);

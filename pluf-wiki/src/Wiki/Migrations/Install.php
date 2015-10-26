@@ -21,6 +21,21 @@ function Wiki_Migrations_Install_setup ($params = '')
     /*
      * موجودیت‌های پیش فرض سیستم
      */
+
+    // Install the permissions
+    $perm = new Pluf_Permission();
+    $perm->name = 'Wiki book ownership';
+    $perm->code_name = 'book-owner';
+    $perm->description = 'Permission given to wiki book owners.';
+    $perm->application = 'Wiki';
+    $perm->create();
+    
+    $perm = new Pluf_Permission();
+    $perm->name = 'Wiki page ownership';
+    $perm->code_name = 'page-owner';
+    $perm->description = 'Permission given to wiki page owners.';
+    $perm->application = 'Wiki';
+    $perm->create();
 }
 
 /**

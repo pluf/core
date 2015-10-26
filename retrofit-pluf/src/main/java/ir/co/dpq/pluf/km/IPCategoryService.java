@@ -40,13 +40,19 @@ public interface IPCategoryService {
 	PCategory createCategory(@Path("categoryId") long parentId, @FieldMap Map<String, Object> params);
 	
 	
-	
-	
-	
+	@GET("/api/km/category/root")
+	PCategory getRootCategory();
 
 	@GET("/api/km/category/{categoryId}")
 	PCategory getCategory(@Path("categoryId") long id);
 
+	@GET("/api/km/category/{categoryId}/children")
+	PPaginatorPage<PCategory> getSubCategory(@Path("categoryId") long id, @QueryMap Map<String, Object> params);
+	
+	
+	
+	
+	
 	@FormUrlEncoded
 	@POST("/api/km/category/{categoryId}")
 	PCategory updateCategory(@FieldMap Map<String, Object> params, @Path("categoryId") long id);

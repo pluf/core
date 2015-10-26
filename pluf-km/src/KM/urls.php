@@ -85,10 +85,28 @@ return array(
                         'POST'
                 ),
         ),
+        
+        
+        array(
+                'regex' => '#^/category/root$#',
+                'model' => 'KM_Views_Category',
+                'method' => 'root',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
         array(
                 'regex' => '#^/category/(\d+)$#',
                 'model' => 'KM_Views_Category',
                 'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/category/(\d+)/children$#',
+                'model' => 'KM_Views_Category',
+                'method' => 'children',
                 'http-method' => array(
                         'GET'
                 )

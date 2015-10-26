@@ -34,6 +34,10 @@ public class PPaginatorParameter {
 	 */
 	String filterValue;
 
+	public Map<String, Object> toMap() {
+		return this.map();
+	}
+
 	public Map<String, Object> map() {
 		Map<String, Object> pmap = new HashMap<String, Object>();
 		// _px_q
@@ -116,14 +120,14 @@ public class PPaginatorParameter {
 	public void setFilterValue(String filterValue) {
 		this.filterValue = filterValue;
 	}
-	
+
 	/**
 	 * فیلتر مورد نیاز را تعیین می‌کند.
 	 * 
 	 * @param key
 	 * @param value
 	 */
-	public void setFilter(String key, String value){
+	public void setFilter(String key, String value) {
 		setFilterKey(key);
 		setFilterValue(value);
 	}
