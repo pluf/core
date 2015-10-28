@@ -94,6 +94,7 @@ class Wiki_Page extends Pluf_Model
                 'book' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'Pluf_Book',
+                        'relate_name' => 'book',
                         'blank' => true,
                         'verbose' => __('book')
                 ),
@@ -101,6 +102,7 @@ class Wiki_Page extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Manytomany',
                         'model' => 'KM_Label',
                         'blank' => true,
+                        'relate_name' => 'label',
                         'verbose' => __('labels'),
                         'help_text' => __('lables')
                 ),
@@ -108,6 +110,7 @@ class Wiki_Page extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Manytomany',
                         'model' => 'KM_Category',
                         'blank' => true,
+                        'relate_name' => 'category',
                         'verbose' => __('categories'),
                         'help_text' => __('categories')
                 )

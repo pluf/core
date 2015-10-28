@@ -5,11 +5,13 @@ import static ir.co.dpq.pluf.TestConstant.ADMIN_PASSWORD;
 import static ir.co.dpq.pluf.TestConstant.API_URL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,8 @@ import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.IPLabelService;
+import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.IPWikiPageService;
@@ -32,6 +36,7 @@ import retrofit.converter.GsonConverter;
 
 public class WikiService {
 
+	private IPLabelService labelService;
 	private IPWikiPageService wikiService;
 	private IPUserService usr;
 
@@ -42,15 +47,11 @@ public class WikiService {
 		CookieHandler.setDefault(cookieManager);
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder
-				/*
-				 * این تبدیل برای صفحه بندی به کار گرفته می‌شود.
-				 */
+		gsonBuilder//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
+				}.getType(), new DeserializerJson<PLabel>())//
 				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
-				}.getType(), new DeserializerJson<PWikiPage>())
-				/*
-				 * 
-				 */
+				}.getType(), new DeserializerJson<PWikiPage>())//
 				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiBook>>() {
 				}.getType(), new DeserializerJson<PWikiBook>());
 		Gson gson = gsonBuilder.create();
@@ -66,6 +67,7 @@ public class WikiService {
 				.build();
 		this.wikiService = restAdapter.create(IPWikiPageService.class);
 		this.usr = restAdapter.create(IPUserService.class);
+		this.labelService = restAdapter.create(IPLabelService.class);
 	}
 
 	@Test
@@ -184,5 +186,121 @@ public class WikiService {
 		PPaginatorPage<PWikiPage> list = wikiService.findWikiPage(param);
 		assertNotNull(list);
 		assertNotNull(list.getItems());
+	}
+
+	@Test
+	public void addLabelTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PLabel label = new PLabel();
+		label.setTitle("example");
+		label.setDescription("label description");
+		label.setColor("#FFFFFF");
+
+		PLabel clabel = labelService.createLabel(label.toMap());
+		assertNotNull(clabel);
+		assertEquals(label.getTitle(), clabel.getTitle());
+		assertEquals(label.getColor(), clabel.getColor());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addLabelToPage(cpage.getId(), clabel.getId());
+	}
+
+	@Test
+	public void delLabelTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PLabel label = new PLabel();
+		label.setTitle("example");
+		label.setDescription("label description");
+		label.setColor("#FFFFFF");
+
+		PLabel clabel = labelService.createLabel(label.toMap());
+		assertNotNull(clabel);
+		assertEquals(label.getTitle(), clabel.getTitle());
+		assertEquals(label.getColor(), clabel.getColor());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addLabelToPage(cpage.getId(), clabel.getId());
+
+		Map<String, PLabel> labels = wikiService.getPageLabels(cpage.getId());
+		assertNotNull(labels);
+		assertTrue(labels.size() == 1);
+
+		wikiService.deleteLabelFromPage(cpage.getId(), clabel.getId());
+		labels = wikiService.getPageLabels(cpage.getId());
+		assertNotNull(labels);
+		assertTrue(labels.size() == 0);
+
+	}
+
+	@Test
+	public void getLabelTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PLabel label = new PLabel();
+		label.setTitle("example");
+		label.setDescription("label description");
+		label.setColor("#FFFFFF");
+
+		PLabel clabel = labelService.createLabel(label.toMap());
+		assertNotNull(clabel);
+		assertEquals(label.getTitle(), clabel.getTitle());
+		assertEquals(label.getColor(), clabel.getColor());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addLabelToPage(cpage.getId(), clabel.getId());
+
+		Map<String, PLabel> labels = wikiService.getPageLabels(cpage.getId());
+		assertNotNull(labels);
+		assertTrue(labels.size() == 1);
+
+		PLabel[] items = labels.values().toArray(new PLabel[0]);
+		assertEquals(clabel.getId(), items[0].getId());
 	}
 }

@@ -12,13 +12,6 @@ class Wiki_Views_Page
 {
 
     /**
-     * پیش شرط‌های دستیابی به نرم‌افزار صفحه اصلی
-     *
-     * @var array $house_precond
-     */
-    public $index_precond = array();
-
-    /**
      * نمایش برگه اصلی سایت
      *
      * در این نمایش اطلاعات کلی کارگزار نمایش داده می‌شود. این نمایش می‌تواند در
@@ -57,10 +50,6 @@ class Wiki_Views_Page
         throw new Wiki_PageNotFoundException(__('requeisted page not found.'));
     }
 
-    public $create_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
-
     public function create ($request, $match)
     {
         // initial page data
@@ -77,16 +66,12 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
-    public $get_precond = array();
-
     public function get ($request, $match)
     {
         // XXX: maso, 1394: بررسی حق دسترسی
         $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
         return new Pluf_HTTP_Response_Json($page);
     }
-
-    public $delete_precond = array();
 
     public function delete ($request, $match)
     {
@@ -96,8 +81,6 @@ class Wiki_Views_Page
         $page2->delete();
         return new Pluf_HTTP_Response_Json($page);
     }
-
-    public $find_precond = array();
 
     public function find ($request, $match)
     {
@@ -127,9 +110,30 @@ class Wiki_Views_Page
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
-    
-    
-    
+
+    public function labels ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $labels = $page->get_label_list();
+        return new Pluf_HTTP_Response_Json($labels);
+    }
+
+    public function addLabel ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        $page->setAssoc($label);
+        return new Pluf_HTTP_Response_Json($page);
+    }
+
+    public function removeLabel ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        $page->delAssoc($label);
+        return new Pluf_HTTP_Response_Json($page);
+    }
+
     private function getListCount ($request)
     {
         $count = 20;
