@@ -24,7 +24,9 @@ import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.IPCategoryService;
 import ir.co.dpq.pluf.km.IPLabelService;
+import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
@@ -36,6 +38,7 @@ import retrofit.converter.GsonConverter;
 
 public class WikiService {
 
+	private IPCategoryService categoryService;
 	private IPLabelService labelService;
 	private IPWikiPageService wikiService;
 	private IPUserService usr;
@@ -48,6 +51,8 @@ public class WikiService {
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PCategory>>() {
+				}.getType(), new DeserializerJson<PCategory>())//
 				.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
 				}.getType(), new DeserializerJson<PLabel>())//
 				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
@@ -68,6 +73,7 @@ public class WikiService {
 		this.wikiService = restAdapter.create(IPWikiPageService.class);
 		this.usr = restAdapter.create(IPUserService.class);
 		this.labelService = restAdapter.create(IPLabelService.class);
+		this.categoryService = restAdapter.create(IPCategoryService.class);
 	}
 
 	@Test
@@ -302,5 +308,121 @@ public class WikiService {
 
 		PLabel[] items = labels.values().toArray(new PLabel[0]);
 		assertEquals(clabel.getId(), items[0].getId());
+	}
+
+	@Test
+	public void addCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addCategoryToPage(cpage.getId(), category2.getId());
+	}
+
+	@Test
+	public void getCategoriesTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addCategoryToPage(cpage.getId(), category2.getId());
+
+		Map<String, PCategory> cats = wikiService.getPageCategories(cpage.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 1);
+	}
+
+	@Test
+	public void removeCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		wikiService.addCategoryToPage(cpage.getId(), category2.getId());
+
+		Map<String, PCategory> cats = wikiService.getPageCategories(cpage.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 1);
+
+		wikiService.deleteCategoryFromPage(cpage.getId(), category2.getId());
+		cats = wikiService.getPageCategories(cpage.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 0);
+
 	}
 }

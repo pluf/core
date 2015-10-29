@@ -3,6 +3,7 @@ package ir.co.dpq.pluf.wiki;
 import java.util.Map;
 
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import retrofit.Callback;
 import retrofit.http.DELETE;
@@ -68,5 +69,14 @@ public interface IPWikiPageService {
 
 	@DELETE("/api/wiki/page/{pageId}/label/{labelId}")
 	PWikiPage deleteLabelFromPage(@Path("pageId") long pageId, @Path("labelId") long labelId);
+
+	@POST("/api/wiki/page/{pageId}/category/{categoryId}")
+	PWikiPage addCategoryToPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
+	
+	@DELETE("/api/wiki/page/{pageId}/category/{categoryId}")
+	PWikiPage deleteCategoryFromPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
+
+	@GET("/api/wiki/page/{pageId}/categories")
+	Map<String, PCategory> getPageCategories(@Path("pageId") long pageId);
 
 }

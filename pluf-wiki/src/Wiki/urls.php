@@ -39,6 +39,24 @@ return array (
                 'method' => 'removeLabel',
                 'http-method' => 'DELETE'
         ),
+        array( // category
+                'regex' => '#^/page/(\d+)/categories$#',
+                'model' => 'Wiki_Views_Page',
+                'method' => 'categories',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/page/(\d+)/category/(\d+)$#',
+                'model' => 'Wiki_Views_Page',
+                'method' => 'addCategory',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/page/(\d+)/category/(\d+)$#',
+                'model' => 'Wiki_Views_Page',
+                'method' => 'removeCategory',
+                'http-method' => 'DELETE'
+        ),
         array(
                 'regex' => '#^/page/create$#',
                 'model' => 'Wiki_Views_Page',

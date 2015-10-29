@@ -111,6 +111,12 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
+    /**
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function labels ($request, $match)
     {
         $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
@@ -131,6 +137,29 @@ class Wiki_Views_Page
         $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
         $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
         $page->delAssoc($label);
+        return new Pluf_HTTP_Response_Json($page);
+    }
+
+    public function categories ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $cats = $page->get_category_list();
+        return new Pluf_HTTP_Response_Json($cats);
+    }
+
+    public function addCategory ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        $page->setAssoc($cat);
+        return new Pluf_HTTP_Response_Json($page);
+    }
+
+    public function removeCategory ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        $page->delAssoc($cat);
         return new Pluf_HTTP_Response_Json($page);
     }
 
