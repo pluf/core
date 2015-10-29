@@ -90,8 +90,8 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * Define the list of methods for the model from the available
-     * model relationship.
+     * فهرست متدها را بر اساس رابطه‌هایی که در سیستم تعریف شده است را تعیین می‌کند.
+     * 
      */
     function _init ()
     {
@@ -1075,7 +1075,7 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * Build the automatic methods for the relations of given type.
+     * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
      *
      * Adds the get_xx_list method when the methods of the model
      * contains custom names.
@@ -1091,8 +1091,9 @@ class Pluf_Model implements JsonSerializable
             foreach ($relations as $related) {
                 if ($related != $current_model) {
                     $model = new $related();
-                } else
+                } else {
                     $model = clone $this;
+                }
                 $fkeys = $model->getRelationKeysToModel($current_model, $type);
                 foreach ($fkeys as $fkey => $val) {
                     $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;

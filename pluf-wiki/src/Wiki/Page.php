@@ -94,7 +94,6 @@ class Wiki_Page extends Pluf_Model
                 'book' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'Pluf_Book',
-                        'relate_name' => 'book',
                         'blank' => true,
                         'verbose' => __('book')
                 ),
@@ -115,6 +114,44 @@ class Wiki_Page extends Pluf_Model
                         'help_text' => __('categories')
                 )
         );
+        $this->_a['views'] = array(
+                'page_list' => array(
+                        'select' => $this->getCustomSelect('page_list', 
+                                array(
+                                        'id',
+                                        'title',
+                                        'priority',
+                                ))
+                ),
+                'page_list_summary' => array(
+                        'select' => $this->getCustomSelect('page_list', 
+                                array(
+                                        'id',
+                                        'title',
+                                        'priority',
+                                        'state',
+                                        'language',
+                                        'summary'
+                                ))
+                )
+        );
+    }
+
+    function getCustomSelect ($cache_key, $keys = array())
+    {
+        if (isset($this->_cache[$cache_key]))
+            return $this->_cache[$cache_key];
+        $select = array();
+        $table = $this->getSqlTable();
+        foreach ($keys as $col) {
+            $val = $this->_a['cols'][$col];
+            if ($val['type'] != 'Pluf_DB_Field_Manytomany') {
+                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
+                         $this->_con->qn($col);
+            }
+        }
+        $this->_cache['getSelect'] = implode(', ', $select);
+        return $this->_cache['getSelect'];
     }
 
     /**

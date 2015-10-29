@@ -143,6 +143,45 @@ class Wiki_Views_Book
         $book->delAssoc($cat);
         return new Pluf_HTTP_Response_Json($book);
     }
+    
+    
+    
+
+
+    public function pages ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $page = new Wiki_Page();
+        $pages= $page->getList(array(
+                'view' => 'page_list',
+                'filter'=> 'book='.$book->id
+        ));
+        return new Pluf_HTTP_Response_Json($pages);
+    }
+    
+    public function addPage ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[2]);
+        if($page->book != 0){
+            throw new Pluf_Exception("Page is added into the another book.");
+        }
+        $page->book = $book;
+        $page->update();
+        return new Pluf_HTTP_Response_Json($book);
+    }
+    
+    public function removePage ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[2]);
+        if($page->book != $book->id){
+            throw new Pluf_Exception("Page is not part of the book.");
+        }
+        $page->book = new Wiki_Book();
+        $page->update();
+        return new Pluf_HTTP_Response_Json($book);
+    }
 
     private function getListCount ($request)
     {

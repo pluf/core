@@ -40,7 +40,7 @@ function Pluf_Shortcuts_GetObjectOr404($object, $id)
     if ((int)$id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404();
+    throw new Pluf_HTTP_Error404("Object not found (".$object.",".$id.")");
 }
 
 /**

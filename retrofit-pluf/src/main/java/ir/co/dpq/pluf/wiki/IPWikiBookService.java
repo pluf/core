@@ -56,4 +56,16 @@ public interface IPWikiBookService {
 
 	@GET("/api/wiki/book/{bookId}/categories")
 	Map<String, PCategory> getBookCategories(@Path("bookId") long bookId);
+
+	
+	
+	
+	@GET("/api/wiki/book/{bookId}/pages")
+	Map<String, PWikiPageItem> getBookPages(@Path("bookId") long bookId);
+
+	@POST("/api/wiki/book/{bookId}/page/{pageId}")
+	PWikiPage addPageToBook(@Path("bookId") long bookId, @Path("pageId") long pageId);
+
+	@DELETE("/api/wiki/book/{bookId}/page/{pageId}")
+	PWikiPage deletePageFromBook(@Path("bookId") long bookId, @Path("pageId") long pageId);
 }

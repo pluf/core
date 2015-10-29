@@ -11,37 +11,17 @@ import com.google.gson.annotations.SerializedName;
  * @author maso
  *
  */
-public class PWikiPage {
+public class PWikiPage extends PWikiPageItem {
 
-	long id;
-	int priority;
-	int state;
-
-	String title;
-	String language;
-	String summary;
-	String content;
+	private String language;
+	private String summary;
+	private String content;
 
 	@SerializedName("content_type")
-	String contentType;
+	private String contentType;
 
 	// creation_dtime
 	// modif_dtime : Datetime
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
 
 	public String getLanguage() {
 		return language;
@@ -67,14 +47,6 @@ public class PWikiPage {
 		this.content = content;
 	}
 
-	public int getPriority() {
-		return priority;
-	}
-
-	public void setPriority(int priority) {
-		this.priority = priority;
-	}
-
 	public String getContentType() {
 		return contentType;
 	}
@@ -87,8 +59,10 @@ public class PWikiPage {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("id", getId());
-		map.put("periority", getPriority());
 		map.put("title", getTitle());
+		map.put("periority", getPriority());
+		map.put("state", getState());
+
 		map.put("language", getLanguage());
 		map.put("summary", getSummary());
 		map.put("content", getContent());

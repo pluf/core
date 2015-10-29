@@ -33,6 +33,7 @@ import ir.co.dpq.pluf.wiki.IPWikiBookService;
 import ir.co.dpq.pluf.wiki.IPWikiPageService;
 import ir.co.dpq.pluf.wiki.PWikiBook;
 import ir.co.dpq.pluf.wiki.PWikiPage;
+import ir.co.dpq.pluf.wiki.PWikiPageItem;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
@@ -52,14 +53,16 @@ public class WikiBookService {
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder//
-		.registerTypeAdapter(new TypeToken<PPaginatorPage<PCategory>>() {
-		}.getType(), new DeserializerJson<PCategory>())//
-		.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
-		}.getType(), new DeserializerJson<PLabel>())//
-		.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
-		}.getType(), new DeserializerJson<PWikiPage>())//
-		.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiBook>>() {
-		}.getType(), new DeserializerJson<PWikiBook>());
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PCategory>>() {
+				}.getType(), new DeserializerJson<PCategory>())//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
+				}.getType(), new DeserializerJson<PLabel>())//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
+				}.getType(), new DeserializerJson<PWikiPage>())//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPageItem>>() {
+				}.getType(), new DeserializerJson<PWikiPageItem>())//
+				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiBook>>() {
+				}.getType(), new DeserializerJson<PWikiBook>());
 		Gson gson = gsonBuilder.create();
 
 		RestAdapter restAdapter = new RestAdapter.Builder()
@@ -261,7 +264,6 @@ public class WikiBookService {
 		assertEquals(label.getTitle(), clabel.getTitle());
 		assertEquals(label.getColor(), clabel.getColor());
 
-
 		PWikiBook book = new PWikiBook();
 		book.setTitle("title");
 		book.setSummary("summery");
@@ -269,7 +271,6 @@ public class WikiBookService {
 		PWikiBook book2 = wikiBookService.createWikiBook(book.toMap());
 		assertNotNull(book2);
 		assertEquals(book.getTitle(), book2.getTitle());
-
 
 		wikiBookService.addLabelToBook(book2.getId(), clabel.getId());
 
@@ -280,9 +281,6 @@ public class WikiBookService {
 		PLabel[] items = labels.values().toArray(new PLabel[0]);
 		assertEquals(clabel.getId(), items[0].getId());
 	}
-	
-	
-
 
 	@Test
 	public void addCategoryTest00() {
@@ -383,4 +381,76 @@ public class WikiBookService {
 		assertNotNull(cats);
 		assertTrue(cats.size() == 0);
 	}
+
+	@Test
+	public void addPageToBookTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookService.addPageToBook(cbook.getId(), cpage.getId());
+
+		Map<String, PWikiPageItem> pages = wikiBookService.getBookPages(cbook.getId());
+		assertTrue(pages.size() == 1);
+	}
+
+	@Test
+	public void deletePageToBookTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiService.createWikiPage(page.toMap());
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookService.addPageToBook(cbook.getId(), cpage.getId());
+
+		Map<String, PWikiPageItem> pages = wikiBookService.getBookPages(cbook.getId());
+		assertTrue(pages.size() == 1);
+
+		wikiBookService.deletePageFromBook(cbook.getId(), cpage.getId());
+		pages = wikiBookService.getBookPages(cbook.getId());
+		assertTrue(pages.size() == 0);
+
+	}
+
 }
