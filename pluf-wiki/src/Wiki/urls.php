@@ -89,6 +89,24 @@ return array (
                 'method' => 'find',
                 'http-method' => 'GET'
         ),
+        array(
+                'regex' => '#^/book/(\d+)/labels$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'labels',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/label/(\d+)$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'addLabel',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/label/(\d+)$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'removeLabel',
+                'http-method' => 'DELETE'
+        ),
         
         // جستجو با استفاده عنوان و زبان
         array(

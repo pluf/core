@@ -3,6 +3,7 @@ package ir.co.dpq.pluf.wiki;
 import java.util.Map;
 
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.PLabel;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -36,5 +37,16 @@ public interface IPWikiBookService {
 
 	@GET("/api/wiki/book/find")
 	PPaginatorPage<PWikiPage> findWikiBook(@QueryMap Map<String, Object> params);
+
+	
+
+	@POST("/api/wiki/book/{bookId}/label/{labelId}")
+	PWikiBook addLabelToBook(@Path("bookId") long bookId, @Path("labelId") long labelId);
+
+	@GET("/api/wiki/book/{bookId}/labels")
+	Map<String, PLabel> getBookLabels(@Path("bookId") long bookId);
+
+	@DELETE("/api/wiki/book/{bookId}/label/{labelId}")
+	PWikiBook deleteLabelFromBook(@Path("bookId") long bookId, @Path("labelId") long labelId);
 
 }

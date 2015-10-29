@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class PWikiBook {
 
-	long id;
-	int state;
+	Long id;
+	Integer state;
 
 	String title;
 	String language;
@@ -18,19 +18,19 @@ public class PWikiBook {
 	// @SerializedName("modif_dtime")
 	// Date modifTime;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 

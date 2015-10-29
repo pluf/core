@@ -98,6 +98,29 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
+    public function labels ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $labels = $book->get_label_list();
+        return new Pluf_HTTP_Response_Json($labels);
+    }
+    
+    public function addLabel ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        $book->setAssoc($label);
+        return new Pluf_HTTP_Response_Json($book);
+    }
+    
+    public function removeLabel ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        $book->delAssoc($label);
+        return new Pluf_HTTP_Response_Json($book);
+    }
+    
     private function getListCount ($request)
     {
         $count = 20;
