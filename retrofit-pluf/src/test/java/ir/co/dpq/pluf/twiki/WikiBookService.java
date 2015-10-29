@@ -23,7 +23,9 @@ import com.google.gson.reflect.TypeToken;
 import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.IPCategoryService;
 import ir.co.dpq.pluf.km.IPLabelService;
+import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
@@ -40,6 +42,7 @@ public class WikiBookService {
 	private IPWikiBookService wikiBookService;
 	private IPWikiPageService wikiService;
 	private IPUserService usr;
+	private IPCategoryService categoryService;
 
 	@Before
 	public void createService() {
@@ -49,12 +52,14 @@ public class WikiBookService {
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder//
-				.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
-				}.getType(), new DeserializerJson<PLabel>())//
-				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
-				}.getType(), new DeserializerJson<PWikiPage>())//
-				.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiBook>>() {
-				}.getType(), new DeserializerJson<PWikiBook>());
+		.registerTypeAdapter(new TypeToken<PPaginatorPage<PCategory>>() {
+		}.getType(), new DeserializerJson<PCategory>())//
+		.registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>() {
+		}.getType(), new DeserializerJson<PLabel>())//
+		.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiPage>>() {
+		}.getType(), new DeserializerJson<PWikiPage>())//
+		.registerTypeAdapter(new TypeToken<PPaginatorPage<PWikiBook>>() {
+		}.getType(), new DeserializerJson<PWikiBook>());
 		Gson gson = gsonBuilder.create();
 
 		RestAdapter restAdapter = new RestAdapter.Builder()
@@ -71,6 +76,7 @@ public class WikiBookService {
 		this.wikiService = restAdapter.create(IPWikiPageService.class);
 		this.usr = restAdapter.create(IPUserService.class);
 		this.labelService = restAdapter.create(IPLabelService.class);
+		this.categoryService = restAdapter.create(IPCategoryService.class);
 	}
 
 	@Test
@@ -273,5 +279,108 @@ public class WikiBookService {
 
 		PLabel[] items = labels.values().toArray(new PLabel[0]);
 		assertEquals(clabel.getId(), items[0].getId());
+	}
+	
+	
+
+
+	@Test
+	public void addCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook book2 = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(book2);
+		assertEquals(book.getTitle(), book2.getTitle());
+
+		wikiBookService.addCategoryToBook(book2.getId(), category2.getId());
+	}
+
+	@Test
+	public void getCategoriesTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook book2 = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(book2);
+		assertEquals(book.getTitle(), book2.getTitle());
+
+		wikiBookService.addCategoryToBook(book2.getId(), category2.getId());
+
+		Map<String, PCategory> cats = wikiBookService.getBookCategories(book2.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 1);
+	}
+
+	@Test
+	public void removeCategoryTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		// create label
+		PCategory category = new PCategory();
+		category.setTitle("example");
+		category.setDescription("label description");
+		category.setColor("#FFFFFF");
+
+		PCategory category2 = categoryService.createCategory(category.toMap());
+		assertNotNull(category2);
+		assertEquals(category.getTitle(), category2.getTitle());
+		assertEquals(category.getColor(), category2.getColor());
+		assertEquals(category.getDescription(), category2.getDescription());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook book2 = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(book2);
+		assertEquals(book.getTitle(), book2.getTitle());
+
+		wikiBookService.addCategoryToBook(book2.getId(), category2.getId());
+
+		Map<String, PCategory> cats = wikiBookService.getBookCategories(book2.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 1);
+
+		wikiBookService.deleteCategoryFromBook(book2.getId(), category2.getId());
+		cats = wikiBookService.getBookCategories(book2.getId());
+		assertNotNull(cats);
+		assertTrue(cats.size() == 0);
 	}
 }

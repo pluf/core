@@ -125,6 +125,24 @@ return array (
                 'method' => 'removeLabel',
                 'http-method' => 'DELETE'
         ),
+        array( // category
+                'regex' => '#^/book/(\d+)/categories$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'categories',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/category/(\d+)$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'addCategory',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/category/(\d+)$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'removeCategory',
+                'http-method' => 'DELETE'
+        ),
         
         // جستجو با استفاده عنوان و زبان
         array(

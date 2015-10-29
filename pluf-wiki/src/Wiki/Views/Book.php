@@ -104,7 +104,7 @@ class Wiki_Views_Book
         $labels = $book->get_label_list();
         return new Pluf_HTTP_Response_Json($labels);
     }
-    
+
     public function addLabel ($request, $match)
     {
         $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
@@ -112,7 +112,7 @@ class Wiki_Views_Book
         $book->setAssoc($label);
         return new Pluf_HTTP_Response_Json($book);
     }
-    
+
     public function removeLabel ($request, $match)
     {
         $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
@@ -120,7 +120,30 @@ class Wiki_Views_Book
         $book->delAssoc($label);
         return new Pluf_HTTP_Response_Json($book);
     }
-    
+
+    public function categories ($request, $match)
+    {
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $cats = $page->get_category_list();
+        return new Pluf_HTTP_Response_Json($cats);
+    }
+
+    public function addCategory ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        $book->setAssoc($cat);
+        return new Pluf_HTTP_Response_Json($book);
+    }
+
+    public function removeCategory ($request, $match)
+    {
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        $book->delAssoc($cat);
+        return new Pluf_HTTP_Response_Json($book);
+    }
+
     private function getListCount ($request)
     {
         $count = 20;

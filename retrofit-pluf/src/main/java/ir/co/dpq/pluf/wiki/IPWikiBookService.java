@@ -3,6 +3,7 @@ package ir.co.dpq.pluf.wiki;
 import java.util.Map;
 
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
@@ -38,8 +39,6 @@ public interface IPWikiBookService {
 	@GET("/api/wiki/book/find")
 	PPaginatorPage<PWikiPage> findWikiBook(@QueryMap Map<String, Object> params);
 
-	
-
 	@POST("/api/wiki/book/{bookId}/label/{labelId}")
 	PWikiBook addLabelToBook(@Path("bookId") long bookId, @Path("labelId") long labelId);
 
@@ -49,4 +48,12 @@ public interface IPWikiBookService {
 	@DELETE("/api/wiki/book/{bookId}/label/{labelId}")
 	PWikiBook deleteLabelFromBook(@Path("bookId") long bookId, @Path("labelId") long labelId);
 
+	@POST("/api/wiki/book/{bookId}/category/{categoryId}")
+	PWikiPage addCategoryToBook(@Path("bookId") long bookId, @Path("categoryId") long categoryId);
+
+	@DELETE("/api/wiki/book/{bookId}/category/{categoryId}")
+	PWikiPage deleteCategoryFromBook(@Path("bookId") long bookId, @Path("categoryId") long categoryId);
+
+	@GET("/api/wiki/book/{bookId}/categories")
+	Map<String, PCategory> getBookCategories(@Path("bookId") long bookId);
 }

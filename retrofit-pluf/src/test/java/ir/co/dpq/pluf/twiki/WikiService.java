@@ -423,6 +423,5 @@ public class WikiService {
 		cats = wikiService.getPageCategories(cpage.getId());
 		assertNotNull(cats);
 		assertTrue(cats.size() == 0);
-
 	}
 }
