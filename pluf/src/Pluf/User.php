@@ -332,8 +332,13 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * Get all the permissions of a user.
+     * تمام دسترسی‌هایی که یک کاربر دارد را تعیین می‌کند.
      *
+     * این که گواهی مربوط به یک سطر است یا نه به صورت کلی تعیین شده است مهم نیست
+     * و تنها وجود گواهی برای کاربر در نظر گرفته می‌شود.
+     * 
+     * گواهی می‌تواند به کاربر و یا به گروه انتصاب داده شده باشد.
+     * 
      * @param
      *            bool Force the reload of the list of permissions (false)
      * @return array List of permissions
@@ -411,6 +416,12 @@ class Pluf_User extends Pluf_Model
      * یگ گواهی برای یک مدل خاص است، در اینجا می‌توان تعیین کرد که آیا کاربر
      * به شئی مورد نظر این گواهی را دارد.
      *
+     * <ul>
+     * <li>کاربر باید در سیستم فعال باشد</li>
+     * <li>کاربر مدیر تمام دسترسی‌ها را دارد</li>
+     * <li></li>
+     * </ul>
+     * 
      * @param
      *            string Permission
      * @param
@@ -437,9 +448,9 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * Check if a user one or more application permission.
+     * تعیین می‌کند که آیا کاربر یکی از مجوزهای نرم افزار را دارد یا نه.
      *
-     * @return bool True if the user has some.
+     * @return bool درستی اگر یکی از مجوزها وجود داشته باشد.
      */
     function hasAppPerms ($app)
     {
@@ -472,9 +483,8 @@ class Pluf_User extends Pluf_Model
         $m = new Pluf_Message();
         $m->user = $this;
         $m->message = $message;
-        if(!$m->create()){
-            throw new Pluf_Exception(
-                    __("not possible to create a message"));
+        if (! $m->create()) {
+            throw new Pluf_Exception(__("not possible to create a message"));
         }
         return $m;
     }
@@ -482,7 +492,8 @@ class Pluf_User extends Pluf_Model
     /**
      * دریافت و حذف پیام‌ها
      *
-     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند. در
+     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند.
+     * در
      * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
      *
      * @return ArrayObject
