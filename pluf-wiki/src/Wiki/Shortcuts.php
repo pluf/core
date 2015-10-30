@@ -49,3 +49,15 @@ function Wiki_Shortcuts_GetBookListCount ($request)
     }
     return $count;
 }
+
+function Wiki_Shortcuts_GetPageListCount ($request)
+{
+    $count = 20;
+    if (array_key_exists('_px_count', $request->GET)) {
+        $count = $request->GET['_px_count'];
+        if ($count > 20) {
+            $count = 20;
+        }
+    }
+    return $count;
+}
