@@ -5,6 +5,7 @@ import java.util.Map;
 import ir.co.dpq.pluf.PPaginatorPage;
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
+import ir.co.dpq.pluf.user.PUser;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -68,4 +69,11 @@ public interface IPWikiBookService {
 
 	@DELETE("/api/wiki/book/{bookId}/page/{pageId}")
 	PWikiPage deletePageFromBook(@Path("bookId") long bookId, @Path("pageId") long pageId);
+
+	@POST("/api/wiki/book/{bookId}/interested")
+	PWikiPage addInterestedUser(@Path("bookId") long bookId);
+	@DELETE("/api/wiki/book/{bookId}/interested")
+	PWikiPage deleteInterestedUser(@Path("bookId") long bookId);
+	@GET("/api/wiki/book/{bookId}/interesteds")
+	Map<String, PUser> getBookInteresteds(@Path("bookId") long bookId);
 }

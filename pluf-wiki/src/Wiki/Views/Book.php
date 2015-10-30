@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('User_Shortcuts_RemoveSecureData');
 Pluf::loadFunction('Wiki_Shortcuts_GetBookOr404');
 Pluf::loadFunction('Wiki_Shortcuts_GetBookListCount');
 
@@ -94,6 +95,39 @@ class Wiki_Views_Book
         $pag->items_per_page = Wiki_Shortcuts_GetBookListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
+    }
+
+    public function interestedUsers ($request, $match)
+    { // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // بررسی دسترسی
+        Wiki_Precondition::userCanAccessBook($request, $book);
+        // اجرای درخواست
+        $intre = $book->get_interested_list();
+        foreach ($intre as $key => $value){
+            User_Shortcuts_RemoveSecureData($value);
+        }
+        return new Pluf_HTTP_Response_Json($intre);
+    }
+
+    public function addInterestedUser ($request, $match)
+    {
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // بررسی دسترسی
+        Wiki_Precondition::userCanInterestedInBook($request, $book);
+        // اجرای درخواست
+        $book->setAssoc($request->user);
+        return new Pluf_HTTP_Response_Json($book);
+    }
+
+    public function removeInterestedUser ($request, $match)
+    {
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // اجرای درخواست
+        $book->delAssoc($request->user);
+        return new Pluf_HTTP_Response_Json($book);
     }
 
     public function labels ($request, $match)

@@ -166,7 +166,24 @@ return array (
                 'method' => 'removePage',
                 'http-method' => 'DELETE'
         ),
-        
+        array( // interested
+                'regex' => '#^/book/(\d+)/interesteds$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'interestedUsers',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/interested$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'addInterestedUser',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/book/(\d+)/interested$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'removeInterestedUser',
+                'http-method' => 'DELETE'
+        ),
         // جستجو با استفاده عنوان و زبان
         array(
                 'regex' => '#^/(.+)/(.+)$#',

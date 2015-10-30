@@ -8,69 +8,25 @@ import com.google.gson.annotations.SerializedName;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class PUser {
+public class PUser extends PUserItem {
 
-	@SerializedName("id")
-	long id;
-
-	@SerializedName("login")
-	String login;
-	
-	@SerializedName("first_name")
-	String firstName;
-	
-	@SerializedName("last_name")
-	String lastName;
-	
 	@SerializedName("email")
-	String email;
-	
+	private String email;
+
 	@SerializedName("administrator")
-	boolean administrator;
-	
+	private boolean administrator;
+
 	@SerializedName("staff")
-	boolean staff;
-	
+	private boolean staff;
+
 	@SerializedName("active")
-	boolean active;
-	
+	private boolean active;
+
 	@SerializedName("language")
-	String language;
-	
+	private String language;
+
 	@SerializedName("timezone")
-	String timezone;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+	private String timezone;
 
 	public String getEmail() {
 		return email;

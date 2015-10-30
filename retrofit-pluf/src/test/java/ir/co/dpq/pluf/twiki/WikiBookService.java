@@ -453,4 +453,66 @@ public class WikiBookService {
 
 	}
 
+	@Test
+	public void addInterestedToBookTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookService.addInterestedUser(cbook.getId());
+	}
+
+	@Test
+	public void removeInterestedFromBookTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookService.addInterestedUser(cbook.getId());
+
+		wikiBookService.deleteInterestedUser(cbook.getId());
+	}
+	
+	@Test
+	public void getInterestedUsersOfBookTest00() {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+		
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+		
+		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+		
+		wikiBookService.addInterestedUser(cbook.getId());
+		
+		Map<String, PUser> interesteds = wikiBookService.getBookInteresteds(cbook.getId());
+		assertNotNull(interesteds);
+		assertTrue(interesteds.size() == 1);
+		
+		wikiBookService.deleteInterestedUser(cbook.getId());
+		interesteds = wikiBookService.getBookInteresteds(cbook.getId());
+		assertNotNull(interesteds);
+		assertTrue(interesteds.size() == 0);
+	}
+
 }

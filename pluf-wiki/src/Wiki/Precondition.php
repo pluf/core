@@ -27,6 +27,11 @@ class Wiki_Precondition
         return true;
     }
 
+    public static function userCanInterestedInBook ($request, $book)
+    {
+        return true;
+    }
+
     public static function userCanCreatePage ($request)
     {
         return true;
@@ -36,6 +41,7 @@ class Wiki_Precondition
     {
         return true;
     }
+
     public static function userCanUpdatePage ($request, $page)
     {
         return true;

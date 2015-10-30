@@ -48,7 +48,7 @@ class Wiki_Views_Page
                 return new Pluf_HTTP_Response_Json($page);
             }
         }
-        throw new Wiki_PageNotFoundException(__('requeisted page not found.'));
+        throw new Wiki_Exception_PageNotFound(__('requeisted page not found.'));
     }
 
     public function create ($request, $match)
