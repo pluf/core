@@ -1,7 +1,7 @@
 <?php
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('Wiki_Shortcuts_GetBookOr404');
+Pluf::loadFunction('Wiki_Shortcuts_GetBookListCount');
 
 /**
  * لایه نمایش کتاب‌ها را ایجاد می‌کند.
@@ -10,8 +10,6 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
  */
 class Wiki_Views_Book
 {
-
-    public $create_precond = array();
 
     public function create ($request, $match)
     {
@@ -28,22 +26,23 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($book);
     }
 
-    public $get_precond = array();
-
     public function get ($request, $match)
     {
-        // XXX: maso, 1394: بررسی حق دسترسی
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // بررسی حق دسترسی
+        Wiki_Precondition::userCanAccessBook($request, $book);
+        // اجرای درخواست
         return new Pluf_HTTP_Response_Json($book);
     }
 
-    public $update_precond = array();
-
     public function update ($request, $match)
     {
-        // XXX: maso, 1394: بررسی حق دسترسی
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
-        // initial page data
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // حق دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
                 'book' => $book
@@ -57,18 +56,17 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($book);
     }
 
-    public $delete_precond = array();
-
     public function delete ($request, $match)
     {
-        // XXX: maso, 1394: بررسی حق دسترسی
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // بررسی حق دسترسی
+        Wiki_Precondition::userCanDeleteBook($request, $book);
+        // اجرای درخواست
         $book2 = new Wiki_Page($book->id);
         $book2->delete();
         return new Pluf_HTTP_Response_Json($book);
     }
-
-    public $find_precond = array();
 
     public function find ($request, $match)
     {
@@ -93,105 +91,126 @@ class Wiki_Views_Book
                 'modif_dtime'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = $this->getListCount($request);
+        $pag->items_per_page = Wiki_Shortcuts_GetBookListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
     public function labels ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // بررسی حق دسترسی
+        Wiki_Precondition::userCanAccessBook($request, $book);
+        // اجرای درخواست
         $labels = $book->get_label_list();
         return new Pluf_HTTP_Response_Json($labels);
     }
 
     public function addLabel ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        // بررسی دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای درخواست
         $book->setAssoc($label);
         return new Pluf_HTTP_Response_Json($book);
     }
 
     public function removeLabel ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
+        // بررسی دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای درخواست
         $book->delAssoc($label);
         return new Pluf_HTTP_Response_Json($book);
     }
 
     public function categories ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
-        $cats = $page->get_category_list();
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        // تعیین دسترسی
+        Wiki_Precondition::userCanAccessBook($request, $book);
+        // اجرای درخواست
+        $cats = $book->get_category_list();
         return new Pluf_HTTP_Response_Json($cats);
     }
 
     public function addCategory ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        // بررسی دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای درخواست
         $book->setAssoc($cat);
         return new Pluf_HTTP_Response_Json($book);
     }
 
     public function removeCategory ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
+        // تعیین دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای دستور
         $book->delAssoc($cat);
         return new Pluf_HTTP_Response_Json($book);
     }
-    
-    
-    
-
 
     public function pages ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $page = new Wiki_Page();
-        $pages= $page->getList(array(
-                'view' => 'page_list',
-                'filter'=> 'book='.$book->id
-        ));
+        // تعیین دسترسی‌ها
+        Wiki_Precondition::userCanAccessBook($request, $book);
+        // اجرای دستور
+        $pages = $page->getList(
+                array(
+                        'view' => 'page_list',
+                        'filter' => 'book=' . $book->id
+                ));
         return new Pluf_HTTP_Response_Json($pages);
     }
-    
+
     public function addPage ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[2]);
-        if($page->book != 0){
+        // بررسی دسترسی‌ها
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای دستور
+        if ($page->book != 0) {
             throw new Pluf_Exception("Page is added into the another book.");
         }
         $page->book = $book;
         $page->update();
         return new Pluf_HTTP_Response_Json($book);
     }
-    
+
     public function removePage ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match[1]);
+        // تعیین داده‌ها
+        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
         $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[2]);
-        if($page->book != $book->id){
+        // تعیین دسترسی
+        Wiki_Precondition::userCanUpdateBook($request, $book);
+        // اجرای دستور
+        if ($page->book != $book->id) {
             throw new Pluf_Exception("Page is not part of the book.");
         }
         $page->book = new Wiki_Book();
         $page->update();
         return new Pluf_HTTP_Response_Json($book);
-    }
-
-    private function getListCount ($request)
-    {
-        $count = 20;
-        if (array_key_exists('_px_count', $request->GET)) {
-            $count = $request->GET['_px_count'];
-            if ($count > 20) {
-                $count = 20;
-            }
-        }
-        return $count;
     }
 }

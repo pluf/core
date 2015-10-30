@@ -4,6 +4,22 @@ return array (
          * کار با صفحه‌ها
          */
         array(
+                'regex' => '#^/page/find$#',
+                'model' => 'Wiki_Views_Page',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/page/create$#',
+                'model' => 'Wiki_Views_Page',
+                'method' => 'create',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired',
+                        'Wiki_Precondition::userCanCreatePage'
+                ),
+                'http-method' => 'POST'
+        ),
+        array(
                 'regex' => '#^/page/(\d+)$#',
                 'model' => 'Wiki_Views_Page',
                 'method' => 'get',
@@ -57,30 +73,25 @@ return array (
                 'method' => 'removeCategory',
                 'http-method' => 'DELETE'
         ),
-        array(
-                'regex' => '#^/page/create$#',
-                'model' => 'Wiki_Views_Page',
-                'method' => 'create',
-                'precond' => array(
-                        'Pluf_Precondition::loginRequired'
-                ),
-                'http-method' => 'POST'
-        ),
-        array(
-                'regex' => '#^/page/find$#',
-                'model' => 'Wiki_Views_Page',
-                'method' => 'find',
-                'http-method' => 'GET'
-        ),
         
         
         /*
          * کار با کتابها
          */
         array(
+                'regex' => '#^/book/find$#',
+                'model' => 'Wiki_Views_Book',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
                 'regex' => '#^/book/create$#',
                 'model' => 'Wiki_Views_Book',
                 'method' => 'create',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired',
+                        'Wiki_Precondition::userCanCreateBook'
+                ),
                 'http-method' => 'POST'
         ),
         array(
@@ -100,12 +111,6 @@ return array (
                 'model' => 'Wiki_Views_Book',
                 'method' => 'delete',
                 'http-method' => 'DELETE'
-        ),
-        array(
-                'regex' => '#^/book/find$#',
-                'model' => 'Wiki_Views_Book',
-                'method' => 'find',
-                'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/book/(\d+)/labels$#',

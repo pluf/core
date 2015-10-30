@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('Wiki_Shortcuts_GetPageOr404');
 
 /**
  * @ingroup views
@@ -69,14 +70,14 @@ class Wiki_Views_Page
     public function get ($request, $match)
     {
         // XXX: maso, 1394: بررسی حق دسترسی
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         return new Pluf_HTTP_Response_Json($page);
     }
 
     public function delete ($request, $match)
     {
         // XXX: maso, 1394: بررسی حق دسترسی
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $page2 = new Wiki_Page($page->id);
         $page2->delete();
         return new Pluf_HTTP_Response_Json($page);
@@ -119,14 +120,14 @@ class Wiki_Views_Page
      */
     public function labels ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $labels = $page->get_label_list();
         return new Pluf_HTTP_Response_Json($labels);
     }
 
     public function addLabel ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
         $page->setAssoc($label);
         return new Pluf_HTTP_Response_Json($page);
@@ -134,7 +135,7 @@ class Wiki_Views_Page
 
     public function removeLabel ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[2]);
         $page->delAssoc($label);
         return new Pluf_HTTP_Response_Json($page);
@@ -142,14 +143,14 @@ class Wiki_Views_Page
 
     public function categories ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $cats = $page->get_category_list();
         return new Pluf_HTTP_Response_Json($cats);
     }
 
     public function addCategory ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
         $page->setAssoc($cat);
         return new Pluf_HTTP_Response_Json($page);
@@ -157,7 +158,7 @@ class Wiki_Views_Page
 
     public function removeCategory ($request, $match)
     {
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[1]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
         $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[2]);
         $page->delAssoc($cat);
         return new Pluf_HTTP_Response_Json($page);

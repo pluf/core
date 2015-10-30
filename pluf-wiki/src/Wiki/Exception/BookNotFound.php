@@ -6,7 +6,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_BookNotFoundException extends Pluf_Exception
+class Wiki_Exception_BookNotFound extends Pluf_Exception
 {
 
     /**

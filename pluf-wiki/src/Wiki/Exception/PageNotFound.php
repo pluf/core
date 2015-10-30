@@ -6,7 +6,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_PageNotFoundException extends Pluf_Exception
+class Wiki_Exception_PageNotFound extends Pluf_Exception
 {
 
     /**

@@ -88,6 +88,15 @@ class Pluf_RowPermission extends Pluf_Model
         );
     }
 
+    /**
+     * یک گواهی را به سیستم اضافه می‌کند.
+     * 
+     * @param Pluf_Model $owner
+     * @param Pluf_Model $object
+     * @param string $perm
+     * @param bool $negative
+     * @throws Exception
+     */
     public static function add ($owner, $object, $perm, $negative = false)
     {
         if (! is_object($perm)) {
@@ -111,6 +120,14 @@ class Pluf_RowPermission extends Pluf_Model
         return true;
     }
 
+    /**
+     * یک گواهی را از سیستم حذف می‌کند.
+     * 
+     * @param unknown $owner
+     * @param unknown $object
+     * @param unknown $perm
+     * @throws Exception
+     */
     public static function remove ($owner, $object, $perm)
     {
         if (! is_object($perm)) {
