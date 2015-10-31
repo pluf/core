@@ -16,52 +16,6 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 class SaaS_Views extends Pluf_Views
 {
 
-    public function sap ($request, $match)
-    {
-        $app = $request->application;
-        if ($app->isAnonymous()) {
-            throw new Pluf_Exception("Non app??");
-        }
-        $sap = $app->get_sap();
-        $repo = Pluf::f('saas_sap_repository');
-        
-        // بار گذاری بسته
-        $package = null;
-        {
-            $filename = $repo . $sap->path .
-                     Pluf::f('saas_sap_package', "/sap.json");
-            if (is_readable($filename)) {
-                $myfile = fopen($filename, "r") or die("Unable to open file!");
-                $json = fread($myfile, filesize($filename));
-                fclose($myfile);
-                $package = json_decode($json, true);
-            }
-        }
-        // کتابخانه‌ها
-        $cssLib = array();
-        $jsLib = array();
-        foreach ($package['dependencies'] as $name=>$version){
-            $lib = new SaaS_Lib();
-            $lib->path = "/test/".$name;
-            $lib->name = $name;
-            $lib->description = "example lib";
-            $jsLib[] = $lib;
-        }
-        
-        
-        // نمایش اصلی
-        $params = array(
-                'sap' => $sap,
-                'title' => __('ghazal'),
-                'mainView' => $repo . $sap->path . $package['view'],
-                'sources' => $package['src'],
-                'links' => $package['link'],
-                'metas' => $package['meta'],
-                'jsLibs' => $jsLib
-        );
-        return Pluf_Shortcuts_RenderToResponse('sap.html', $params, $request);
-    }
-
     public function appcache ($request, $match)
     {
         $params = array();

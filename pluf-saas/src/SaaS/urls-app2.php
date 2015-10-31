@@ -2,22 +2,12 @@
 return array(
         array( // مانیفست نرم‌افزارها
                 'regex' => '#^/saas.appcache$#',
-                'model' => 'SaaS_Views',
+                'model' => 'SaaS_Views_SAP',
                 'method' => 'appcache'
         ),
         array( // صفحه اصلی نرم‌افزار
                 'regex' => '#^/(\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'SaaS_Views_SAP',
                 'method' => 'sap'
-        ),
-        array( // سایر نرم‌افزار
-                'regex' => '#^/(\d+)/(.+)$#',
-                'model' => 'SaaS_Views',
-                'method' => 'applicationPage'
-        ),
-        array( // صفحه اصلی سیستم
-                'regex' => '#^/$#',
-                'model' => 'SaaS_Views',
-                'method' => 'index'
         )
 );
