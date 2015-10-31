@@ -5,7 +5,7 @@
  * @author maso
  *
  */
-class SaaS_SAP extends Pluf_Model
+class SaaS_Lib extends Pluf_Model
 {
 
     /**
@@ -14,8 +14,8 @@ class SaaS_SAP extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'SaaS_SAP';
-        $this->_a['table'] = 'saas_sap';
+        $this->_model = 'SaaS_Lib';
+        $this->_a['table'] = 'saas_lib';
         $this->_a['model'] = $this->_model;
         $this->_a['cols'] = array(
                 'id' => array(
@@ -38,6 +38,11 @@ class SaaS_SAP extends Pluf_Model
                         'size' => 100
                 ),
                 'description' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 250
+                ),
+                'path' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 250

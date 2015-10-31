@@ -71,7 +71,13 @@ class SaaS_Application extends Pluf_Model
                 'modif_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true
-                )
+                ),
+                'sap' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_SAP',
+                        'blank' => true,
+                        'verbose' => __('Default SAP for this application')
+                ),
         );
         $this->_a['views'] = array(
                 'user_model_permission' => array(
