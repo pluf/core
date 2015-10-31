@@ -109,4 +109,29 @@ class SaaS_Precondition
         }
         throw new Pluf_Exception_PermissionDenied();
     }
+
+    public static function userCanCreateLib ($request)
+    {
+        return true;
+    }
+
+    public static function userCanAccessLibs ($request)
+    {
+        return true;
+    }
+
+    public static function userCanAccessLib ($request, $lib)
+    {
+        return true;
+    }
+
+    public static function userCanUpdateLib ($request, $lib)
+    {
+        return true;
+    }
+
+    public static function userCanDeleteLib ($request, $lib)
+    {
+        return true;
+    }
 }

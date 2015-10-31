@@ -91,5 +91,55 @@ return array(
                 'freemium' => array(
                         'level' => Pluf::f('saas_freemium_full', 5)
                 )
-        )
+        ),
+        /*
+         * کتابخانه‌ها
+         */
+        array(
+                'regex' => '#^/lib/create$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                        'SaaS_Precondition::userCanCreateLib'
+                ),
+        ),
+        array(
+                'regex' => '#^/lib/list$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'find',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                        'SaaS_Precondition::userCanAccessLibs'
+                ),
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                ),
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                ),
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                ),
+        ),
 );

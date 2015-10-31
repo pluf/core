@@ -13,9 +13,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * ساختارهای داده‌ای صفحه بندی شده را دیکد می‌کند.
  * 
- * @author maso
- *
- * @param <T>
+ * @author maso <mostafa.barmshory@dpq.co.ir>
  */
 public class DeserializerJson<T> implements JsonDeserializer<PPaginatorPage<T>> {
 

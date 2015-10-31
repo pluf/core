@@ -37,6 +37,11 @@ class SaaS_Lib extends Pluf_Model
                         'blank' => true,
                         'size' => 100
                 ),
+                'version' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 100
+                ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
