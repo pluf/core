@@ -69,3 +69,42 @@ function SaaS_Shortcuts_LibFindCount ($request)
 {
     return 20;
 }
+
+
+/**
+ * نصب کتابخانه‌ها بر اساس یک فایل جیسون
+ * 
+ * فهرست تمام کتابخانه‌ها را با قالب جیسون دریافت کرده و آنها را به کلاس‌های معادل
+ * تبدیل می‌کند. در صورتی که پارامتر $create مقدار درستی باشد آنها را در پایگاه داده
+ * ذخیره نیز می‌کند.
+ * 
+ * @param string $filename
+ * @param boolean $create
+ * @return library list
+ */
+function SaaS_Shortcuts_LoadLibFromJson($filename, $create){
+    $list = array();
+    {
+        if (is_readable($filename)) {
+            $myfile = fopen($filename, "r") or die("Unable to open file!");
+            $json = fread($myfile, filesize($filename));
+            fclose($myfile);
+            $packages = json_decode($json, true);
+            foreach($packages as $package){
+                $lib = new SaaS_Lib();
+                $lib->name = $package['name'];
+                $lib->version = $package['version'];
+                $lib->mode = $package['mode'];
+                $lib->type = $package['type'];
+                $lib->path = $package['path'];
+                $list[] = $lib;
+            }
+        }
+    }
+    if($create){
+        foreach ($list as $lib){
+            $lib->create();
+        }
+    }
+    return $list;
+}
