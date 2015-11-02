@@ -1,6 +1,15 @@
+# شرط
 
+## if
 
-# if
+	{if $condition}
+	
+	{/if}
 
-# if else
+## if else
 
+	{if $condition}
+	...
+	{else}
+	..
+	{/if}
