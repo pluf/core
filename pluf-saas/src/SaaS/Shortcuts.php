@@ -48,6 +48,14 @@ function SaaS_Shortcuts_libraryFactory ($object = null)
     return $object;
 }
 
+function SaaS_Shortcuts_GetSAPOr404($id){
+    $item = new SaaS_SAP($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404("SAP not found (" . $id . ")");
+}
+
 /**
  *
  * @param unknown $request            

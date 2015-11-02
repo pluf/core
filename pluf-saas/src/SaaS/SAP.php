@@ -82,4 +82,21 @@ class SaaS_SAP extends Pluf_Model
     {
         //
     }
+
+    public function loadPackage ()
+    {
+        $repo = Pluf::f('saas_sap_repository');
+        $package = array();
+        {
+            $filename = $repo . $this->path .
+                     Pluf::f('saas_sap_package', "/sap.json");
+            if (is_readable($filename)) {
+                $myfile = fopen($filename, "r") or die("Unable to open file!");
+                $json = fread($myfile, filesize($filename));
+                fclose($myfile);
+                $package = json_decode($json, true);
+            }
+        }
+        return $package;
+    }
 }

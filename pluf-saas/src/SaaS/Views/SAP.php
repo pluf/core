@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('SaaS_Shortcuts_GetSAPOr404');
 
 /**
  *
@@ -18,39 +19,8 @@ class SaaS_Views_SAP
         $sap = $app->get_sap();
         $repo = Pluf::f('saas_sap_repository');
         
-        // بار گذاری بسته
-        $package = null;
-        {
-            $filename = $repo . $sap->path .
-                     Pluf::f('saas_sap_package', "/sap.json");
-            if (is_readable($filename)) {
-                $myfile = fopen($filename, "r") or die("Unable to open file!");
-                $json = fread($myfile, filesize($filename));
-                fclose($myfile);
-                $package = json_decode($json, true);
-            }
-        }
-        // کتابخانه‌ها
-        $cssLib = array();
-        $jsLib = array();
-        $mlib = new SaaS_Lib();
-        foreach ($package['dependencies'] as $n => $v) {
-            $sql = new Pluf_SQL('name=%s', 
-                    array(
-                            $n
-                    ));
-            $items = $mlib->getList(
-                    array(
-                            'filter' => $sql->gen()
-                    ));
-            if ($items->count() == 0) {
-                throw new Pluf_Exception('library '.$n.' does not exit.');
-            }
-            if($items[0]->type == SaaS_LibType::JavaScript)
-                $jsLib[] = $items[0];
-            else 
-                $cssLib[] = $items[0];
-        }
+        $package = $sap->loadPackage();
+        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
         
         // نمایش اصلی
         $params = array(
@@ -66,8 +36,53 @@ class SaaS_Views_SAP
 
     public function appcache ($request, $match)
     {
-        $params = array();
+        $sap = SaaS_Shortcuts_GetSAPOr404($match[1]);
+        $repo = Pluf::f('saas_sap_repository');
+        $package = $sap->loadPackage();
+        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
+        
+        // نمایش اصلی
+        $params = array(
+                'sap' => $sap,
+                'title' => __('ghazal'),
+                'mainView' => $repo . $sap->path . $package['view'],
+                'jsLibs' => $jsLib,
+                'cssLibs' => $cssLib,
+                'package' => $package
+        );
         return Pluf_Shortcuts_RenderToResponse('saas.appcache', $params, 
                 $request);
+    }
+
+    private function loadLibrary ($package)
+    {
+        // کتابخانه‌ها
+        $cssLib = array();
+        $jsLib = array();
+        $libs = array();
+        $mlib = new SaaS_Lib();
+        foreach ($package['dependencies'] as $n => $v) {
+            $sql = new Pluf_SQL('name=%s', 
+                    array(
+                            $n
+                    ));
+            $items = $mlib->getList(
+                    array(
+                            'filter' => $sql->gen()
+                    ));
+            if ($items->count() == 0) {
+                throw new Pluf_Exception('library ' . $n . ' does not exit.');
+            }
+            $libs[] = $items[0];
+            if ($items[0]->type == SaaS_LibType::JavaScript)
+                $jsLib[] = $items[0];
+            else
+                $cssLib[] = $items[0];
+        }
+        return array(
+                $jsLib,
+                $cssLib,
+                $libs
+        );
     }
 }
