@@ -57,12 +57,9 @@ class SaaS_Views_SAP
                 'sap' => $sap,
                 'title' => __('ghazal'),
                 'mainView' => $repo . $sap->path . $package['view'],
-                'sources' => $package['src'],
-                'links' => $package['link'],
-                'metas' => $package['meta'],
                 'jsLibs' => $jsLib,
                 'cssLibs' => $cssLib,
-                'appcache' => $package['appcache']
+                'package' => $package
         );
         return Pluf_Shortcuts_RenderToResponse('sap.html', $params, $request);
     }
