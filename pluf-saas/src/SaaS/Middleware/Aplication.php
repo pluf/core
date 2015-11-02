@@ -24,7 +24,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
  */
 class SaaS_Middleware_Aplication
 {
-    
+
     /**
      * تقاضای وارد شده را بررسی می‌کند.
      *
@@ -38,11 +38,17 @@ class SaaS_Middleware_Aplication
         
         if (preg_match('#^/(\d+)|(\d+)/(.+)$#', $request->query, $match)) {
             $application_id = $match[1];
-        } else {
+        }
+        
+        if ($application_id == null) {
             $application_id = $request->session->getData('application', '');
             if ($application_id === '') {
                 $application_id = null;
             }
+        }
+        
+        if($application_id == null){
+            $application_id = Pluf::f("saas_application_default", null);
         }
         
         try {

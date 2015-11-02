@@ -28,6 +28,11 @@ class SaaS_SAP extends Pluf_Model
                         'blank' => true,
                         'size' => 100
                 ),
+                'type' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 250
+                ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,

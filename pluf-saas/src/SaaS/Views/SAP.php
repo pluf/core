@@ -25,6 +25,7 @@ class SaaS_Views_SAP
         // نمایش اصلی
         $params = array(
                 'sap' => $sap,
+                'app' => $app,
                 'title' => __('ghazal'),
                 'mainView' => $repo . $sap->path . $package['view'],
                 'jsLibs' => $jsLib,
@@ -36,7 +37,11 @@ class SaaS_Views_SAP
 
     public function appcache ($request, $match)
     {
-        $sap = SaaS_Shortcuts_GetSAPOr404($match[1]);
+        $app = $request->application;
+        if ($app->isAnonymous()) {
+            throw new Pluf_Exception("Non app??");
+        }
+        $sap = $app->get_sap();
         $repo = Pluf::f('saas_sap_repository');
         $package = $sap->loadPackage();
         list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
@@ -44,6 +49,7 @@ class SaaS_Views_SAP
         // نمایش اصلی
         $params = array(
                 'sap' => $sap,
+                'app' => $app,
                 'title' => __('ghazal'),
                 'mainView' => $repo . $sap->path . $package['view'],
                 'jsLibs' => $jsLib,
