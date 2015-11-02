@@ -1,7 +1,7 @@
 <?php
 return array(
         array( // مانیفست نرم‌افزارها
-                'regex' => '#^/saas.appcache$#',
+                'regex' => '#^/appcache/(\d+)/saas.appcache$#',
                 'model' => 'SaaS_Views_SAP',
                 'method' => 'appcache'
         ),

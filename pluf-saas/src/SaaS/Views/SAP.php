@@ -61,7 +61,8 @@ class SaaS_Views_SAP
                 'links' => $package['link'],
                 'metas' => $package['meta'],
                 'jsLibs' => $jsLib,
-                'cssLibs' => $cssLib
+                'cssLibs' => $cssLib,
+                'appcache' => $package['appcache']
         );
         return Pluf_Shortcuts_RenderToResponse('sap.html', $params, $request);
     }
