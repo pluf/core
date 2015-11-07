@@ -1,25 +1,4 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
-/*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2009 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
 
 /**
  * Readonly middleware.
@@ -53,16 +32,21 @@
  */
 class Pluf_Middleware_ReadOnly
 {
+
     /**
      * Process the request.
      *
-     * @param Pluf_HTTP_Request The request
+     * @param
+     *            Pluf_HTTP_Request The request
      * @return bool false
      */
-    function process_request(&$request)
+    function process_request (&$request)
     {
         if ($request->method == 'POST') {
-            $res = new Pluf_HTTP_Response('Server in read only mode'."\n\n".'We are upgrading the system to make it better for you, please try again later...', 'text/plain');
+            $res = new Pluf_HTTP_Response(
+                    'Server in read only mode' . "\n\n" .
+                             'We are upgrading the system to make it better for you, please try again later...', 
+                            'text/plain');
             $res->status_code = 503;
             return $res;
         }
@@ -75,21 +59,36 @@ class Pluf_Middleware_ReadOnly
      * If configured, add the message to inform that the website is in
      * read only mode.
      *
-     * @param Pluf_HTTP_Request The request
-     * @param Pluf_HTTP_Response The response
+     * @param
+     *            Pluf_HTTP_Request The request
+     * @param
+     *            Pluf_HTTP_Response The response
      * @return Pluf_HTTP_Response The response
      */
-    function process_response($request, $response)
+    function process_response ($request, $response)
     {
-        if (!Pluf::f('read_only_mode_message', false)) {
+        if (! Pluf::f('read_only_mode_message', false)) {
             return $response;
         }
-        if (!in_array($response->status_code, 
-                     array(200, 201, 202, 203, 204, 205, 206, 404, 501))) {
+        if (! in_array($response->status_code, 
+                array(
+                        200,
+                        201,
+                        202,
+                        203,
+                        204,
+                        205,
+                        206,
+                        404,
+                        501
+                ))) {
             return $response;
         }
         $ok = false;
-        $cts = array('text/html', 'application/xhtml+xml');
+        $cts = array(
+                'text/html',
+                'application/xhtml+xml'
+        );
         foreach ($cts as $ct) {
             if (false !== strripos($response->headers['Content-Type'], $ct)) {
                 $ok = true;
@@ -100,8 +99,9 @@ class Pluf_Middleware_ReadOnly
             return $response;
         }
         $message = Pluf::f('read_only_mode_message');
-        $response->content = str_replace('<body>', '<body><div style="width: 50%; color: #c00; border: 2px solid #c00; padding: 5px; margin: 1em auto 2em; background-color: #fffde3">'.$message.'</div>', $response->content);
+        $response->content = str_replace('<body>', 
+                '<body><div style="width: 50%; color: #c00; border: 2px solid #c00; padding: 5px; margin: 1em auto 2em; background-color: #fffde3">' .
+                         $message . '</div>', $response->content);
         return $response;
     }
-
 }

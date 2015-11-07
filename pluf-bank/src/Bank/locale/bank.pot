@@ -1,0 +1,78 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-07 21:28+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Bank/Receipt.php:34
+msgid "unique and no repreducable id fro reception"
+msgstr ""
+
+#: Bank/Receipt.php:40
+msgid "amount of reception"
+msgstr ""
+
+#: Bank/Receipt.php:46
+msgid "title of reception"
+msgstr ""
+
+#: Bank/Receipt.php:52
+msgid "description of reception"
+msgstr ""
+
+#: Bank/Receipt.php:58
+msgid "successfull transaction id from bank"
+msgstr ""
+
+#: Bank/Receipt.php:64
+msgid "verification of the receipt from the bank"
+msgstr ""
+
+#: Bank/Receipt.php:69
+msgid "creation date"
+msgstr ""
+
+#: Bank/Receipt.php:74
+msgid "modification date"
+msgstr ""
+
+#: Bank/Form/Mellat.php:25
+msgid "local"
+msgstr ""
+
+#: Bank/Form/Mellat.php:30
+msgid "state"
+msgstr ""
+
+#: Bank/Form/Mellat.php:35
+msgid "country"
+msgstr ""
+
+#: Bank/Form/Mellat.php:40
+msgid "phone number"
+msgstr ""
+
+#: Bank/Form/Mellat.php:45
+msgid "mobile number"
+msgstr ""
+
+#: Bank/Form/Mellat.php:88 Bank/Form/Mellat.php:109
+msgid "Cannot save the apartment from an invalid form."
+msgstr ""
+
+#: Bank/Form/Mellat.php:94 Bank/Form/Mellat.php:115
+msgid "Fail to update the apartment."
+msgstr ""

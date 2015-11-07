@@ -86,9 +86,8 @@ class Pluf_L10n
         }
         // Load optimized file if available
         if ('' != Pluf::f('tmp_folder')) {
-            $phpfile = Pluf::f('tmp_folder') . '/Pluf_L10n-' .
-                     str_replace(DIRECTORY_SEPARATOR, '_', 
-                            substr($file, 0, - 5)) . '.php';
+            $phpfile = Pluf::f('tmp_folder') . '/Pluf_L10n-' . str_replace(
+                    DIRECTORY_SEPARATOR, '_', substr($file, 0, - 5)) . '.php';
             if (file_exists($phpfile) &&
                      (@filemtime($file) < @filemtime($phpfile))) {
                 $l = include $phpfile;

@@ -1,0 +1,201 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pluf Wiki\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-07 21:49+0330\n"
+"PO-Revision-Date: 2015-11-07 21:50+0330\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@dpq.co.ir>\n"
+"Language-Team: http://dpq.co.ir <info@dpq.co.ir>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: Wiki/Form/PageCreate.php:27
+msgid "empty page"
+msgstr "صفحه خالی"
+
+#: Wiki/Form/PageCreate.php:28
+msgid "page name"
+msgstr "نام صفحه"
+
+#: Wiki/Form/PageCreate.php:32 Wiki/Form/PageUpdate.php:35
+#: Wiki/Form/BookUpdate.php:25
+msgid "page title"
+msgstr "عنوان صفحه"
+
+#: Wiki/Form/PageCreate.php:39 Wiki/Form/PageUpdate.php:42
+#: Wiki/Form/BookCreate.php:31 Wiki/Form/BookUpdate.php:32
+msgid ""
+"the page name must contains only letters, digits and the dash (-) character"
+msgstr ""
+
+#: Wiki/Form/PageCreate.php:44 Wiki/Form/PageUpdate.php:47
+msgid "Description"
+msgstr ""
+
+#: Wiki/Form/PageCreate.php:46 Wiki/Form/PageUpdate.php:49
+#: Wiki/Form/BookCreate.php:39 Wiki/Form/BookUpdate.php:40
+msgid "this one line description is displayed in the list of pages"
+msgstr ""
+
+#: Wiki/Form/PageCreate.php:56 Wiki/Form/PageUpdate.php:61 Wiki/Page.php:67
+msgid "content"
+msgstr ""
+
+#: Wiki/Form/PageCreate.php:67 Wiki/Page.php:73
+msgid "content type"
+msgstr ""
+
+#: Wiki/Form/PageCreate.php:177 Wiki/Form/PageDelete.php:43
+#: Wiki/Form/PageUpdate.php:192
+msgid "cannot save the model from an invalid form"
+msgstr ""
+
+#: Wiki/Form/PageDelete.php:23
+msgid "yes, I understand that the page and all its revisions will be deleted"
+msgstr ""
+
+#: Wiki/Form/PageDelete.php:34
+msgid "you need to confirm the deletion"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:72
+msgid "comment"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:74
+msgid "one line to describe the changes you made"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:96 Wiki/Page.php:105 Wiki/Book.php:90
+msgid "labels"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:112
+msgid "the title contains invalid characters"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:125
+msgid "a page with this title already exists"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:172
+#, php-format
+msgid "you cannot provide more than label from the %s class to a page"
+msgstr ""
+
+#: Wiki/Form/PageUpdate.php:174
+msgid "you provided an invalid label"
+msgstr ""
+
+#: Wiki/Form/BookCreate.php:19
+msgid "empty summary"
+msgstr ""
+
+#: Wiki/Form/BookCreate.php:20
+msgid "PageName"
+msgstr ""
+
+#: Wiki/Form/BookCreate.php:24
+msgid "حage title"
+msgstr ""
+
+#: Wiki/Form/BookCreate.php:36 Wiki/Form/BookUpdate.php:37
+msgid "description"
+msgstr ""
+
+#: Wiki/Form/BookCreate.php:52 Wiki/Form/BookUpdate.php:53
+msgid "cannot save the book from an invalid form"
+msgstr ""
+
+#: Wiki/Views/Page.php:52
+msgid "requeisted page not found."
+msgstr ""
+
+#: Wiki/Views/Page.php:67
+#, php-format
+msgid "new page '%s' is created."
+msgstr ""
+
+#: Wiki/Views/Page.php:104 Wiki/Views/Book.php:81 Wiki/Page.php:44
+#: Wiki/Book.php:39
+msgid "title"
+msgstr ""
+
+#: Wiki/Views/Page.php:105 Wiki/Views/Book.php:82 Wiki/Page.php:60
+#: Wiki/Book.php:55
+msgid "summary"
+msgstr ""
+
+#: Wiki/Views/Book.php:25 Wiki/Views/Book.php:55
+#, php-format
+msgid "new book '%s' is created."
+msgstr ""
+
+#: Wiki/Page.php:46 Wiki/Book.php:41
+msgid ""
+"the title of the page must only contain letters, digits or the dash "
+"character. For example: My-new-Wiki-Page."
+msgstr ""
+
+#: Wiki/Page.php:52 Wiki/Book.php:47
+msgid "language"
+msgstr ""
+
+#: Wiki/Page.php:54
+msgid "the language of the page must only contain letters. For example: en."
+msgstr ""
+
+#: Wiki/Page.php:62 Wiki/Book.php:57
+msgid "a one line description of the page content."
+msgstr ""
+
+#: Wiki/Page.php:75
+msgid "the content type of the page is a mime type. For example: text/plain."
+msgstr ""
+
+#: Wiki/Page.php:80 Wiki/Book.php:62
+msgid "creation date"
+msgstr ""
+
+#: Wiki/Page.php:85 Wiki/Book.php:67
+msgid "modification date"
+msgstr ""
+
+#: Wiki/Page.php:92 Wiki/Book.php:83
+msgid "submitter"
+msgstr ""
+
+#: Wiki/Page.php:98
+msgid "book"
+msgstr ""
+
+#: Wiki/Page.php:106 Wiki/Book.php:91
+msgid "lables"
+msgstr ""
+
+#: Wiki/Page.php:113 Wiki/Page.php:114 Wiki/Book.php:97 Wiki/Book.php:98
+msgid "categories"
+msgstr ""
+
+#: Wiki/Book.php:49
+msgid "the language of the page must only contain letters. for example: en."
+msgstr ""
+
+#: Wiki/Book.php:75
+msgid "interested users"
+msgstr ""
+
+#: Wiki/Book.php:77
+msgid ""
+"interested users will get an email notification when the wiki page is "
+"changed."
+msgstr ""

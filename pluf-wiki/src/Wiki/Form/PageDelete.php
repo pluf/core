@@ -20,7 +20,7 @@ class Wiki_Form_PageDelete extends Pluf_Form
                 array(
                         'required' => true,
                         'label' => __(
-                                'Yes, I understand that the page and all its revisions will be deleted.'),
+                                'yes, I understand that the page and all its revisions will be deleted'),
                         'initial' => ''
                 ));
     }
@@ -31,7 +31,7 @@ class Wiki_Form_PageDelete extends Pluf_Form
     public function clean_confirm ()
     {
         if (! $this->cleaned_data['confirm']) {
-            throw new Pluf_Form_Invalid(__('You need to confirm the deletion.'));
+            throw new Pluf_Form_Invalid(__('you need to confirm the deletion'));
         }
         return $this->cleaned_data['confirm'];
     }
@@ -40,7 +40,7 @@ class Wiki_Form_PageDelete extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Exception(
-                    __('Cannot save the model from an invalid form.'));
+                    __('cannot save the model from an invalid form'));
         }
         $this->page->delete();
         return true;

@@ -1,0 +1,165 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Mostafa Barmshory <mostafa.barmshory@dpq.co.ir>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Pluf SaaS\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-07 21:27+0330\n"
+"PO-Revision-Date: 2015-11-07 22:47+0330\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@dpq.co.ir>\n"
+"Language-Team: American English <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: SaaS/Application.php:40
+msgid "validate"
+msgstr "معتبر"
+
+#: SaaS/Application.php:60
+msgid "logo"
+msgstr ""
+
+#: SaaS/Application.php:65
+msgid "background image"
+msgstr ""
+
+#: SaaS/Application.php:79
+msgid "Default SAP for this application"
+msgstr ""
+
+#: SaaS/Configuration.php:36 SaaS/Resource.php:36
+msgid "application"
+msgstr ""
+
+#: SaaS/Configuration.php:37 SaaS/Resource.php:37
+msgid "Related application."
+msgstr ""
+
+#: SaaS/Configuration.php:93 SaaS/Resource.php:88
+msgid "creation date"
+msgstr ""
+
+#: SaaS/Configuration.php:94 SaaS/Resource.php:89
+msgid "Creation date of the configuration."
+msgstr ""
+
+#: SaaS/Configuration.php:99 SaaS/Resource.php:94
+msgid "modification date"
+msgstr ""
+
+#: SaaS/Configuration.php:101 SaaS/Resource.php:96
+msgid "Modification date of the configuration."
+msgstr ""
+
+#: SaaS/Exception/ApplicationNotFound.php:19
+msgid "Apartment is not found?!"
+msgstr ""
+
+#: SaaS/Form/Application.php:19 SaaS/Views/Application.php:32
+#: SaaS/Views/Application.php:81 SaaS/Views/Lib.php:63
+msgid "title"
+msgstr ""
+
+#: SaaS/Form/Application.php:24 SaaS/Form/Configuration.php:38
+#: SaaS/Form/LibCreate.php:45 SaaS/Form/LibUpdate.php:43
+msgid "description"
+msgstr ""
+
+#: SaaS/Form/Application.php:42 SaaS/Form/Application.php:63
+msgid "Cannot save the application from an invalid form."
+msgstr ""
+
+#: SaaS/Form/Application.php:48 SaaS/Form/LibCreate.php:66
+msgid "Fail to create the application."
+msgstr ""
+
+#: SaaS/Form/Application.php:69 SaaS/Form/LibUpdate.php:71
+msgid "Fail to update the application."
+msgstr ""
+
+#: SaaS/Form/Member.php:33
+msgid "application owners"
+msgstr ""
+
+#: SaaS/Form/Member.php:43
+msgid "application members"
+msgstr ""
+
+#: SaaS/Form/Member.php:52
+msgid "application authorized"
+msgstr ""
+
+#: SaaS/Form/Member.php:69
+msgid "Cannot save the model from an invalid form."
+msgstr ""
+
+#: SaaS/Form/Member.php:132
+#, php-format
+msgid "The following login is invalid: %s."
+msgid_plural "The following logins are invalid: %s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: SaaS/Form/Configuration.php:32
+msgid "key"
+msgstr ""
+
+#: SaaS/Form/Configuration.php:44 SaaS/Form/LibCreate.php:27
+#: SaaS/Form/LibUpdate.php:25
+msgid "type"
+msgstr ""
+
+#: SaaS/Form/Configuration.php:66 SaaS/Form/Configuration.php:91
+msgid "Cannot save the configuration from an invalid form."
+msgstr ""
+
+#: SaaS/Form/Configuration.php:74 SaaS/Form/Configuration.php:98
+msgid "Fail to update the configuration."
+msgstr ""
+
+#: SaaS/Form/LibCreate.php:21 SaaS/Form/LibUpdate.php:19
+msgid "mode"
+msgstr ""
+
+#: SaaS/Form/LibCreate.php:33 SaaS/Form/LibUpdate.php:31
+msgid "name"
+msgstr ""
+
+#: SaaS/Form/LibCreate.php:39 SaaS/Form/LibUpdate.php:37
+msgid "version"
+msgstr ""
+
+#: SaaS/Form/LibCreate.php:51 SaaS/Form/LibUpdate.php:49
+msgid "path"
+msgstr ""
+
+#: SaaS/Form/LibCreate.php:60 SaaS/Form/LibUpdate.php:65
+msgid "Cannot save the lib from an invalid form."
+msgstr ""
+
+#: SaaS/Views/Application.php:31 SaaS/Views/Application.php:80
+#: SaaS/Views/Lib.php:62
+msgid "application id"
+msgstr ""
+
+#: SaaS/Views/Application.php:33 SaaS/Views/Application.php:82
+#: SaaS/Views/Lib.php:64
+msgid "create"
+msgstr ""
+
+#: SaaS/Views/Application.php:42 SaaS/Views/Application.php:90
+#: SaaS/Views/Lib.php:73
+msgid "No apartment is added yet."
+msgstr ""
+
+#: SaaS/Views/SAP.php:29 SaaS/Views/SAP.php:53
+msgid "ghazal"
+msgstr ""
+

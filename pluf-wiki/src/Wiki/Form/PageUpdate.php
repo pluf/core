@@ -32,21 +32,21 @@ class Wiki_Form_PageUpdate extends Pluf_Form
             $this->fields['title'] = new Pluf_Form_Field_Varchar(
                     array(
                             'required' => true,
-                            'label' => __('Page title'),
+                            'label' => __('page title'),
                             'initial' => $this->page->title,
                             'widget_attrs' => array(
                                     'maxlength' => 200,
                                     'size' => 67
                             ),
                             'help_text' => __(
-                                    'The page name must contains only letters, digits and the dash (-) character.')
+                                    'the page name must contains only letters, digits and the dash (-) character')
                     ));
             $this->fields['summary'] = new Pluf_Form_Field_Varchar(
                     array(
                             'required' => true,
                             'label' => __('Description'),
                             'help_text' => __(
-                                    'This one line description is displayed in the list of pages.'),
+                                    'this one line description is displayed in the list of pages'),
                             'initial' => $this->page->summary,
                             'widget_attrs' => array(
                                     'maxlength' => 200,
@@ -58,7 +58,7 @@ class Wiki_Form_PageUpdate extends Pluf_Form
         $this->fields['content'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => true,
-                        'label' => __('Content'),
+                        'label' => __('content'),
                         'initial' => $rev->content,
                         'widget' => 'Pluf_Form_Widget_TextareaInput',
                         'widget_attrs' => array(
@@ -69,9 +69,9 @@ class Wiki_Form_PageUpdate extends Pluf_Form
         $this->fields['comment'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => true,
-                        'label' => __('Comment'),
+                        'label' => __('comment'),
                         'help_text' => __(
-                                'One line to describe the changes you made.'),
+                                'one line to describe the changes you made'),
                         'initial' => '',
                         'widget_attrs' => array(
                                 'maxlength' => 200,
@@ -93,7 +93,7 @@ class Wiki_Form_PageUpdate extends Pluf_Form
                 $this->fields['label' . $i] = new Pluf_Form_Field_Varchar(
                         array(
                                 'required' => false,
-                                'label' => __('Labels'),
+                                'label' => __('labels'),
                                 'initial' => $initial,
                                 'widget_attrs' => array(
                                         'maxlength' => 50,
@@ -109,7 +109,7 @@ class Wiki_Form_PageUpdate extends Pluf_Form
         $title = $this->cleaned_data['title'];
         if (preg_match('/[^a-zA-Z0-9\-]/', $title)) {
             throw new Pluf_Form_Invalid(
-                    __('The title contains invalid characters.'));
+                    __('the title contains invalid characters'));
         }
         $sql = new Pluf_SQL('project=%s AND title=%s', 
                 array(
@@ -122,7 +122,7 @@ class Wiki_Form_PageUpdate extends Pluf_Form
                 ));
         if ($pages->count() > 0 and $pages[0]->id != $this->page->id) {
             throw new Pluf_Form_Invalid(
-                    __('A page with this title already exists.'));
+                    __('a page with this title already exists'));
         }
         return $title;
     }
@@ -169,9 +169,9 @@ class Wiki_Form_PageUpdate extends Pluf_Form
                     $this->errors['label' . $i] = array();
                 $this->errors['label' . $i][] = sprintf(
                         __(
-                                'You cannot provide more than label from the %s class to a page.'), 
+                                'you cannot provide more than label from the %s class to a page'), 
                         $class);
-                throw new Pluf_Form_Invalid(__('You provided an invalid label.'));
+                throw new Pluf_Form_Invalid(__('you provided an invalid label'));
             }
         }
         return $this->cleaned_data;
@@ -189,7 +189,7 @@ class Wiki_Form_PageUpdate extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Exception(
-                    __('Cannot save the model from an invalid form.'));
+                    __('cannot save the model from an invalid form'));
         }
         if ($this->show_full) {
             $tagids = array();

@@ -1,0 +1,90 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Mostafa Barmshory <mostafa.barmshory@dpq.co.ir>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Pluf Inbox\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-07 21:28+0330\n"
+"PO-Revision-Date: 2015-11-07 22:50+0330\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@dpq.co.ir>\n"
+"Language-Team: American English <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Language: en\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Inbox/Form/Message.php:34
+msgid "message title"
+msgstr ""
+
+#: Inbox/Form/Message.php:41
+msgid "message content"
+msgstr ""
+
+#: Inbox/Form/Message.php:48
+msgid "message summery"
+msgstr ""
+
+#: Inbox/Form/Message.php:70
+msgid "Cannot save the message from an invalid form."
+msgstr ""
+
+#: Inbox/Message.php:30
+msgid "model ID"
+msgstr ""
+
+#: Inbox/Message.php:36
+msgid "model class"
+msgstr ""
+
+#: Inbox/Message.php:41
+msgid "owner ID"
+msgstr ""
+
+#: Inbox/Message.php:47
+msgid "owner class"
+msgstr ""
+
+#: Inbox/Message.php:49
+msgid "For example Pluf_User or Pluf_Group."
+msgstr ""
+
+#: Inbox/Message.php:55
+msgid "title"
+msgstr "Title"
+
+#: Inbox/Message.php:57
+msgid ""
+"The title of the page must only contain letters, digits or the dash "
+"character. For example: My-new-Wiki-Page."
+msgstr ""
+
+#: Inbox/Message.php:63
+msgid "summery"
+msgstr ""
+
+#: Inbox/Message.php:65
+msgid "A one line description of the message content."
+msgstr ""
+
+#: Inbox/Message.php:70
+msgid "content"
+msgstr ""
+
+#: Inbox/Message.php:75
+msgid "creation date"
+msgstr ""
+
+#: Inbox/Message.php:80
+msgid "modification date"
+msgstr ""
+
+#: Inbox/Views/System.php:49
+msgid "not possible to add test message"
+msgstr ""
+
