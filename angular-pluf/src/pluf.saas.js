@@ -10,12 +10,23 @@ angular.module('pluf.saas', ['pluf'])
 .factory(
         'PTenant',
         function($http, $httpParamSerializerJQLike, $window, $q, PObject,
-                PProfile) {
+                PProfile, PApplication, $notify, PaginatorPage) {
           var pTenant = function() {
             PObject.apply(this, arguments);
           };
           pTenant.prototype = new PObject();
 
+          pTenant.prototype._pool = [];
+          pTenant.prototype.ret = function(d) {
+            if (d.id in this._pool) {
+              var t = this._pool[d.id];
+              t.setData(d);
+              return t;
+            }
+            var t = new PApplication(d);
+            this._pool[t.id] = t;
+            return t;
+          }
           /**
            * با استفاده از این فراخوانی یکی از خصوصیت‌های یک نرم‌افزار کاربردی
            * به روز می‌شود.
@@ -68,8 +79,28 @@ angular.module('pluf.saas', ['pluf'])
            * فهرست تمام نرم‌افزارهایی را تعیین می‌کند که این ناحیه حق استفاده از
            * آنها را دارد.
            */
-          pTenant.prototype.apps = function() {
-            // FIXME: maso, 1394: فهرست نرم‌افزارها تعیین شود
+          pTenant.prototype.apps = function($params) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/saas/app/' + this.id + '/sap/list',
+              params: $params.getParameter(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+            }).then(function(res) {
+              var page = new PaginatorPage(res.data);
+              var items = [];
+              for (var i = 0; i < page.counts; i++) {
+                var t = scope.ret(page.items[i]);
+                items.push(t);
+              }
+              page.items = items;
+              return page;
+            }, function(data) {
+              $notify.debug('fail to get applications', data);
+              throw new PException(data);
+            });
           }
 
           /**

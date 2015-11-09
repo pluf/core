@@ -42,6 +42,34 @@ function SaaS_Migrations_Install_setup ($params = null)
     $perm->description = 'Permission given to users allowed to access a software.';
     $perm->application = 'SaaS';
     $perm->create();
+    
+    $perm = new Pluf_Permission();
+    $perm->name = 'SAP anonymous users';
+    $perm->code_name = 'sap-anonymous-access';
+    $perm->description = 'Permission given to application';
+    $perm->application = 'SaaS';
+    $perm->create();
+    
+    $perm = new Pluf_Permission();
+    $perm->name = 'SAP authorized users';
+    $perm->code_name = 'sap-authorized-access';
+    $perm->description = 'Permission given to application';
+    $perm->application = 'SaaS';
+    $perm->create();
+    
+    $perm = new Pluf_Permission();
+    $perm->name = 'SAP member users';
+    $perm->code_name = 'sap-member-access';
+    $perm->description = 'Permission given to application';
+    $perm->application = 'SaaS';
+    $perm->create();
+    
+    $perm = new Pluf_Permission();
+    $perm->name = 'SAP owner users';
+    $perm->code_name = 'sap-owner-access';
+    $perm->description = 'Permission given to application';
+    $perm->application = 'SaaS';
+    $perm->create();
 }
 
 /**

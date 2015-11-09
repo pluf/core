@@ -1,6 +1,7 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('SaaS_Shortcuts_GetSAPOr404');
+Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
 
 /**
  *

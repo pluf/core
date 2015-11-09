@@ -28,7 +28,9 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'userApplications'
         ),
-        /* دسترسی‌ها به نرم‌افزار */
+        /*
+         *  دسترسی‌ها به نرم‌افزار 
+         */
         array( // اطلاعات نرم‌افزار جاری
                 'regex' => '#^/app$#',
                 'model' => 'SaaS_Views_Application',
@@ -49,7 +51,21 @@ return array(
                         'match-application' => 1
                 )
         ),
-        /* تنظیم‌ها */
+        /*
+         * SAP of applications
+         */
+        array( 
+                'regex' => '#^/app/(\d+)/sap/list$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'saps',
+                'http-method' => 'GET',
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
+        /*
+         *  تنظیم‌ها 
+         */
         array( // فهرستی از تنظیم‌ها
                 'regex' => '#^/app/(\d+)/config/list$#',
                 'model' => 'SaaS_Views_Configuration',
