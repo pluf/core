@@ -2,6 +2,7 @@
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('KM_Shortcuts_GetCategoryOr404');
 
 /**
  *
@@ -23,7 +24,7 @@ class KM_Views_Category
         // $request->user->id
         // ));
         $list_display = array(
-                'title' => __('Message title'),
+                'title' => __('title'),
                 'description' => __('description'),
                 'color' => __('color')
         );
@@ -36,7 +37,7 @@ class KM_Views_Category
                 'Label_Views_Label::label'
         );
         $pag->items_per_page = $count;
-        $pag->no_results_text = __('Label queue is empty.');
+        $pag->no_results_text = __('queue is empty');
         $pag->sort_order = array(
                 'creation_dtime',
                 'DESC'
@@ -60,7 +61,7 @@ class KM_Views_Category
 
     public function createSubCategory ($request, $match)
     {
-        $parent = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $parent = KM_Shortcuts_GetCategoryOr404($match[1]);
         $extra = array(
                 'user' => $request->user,
                 'parent' => $parent
@@ -73,7 +74,7 @@ class KM_Views_Category
 
     public function update ($request, $match)
     {
-        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
         $extra = array(
                 'user' => $request->user,
                 'parent' => null,
@@ -87,7 +88,7 @@ class KM_Views_Category
 
     public function delete ($request, $match)
     {
-        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
         $d = new KM_Category($cat->id);
         $d->delete();
         return new Pluf_HTTP_Response_Json($cat);
@@ -101,13 +102,13 @@ class KM_Views_Category
 
     public function get ($request, $match)
     {
-        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
         return new Pluf_HTTP_Response_Json($cat);
     }
 
     public function children ($request, $match)
     {
-        $cat = Pluf_Shortcuts_GetObjectOr404('KM_Category', $match[1]);
+        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
         $count = 20;
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
         // Paginator to paginate messages
@@ -127,7 +128,7 @@ class KM_Views_Category
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->items_per_page = $count;
-        $pag->no_results_text = __('Category queue is empty.');
+        $pag->no_results_text = __('queue is empty');
         $pag->sort_order = array(
                 'creation_dtime',
                 'DESC'

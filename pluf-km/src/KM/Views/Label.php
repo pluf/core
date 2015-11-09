@@ -1,7 +1,5 @@
 <?php
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
-Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('KM_Shortcuts_GetLabelOr404');
 
 /**
  *
@@ -11,15 +9,6 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
  */
 class KM_Views_Label
 {
-
-    /**
-     * پیش شرط‌های دستیابی به نرم‌افزار صفحه اصلی
-     *
-     * @var array $house_precond
-     */
-    public $find_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
 
     /**
      *
@@ -38,15 +27,15 @@ class KM_Views_Label
                 'title',
                 'community'
         );
-//         $pag->forced_where = new Pluf_SQL('user=%s', 
-//                 array(
-//                         $request->user->id
-//                 ));
+        // $pag->forced_where = new Pluf_SQL('user=%s',
+        // array(
+        // $request->user->id
+        // ));
         $pag->action = array(
                 'Label_Views_Label::label'
         );
         $list_display = array(
-                'title' => __('Message title'),
+                'title' => __('title'),
                 'description' => __('description'),
                 'color' => __('color')
         );
@@ -69,15 +58,6 @@ class KM_Views_Label
     }
 
     /**
-     * پیش نیازهای ایجاد یک برچسب را تعیین می‌کند
-     *
-     * @var unknown
-     */
-    public $create_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
-
-    /**
      * یک برچسب جدید در سیستم ایجاد می‌کند
      *
      * @param unknown $request            
@@ -96,35 +76,25 @@ class KM_Views_Label
                 $extra);
         $cuser = $form->save();
         $request->user->setMessage(
-                sprintf(__('The label %s has been created.'), (string) $cuser));
+                sprintf(__('the label %s has been created'), (string) $cuser));
         
         // Return response
         return new Pluf_HTTP_Response_Json($cuser);
     }
 
-    public $get_precond = array();
-
     public function get ($request, $match)
     {
-        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        $label = KM_Shortcuts_GetLabelOr404($match[1]);
         return new Pluf_HTTP_Response_Json($label);
     }
 
-    public $delete_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
-
     public function delete ($request, $match)
     {
-        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        $label = KM_Shortcuts_GetLabelOr404($match[1]);
         $labelR = new KM_Label($label->id);
         $label->delete();
         return new Pluf_HTTP_Response_Json($labelR);
     }
-
-    public $update_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
 
     /**
      * فرآیند دستکاری یک برچسب را ایجاد می‌کند.
@@ -135,7 +105,7 @@ class KM_Views_Label
      */
     public function update ($request, $match)
     {
-        $label = Pluf_Shortcuts_GetObjectOr404('KM_Label', $match[1]);
+        $label = KM_Shortcuts_GetLabelOr404($match[1]);
         // if ($label->user != $request->user->id) {
         // throw new Pluf_Exception_PermissionDenied(
         // __('You are not the laberl owner.'));

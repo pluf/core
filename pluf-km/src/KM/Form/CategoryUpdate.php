@@ -47,7 +47,7 @@ class KM_Form_CategoryUpdate extends KM_Form_CategoryCreate
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('Cannot update the label from an invalid form.'));
+                    __('cannot update a category from an invalid form'));
         }
         $this->category->setFromFormData($this->cleaned_data);
         // $this->category->user = $this->user;

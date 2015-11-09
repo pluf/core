@@ -25,3 +25,32 @@ function KM_Shortcuts_categoryDateFactory ($object)
         return new KM_Category();
     return $object;
 }
+
+function KM_Shortcuts_GetLabelOr404 ($id)
+{
+    $item = new KM_Label($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404(sprintf(__("label not found (%s)"), $id), 4321);
+}
+
+function KM_Shortcuts_GetCategoryOr404 ($id)
+{
+    $item = new KM_Category($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404(sprintf(__("category not found (%s)"), $id), 
+            4322);
+}
+
+function KM_Shortcuts_GetCommentOr404 ($id)
+{
+    $item = new KM_Comment($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404(sprintf(__("comment not found (%s)"), $id), 
+            4323);
+}

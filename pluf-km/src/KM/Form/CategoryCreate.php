@@ -67,7 +67,7 @@ class KM_Form_CategoryCreate extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('Cannot save the label from an invalid form.'));
+                    __('cannot save a category from an invalid form'));
         }
         $this->category->setFromFormData($this->cleaned_data);
         $this->category->community = true;

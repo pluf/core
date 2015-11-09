@@ -34,7 +34,7 @@ class KM_Category extends Pluf_Model
                         'blank' => false,
                         'verbose' => __('created by community'),
                         'help_text' => __(
-                                'Define wether the location created by the community or not.')
+                                'define wether a category created by the community or not')
                 ),
                 'parent' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
@@ -47,7 +47,7 @@ class KM_Category extends Pluf_Model
                         'size' => 250,
                         'verbose' => __('title'),
                         'help_text' => __(
-                                'The title of the label must only contain letters, digits or the dash character. For example: My-new-Wiki-Page.')
+                                'the title of a category must only contain letters, digits or the dash character')
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -55,15 +55,14 @@ class KM_Category extends Pluf_Model
                         'size' => 500,
                         'verbose' => __('description'),
                         'help_text' => __(
-                                'The description of the label must only contain letters. For example: en.')
+                                'the description of a category must only contain letters')
                 ),
                 'color' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 100,
                         'verbose' => __('color'),
-                        'help_text' => __(
-                                'A one line description of the page content.')
+                        'help_text' => __('color is and RGB reperesentation')
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',

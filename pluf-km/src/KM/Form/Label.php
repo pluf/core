@@ -63,7 +63,7 @@ class KM_Form_Label extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('Cannot save the label from an invalid form.'));
+                    __('cannot save a label from an invalid form'));
         }
         $this->label_data->setFromFormData($this->cleaned_data);
         $this->label_data->user = $this->user;
@@ -82,7 +82,7 @@ class KM_Form_Label extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('Cannot update the label from an invalid form.'));
+                    __('cannot update a label from an invalid form'));
         }
         $this->label_data->setFromFormData($this->cleaned_data);
         // $this->label_data->user = $this->user;
