@@ -54,6 +54,14 @@ class SaaS_SAP extends Pluf_Model
         );
 
         $this->_a['views'] = array(
+                'sap_application' => array(
+                        'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_sap.id='.$this->_con->pfx.'rowpermissions.model_id',
+                        'select' => $this->getSelect().', permission',
+                        'props' => array(
+                                'permission' => 'permission'
+                        ),
+                        'group'=>'rowpermissions.model_id'
+                ),
                 'sap_application_permission' => array(
                         'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_sap.id='.$this->_con->pfx.'rowpermissions.model_id',
                         'select' => $this->getSelect().', permission',

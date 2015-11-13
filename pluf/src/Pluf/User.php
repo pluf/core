@@ -336,9 +336,9 @@ class Pluf_User extends Pluf_Model
      *
      * این که گواهی مربوط به یک سطر است یا نه به صورت کلی تعیین شده است مهم نیست
      * و تنها وجود گواهی برای کاربر در نظر گرفته می‌شود.
-     * 
+     *
      * گواهی می‌تواند به کاربر و یا به گروه انتصاب داده شده باشد.
-     * 
+     *
      * @param
      *            bool Force the reload of the list of permissions (false)
      * @return array List of permissions
@@ -411,6 +411,37 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
+     * تمام گواهی‌های کاربر را تعیین می‌کند
+     *
+     * این فراخوانی تمام گواهی‌های کاربر را تعیین می‌کند که برای یک موجودیت
+     * دارد. برای نمونه تمام گواهی‌هایی که کاربر برای یک نرم افزار دارد را
+     * می‌توان با این فراخوانی تعیین کرد.
+     *
+     * @param unknown $object            
+     */
+    public function getPermissions ($object)
+    {
+        // Group permissions
+        // $groups = $this->get_groups_list();
+        // $ids = array();
+        // foreach ($groups as $group) {
+        // $ids[] = $group->id;
+        // }
+        // if (count($ids) > 0) {
+        // $gperm = new Pluf_Permission();
+        // $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) .
+        // '_id';
+        // $perms = array_merge($perms,
+        // (array) $gperm->getList(
+        // array(
+        // 'filter' => $f_name . ' IN (' .
+        // join(', ', $ids) . ')',
+        // 'view' => 'join_group'
+        // )));
+        // }
+    }
+
+    /**
      * تعیین گواهی برای شئی تعیین شده
      *
      * یگ گواهی برای یک مدل خاص است، در اینجا می‌توان تعیین کرد که آیا کاربر
@@ -421,7 +452,7 @@ class Pluf_User extends Pluf_Model
      * <li>کاربر مدیر تمام دسترسی‌ها را دارد</li>
      * <li></li>
      * </ul>
-     * 
+     *
      * @param
      *            string Permission
      * @param

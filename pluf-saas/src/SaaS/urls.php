@@ -1,47 +1,76 @@
 <?php
 return array(
-        array( // اطلاعات نرم‌افزار مورد نظر
+        /**
+         * *****************************************************************
+         * Application
+         * *****************************************************************
+         */
+        array( // ایجاد
+                'regex' => '#^/app/create$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::baseAccess',
+                        'Pluf_Precondition::loginRequired'
+                )
+        ),
+        array( // گرفتن
                 'regex' => '#^/app/(\d+)$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'get',
-                'http-method' => 'GET',
                 'saas' => array(
                         'match-application' => 1
+                ),
+                'http-method' => array(
+                        'GET'
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::baseAccess'
                 )
         ),
-        array( // اطلاعات نرم‌افزار مورد نظر
+        array( // گرفتن جاری
+                'regex' => '#^/app$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::baseAccess'
+                )
+        ),
+        array( // به روز کردن
                 'regex' => '#^/app/(\d+)$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'update',
-                'http-method' => 'POST',
+                'http-method' => array(
+                        'POST'
+                ),
                 'saas' => array(
                         'match-application' => 1
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::baseAccess',
+                        'SaaS_Precondition::applicationOwner'
                 )
         ),
-        array( // فهرستی از تمام نرم‌افزارهای موجود
+        
+        array( // فهرست
                 'regex' => '#^/app/list$#',
                 'model' => 'SaaS_Views_Application',
-                'method' => 'applications'
+                'method' => 'applications',
+                'http-method' => array(
+                        'GET'
+                )
         ),
+        
         array( // فهرستی از تمام نرم‌افزارهایی که با کاربر در رابطه است
                 'regex' => '#^/app/user/list$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'userApplications'
-        ),
-        /*
-         *  دسترسی‌ها به نرم‌افزار 
-         */
-        array( // اطلاعات نرم‌افزار جاری
-                'regex' => '#^/app$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'currentApplication',
-                'http-method' => 'GET'
-        ),
-        array( // ایجاد یک نرم‌افزار جدید
-                'regex' => '#^/app$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'create',
-                'http-method' => 'POST'
         ),
         array( // فهرستی از تمام اعضا
                 'regex' => '#^/app/(\d+)/member/list$#',
@@ -54,7 +83,7 @@ return array(
         /*
          * SAP of applications
          */
-        array( 
+        array(
                 'regex' => '#^/app/(\d+)/sap/list$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'saps',
@@ -119,7 +148,7 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::staffRequired',
                         'SaaS_Precondition::userCanCreateLib'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/lib/list$#',
@@ -129,7 +158,7 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::staffRequired',
                         'SaaS_Precondition::userCanAccessLibs'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/lib/(\d+)$#',
@@ -137,8 +166,8 @@ return array(
                 'method' => 'get',
                 'http-method' => 'GET',
                 'precond' => array(
-                        'Pluf_Precondition::staffRequired',
-                ),
+                        'Pluf_Precondition::staffRequired'
+                )
         ),
         array(
                 'regex' => '#^/lib/(\d+)$#',
@@ -146,8 +175,8 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::staffRequired',
-                ),
+                        'Pluf_Precondition::staffRequired'
+                )
         ),
         array(
                 'regex' => '#^/lib/(\d+)$#',
@@ -155,7 +184,7 @@ return array(
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'Pluf_Precondition::staffRequired',
-                ),
-        ),
+                        'Pluf_Precondition::staffRequired'
+                )
+        )
 );

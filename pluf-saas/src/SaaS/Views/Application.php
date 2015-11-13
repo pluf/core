@@ -10,6 +10,75 @@ class SaaS_Views_Application
 {
 
     /**
+     * یک نرم‌افزار را ایجاد می‌کند.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function create ($request, $match)
+    {
+        $params = array(
+                'application' => null
+        );
+        $form = new SaaS_Form_Application(
+                array_merge($request->REQUEST, $request->FILES), $params);
+        $app = $form->save();
+        SaaS_Util::initConfiguration($app);
+        Pluf_RowPermission::add($request->user, $app, 'SaaS.software-owner');
+        return new Pluf_HTTP_Response_Json($app);
+    }
+
+    /**
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @throws Pluf_Exception_GetMethodSuported
+     * @throws Pluf_Exception
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function current ($request, $match)
+    {
+        return new Pluf_HTTP_Response_Json($request->application);
+    }
+
+    /**
+     * یک نرم‌افزار را تعیین می‌کند
+     *
+     * با استفاده از این فراخوانی داده‌های یک نرم‌افزار به دست می‌آید.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @throws Pluf_Exception_GetMethodSuported
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function get ($request, $match)
+    {
+        $app = new SaaS_Application($match[1]);
+        return new Pluf_HTTP_Response_Json($app);
+    }
+
+    /**
+     * یک نرم‌افزار را به روز می‌کند.
+     *
+     * این کنترل حتما باید با متد POST فراخوانی شود.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function update ($request, $match)
+    {
+        $params = array(
+                'application' => $request->application
+        );
+        $form = new SaaS_Form_Application(
+                array_merge($request->POST, $request->FILES), $params);
+        $app = $form->update();
+        return new Pluf_HTTP_Response_Json($app);
+    }
+
+    /**
      * فهرستی از نرم‌افزارها ایجاد می‌کند
      *
      * @param unknown_type $request            
@@ -50,7 +119,7 @@ class SaaS_Views_Application
 
     /**
      * پیش نیاز تعیین نرم‌افزارهای کاربر
-     * 
+     *
      * @var unknown
      */
     public $userApplications_precond = array(
@@ -59,9 +128,9 @@ class SaaS_Views_Application
 
     /**
      * نرم‌افزارهای کاربردی که به نوعی با کاربر در رابطه هستند
-     * 
-     * @param unknown $request
-     * @param unknown $match
+     *
+     * @param unknown $request            
+     * @param unknown $match            
      * @return Pluf_HTTP_Response_Json
      */
     public function userApplications ($request, $match)
@@ -94,101 +163,6 @@ class SaaS_Views_Application
         );
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
-    }
-
-    /**
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @throws Pluf_Exception_GetMethodSuported
-     * @throws Pluf_Exception
-     * @return Pluf_HTTP_Response_Json
-     */
-    public function currentApplication ($request, $match)
-    {
-        return new Pluf_HTTP_Response_Json($request->application);
-    }
-
-    /**
-     * پیش شرط‌های دسترسی را تعیین می‌کند
-     *
-     * @var unknown
-     */
-    public $get_precond = array(
-            'SaaS_Precondition::baseAccess'
-    );
-
-    /**
-     * یک نرم‌افزار را تعیین می‌کند
-     *
-     * با استفاده از این فراخوانی داده‌های یک نرم‌افزار به دست می‌آید.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @throws Pluf_Exception_GetMethodSuported
-     * @return Pluf_HTTP_Response_Json
-     */
-    public function get ($request, $match)
-    {
-        return new Pluf_HTTP_Response_Json($request->application);
-    }
-
-    /**
-     * پیش شرط‌های ایجاد نرم‌افزار را تعیین می‌کند
-     *
-     * @var unknown
-     */
-    public $create_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
-
-    /**
-     * یک نرم‌افزار را ایجاد می‌کند.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response_Json
-     */
-    public function create ($request, $match)
-    {
-        $params = array(
-                'application' => null
-        );
-        $form = new SaaS_Form_Application(
-                array_merge($request->POST, $request->FILES), $params);
-        $app = $form->save();
-        SaaS_Util::initConfiguration($app);
-        Pluf_RowPermission::add($request->user, $app, 'SaaS.software-owner');
-        return new Pluf_HTTP_Response_Json($app);
-    }
-
-    /**
-     * پیش شرط‌های به روز رسانی را تعیین می‌کند
-     *
-     * @var unknown
-     */
-    public $update_precond = array(
-            'SaaS_Precondition::applicationOwner'
-    );
-
-    /**
-     * یک نرم‌افزار را به روز می‌کند.
-     *
-     * این کنترل حتما باید با متد POST فراخوانی شود.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response_Json
-     */
-    public function update ($request, $match)
-    {
-        $params = array(
-                'application' => $request->application
-        );
-        $form = new SaaS_Form_Application(
-                array_merge($request->POST, $request->FILES), $params);
-        $app = $form->update();
-        return new Pluf_HTTP_Response_Json($app);
     }
 
     /**
@@ -229,20 +203,43 @@ class SaaS_Views_Application
         }
         return $count;
     }
-    
-    
 
     public function saps ($request, $match)
     {
         $pag = new Pluf_Paginator(new SaaS_SAP());
-        $pag->model_view = 'sap_application_permission';
-        $pag->forced_where = new Pluf_SQL(
-                'model_class=%s AND owner_class=%s AND owner_id=%s', 
+        $pag->model_view = 'sap_application';
+        // $pag->model_view = 'sap_application_permission';
+        
+        $sql = new Pluf_SQL('model_class=%s AND owner_class=%s AND owner_id=%s', 
                 array(
                         'SaaS_SAP',
                         'SaaS_Application',
                         $request->application->id
                 ));
+        
+        // Permissions
+        $perms = array();
+        if ($request->user->isAnonymous()) {
+            $perms[] = Pluf_Permission::getFromString(
+                    'SaaS.sap-anonymous-access');
+        } else {
+            $perms[] = Pluf_Permission::getFromString(
+                    'SaaS.sap-authorized-access');
+            $perms[] = Pluf_Permission::getFromString('SaaS.sap-member-access');
+            $perms[] = Pluf_Permission::getFromString('SaaS.sap-owner-access');
+        }
+        
+        $permSql = new Pluf_SQL();
+        foreach ($perms as $permission) {
+            $permSql->SOr(
+                    new Pluf_SQL('permission=%s', 
+                            array(
+                                    $permission->id
+                            )));
+        }
+        $sql->SAnd($permSql);
+        
+        $pag->forced_where = $sql;
         
         $list_display = array(
                 'id' => __('id'),
