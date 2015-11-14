@@ -2,7 +2,11 @@ package ir.co.dpq.pluf.retrofit;
 
 import java.util.List;
 
-public class PPaginatorPage<T> {
+import com.google.gson.annotations.SerializedName;
+
+import ir.co.dpq.pluf.IPPaginatorPage;
+
+public class PPaginatorPage<T> implements IPPaginatorPage<T> {
 
 	/**
 	 * تعداد گزینه‌های لیست را تعیین می‌کند

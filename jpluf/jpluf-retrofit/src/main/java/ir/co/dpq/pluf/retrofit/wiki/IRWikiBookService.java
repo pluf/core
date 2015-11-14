@@ -6,6 +6,8 @@ import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.user.PUser;
+import ir.co.dpq.pluf.wiki.PWikiPage;
+import ir.co.dpq.pluf.wiki.PWikiPageItem;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -58,11 +60,8 @@ public interface IRWikiBookService {
 	@GET("/api/wiki/book/{bookId}/categories")
 	Map<String, PCategory> getBookCategories(@Path("bookId") long bookId);
 
-	
-	
-	
 	@GET("/api/wiki/book/{bookId}/pages")
-	Map<String, RWikiPageItem> getBookPages(@Path("bookId") long bookId);
+	Map<String, PWikiPageItem> getBookPages(@Path("bookId") long bookId);
 
 	@POST("/api/wiki/book/{bookId}/page/{pageId}")
 	PWikiPage addPageToBook(@Path("bookId") long bookId, @Path("pageId") long pageId);
@@ -72,8 +71,10 @@ public interface IRWikiBookService {
 
 	@POST("/api/wiki/book/{bookId}/interested")
 	PWikiPage addInterestedUser(@Path("bookId") long bookId);
+
 	@DELETE("/api/wiki/book/{bookId}/interested")
 	PWikiPage deleteInterestedUser(@Path("bookId") long bookId);
+
 	@GET("/api/wiki/book/{bookId}/interesteds")
 	Map<String, PUser> getBookInteresteds(@Path("bookId") long bookId);
 }

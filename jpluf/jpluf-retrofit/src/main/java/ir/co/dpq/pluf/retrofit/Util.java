@@ -3,6 +3,8 @@ package ir.co.dpq.pluf.retrofit;
 import java.util.HashMap;
 import java.util.Map;
 
+import ir.co.dpq.pluf.PException;
+
 /**
  * برخی از فراخوانی‌های پرکاربرد سیستم را ایجاد می‌کند.
  * 

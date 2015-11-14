@@ -3,6 +3,7 @@
  */
 package ir.co.dpq.pluf.retrofit;
 
+import ir.co.dpq.pluf.PException;
 import retrofit.ErrorHandler;
 import retrofit.RetrofitError;
 

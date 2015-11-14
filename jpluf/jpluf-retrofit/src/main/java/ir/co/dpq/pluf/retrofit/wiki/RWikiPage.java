@@ -1,8 +1,9 @@
 package ir.co.dpq.pluf.retrofit.wiki;
 
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import ir.co.dpq.pluf.wiki.PWikiPage;
 
 /**
  * صفحه‌های راهنمای را ایجاد می‌کند
@@ -10,47 +11,7 @@ import java.util.Map;
  * @author maso
  *
  */
-public class RWikiPage extends PWiki {
-
-	private String language;
-	private String summary;
-	private String content;
-	private String contentType;
-
-	Date creation;
-	Date modification;
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public String getContentType() {
-		return contentType;
-	}
-
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+public class RWikiPage extends PWikiPage {
 
 	public Map<String, Object> toMap() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -67,6 +28,5 @@ public class RWikiPage extends PWiki {
 
 		return map;
 	}
-	
-	
+
 }
