@@ -7,9 +7,12 @@ import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
+import retrofit.mime.TypedFile;
 
 /**
  * 
@@ -41,4 +44,7 @@ public interface IPTenantService {
 	@GET("/api/saas/app/userList")
 	PPaginatorPage<PTenant> findUserTenant(@QueryMap Map<String, Object> params);
 
+	@Multipart
+	@POST("/api/saas/app/{appId}/resource/create")
+	PResource createResource(@Path("appId") Long id, @Part("file") TypedFile file, @Part("description") String description);
 }

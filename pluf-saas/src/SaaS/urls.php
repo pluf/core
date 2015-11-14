@@ -136,6 +136,26 @@ return array(
                         'level' => Pluf::f('saas_freemium_full', 5)
                 )
         ),
+        /**
+         * *****************************************************************
+         * Application resource
+         * *****************************************************************
+         */
+        array( // ایجاد یک تنظیم جدید
+                'regex' => '#^/app/(\d+)/resource/create$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                ),
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
+        ),
+        
         /*
          * کتابخانه‌ها
          */

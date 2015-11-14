@@ -28,23 +28,33 @@ class SaaS_Resource extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'application' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
-                        'blank' => false,
-                        'relate_name' => 'configuration',
-                        'verbose' => __('application'),
-                        'help_text' => __('Related application.')
-                ),
-                'key' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 250
-                ),
                 'file' => array(
                         'type' => 'Pluf_DB_Field_File',
                         'blank' => false,
                 ),
+                'file_path' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 250
+                ),
+                'file_size' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                ),
+                'downloads' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => true,
+                ),
+                'description' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 250
+                ),
+                
+
+                /*
+                 * دسترسی‌ها 
+                 */
                 'owner_write' => array( // owner can write
                         'type' => 'Pluf_DB_Field_Boolean',
                         'blank' => false
@@ -77,11 +87,10 @@ class SaaS_Resource extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Boolean',
                         'blank' => false
                 ),
-                'description' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 250
-                ),
+                
+                /*
+                 * تاریخ‌ها
+                 */
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
@@ -94,8 +103,32 @@ class SaaS_Resource extends Pluf_Model
                         'verbose' => __('modification date'),
                         'help_text' => __(
                                 'Modification date of the configuration.')
-                )
+                ),
+                
+                
+                /*
+                 * رابطه‌ها
+                 */
+
+                'application' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'relate_name' => 'configuration',
+                        'verbose' => __('application'),
+                        'help_text' => __('Related application.')
+                ),
+                'submitter' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_User',
+                        'blank' => false,
+                        'relate_name' => 'submitter',
+                        'verbose' => __('submitter'),
+                        'help_text' => __('submitter')
+                ),
         );
+        
+        
         $this->_a['idx'] = array();
         $this->_a['views'] = array();
     }

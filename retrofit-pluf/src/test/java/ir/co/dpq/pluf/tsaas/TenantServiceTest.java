@@ -7,9 +7,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +29,7 @@ import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.saas.IPTenantService;
 import ir.co.dpq.pluf.saas.PLibrary;
+import ir.co.dpq.pluf.saas.PResource;
 import ir.co.dpq.pluf.saas.PTenant;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
@@ -34,6 +38,7 @@ import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedFile;
 
 public class TenantServiceTest {
 
@@ -185,6 +190,28 @@ public class TenantServiceTest {
 		assertNotNull(tlist);
 		assertNotNull(tlist.getItems());
 		assertTrue(tlist.getItems().size() > 0);
+	}
+
+	@Test
+	public void createResourceTest00() throws URISyntaxException {
+		// Login
+		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		assertNotNull(user);
+
+		PTenant tenant = new PTenant();
+		tenant.setTitle("title");
+		tenant.setDescription("description");
+
+		PTenant ctenant = tenantService.createTenant(tenant.toMap());
+		assertNotNull(ctenant);
+		assertEquals(tenant.getTitle(), ctenant.getTitle());
+		assertEquals(tenant.getDescription(), ctenant.getDescription());
+
+		URL defaultImage = TenantServiceTest.class.getResource("/tenant/test.png");
+		File imageFile = new File(defaultImage.toURI());
+		TypedFile file = new TypedFile("application/binary", imageFile);
+		PResource resource = tenantService.createResource(ctenant.getId(), file, "description");
+		assertNotNull(resource);
 	}
 
 }
