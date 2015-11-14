@@ -69,13 +69,18 @@ class SaaS_Views_Application
      */
     public function update ($request, $match)
     {
+        // GET data
+        $app = new SaaS_Application($match[1]);
+        // Check permission
+        SaaS_Precondition::userCanUpdateApplication($request, $app);
+        // Do update
         $params = array(
-                'application' => $request->application
+                'application' => $app
         );
-        $form = new SaaS_Form_Application(
-                array_merge($request->POST, $request->FILES), $params);
-        $app = $form->update();
-        return new Pluf_HTTP_Response_Json($app);
+        $form = new SaaS_Form_ApplicationUpdate(
+                array_merge($request->REQUEST, $request->FILES), $params);
+        $app2 = $form->update();
+        return new Pluf_HTTP_Response_Json($app2);
     }
 
     /**
@@ -86,15 +91,7 @@ class SaaS_Views_Application
      */
     public function applications ($request, $match)
     {
-        /*
-         * TODO: maso, 1394: پارامترهای جستجو استفاده نشده است.
-         * سه پارامتر زیر باید در جستجو استفاده شود، اگر توسط کاربر تعیین شده
-         * باشد
-         * -after
-         * -before
-         * -count
-         */
-        // maso, 1394: گرفتن فهرست مناسبی از آپارتمان‌ها
+        // maso, 1394: گرفتن فهرست مناسبی از نرم افزارها
         $pag = new Pluf_Paginator(new SaaS_Application());
         $list_display = array(
                 'id' => __('application id'),
@@ -108,7 +105,7 @@ class SaaS_Views_Application
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();
         $pag->items_per_page = $this->getListCount($request);
-        $pag->no_results_text = __('No apartment is added yet.');
+        $pag->no_results_text = __('no application is found');
         $pag->sort_order = array(
                 'creation_dtime',
                 'DESC'
@@ -116,15 +113,6 @@ class SaaS_Views_Application
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
-
-    /**
-     * پیش نیاز تعیین نرم‌افزارهای کاربر
-     *
-     * @var unknown
-     */
-    public $userApplications_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
 
     /**
      * نرم‌افزارهای کاربردی که به نوعی با کاربر در رابطه هستند
@@ -164,14 +152,6 @@ class SaaS_Views_Application
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
-
-    /**
-     *
-     * @var unknown
-     */
-    public $members_precond = array(
-            'SaaS_Precondition::applicationOwner'
-    );
 
     /**
      *

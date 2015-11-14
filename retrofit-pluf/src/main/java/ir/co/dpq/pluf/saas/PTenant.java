@@ -100,7 +100,6 @@ public class PTenant {
 	public Map<String, Object> toMap() {
 		HashMap<String, Object> map = new HashMap<>();
 
-		map.put("id", getId());
 		map.put("title", getTitle());
 		map.put("description", getDescription());
 

@@ -38,4 +38,7 @@ public interface IPTenantService {
 	@GET("/api/saas/app/list")
 	PPaginatorPage<PTenant> findTenant(@QueryMap Map<String, Object> params);
 
+	@GET("/api/saas/app/userList")
+	PPaginatorPage<PTenant> findUserTenant(@QueryMap Map<String, Object> params);
+
 }

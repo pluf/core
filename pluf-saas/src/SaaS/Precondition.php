@@ -110,6 +110,46 @@ class SaaS_Precondition
         throw new Pluf_Exception_PermissionDenied();
     }
 
+    public static function userCanCreateApplication ($request)
+    {
+        return true;
+    }
+
+    public static function userCanAccessApplication ($request, $app)
+    {
+        return true;
+    }
+
+    public static function userCanUpdateApplication ($request, $app)
+    {
+        return true;
+    }
+
+    public static function userCanDeleteApplication ($request, $app)
+    {
+        return true;
+    }
+
+    public static function userCanCreateSap ($request)
+    {
+        return true;
+    }
+
+    public static function userCanAccessSap ($request)
+    {
+        return true;
+    }
+
+    public static function userCanUpdateSap ($request, $sap)
+    {
+        return true;
+    }
+
+    public static function userCanDeleteSap ($request, $sap)
+    {
+        return true;
+    }
+
     public static function userCanCreateLib ($request)
     {
         return true;

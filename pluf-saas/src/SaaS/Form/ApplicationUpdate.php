@@ -6,7 +6,7 @@ Pluf::loadFunction('SaaS_Shortcuts_applicationFactory');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Form_Application extends Pluf_Form
+class SaaS_Form_ApplicationUpdate extends Pluf_Form
 {
 
     var $application = null;
@@ -20,9 +20,6 @@ class SaaS_Form_Application extends Pluf_Form
     public function initFields ($extra = array())
     {
         $this->application = $extra['application'];
-        $this->application = SaaS_Shortcuts_applicationFactory(
-                $this->application);
-        
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
@@ -38,29 +35,23 @@ class SaaS_Form_Application extends Pluf_Form
     }
 
     /**
-     * مدل داده‌ای را ذخیره می‌کند
+     * موجودیت را به روز می‌کند.
      *
-     * مدل داده‌ای را بر اساس تغییرات تعیین شده توسط کاربر به روز می‌کند. در
-     * صورتی
-     * که پارامتر ورودی با نا درستی مقدار دهی شود تغییراد ذخیره نمی شود در غیر
-     * این
-     * صورت داده‌ها در پایگاه داده ذخیره می‌شود.
-     *
-     * @param $commit داده‌ها
-     *            ذخیره شود یا نه
-     * @return مدل داده‌ای تغییر یافته
+     * @param string $commit            
+     * @throws Pluf_Exception
+     * @return Ambigous <unknown, Advisor_Models_UserProfile>
      */
-    function save ($commit = true)
+    function update ($commit = true)
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('cannot create an application from an invalid form'));
+                    __('cannot update the application from an invalid form'));
         }
         // Set attributes
         $this->application->setFromFormData($this->cleaned_data);
         if ($commit) {
-            if (! $this->application->create()) {
-                throw new Pluf_Exception(__('fail to create the application'));
+            if (! $this->application->update()) {
+                throw new Pluf_Exception(__('fail to update the application'));
             }
         }
         return $this->application;

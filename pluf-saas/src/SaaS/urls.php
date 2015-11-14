@@ -13,8 +13,8 @@ return array(
                         'POST'
                 ),
                 'precond' => array(
-                        'SaaS_Precondition::baseAccess',
-                        'Pluf_Precondition::loginRequired'
+                        'Pluf_Precondition::loginRequired',
+                        'SaaS_Precondition::userCanCreateApplication'
                 )
         ),
         array( // گرفتن
@@ -27,9 +27,7 @@ return array(
                 'http-method' => array(
                         'GET'
                 ),
-                'precond' => array(
-                        'SaaS_Precondition::baseAccess'
-                )
+                'precond' => array()
         ),
         array( // گرفتن جاری
                 'regex' => '#^/app$#',
@@ -38,9 +36,7 @@ return array(
                 'http-method' => array(
                         'GET'
                 ),
-                'precond' => array(
-                        'SaaS_Precondition::baseAccess'
-                )
+                'precond' => array()
         ),
         array( // به روز کردن
                 'regex' => '#^/app/(\d+)$#',
@@ -53,11 +49,9 @@ return array(
                         'match-application' => 1
                 ),
                 'precond' => array(
-                        'SaaS_Precondition::baseAccess',
-                        'SaaS_Precondition::applicationOwner'
+                        'Pluf_Precondition::loginRequired'
                 )
         ),
-        
         array( // فهرست
                 'regex' => '#^/app/list$#',
                 'model' => 'SaaS_Views_Application',
@@ -66,11 +60,16 @@ return array(
                         'GET'
                 )
         ),
-        
-        array( // فهرستی از تمام نرم‌افزارهایی که با کاربر در رابطه است
-                'regex' => '#^/app/user/list$#',
+        array( // فهرست بر اساس کاربران
+                'regex' => '#^/app/userList$#',
                 'model' => 'SaaS_Views_Application',
-                'method' => 'userApplications'
+                'method' => 'userApplications',
+                'http-method' => array(
+                        'GET'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
         array( // فهرستی از تمام اعضا
                 'regex' => '#^/app/(\d+)/member/list$#',

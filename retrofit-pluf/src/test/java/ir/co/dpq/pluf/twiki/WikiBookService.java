@@ -23,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.PPaginatorPage;
+import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.km.IPCategoryService;
 import ir.co.dpq.pluf.km.IPLabelService;
 import ir.co.dpq.pluf.km.PCategory;
@@ -175,8 +176,8 @@ public class WikiBookService {
 		assertEquals(book.getTitle(), book2.getTitle());
 		assertEquals(book.getSummary(), book2.getSummary());
 
-		Map<String, Object> params = new HashMap<>();
-		PPaginatorPage<PWikiPage> books = wikiBookService.findWikiBook(params);
+		PPaginatorParameter param = new PPaginatorParameter();
+		PPaginatorPage<PWikiPage> books = wikiBookService.findWikiBook(param.toMap());
 		assertNotNull(books);
 		assertNotNull(books.getItems());
 	}
@@ -488,27 +489,27 @@ public class WikiBookService {
 
 		wikiBookService.deleteInterestedUser(cbook.getId());
 	}
-	
+
 	@Test
 	public void getInterestedUsersOfBookTest00() {
 		// Login
 		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
-		
+
 		PWikiBook book = new PWikiBook();
 		book.setTitle("title");
 		book.setSummary("summery");
-		
+
 		PWikiBook cbook = wikiBookService.createWikiBook(book.toMap());
 		assertNotNull(cbook);
 		assertEquals(book.getTitle(), cbook.getTitle());
-		
+
 		wikiBookService.addInterestedUser(cbook.getId());
-		
+
 		Map<String, PUser> interesteds = wikiBookService.getBookInteresteds(cbook.getId());
 		assertNotNull(interesteds);
 		assertTrue(interesteds.size() == 1);
-		
+
 		wikiBookService.deleteInterestedUser(cbook.getId());
 		interesteds = wikiBookService.getBookInteresteds(cbook.getId());
 		assertNotNull(interesteds);

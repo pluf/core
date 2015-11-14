@@ -24,16 +24,12 @@ import ir.co.dpq.pluf.DeserializerJson;
 import ir.co.dpq.pluf.PErrorHandler;
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorPage;
-import ir.co.dpq.pluf.km.IPCategoryService;
-import ir.co.dpq.pluf.km.IPLabelService;
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.saas.IPLiberaryService;
 import ir.co.dpq.pluf.saas.PLibrary;
 import ir.co.dpq.pluf.user.IPUserService;
 import ir.co.dpq.pluf.user.PUser;
-import ir.co.dpq.pluf.wiki.IPWikiBookService;
-import ir.co.dpq.pluf.wiki.IPWikiPageService;
 import ir.co.dpq.pluf.wiki.PWikiBook;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
@@ -48,11 +44,11 @@ import retrofit.converter.GsonConverter;
 public class LibraryServiceTest {
 
 	private IPLiberaryService libraryService;
-	private IPLabelService labelService;
-	private IPWikiBookService wikiBookService;
-	private IPWikiPageService wikiService;
+	// private IPLabelService labelService;
+	// private IPWikiBookService wikiBookService;
+	// private IPWikiPageService wikiService;
 	private IPUserService usr;
-	private IPCategoryService categoryService;
+	// private IPCategoryService categoryService;
 
 	@Before
 	public void createService() {
@@ -86,11 +82,11 @@ public class LibraryServiceTest {
 				// ایجاد یک نمونه
 				.build();
 		// ایجاد سرویس‌ها
-		this.wikiBookService = restAdapter.create(IPWikiBookService.class);
-		this.wikiService = restAdapter.create(IPWikiPageService.class);
+		// this.wikiBookService = restAdapter.create(IPWikiBookService.class);
+		// this.wikiService = restAdapter.create(IPWikiPageService.class);
 		this.usr = restAdapter.create(IPUserService.class);
-		this.labelService = restAdapter.create(IPLabelService.class);
-		this.categoryService = restAdapter.create(IPCategoryService.class);
+		// this.labelService = restAdapter.create(IPLabelService.class);
+		// this.categoryService = restAdapter.create(IPCategoryService.class);
 		this.libraryService = restAdapter.create(IPLiberaryService.class);
 	}
 
