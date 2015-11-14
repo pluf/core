@@ -30,7 +30,7 @@ class SaaS_Resource extends Pluf_Model
                 ),
                 'file' => array(
                         'type' => 'Pluf_DB_Field_File',
-                        'blank' => false,
+                        'blank' => false
                 ),
                 'file_path' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -39,11 +39,11 @@ class SaaS_Resource extends Pluf_Model
                 ),
                 'file_size' => array(
                         'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
+                        'blank' => false
                 ),
                 'downloads' => array(
                         'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true,
+                        'blank' => true
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -125,9 +125,8 @@ class SaaS_Resource extends Pluf_Model
                         'relate_name' => 'submitter',
                         'verbose' => __('submitter'),
                         'help_text' => __('submitter')
-                ),
+                )
         );
-        
         
         $this->_a['idx'] = array();
         $this->_a['views'] = array();
@@ -147,4 +146,15 @@ class SaaS_Resource extends Pluf_Model
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
 
+    public function getMimeType ()
+    {
+        // XXX: maso, 1394: تعیین نوع پرونده
+        return "application/binary";
+    }
+
+    public function getAbslotePath ()
+    {
+        // XXX: maso, 1394: تعیین نوع پرونده
+        return Pluf::f('upload_path') . $this->file_path . '/' . $this->file;
+    }
 }

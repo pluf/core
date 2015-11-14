@@ -141,7 +141,7 @@ return array(
          * Application resource
          * *****************************************************************
          */
-        array( // ایجاد یک تنظیم جدید
+        array(
                 'regex' => '#^/app/(\d+)/resource/create$#',
                 'model' => 'SaaS_Views_ApplicationResource',
                 'method' => 'create',
@@ -155,7 +155,39 @@ return array(
                         'level' => Pluf::f('saas_freemium_full', 5)
                 )
         ),
-        
+        array(
+                'regex' => '#^/app/(\d+)/resource/list$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
+        array(
+                'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
+        array(
+                'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'download',
+                'http-method' => array(
+                        'GET'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
         /*
          * کتابخانه‌ها
          */

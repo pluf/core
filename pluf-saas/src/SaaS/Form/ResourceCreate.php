@@ -156,9 +156,9 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
         $upload->submitter = $this->user;
         $upload->description = trim($this->cleaned_data['description']);
         $upload->file = $this->cleaned_data['file'];
-        $upload->file_path = Pluf::f('upload_path') . '/' . $this->app->id .
-                 '/files';
-        $upload->file_size = filesize($upload->file_path);
+        $upload->file_path = '/' . $this->app->id . '/files';
+        $upload->file_size = filesize(
+                Pluf::f('upload_path') . $upload->file_path);
         $upload->downloads = 0;
         
         $upload->owner_write = true;

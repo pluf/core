@@ -174,4 +174,24 @@ class SaaS_Precondition
     {
         return true;
     }
+
+    public static function userCanCreateResource ($request)
+    {
+        return true;
+    }
+
+    public static function userCanAccessResource ($request, $app)
+    {
+        return true;
+    }
+
+    public static function userCanUpdateResource ($request, $app)
+    {
+        return true;
+    }
+
+    public static function userCanDeleteResource ($request, $app)
+    {
+        return true;
+    }
 }

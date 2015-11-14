@@ -164,26 +164,6 @@ class SaaS_Views_Application
                 $request->application->getMembershipData('txt'));
     }
 
-    /**
-     * تعداد گزینه‌های یک لیست را تعیین می‌کند.
-     *
-     * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
-     *
-     * @param unknown $request            
-     * @return number
-     */
-    private function getListCount ($request)
-    {
-        $count = 5;
-        if (array_key_exists('_px_count', $request->GET)) {
-            $count = $request->GET['_px_count'];
-            if ($count > 20 || $count < 1) {
-                $count = 20;
-            }
-        }
-        return $count;
-    }
-
     public function saps ($request, $match)
     {
         $pag = new Pluf_Paginator(new SaaS_SAP());
@@ -240,5 +220,25 @@ class SaaS_Views_Application
         );
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
+    }
+
+    /**
+     * تعداد گزینه‌های یک لیست را تعیین می‌کند.
+     *
+     * TODO: maso, 1394: این تعداد می‌تواند برای کاربران متفاوت باشد.
+     *
+     * @param unknown $request            
+     * @return number
+     */
+    private function getListCount ($request)
+    {
+        $count = 5;
+        if (array_key_exists('_px_count', $request->GET)) {
+            $count = $request->GET['_px_count'];
+            if ($count > 20 || $count < 1) {
+                $count = 20;
+            }
+        }
+        return $count;
     }
 }
