@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class PUser extends PUserItem {
+public class RUser extends RUserItem {
 
 	@SerializedName("email")
 	private String email;

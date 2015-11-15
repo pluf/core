@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ir.co.dpq.pluf.PException;
+import ir.co.dpq.pluf.retrofit.user.RProfile;
+import ir.co.dpq.pluf.user.PProfile;
 
 /**
  * برخی از فراخوانی‌های پرکاربرد سیستم را ایجاد می‌کند.
@@ -72,5 +74,10 @@ public class Util {
 			throw new PException("login is required in signup");
 		}
 		return params;
+	}
+
+	public static RProfile toRObject(PProfile profile) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

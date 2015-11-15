@@ -16,16 +16,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ir.co.dpq.pluf.retrofit.PErrorHandler;
-import ir.co.dpq.pluf.retrofit.user.IPProfileAdministrator;
-import ir.co.dpq.pluf.retrofit.user.IPUserService;
-import ir.co.dpq.pluf.retrofit.user.PUser;
+import ir.co.dpq.pluf.retrofit.user.IRProfileAdministrator;
+import ir.co.dpq.pluf.retrofit.user.IRUserService;
+import ir.co.dpq.pluf.retrofit.user.RUser;
 import ir.co.dpq.pluf.user.PProfile;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 public class PProfileAdminTest {
-	private IPProfileAdministrator profileAdmin;
-	private IPUserService usr;
+	private IRProfileAdministrator profileAdmin;
+	private IRUserService usr;
 
 	@Before
 	public void createService() {
@@ -46,13 +46,13 @@ public class PProfileAdminTest {
 				.setEndpoint(API_URL)
 				// ایجاد یک نمونه
 				.build();
-		this.profileAdmin = restAdapter.create(IPProfileAdministrator.class);
-		this.usr = restAdapter.create(IPUserService.class);
+		this.profileAdmin = restAdapter.create(IRProfileAdministrator.class);
+		this.usr = restAdapter.create(IRUserService.class);
 	}
 
 	@Test
 	public void getUserProfile() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		Assert.assertNotNull(user);
 
 		PProfile profile = profileAdmin.getProfile(user.getId());

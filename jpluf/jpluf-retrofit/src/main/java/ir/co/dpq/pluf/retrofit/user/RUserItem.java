@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class PUserItem {
+public class RUserItem {
 
 	@SerializedName("id")
 	private long id;

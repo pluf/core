@@ -1,9 +1,5 @@
 package ir.co.dpq.pluf.user;
 
-import java.util.Map;
-
-import javax.security.auth.callback.Callback;
-
 import ir.co.dpq.pluf.IPCallback;
 
 /**

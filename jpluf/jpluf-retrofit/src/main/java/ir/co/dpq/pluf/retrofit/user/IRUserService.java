@@ -16,7 +16,7 @@ import retrofit.http.Path;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  */
-public interface IPUserService {
+public interface IRUserService {
 
 	/**
 	 * ورود کاربر به سیستم
@@ -31,7 +31,7 @@ public interface IPUserService {
 	@FormUrlEncoded
 	@POST("/api/user/login")
 	void login(@Field("login") String username,
-			@Field("password") String password, Callback<PUser> callback);
+			@Field("password") String password, Callback<RUser> callback);
 
 	/**
 	 * ورود کاربر به سیستم
@@ -43,7 +43,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/login")
-	PUser login(@Field("login") String username,
+	RUser login(@Field("login") String username,
 			@Field("password") String password);
 
 	/**
@@ -53,7 +53,7 @@ public interface IPUserService {
 	 * @param callback
 	 */
 	@GET("/api/user/logout")
-	void logout(Callback<PUser> callback);
+	void logout(Callback<RUser> callback);
 
 	/**
 	 * خروج کاربر از سیستم
@@ -62,7 +62,7 @@ public interface IPUserService {
 	 * @return
 	 */
 	@GET("/api/user/logout")
-	PUser logout();
+	RUser logout();
 
 	/**
 	 * کاربر جاری را تعیین می‌کند
@@ -70,7 +70,7 @@ public interface IPUserService {
 	 * @param callback
 	 */
 	@GET("/api/user/account")
-	void getSessionUser(Callback<PUser> callback);
+	void getSessionUser(Callback<RUser> callback);
 
 	/**
 	 * کاربر جاری را تعیین می‌کند.
@@ -79,7 +79,7 @@ public interface IPUserService {
 	 * @return کاربر جاری
 	 */
 	@GET("/api/user/{userId}")
-	PUser getUserInfo(@Path("userId") long userId);
+	RUser getUserInfo(@Path("userId") long userId);
 
 	/**
 	 * کاربر جاری را تعیین می‌کند.
@@ -88,7 +88,7 @@ public interface IPUserService {
 	 * @return کاربر جاری
 	 */
 	@GET("/api/user/{userId}")
-	void getUserInfo(@Path("userId") long userId, Callback<PUser> callback);
+	void getUserInfo(@Path("userId") long userId, Callback<RUser> callback);
 	
 	/**
 	 * کاربر جاری را تعیین می‌کند.
@@ -97,7 +97,7 @@ public interface IPUserService {
 	 * @return کاربر جاری
 	 */
 	@GET("/api/user/account")
-	PUser getSessionUser();
+	RUser getSessionUser();
 	
 	/**
 	 * به روز کردن خصوصیت‌های کاربر.
@@ -124,7 +124,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/account")
-	void update(@FieldMap Map<String, Object> params, Callback<PUser> callback);
+	void update(@FieldMap Map<String, Object> params, Callback<RUser> callback);
 
 	/**
 	 * اطلاعات کاربری را به روز می‌کند.
@@ -135,7 +135,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/account")
-	PUser update(@FieldMap Map<String, Object> params);
+	RUser update(@FieldMap Map<String, Object> params);
 
 	/**
 	 * یک کاربر جدید را در سیستم ثبت می‌کند.
@@ -161,7 +161,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/signup")
-	void signup(@FieldMap Map<String, Object> params, Callback<PUser> callBack);
+	void signup(@FieldMap Map<String, Object> params, Callback<RUser> callBack);
 
 	/**
 	 * یک کاربر جدید را در سیستم ثبت می‌کند.
@@ -172,7 +172,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/signup")
-	PUser signup(@FieldMap Map<String, Object> params);
+	RUser signup(@FieldMap Map<String, Object> params);
 
 	/**
 	 * @deprecated use {@link #update(Map, Callback)}
@@ -183,7 +183,7 @@ public interface IPUserService {
 			@Field("last_name") String lastName, @Field("email") String email,
 			@Field("password") String password,
 			@Field("language") String language,
-			@Field("timezone") String timezone, Callback<PUser> callback);
+			@Field("timezone") String timezone, Callback<RUser> callback);
 
 	/**
 	 * 
@@ -198,7 +198,7 @@ public interface IPUserService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/account")
-	PUser update(@Field("first_name") String firstName,
+	RUser update(@Field("first_name") String firstName,
 			@Field("last_name") String lastName, @Field("email") String email,
 			@Field("password") String password,
 			@Field("language") String language,
@@ -220,7 +220,7 @@ public interface IPUserService {
 			@Field("password") String password,
 			@Field("first_name") String firstName,
 			@Field("last_name") String lastName, @Field("email") String email,
-			Callback<PUser> callBack);
+			Callback<RUser> callBack);
 
 	/**
 	 * @deprecated use {@link #signup(Map)}
@@ -234,7 +234,7 @@ public interface IPUserService {
 	@Deprecated
 	@FormUrlEncoded
 	@POST("/api/user/signup")
-	PUser signup(@Field("login") String uername,
+	RUser signup(@Field("login") String uername,
 			@Field("password") String password,
 			@Field("first_name") String firstName,
 			@Field("last_name") String lastName, @Field("email") String email);

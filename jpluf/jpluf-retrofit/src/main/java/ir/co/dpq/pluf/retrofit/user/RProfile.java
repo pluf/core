@@ -1,9 +1,11 @@
 package ir.co.dpq.pluf.retrofit.user;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
+import ir.co.dpq.pluf.retrofit.IRObject;
 import ir.co.dpq.pluf.user.PProfile;
 
 /**
@@ -12,7 +14,7 @@ import ir.co.dpq.pluf.user.PProfile;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class RProfile extends PProfile{
+public class RProfile extends PProfile implements IRObject {
 
 	@SerializedName("access_count")
 	long accessCount;
@@ -31,10 +33,9 @@ public class RProfile extends PProfile{
 
 	@SerializedName("creation_dtime")
 	Date creation;
-	
+
 	@SerializedName("modif_dtime")
 	Date modification;
-
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
@@ -92,5 +93,9 @@ public class RProfile extends PProfile{
 		return phoneNumber;
 	}
 
-	
+	public Map<String, Object> toMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

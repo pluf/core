@@ -20,14 +20,14 @@ import com.google.gson.GsonBuilder;
 
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.retrofit.PErrorHandler;
-import ir.co.dpq.pluf.retrofit.user.IPUserService;
-import ir.co.dpq.pluf.retrofit.user.PUser;
+import ir.co.dpq.pluf.retrofit.user.IRUserService;
+import ir.co.dpq.pluf.retrofit.user.RUser;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
 public class PUserServiceTest {
 
-	private IPUserService usr;
+	private IRUserService usr;
 
 	@Before
 	public void createService() {
@@ -64,25 +64,25 @@ public class PUserServiceTest {
 				.setEndpoint(API_URL)
 				// ایجاد یک نمونه
 				.build();
-		this.usr = restAdapter.create(IPUserService.class);
+		this.usr = restAdapter.create(IRUserService.class);
 	}
 
 	@Test
 	public void getSessionUser() {
-		PUser user = usr.getSessionUser();
+		RUser user = usr.getSessionUser();
 		assertNotNull(user);
 	}
 
 	@Test
 	public void login() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals(ADMIN_LOGIN, user.getLogin());
 	}
 
 	@Test
 	public void login01() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals(ADMIN_LOGIN, user.getLogin());
 		assertNotNull(user.getLastLogin());
@@ -90,14 +90,14 @@ public class PUserServiceTest {
 
 	@Test(expected = PException.class)
 	public void loginFail() {
-		PUser user = usr.login("Non user name", "bad password");
+		RUser user = usr.login("Non user name", "bad password");
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 	}
 
 	@Test
 	public void logout() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 
@@ -106,7 +106,7 @@ public class PUserServiceTest {
 
 	@Test
 	public void updateUserFirstName() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals("admin", user.getLogin());
 
@@ -114,14 +114,14 @@ public class PUserServiceTest {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("first_name", name);
-		PUser nuser = usr.update(params);
+		RUser nuser = usr.update(params);
 		assertNotNull(nuser);
 		assertEquals(name, nuser.getFirstName());
 	}
 
 	@Test
 	public void updateUserEmail() {
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		RUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 		assertEquals(ADMIN_LOGIN, user.getLogin());
 
@@ -129,7 +129,7 @@ public class PUserServiceTest {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("email", email);
-		PUser nuser = usr.update(params);
+		RUser nuser = usr.update(params);
 		assertNotNull(nuser);
 	}
 }

@@ -19,7 +19,7 @@ import retrofit.http.POST;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPProfileService {
+public interface IRProfileService {
 
 	/**
 	 * پروفایل کاربر جاری را تعیین می‌کند

@@ -6,6 +6,6 @@ package ir.co.dpq.pluf.retrofit.user;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPUserAdministratorService {
+public interface IRUserAdministratorService {
 
 }
