@@ -30,7 +30,7 @@ public interface IPProfileService {
 	 * @param callback
 	 */
 	@GET("/api/user/profile")
-	void getProfile(Callback<PProfile> callback);
+	void getProfile(Callback<RProfile> callback);
 
 	/**
 	 * پروفایل کاربر جاری را تعیین می‌کند.
@@ -39,7 +39,7 @@ public interface IPProfileService {
 	 * @return
 	 */
 	@GET("/api/user/profile")
-	PProfile getProfile();
+	RProfile getProfile();
 
 	/**
 	 * پروفایل کاربر جاری را به روز می‌کند.
@@ -50,7 +50,7 @@ public interface IPProfileService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/profile")
-	void updateProfile(@FieldMap Map<String, Object> params, Callback<PProfile> callback);
+	void updateProfile(@FieldMap Map<String, Object> params, Callback<RProfile> callback);
 
 	/**
 	 * اطلاعات پروفایل کاربری را به روز می‌کند.
@@ -61,5 +61,5 @@ public interface IPProfileService {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/profile")
-	PProfile updateProfile(@FieldMap Map<String, Object> params);
+	RProfile updateProfile(@FieldMap Map<String, Object> params);
 }

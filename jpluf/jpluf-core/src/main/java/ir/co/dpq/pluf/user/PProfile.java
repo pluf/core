@@ -46,6 +46,7 @@ public class PProfile {
 	String shaba;
 
 	Date creation;
+
 	Date modification;
 
 	public long getId() {
@@ -184,6 +185,22 @@ public class PProfile {
 
 	public void setShaba(String shaba) {
 		this.shaba = shaba;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getModification() {
+		return modification;
+	}
+
+	public void setModification(Date modification) {
+		this.modification = modification;
 	}
 
 }

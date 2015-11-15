@@ -1,5 +1,7 @@
 package ir.co.dpq.pluf.retrofit.user;
 
+import java.util.Date;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -27,6 +29,12 @@ public class PUser extends PUserItem {
 
 	@SerializedName("timezone")
 	private String timezone;
+
+	@SerializedName("date_joined")
+	Date dateJoined;
+
+	@SerializedName("last_login")
+	Date lastLogin;
 
 	public String getEmail() {
 		return email;
@@ -75,4 +83,22 @@ public class PUser extends PUserItem {
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
+
+	public Date getDateJoined() {
+		return dateJoined;
+	}
+
+	public void setDateJoined(Date dateJoined) {
+		this.dateJoined = dateJoined;
+	}
+
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	
+	
 }

@@ -17,6 +17,7 @@ public class PTenant {
 
 	@SerializedName("access_count")
 	Long accessCount;
+	
 	Boolean validate;
 	String title;
 	String domain;

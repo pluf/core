@@ -25,7 +25,7 @@ public interface IPProfileAdministrator {
 	 * @param callback
 	 */
 	@GET("/api/user/{id}/profile")
-	void getProfile(@Path("id") long id, Callback<PProfile> callback);
+	void getProfile(@Path("id") long id, Callback<RProfile> callback);
 
 	/**
 	 * پروفایل کاربر تعیین شده را می‌دهد
@@ -34,7 +34,7 @@ public interface IPProfileAdministrator {
 	 * @return
 	 */
 	@GET("/api/user/{id}/profile")
-	PProfile getProfile(@Path("id") long l);
+	RProfile getProfile(@Path("id") long l);
 
 	/**
 	 * پروفایل کاربر تعیین شده را به روز می‌کند.
@@ -50,7 +50,7 @@ public interface IPProfileAdministrator {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/{id}/profile")
-	void updateProfile(@Path("id") long id, @FieldMap Map<String, Object> params, Callback<PProfile> callback);
+	void updateProfile(@Path("id") long id, @FieldMap Map<String, Object> params, Callback<RProfile> callback);
 
 	/**
 	 * اطلاعات پروفایل کاربری را به روز می‌کند.
@@ -61,5 +61,5 @@ public interface IPProfileAdministrator {
 	 */
 	@FormUrlEncoded
 	@POST("/api/user/{id}/profile")
-	PProfile updateProfile(@Path("id") long id, @FieldMap Map<String, Object> params);
+	RProfile updateProfile(@Path("id") long id, @FieldMap Map<String, Object> params);
 }
