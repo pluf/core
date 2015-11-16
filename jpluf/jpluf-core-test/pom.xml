@@ -15,5 +15,9 @@
   		<groupId>ir.co.dpq.jpluf</groupId>
   		<artifactId>jpluf-core</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>org.eclipse.persistence</groupId>
+  		<artifactId>javax.persistence</artifactId>
+  	</dependency>
   </dependencies>
 </project>

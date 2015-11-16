@@ -2,16 +2,39 @@ package ir.co.dpq.pluf.wiki;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "pluf_wiki_book")
 public class PWikiBook {
 
+	@Id
+	@Column(name = "book_id", nullable = false)
 	Long id;
+
+	@Column(name = "state")
 	Integer state;
 
+	@Column(name = "title", nullable = true)
 	String title;
+
+	@Column(name = "language")
 	String language;
+
+	@Column(name = "summary", nullable = true)
 	String summary;
 
+	@Column(name = "creation_dtime")
+	@Temporal(TemporalType.DATE)
 	Date creation;
+
+	@Column(name = "modif_dtime")
+	@Temporal(TemporalType.DATE)
 	Date modification;
 
 	public PWikiBook() {
