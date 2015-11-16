@@ -18,7 +18,7 @@ import ir.co.dpq.pluf.km.PLabel;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPWikiPageService {
+public interface IPWikiPageDao {
 
 	PWikiPage createWikiPage(PWikiPage page);
 

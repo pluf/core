@@ -25,7 +25,7 @@ public interface IPWikiBookDao {
 
 	PWikiBook deleteWikiBook(PWikiBook book);
 
-	IPPaginatorPage<PWikiPage> findWikiBook(PPaginatorParameter param);
+	IPPaginatorPage<PWikiBook> findWikiBook(PPaginatorParameter param);
 
 	PWikiBook addLabelToBook(PWikiBook book, PLabel label);
 

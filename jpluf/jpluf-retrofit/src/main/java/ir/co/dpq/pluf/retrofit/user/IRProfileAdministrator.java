@@ -2,7 +2,6 @@ package ir.co.dpq.pluf.retrofit.user;
 
 import java.util.Map;
 
-import ir.co.dpq.pluf.retrofit.CallbackWraper;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;

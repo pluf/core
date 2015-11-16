@@ -12,8 +12,22 @@ public class PWikiBook {
 	String summary;
 
 	Date creation;
-
 	Date modification;
+
+	public PWikiBook() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public PWikiBook(PWikiBook book) {
+		update(book);
+	}
+
+	public void update(PWikiBook book) {
+		this.state = book.state;
+		this.title = book.title;
+		this.language = book.language;
+		this.summary = book.summary;
+	}
 
 	public Long getId() {
 		return id;
