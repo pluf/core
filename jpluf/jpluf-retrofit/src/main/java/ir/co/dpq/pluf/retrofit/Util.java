@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ir.co.dpq.pluf.PException;
+import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.retrofit.user.RProfile;
+import ir.co.dpq.pluf.retrofit.user.RUser;
+import ir.co.dpq.pluf.retrofit.wiki.RWikiBook;
 import ir.co.dpq.pluf.user.PProfile;
+import ir.co.dpq.pluf.user.PUser;
+import ir.co.dpq.pluf.wiki.PWikiBook;
 
 /**
  * برخی از فراخوانی‌های پرکاربرد سیستم را ایجاد می‌کند.
@@ -79,5 +84,21 @@ public class Util {
 	public static RProfile toRObject(PProfile profile) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static RWikiBook toRObject(PWikiBook book) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static RPaginatorParameter toRObject(PPaginatorParameter param) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static RUser toRObject(PUser user) {
+		if(user instanceof RUser)
+			return (RUser) user;
+		return new RUser(user);
 	}
 }

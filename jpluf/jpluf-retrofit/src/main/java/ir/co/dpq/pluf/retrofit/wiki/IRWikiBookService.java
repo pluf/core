@@ -2,9 +2,9 @@ package ir.co.dpq.pluf.retrofit.wiki;
 
 import java.util.Map;
 
-import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
+import ir.co.dpq.pluf.retrofit.RPaginatorPage;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
@@ -40,7 +40,7 @@ public interface IRWikiBookService {
 	RWikiBook deleteWikiBook(@Path("bookId") long id);
 
 	@GET("/api/wiki/book/find")
-	IPPaginatorPage<PWikiPage> findWikiBook(@QueryMap Map<String, Object> params);
+	RWikiBookPaginatorPage findWikiBook(@QueryMap Map<String, Object> params);
 
 	@POST("/api/wiki/book/{bookId}/label/{labelId}")
 	RWikiBook addLabelToBook(@Path("bookId") long bookId, @Path("labelId") long labelId);

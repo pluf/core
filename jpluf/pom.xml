@@ -13,6 +13,7 @@
 		<module>jpluf-ormlit-jdbc</module>
 		<module>jpluf-ormlit-android</module>
 		<module>jpluf-hibernate</module>
+		<module>jpluf-core-test</module>
 	</modules>
 
 	<properties>
@@ -25,6 +26,18 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>ir.co.dpq.jpluf</groupId>
+				<artifactId>jpluf-core</artifactId>
+				<version>0.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>ir.co.dpq.jpluf</groupId>
+				<artifactId>jpluf-core-test</artifactId>
+				<version>0.3.0</version>
+			</dependency>
+
+			<!-- REST -->
+			<dependency>
 				<groupId>com.squareup.retrofit</groupId>
 				<artifactId>retrofit</artifactId>
 				<version>1.9.0</version>
@@ -34,15 +47,36 @@
 				<artifactId>okhttp</artifactId>
 				<version>2.2.0</version>
 			</dependency>
+
+			<!-- ORM -->
+			<dependency>
+				<groupId>org.eclipse.persistence</groupId>
+				<artifactId>javax.persistence</artifactId>
+				<version>2.1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.j256.ormlite</groupId>
+				<artifactId>ormlite-core</artifactId>
+				<version>4.48</version>
+			</dependency>
+			<dependency>
+				<groupId>com.j256.ormlite</groupId>
+				<artifactId>ormlite-jdbc</artifactId>
+				<version>4.48</version>
+			</dependency>
+
+			<!-- JDBC Connector -->
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.4.190</version>
+			</dependency>
+
+			<!-- Unit test -->
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.12</version>
-			</dependency>
-			<dependency>
-				<groupId>ir.co.dpq.jpluf</groupId>
-				<artifactId>jpluf-core</artifactId>
-				<version>0.3.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

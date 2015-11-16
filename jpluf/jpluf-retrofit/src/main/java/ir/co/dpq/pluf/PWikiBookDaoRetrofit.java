@@ -4,42 +4,46 @@ import java.util.List;
 
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
+import ir.co.dpq.pluf.retrofit.RPaginatorParameter;
+import ir.co.dpq.pluf.retrofit.Util;
+import ir.co.dpq.pluf.retrofit.wiki.IRWikiBookService;
+import ir.co.dpq.pluf.retrofit.wiki.RWikiBook;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
 import ir.co.dpq.pluf.wiki.PWikiBook;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
 
-public class PWikiBookDaoRetrofit  implements IPWikiBookDao{
+public class PWikiBookDaoRetrofit implements IPWikiBookDao {
+
+	private IRWikiBookService wikiBookService;
 
 	@Override
 	public PWikiBook createWikiBook(PWikiBook book) {
-		// TODO Auto-generated method stub
-		return null;
+		RWikiBook rbook = Util.toRObject(book);
+		return wikiBookService.createWikiBook(rbook.toMap());
 	}
 
 	@Override
 	public PWikiBook getWikiBook(Long bookId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.wikiBookService.getWikiBook(bookId);
 	}
 
 	@Override
 	public PWikiBook updateWikiBook(PWikiBook book) {
-		// TODO Auto-generated method stub
-		return null;
+		RWikiBook rbook = Util.toRObject(book);
+		return this.wikiBookService.updateWikiBook(rbook.getId(), rbook.toMap());
 	}
 
 	@Override
 	public PWikiBook deleteWikiBook(PWikiBook book) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.wikiBookService.deleteWikiBook(book.getId());
 	}
 
 	@Override
-	public IPPaginatorPage<PWikiPage> findWikiBook(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+	public IPPaginatorPage<PWikiBook> findWikiBook(PPaginatorParameter param) {
+		RPaginatorParameter rparams = Util.toRObject(param);
+		return wikiBookService.findWikiBook(rparams.toMap());
 	}
 
 	@Override
@@ -112,6 +116,10 @@ public class PWikiBookDaoRetrofit  implements IPWikiBookDao{
 	public IPPaginatorPage<PUser> getBookInteresteds(PWikiBook book, PPaginatorParameter param) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setWikiBookService(IRWikiBookService wikiBookService) {
+		this.wikiBookService = wikiBookService;
 	}
 
 }

@@ -12,7 +12,7 @@ import ir.co.dpq.pluf.IPCallback;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  */
-public interface IPUserService {
+public interface IPUserDao {
 
 	/**
 	 * ورود کاربر به سیستم
@@ -100,7 +100,7 @@ public interface IPUserService {
 	 * @param params
 	 * @param callback
 	 */
-	void update(PUser params, IPCallback<PUser> callback);
+	void update(PUser user, IPCallback<PUser> callback);
 
 	/**
 	 * اطلاعات کاربری را به روز می‌کند.
@@ -109,7 +109,7 @@ public interface IPUserService {
 	 * @param params
 	 * @return
 	 */
-	PUser update(PUser params);
+	PUser update(PUser user);
 
 	/**
 	 * یک کاربر جدید را در سیستم ثبت می‌کند.
@@ -142,5 +142,5 @@ public interface IPUserService {
 	 * @param params
 	 * @return
 	 */
-	PUser signup(PUser params);
+	PUser signup(PUser user);
 }

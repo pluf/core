@@ -1,8 +1,13 @@
 package ir.co.dpq.pluf.retrofit.user;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+
+import ir.co.dpq.pluf.retrofit.IRObject;
+import ir.co.dpq.pluf.user.PUser;
 
 /**
  * ساختار داده‌ای کاربر را تعیین می‌کند.
@@ -10,25 +15,13 @@ import com.google.gson.annotations.SerializedName;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class RUser extends RUserItem {
+public class RUser extends PUser implements IRObject {
 
-	@SerializedName("email")
-	private String email;
+	@SerializedName("first_name")
+	private String firstName;
 
-	@SerializedName("administrator")
-	private boolean administrator;
-
-	@SerializedName("staff")
-	private boolean staff;
-
-	@SerializedName("active")
-	private boolean active;
-
-	@SerializedName("language")
-	private String language;
-
-	@SerializedName("timezone")
-	private String timezone;
+	@SerializedName("last_name")
+	private String lastName;
 
 	@SerializedName("date_joined")
 	Date dateJoined;
@@ -36,52 +29,31 @@ public class RUser extends RUserItem {
 	@SerializedName("last_login")
 	Date lastLogin;
 
-	public String getEmail() {
-		return email;
+	public RUser() {
+		super();
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public RUser(PUser user) {
+		super();
+
+		// copy attrigutes
+		setId(user.getId());
+		setEmail(user.getEmail());
+		setAdministrator(user.isAdministrator());
+		setStaff(user.isStaff());
+		setActive(user.isActive());
+		setLanguage(user.getLanguage());
+		setTimezone(user.getTimezone());
+		setDateJoined(user.getDateJoined());
+		setLastLogin(user.getLastLogin());
 	}
 
-	public boolean isAdministrator() {
-		return administrator;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setAdministrator(boolean administrator) {
-		this.administrator = administrator;
-	}
-
-	public boolean isStaff() {
-		return staff;
-	}
-
-	public void setStaff(boolean staff) {
-		this.staff = staff;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-
-	public String getTimezone() {
-		return timezone;
-	}
-
-	public void setTimezone(String timezone) {
-		this.timezone = timezone;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public Date getDateJoined() {
@@ -99,6 +71,38 @@ public class RUser extends RUserItem {
 	public void setLastLogin(Date lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-	
-	
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.user.PUserItem#setLastName(java.lang.String)
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.retrofit.IRObject#toMap()
+	 */
+	@Override
+	public Map<String, Object> toMap() {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("email", getEmail());
+		map.put("active", isActive());
+		map.put("administrator", isAdministrator());
+		map.put("staff", isStaff());
+		map.put("language", getLanguage());
+		map.put("timezone", getTimezone());
+		map.put("first_name", getFirstName());
+		map.put("last_name", getLastName());
+		
+		return map;
+	}
 }

@@ -1,12 +1,8 @@
 package ir.co.dpq.pluf.retrofit;
 
-import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
 
-import ir.co.dpq.pluf.IPPaginatorPage;
-
-public class PPaginatorPage<T> implements IPPaginatorPage<T> {
+public abstract class RPaginatorPage {
 
 	/**
 	 * تعداد گزینه‌های لیست را تعیین می‌کند
@@ -31,13 +27,6 @@ public class PPaginatorPage<T> implements IPPaginatorPage<T> {
 	@SerializedName("page_number")
 	int pageNumber;
 	
-	@SerializedName("page_items")
-	List<T> items;
-
-
-	public boolean isEmpty() {
-		return items == null || items.isEmpty();
-	}
 
 	public int getCounts() {
 		return counts;
@@ -69,14 +58,6 @@ public class PPaginatorPage<T> implements IPPaginatorPage<T> {
 
 	public void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
-	}
-
-	public List<T> getItems() {
-		return items;
-	}
-
-	public void setItems(List<T> items) {
-		this.items = items;
 	}
 
 }

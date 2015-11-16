@@ -1,5 +1,7 @@
 package ir.co.dpq.pluf.user;
 
+import java.util.Date;
+
 /**
  * ساختار داده‌ای کاربر را تعیین می‌کند.
  * 
@@ -19,6 +21,10 @@ public class PUser extends PUserItem {
 	private String language;
 
 	private String timezone;
+
+	Date dateJoined;
+
+	Date lastLogin;
 
 	public String getEmail() {
 		return email;
@@ -67,4 +73,21 @@ public class PUser extends PUserItem {
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
+
+	public Date getDateJoined() {
+		return dateJoined;
+	}
+
+	public void setDateJoined(Date dateJoined) {
+		this.dateJoined = dateJoined;
+	}
+
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+
 }

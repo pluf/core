@@ -1,8 +1,8 @@
 package ir.co.dpq.pluf;
 
-public class TestConstant {
+import ir.co.dpq.pluf.test.TestCoreConstant;
+
+public class TestConstant extends TestCoreConstant {
 
 	public static final String API_URL = "http://localhost:1380";
-	public static final String ADMIN_PASSWORD = "admin";
-	public static final String ADMIN_LOGIN = "admin";
 }

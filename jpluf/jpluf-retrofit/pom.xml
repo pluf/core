@@ -27,6 +27,11 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>ir.co.dpq.jpluf</groupId>
+			<artifactId>jpluf-core-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>ir.co.dpq.pluf</groupId> -->
 		<!-- <artifactId>retrofit-pluf</artifactId> -->

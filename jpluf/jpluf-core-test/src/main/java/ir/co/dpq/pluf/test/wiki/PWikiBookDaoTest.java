@@ -11,9 +11,8 @@ import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
 import ir.co.dpq.pluf.wiki.PWikiBook;
-import ir.co.dpq.pluf.wiki.PWikiBookDaoMem;
 
-public class PWikiBookDaoTest {
+public abstract class PWikiBookDaoTest {
 
 	IPWikiBookDao wikiBookDao;
 
@@ -30,9 +29,7 @@ public class PWikiBookDaoTest {
 	 * 
 	 * @return
 	 */
-	protected IPWikiBookDao getWikiBookInstance() {
-		return new PWikiBookDaoMem();
-	}
+	protected abstract IPWikiBookDao getWikiBookInstance();
 
 	@Test
 	public void createBookTest00() {

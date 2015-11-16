@@ -1,6 +1,11 @@
 package ir.co.dpq.pluf.retrofit.user;
 
+import java.util.Map;
+
 import com.google.gson.annotations.SerializedName;
+
+import ir.co.dpq.pluf.retrofit.IRObject;
+import ir.co.dpq.pluf.user.PUserItem;
 
 /**
  * خلاصه اطلاعات یک فرد.
@@ -8,35 +13,14 @@ import com.google.gson.annotations.SerializedName;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public class RUserItem {
+public class RUserItem extends PUserItem implements IRObject{
 
-	@SerializedName("id")
-	private long id;
-
-	@SerializedName("login")
-	private String login;
 
 	@SerializedName("first_name")
 	private String firstName;
 
 	@SerializedName("last_name")
 	private String lastName;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -52,6 +36,12 @@ public class RUserItem {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	@Override
+	public Map<String, Object> toMap() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
