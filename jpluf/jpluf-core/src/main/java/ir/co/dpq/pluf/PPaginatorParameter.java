@@ -11,6 +11,9 @@ public class PPaginatorParameter {
 	 * صفحه جاری را تعیین می‌کند.
 	 */
 	int page;
+
+	int itemPerPage;
+
 	/**
 	 * کلیدی را تعیین می‌کند که مرتب سازی باید بر اساس آن انجام شود
 	 */
@@ -32,6 +35,7 @@ public class PPaginatorParameter {
 	String filterValue;
 
 	public PPaginatorParameter() {
+		itemPerPage = 10;
 	}
 
 	public PPaginatorParameter(PPaginatorParameter param) {
@@ -40,6 +44,7 @@ public class PPaginatorParameter {
 		setPage(param.getPage());
 		setSortKey(param.getSortKey());
 		setSortOrder(param.getSortOrder());
+		setItemPerPage(param.getItemPerPage());
 	}
 
 	public String getQuery() {
@@ -101,6 +106,14 @@ public class PPaginatorParameter {
 	public void setFilter(String key, String value) {
 		setFilterKey(key);
 		setFilterValue(value);
+	}
+
+	public int getItemPerPage() {
+		return itemPerPage;
+	}
+
+	public void setItemPerPage(int itemPerPage) {
+		this.itemPerPage = itemPerPage;
 	}
 
 }
