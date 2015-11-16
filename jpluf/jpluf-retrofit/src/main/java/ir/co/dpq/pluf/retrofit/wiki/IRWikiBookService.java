@@ -4,7 +4,6 @@ import java.util.Map;
 
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
-import ir.co.dpq.pluf.retrofit.RPaginatorPage;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;

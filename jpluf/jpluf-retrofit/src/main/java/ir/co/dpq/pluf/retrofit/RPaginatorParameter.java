@@ -6,13 +6,22 @@ import java.util.Map;
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorParameter;
 
-public class RPaginatorParameter extends PPaginatorParameter {
+public class RPaginatorParameter extends PPaginatorParameter implements IRObject {
 
-	public Map<String, Object> toMap() {
-		return this.map();
+	public RPaginatorParameter() {
+		super();
 	}
 
-	public Map<String, Object> map() {
+	public RPaginatorParameter(PPaginatorParameter param) {
+		super(param);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.retrofit.IRObject#toMap()
+	 */
+	public Map<String, Object> toMap() {
 		Map<String, Object> pmap = new HashMap<String, Object>();
 		// _px_q
 		if (getQuery() != null)

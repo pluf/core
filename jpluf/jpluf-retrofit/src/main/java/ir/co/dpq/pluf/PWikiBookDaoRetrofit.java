@@ -14,6 +14,11 @@ import ir.co.dpq.pluf.wiki.PWikiBook;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public class PWikiBookDaoRetrofit implements IPWikiBookDao {
 
 	private IRWikiBookService wikiBookService;

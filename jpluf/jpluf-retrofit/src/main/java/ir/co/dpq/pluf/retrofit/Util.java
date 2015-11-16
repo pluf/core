@@ -82,18 +82,21 @@ public class Util {
 	}
 
 	public static RProfile toRObject(PProfile profile) {
-		// TODO Auto-generated method stub
-		return null;
+		if(profile instanceof RProfile)
+			return (RProfile) profile;
+		return new RProfile(profile);
 	}
 
 	public static RWikiBook toRObject(PWikiBook book) {
-		// TODO Auto-generated method stub
-		return null;
+		if(book instanceof RWikiBook)
+			return (RWikiBook) book;
+		return new RWikiBook(book);
 	}
 
 	public static RPaginatorParameter toRObject(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		if(param instanceof RPaginatorParameter)
+			return (RPaginatorParameter) param;
+		return new RPaginatorParameter(param);
 	}
 
 	public static RUser toRObject(PUser user) {

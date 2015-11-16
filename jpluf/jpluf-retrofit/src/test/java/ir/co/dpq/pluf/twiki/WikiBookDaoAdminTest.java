@@ -1,8 +1,8 @@
 package ir.co.dpq.pluf.twiki;
 
-import static ir.co.dpq.pluf.TestConstant.ADMIN_LOGIN;
-import static ir.co.dpq.pluf.TestConstant.ADMIN_PASSWORD;
 import static ir.co.dpq.pluf.TestConstant.API_URL;
+import static ir.co.dpq.pluf.test.TestCoreConstant.ADMIN_LOGIN;
+import static ir.co.dpq.pluf.test.TestCoreConstant.ADMIN_PASSWORD;
 import static org.junit.Assert.assertNotNull;
 
 import java.net.CookieHandler;
@@ -14,11 +14,12 @@ import org.junit.Before;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import ir.co.dpq.pluf.PUserDaoRetrofit;
 import ir.co.dpq.pluf.PWikiBookDaoRetrofit;
 import ir.co.dpq.pluf.retrofit.PErrorHandler;
+import ir.co.dpq.pluf.retrofit.user.IRUserService;
 import ir.co.dpq.pluf.retrofit.wiki.IRWikiBookService;
 import ir.co.dpq.pluf.test.wiki.PWikiBookDaoTest;
-import ir.co.dpq.pluf.user.IPUserDao;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
 import retrofit.RestAdapter;
@@ -26,7 +27,8 @@ import retrofit.converter.GsonConverter;
 
 public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 
-	IPUserDao usr;
+	IRUserService userSerivece;
+	PUserDaoRetrofit userDaoRetrofit;
 
 	IRWikiBookService wikiBookService;
 	PWikiBookDaoRetrofit wikiBookDaoRetrofit;
@@ -43,21 +45,6 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder//
 				.setDateFormat("yyyy-MM-dd HH:mm:ss");//
-		// .registerTypeAdapter(new
-		// TypeToken<PPaginatorPage<PCategory>>() {
-		// }.getType(), new DeserializerJson<PCategory>())//
-		// .registerTypeAdapter(new
-		// TypeToken<PPaginatorPage<PLabel>>()
-		// {
-		// }.getType(), new DeserializerJson<PLabel>())//
-		// .registerTypeAdapter(new
-		// TypeToken<PPaginatorPage<PWikiPage>>() {
-		// }.getType(), new DeserializerJson<PWikiPage>())//
-		// .registerTypeAdapter(new
-		// TypeToken<PPaginatorPage<RWikiPageItem>>() {
-		// }.getType(), new DeserializerJson<RWikiPageItem>())//
-		// .registerTypeAdapter(new TypeToken<RPaginatorPage<RWikiBook>>() {
-		// }.getType(), new DeserializerJson<RWikiBook>())
 		Gson gson = gsonBuilder.create();
 
 		RestAdapter restAdapter = new RestAdapter.Builder()
@@ -70,7 +57,7 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 				// ایجاد یک نمونه
 				.build();
 		// ایجاد سرویس‌ها
-		this.usr = restAdapter.create(IPUserDao.class);
+		this.userSerivece = restAdapter.create(IRUserService.class);
 		this.wikiBookService = restAdapter.create(IRWikiBookService.class);
 
 		// this.wikiService = restAdapter.create(IRWikiPageService.class);
@@ -79,12 +66,15 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 
 		wikiBookDaoRetrofit = new PWikiBookDaoRetrofit();
 		wikiBookDaoRetrofit.setWikiBookService(wikiBookService);
+		
+		userDaoRetrofit = new PUserDaoRetrofit();
+		userDaoRetrofit.setUserService(userSerivece);
 	}
 
 	@Before
 	public void loginWithAdmin() {
 		// Login
-		PUser user = usr.login(ADMIN_LOGIN, ADMIN_PASSWORD);
+		PUser user = userDaoRetrofit.login(ADMIN_LOGIN, ADMIN_PASSWORD);
 		assertNotNull(user);
 	}
 

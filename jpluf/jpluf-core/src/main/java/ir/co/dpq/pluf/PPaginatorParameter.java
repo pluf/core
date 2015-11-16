@@ -31,6 +31,17 @@ public class PPaginatorParameter {
 	 */
 	String filterValue;
 
+	public PPaginatorParameter() {
+	}
+
+	public PPaginatorParameter(PPaginatorParameter param) {
+		setQuery(param.getQuery());
+		setFilter(param.getFilterKey(), param.getFilterValue());
+		setPage(param.getPage());
+		setSortKey(param.getSortKey());
+		setSortOrder(param.getSortOrder());
+	}
+
 	public String getQuery() {
 		return query;
 	}

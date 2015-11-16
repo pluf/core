@@ -361,7 +361,7 @@ class Pluf_Paginator
          * ایجاد ساختار داده‌ای نهایی
          */
         return array(
-                'items' => $items,
+                'items' => $items->getArrayCopy(),
                 'counts' => $items->count(),
                 'current_page' => $this->current_page,
                 'items_per_page' => $this->items_per_page,
