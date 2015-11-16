@@ -1,10 +1,28 @@
 package ir.co.dpq.pluf.wiki;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+
+@Entity(name = "wiki_page")
+@Table(name = "wiki_page")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class PWikiPageItem {
 
+	@Id
+	@Column(name = "page_id")
 	private Long id;
+	
+	@Column(name = "priority")
 	private Integer priority;
+	
+	@Column(name = "state")
 	private Integer state;
+	
+	@Column(name = "title")
 	private String title;
 
 	public Long getId() {

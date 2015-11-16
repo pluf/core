@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,8 +16,9 @@ import javax.persistence.TemporalType;
  * @author maso
  *
  */
-@Entity
-@Table(name = "pluf_wiki_page")
+@Entity(name = "wiki_page")
+@Table(name = "wiki_page")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public class PWikiPage extends PWikiPageItem {
 
 	@Column(name = "state")

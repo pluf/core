@@ -9,8 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "pluf_wiki_book")
+@Entity(name="wiki_book")
+@Table(name = "wiki_book")
 public class PWikiBook {
 
 	@Id
@@ -18,7 +18,7 @@ public class PWikiBook {
 	Long id;
 
 	@Column(name = "state")
-	Integer state;
+	Integer state = PWikiState.LOCAL;
 
 	@Column(name = "title", nullable = true)
 	String title;
