@@ -1,0 +1,130 @@
+[
+  {
+    "name": "angular",
+    "version": "1.4.7",
+    "mode": "2",
+    "type": "1",
+    "description": "AngularJS",
+    "path": "/lib/angular/angular.min.js"
+  },
+  {
+    "name": "angular-animate",
+    "version": "1.4.7",
+    "mode": "2",
+    "type": "1",
+    "description": "AngularJS Animation",
+    "path": "/lib/angular-animate/angular-animate.min.js"
+  },
+  {
+    "name": "angular-aria",
+    "version": "1.4.7",
+    "mode": "2",
+    "type": "1",
+    "description": "",
+    "path": "/lib/angular-aria/angular-aria.min.js"
+  },
+  {
+    "name": "angular-material",
+    "version": "0.11.4",
+    "mode": "2",
+    "type": "1",
+    "description": "Angualr Material Desinge",
+    "path": "/lib/angular-material/angular-material.min.js"
+  },
+  {
+    "name": "angular-material",
+    "version": "0.11.4",
+    "mode": "2",
+    "type": "2",
+    "description": "Angualr Material Desinge",
+    "path": "/lib/angular-material/angular-material.min.css"
+  },
+  {
+    "name": "angular-pluf",
+    "version": "0.1.0",
+    "mode": "1",
+    "type": "1",
+    "description": "Angualr Pluf Core",
+    "path": "/lib/angular-pluf/src/pluf.js"
+  },
+  {
+    "name": "angular-pluf-help",
+    "version": "0.1.0",
+    "mode": "1",
+    "type": "1",
+    "description": "Angualr Pluf Help",
+    "path": "/lib/angular-pluf/src/pluf.help.js"
+  },
+  {
+    "name": "angular-pluf-hm",
+    "version": "0.1.0",
+    "mode": "1",
+    "type": "1",
+    "description": "Angualr Pluf House Automation",
+    "path": "/lib/angular-pluf/src/pluf.hm.js"
+  },
+  {
+    "name": "angular-pluf-saas",
+    "version": "0.1.0",
+    "mode": "1",
+    "type": "1",
+    "description": "Angualr Pluf House Automation",
+    "path": "/lib/angular-pluf/src/pluf.saas.js"
+  },
+  {
+    "name": "angular-touch",
+    "version": "1.4.7",
+    "mode": "2",
+    "type": "1",
+    "description": "AngualrJS Touch",
+    "path": "/lib/angular-touch/angular-touch.min.js"
+  },
+  {
+    "name": "angular-translate",
+    "version": "2.7.2",
+    "mode": "2",
+    "type": "1",
+    "description": "AntularJS Translation",
+    "path": "/lib/angular-translate/angular-translate.min.js"
+  },
+  {
+    "name": "angular-ui-router",
+    "version": "0.2.15",
+    "mode": "2",
+    "type": "1",
+    "description": "AngularJS UI Router",
+    "path": "/lib/angular-ui-router/release/angular-ui-router.min.js"
+  },
+  {
+    "name": "angular-validation-match",
+    "version": "1.5.2",
+    "mode": "",
+    "type": "",
+    "description": "",
+    "path": "/lib/angular-validation-match/index.js"
+  },
+  {
+    "name": "angular-xeditable",
+    "version": "0.1.9",
+    "mode": "",
+    "type": "",
+    "description": "",
+    "path": "/lib/angular-xeditable/dist/js/xeditable.min.js"
+  },
+  {
+    "name": "angular-xeditable",
+    "version": "0.1.9",
+    "mode": "",
+    "type": "",
+    "description": "",
+    "path": "/lib/angular-xeditable/dist/css/xeditable.css"
+  },
+  {
+    "name": "markdown",
+    "version": "0.5.0",
+    "mode": "2",
+    "type": "1",
+    "description": "Markdown Compiler",
+    "path": "/lib/markdown/lib/markdown.js"
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "name": "DPQ Base library",
+  "version": "0.1.0",
+  "authors": [
+    "mostafa barmshory <mostafa.barmshory@dpq.co.ir>"
+  ],
+  "description": "Jayab web client",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "Jayab",
+    "Client",
+    "Web"
+  ],
+  "license": "MIT",
+  "homepage": "en fa",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery.appear": "*",
+    "materialize": "*",
+    "angular": "~1.4.0",
+    "angular-ui-router": "~0.2.15",
+    "angular-touch": "~1.4.0",
+    "angular-xeditable": "~0.1.9",
+    "angular-materialize": "*",
+    "angular-validation-match": "~1.5.1",
+    "markdown": "~0.5.0",
+    "angular-chart.js": "~0.7.3",
+    "angular-translate": "~2.7.2",
+    "angular-animate": "~1.4.5"
+  }
+}
