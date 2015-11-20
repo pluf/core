@@ -10,8 +10,7 @@
 	<modules>
 		<module>jpluf-core</module>
 		<module>jpluf-retrofit</module>
-		<module>jpluf-ormlit-jdbc</module>
-		<module>jpluf-ormlit-android</module>
+		<module>jpluf-ormlit</module>
 		<module>jpluf-hibernate</module>
 		<module>jpluf-core-test</module>
 	</modules>
@@ -70,6 +69,11 @@
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>1.4.190</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.37</version>
 			</dependency>
 
 			<!-- Unit test -->

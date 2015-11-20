@@ -6,7 +6,7 @@
 		<artifactId>jpluf</artifactId>
 		<version>0.3.0</version>
 	</parent>
-	<artifactId>jpluf-ormlit-jdbc</artifactId>
+	<artifactId>jpluf-ormlit</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>ir.co.dpq.jpluf</groupId>
@@ -17,16 +17,23 @@
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-core</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-jdbc</artifactId>
+			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>ir.co.dpq.jpluf</groupId>
 			<artifactId>jpluf-core-test</artifactId>
@@ -36,11 +43,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.37</version>
 		</dependency>
 	</dependencies>
 </project>
