@@ -7,6 +7,7 @@ import ir.co.dpq.pluf.km.PLabel;
 import ir.co.dpq.pluf.retrofit.RPaginatorParameter;
 import ir.co.dpq.pluf.retrofit.Util;
 import ir.co.dpq.pluf.retrofit.wiki.IRWikiBookService;
+import ir.co.dpq.pluf.retrofit.wiki.PWikiPageItemPaginatorPage;
 import ir.co.dpq.pluf.retrofit.wiki.RWikiBook;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
@@ -23,28 +24,60 @@ public class PWikiBookDaoRetrofit implements IPWikiBookDao {
 
 	private IRWikiBookService wikiBookService;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#createWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook createWikiBook(PWikiBook book) {
 		RWikiBook rbook = Util.toRObject(book);
 		return wikiBookService.createWikiBook(rbook.toMap());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#getWikiBook(java.lang.Long)
+	 */
 	@Override
 	public PWikiBook getWikiBook(Long bookId) {
 		return this.wikiBookService.getWikiBook(bookId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#updateWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook updateWikiBook(PWikiBook book) {
 		RWikiBook rbook = Util.toRObject(book);
 		return this.wikiBookService.updateWikiBook(rbook.getId(), rbook.toMap());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#deleteWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook deleteWikiBook(PWikiBook book) {
 		return this.wikiBookService.deleteWikiBook(book.getId());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#findWikiBook(ir.co.dpq.pluf.
+	 * PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiBook> findWikiBook(PPaginatorParameter param) {
 		RPaginatorParameter rparams = Util.toRObject(param);
@@ -87,22 +120,43 @@ public class PWikiBookDaoRetrofit implements IPWikiBookDao {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#getBookPages(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiPageItem> getBookPages(PWikiBook book, PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		List<PWikiPageItem> list = wikiBookService.getBookPages(book.getId());
+		PWikiPageItemPaginatorPage pag = new PWikiPageItemPaginatorPage();
+		pag.setItems(list);
+		pag.setCurrentPage(0);
+		pag.setPageNumber(1);
+		return pag;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#addPageToBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.wiki.PWikiPage)
+	 */
 	@Override
 	public PWikiPage addPageToBook(PWikiBook book, PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		return wikiBookService.addPageToBook(book.getId(), page.getId());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#deletePageFromBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.wiki.PWikiPage)
+	 */
 	@Override
 	public PWikiPage deletePageFromBook(PWikiBook book, PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		return wikiBookService.deletePageFromBook(book.getId(), page.getId());
 	}
 
 	@Override

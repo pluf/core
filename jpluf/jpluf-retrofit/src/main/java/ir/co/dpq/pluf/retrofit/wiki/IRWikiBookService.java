@@ -1,5 +1,6 @@
 package ir.co.dpq.pluf.retrofit.wiki;
 
+import java.util.List;
 import java.util.Map;
 
 import ir.co.dpq.pluf.km.PCategory;
@@ -60,7 +61,7 @@ public interface IRWikiBookService {
 	Map<String, PCategory> getBookCategories(@Path("bookId") long bookId);
 
 	@GET("/api/wiki/book/{bookId}/pages")
-	Map<String, PWikiPageItem> getBookPages(@Path("bookId") long bookId);
+	List<PWikiPageItem> getBookPages(@Path("bookId") long bookId);
 
 	@POST("/api/wiki/book/{bookId}/page/{pageId}")
 	PWikiPage addPageToBook(@Path("bookId") long bookId, @Path("pageId") long pageId);

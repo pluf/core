@@ -104,7 +104,7 @@ class Wiki_Views_Book
         Wiki_Precondition::userCanAccessBook($request, $book);
         // اجرای درخواست
         $intre = $book->get_interested_list();
-        foreach ($intre as $key => $value){
+        foreach ($intre as $key => $value) {
             User_Shortcuts_RemoveSecureData($value);
         }
         return new Pluf_HTTP_Response_Json($intre);
@@ -200,6 +200,13 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($book);
     }
 
+    /**
+     * فهرست تمام صفحه‌ها را به صورت آرایه تعیین می‌کند.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function pages ($request, $match)
     {
         // تعیین داده‌ها
@@ -213,7 +220,7 @@ class Wiki_Views_Book
                         'view' => 'page_list',
                         'filter' => 'book=' . $book->id
                 ));
-        return new Pluf_HTTP_Response_Json($pages);
+        return new Pluf_HTTP_Response_Json($pages->getArrayCopy());
     }
 
     public function addPage ($request, $match)

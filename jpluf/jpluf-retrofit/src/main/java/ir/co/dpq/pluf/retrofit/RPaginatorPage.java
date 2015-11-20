@@ -2,6 +2,11 @@ package ir.co.dpq.pluf.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public abstract class RPaginatorPage {
 
 	/**

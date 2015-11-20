@@ -10,15 +10,20 @@ import org.junit.Test;
 import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
+import ir.co.dpq.pluf.wiki.IPWikiPageDao;
 import ir.co.dpq.pluf.wiki.PWikiBook;
+import ir.co.dpq.pluf.wiki.PWikiPage;
+import ir.co.dpq.pluf.wiki.PWikiPageItem;
 
 public abstract class PWikiBookDaoTest {
 
 	IPWikiBookDao wikiBookDao;
+	IPWikiPageDao wikiPageDao;
 
 	@Before
 	public void initTest() {
 		wikiBookDao = getWikiBookInstance();
+		wikiPageDao = getWikiPageInstance();
 	}
 
 	/**
@@ -30,6 +35,8 @@ public abstract class PWikiBookDaoTest {
 	 * @return
 	 */
 	protected abstract IPWikiBookDao getWikiBookInstance();
+
+	protected abstract IPWikiPageDao getWikiPageInstance();
 
 	@Test
 	public void createBookTest00() {
@@ -302,67 +309,74 @@ public abstract class PWikiBookDaoTest {
 	// assertTrue(cats.size() == 0);
 	// }
 
-	// @Test
-	// public void addPageToBookTest00() {
-	// // create page
-	// PWikiPage page = new PWikiPage();
-	// page.setTitle("example");
-	// page.setSummary("summary");
-	// page.setContent("Content");
-	// page.setContentType("text/plain");
-	//
-	// PWikiPage cpage = wikiService.createWikiPage(page);
-	// assertNotNull(cpage);
-	// assertEquals(page.getSummary(), cpage.getSummary());
-	// assertEquals(page.getContent(), cpage.getContent());
-	// assertEquals(page.getContentType(), cpage.getContentType());
-	//
-	// PWikiBook book = new PWikiBook();
-	// book.setTitle("title");
-	// book.setSummary("summery");
-	//
-	// PWikiBook cbook = wikiBookDao.createWikiBook(book);
-	// assertNotNull(cbook);
-	// assertEquals(book.getTitle(), cbook.getTitle());
-	//
-	// wikiBookDao.addPageToBook(cbook, cpage);
-	//
-	// Map<String, RWikiPageItem> pages = wikiBookDao.getBookPages(cbook);
-	// assertTrue(pages.size() == 1);
-	// }
+	@Test
+	public void addPageToBookTest00() {
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
 
-	// @Test
-	// public void deletePageToBookTest00() {
-	// // create page
-	// PWikiPage page = new PWikiPage();
-	// page.setTitle("example");
-	// page.setSummary("summary");
-	// page.setContent("Content");
-	// page.setContentType("text/plain");
-	//
-	// PWikiPage cpage = wikiService.createWikiPage(page);
-	// assertNotNull(cpage);
-	// assertEquals(page.getSummary(), cpage.getSummary());
-	// assertEquals(page.getContent(), cpage.getContent());
-	// assertEquals(page.getContentType(), cpage.getContentType());
-	//
-	// PWikiBook book = new PWikiBook();
-	// book.setTitle("title");
-	// book.setSummary("summery");
-	//
-	// PWikiBook cbook = wikiBookDao.createWikiBook(book);
-	// assertNotNull(cbook);
-	// assertEquals(book.getTitle(), cbook.getTitle());
-	//
-	// wikiBookDao.addPageToBook(cbook, cpage);
-	//
-	// Map<String, RWikiPageItem> pages = wikiBookDao.getBookPages(cbook);
-	// assertTrue(pages.size() == 1);
-	//
-	// wikiBookDao.deletePageFromBook(cbook, cpage);
-	// pages = wikiBookDao.getBookPages(cbook);
-	// assertTrue(pages.size() == 0);
-	// }
+		PWikiPage cpage = wikiPageDao.createWikiPage(page);
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookDao.createWikiBook(book);
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookDao.addPageToBook(cbook, cpage);
+
+		PPaginatorParameter param = new PPaginatorParameter();
+		IPPaginatorPage<PWikiPageItem> pages = wikiBookDao.getBookPages(cbook, param);
+		assertNotNull(pages);
+		assertNotNull(pages.getItems());
+		assertTrue(pages.getItems().size() == 1);
+	}
+
+	@Test
+	public void deletePageToBookTest00() {
+		// create page
+		PWikiPage page = new PWikiPage();
+		page.setTitle("example");
+		page.setSummary("summary");
+		page.setContent("Content");
+		page.setContentType("text/plain");
+
+		PWikiPage cpage = wikiPageDao.createWikiPage(page);
+		assertNotNull(cpage);
+		assertEquals(page.getSummary(), cpage.getSummary());
+		assertEquals(page.getContent(), cpage.getContent());
+		assertEquals(page.getContentType(), cpage.getContentType());
+
+		PWikiBook book = new PWikiBook();
+		book.setTitle("title");
+		book.setSummary("summery");
+
+		PWikiBook cbook = wikiBookDao.createWikiBook(book);
+		assertNotNull(cbook);
+		assertEquals(book.getTitle(), cbook.getTitle());
+
+		wikiBookDao.addPageToBook(cbook, cpage);
+
+		PPaginatorParameter param = new PPaginatorParameter();
+		IPPaginatorPage<PWikiPageItem> pages = wikiBookDao.getBookPages(cbook, param);
+		assertNotNull(pages);
+		assertNotNull(pages.getItems());
+		assertTrue(pages.getItems().size() == 1);
+
+		wikiBookDao.deletePageFromBook(cbook, cpage);
+		pages = wikiBookDao.getBookPages(cbook, param);
+		assertNotNull(pages);
+		assertTrue(pages.isEmpty());
+	}
 
 	// @Test
 	// public void addInterestedToBookTest00() {

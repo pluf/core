@@ -14,12 +14,15 @@ import com.google.gson.GsonBuilder;
 
 import ir.co.dpq.pluf.PUserDaoRetrofit;
 import ir.co.dpq.pluf.PWikiBookDaoRetrofit;
+import ir.co.dpq.pluf.PWikiPageDaoRetrofit;
 import ir.co.dpq.pluf.retrofit.PErrorHandler;
 import ir.co.dpq.pluf.retrofit.user.IRUserService;
 import ir.co.dpq.pluf.retrofit.wiki.IRWikiBookService;
+import ir.co.dpq.pluf.retrofit.wiki.IRWikiPageService;
 import ir.co.dpq.pluf.test.wiki.PWikiBookDaoTest;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
+import ir.co.dpq.pluf.wiki.IPWikiPageDao;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
@@ -30,6 +33,8 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 
 	IRWikiBookService wikiBookService;
 	PWikiBookDaoRetrofit wikiBookDaoRetrofit;
+	private IRWikiPageService wikiPageService;
+	private PWikiPageDaoRetrofit wikiPageDaoRetrofit;
 
 	// private IPCategoryService categoryService;
 	// private IPLabelService labelService;
@@ -57,16 +62,19 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 		// ایجاد سرویس‌ها
 		this.userSerivece = restAdapter.create(IRUserService.class);
 		this.wikiBookService = restAdapter.create(IRWikiBookService.class);
+		this.wikiPageService = restAdapter.create(IRWikiPageService.class);
 
-		// this.wikiService = restAdapter.create(IRWikiPageService.class);
 		// this.labelService = restAdapter.create(IPLabelService.class);
 		// this.categoryService = restAdapter.create(IPCategoryService.class);
 
 		wikiBookDaoRetrofit = new PWikiBookDaoRetrofit();
 		wikiBookDaoRetrofit.setWikiBookService(wikiBookService);
-		
+
 		userDaoRetrofit = new PUserDaoRetrofit();
 		userDaoRetrofit.setUserService(userSerivece);
+
+		wikiPageDaoRetrofit = new PWikiPageDaoRetrofit();
+		wikiPageDaoRetrofit.setWikiPageService(wikiPageService);
 	}
 
 	@Before
@@ -76,8 +84,23 @@ public class WikiBookDaoAdminTest extends PWikiBookDaoTest {
 		assertNotNull(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.test.wiki.PWikiBookDaoTest#getWikiBookInstance()
+	 */
 	@Override
 	protected IPWikiBookDao getWikiBookInstance() {
 		return wikiBookDaoRetrofit;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.test.wiki.PWikiBookDaoTest#getWikiPageInstance()
+	 */
+	@Override
+	protected IPWikiPageDao getWikiPageInstance() {
+		return wikiPageDaoRetrofit;
 	}
 }
