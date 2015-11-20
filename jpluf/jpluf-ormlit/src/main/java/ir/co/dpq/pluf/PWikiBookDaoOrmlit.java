@@ -20,7 +20,7 @@ import ir.co.dpq.pluf.wiki.PWikiPageItem;
  * @author maso
  *
  */
-public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
+public class PWikiBookDaoOrmlit implements IPWikiBookDao {
 
 	private Dao<PWikiBook, Long> wikiDao;
 

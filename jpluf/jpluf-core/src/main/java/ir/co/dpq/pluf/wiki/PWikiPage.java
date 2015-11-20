@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PWikiPage extends PWikiPageItem {
 
-	@Column(name = "state")
+	@Column(name = "language")
 	private String language;
 
 	@Column(name = "summary")

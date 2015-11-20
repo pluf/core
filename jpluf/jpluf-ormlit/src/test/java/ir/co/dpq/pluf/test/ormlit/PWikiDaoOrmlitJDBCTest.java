@@ -8,14 +8,14 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import ir.co.dpq.pluf.PWikiBookDaoOrmlitJdbc;
+import ir.co.dpq.pluf.PWikiBookDaoOrmlit;
 import ir.co.dpq.pluf.test.wiki.PWikiBookDaoTest;
 import ir.co.dpq.pluf.wiki.IPWikiBookDao;
 import ir.co.dpq.pluf.wiki.PWikiBook;
 
 public class PWikiDaoOrmlitJDBCTest extends PWikiBookDaoTest {
 
-	PWikiBookDaoOrmlitJdbc wikiBookDaoOrmlitJdbc;
+	PWikiBookDaoOrmlit wikiBookDaoOrmlitJdbc;
 	Dao<PWikiBook, Long> wikiDao;
 
 	public PWikiDaoOrmlitJDBCTest() throws Exception {
@@ -25,7 +25,7 @@ public class PWikiDaoOrmlitJDBCTest extends PWikiBookDaoTest {
 	}
 
 	void setupService() {
-		wikiBookDaoOrmlitJdbc = new PWikiBookDaoOrmlitJdbc();
+		wikiBookDaoOrmlitJdbc = new PWikiBookDaoOrmlit();
 		wikiBookDaoOrmlitJdbc.setWikiDao(wikiDao);
 	}
 
