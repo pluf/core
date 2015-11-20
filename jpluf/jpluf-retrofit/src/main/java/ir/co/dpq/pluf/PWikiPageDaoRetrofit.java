@@ -4,6 +4,7 @@ import java.util.List;
 
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
+import ir.co.dpq.pluf.retrofit.RPaginatorParameter;
 import ir.co.dpq.pluf.retrofit.Util;
 import ir.co.dpq.pluf.retrofit.wiki.IRWikiPageService;
 import ir.co.dpq.pluf.retrofit.wiki.RWikiPage;
@@ -19,10 +20,12 @@ public class PWikiPageDaoRetrofit implements IPWikiPageDao {
 
 	private IRWikiPageService wikiPageService;
 
-	
 	/*
 	 * (non-Javadoc)
-	 * @see ir.co.dpq.pluf.wiki.IPWikiPageDao#createWikiPage(ir.co.dpq.pluf.wiki.PWikiPage)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiPageDao#createWikiPage(ir.co.dpq.pluf.wiki.
+	 * PWikiPage)
 	 */
 	@Override
 	public PWikiPage createWikiPage(PWikiPage page) {
@@ -30,22 +33,38 @@ public class PWikiPageDaoRetrofit implements IPWikiPageDao {
 		return wikiPageService.createWikiPage(rbook.toMap());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiPageDao#getWikiPage(java.lang.Long)
+	 */
 	@Override
 	public PWikiPage getWikiPage(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return wikiPageService.getWikiPage(id);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiPageDao#deleteWikiPage(ir.co.dpq.pluf.wiki.
+	 * PWikiPage)
+	 */
 	@Override
 	public PWikiPage deleteWikiPage(PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		return wikiPageService.deleteWikiPage(page.getId());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiPageDao#findWikiPage(ir.co.dpq.pluf.
+	 * PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiPage> findWikiPage(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		RPaginatorParameter rparams = Util.toRObject(param);
+		return wikiPageService.findWikiPage(rparams.toMap());
 	}
 
 	@Override

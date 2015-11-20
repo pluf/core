@@ -59,7 +59,7 @@ public interface IRWikiPageService {
 	RWikiPage deleteWikiPage(@Path("pageId") long id);
 
 	@GET("/api/wiki/page/find")
-	IPPaginatorPage<RWikiPage> findWikiPage(@QueryMap Map<String, Object> params);
+	RWikiPaginatorPage findWikiPage(@QueryMap Map<String, Object> params);
 
 	@POST("/api/wiki/page/{pageId}/label/{labelId}")
 	RWikiPage addLabelToPage(@Path("pageId") long pageId, @Path("labelId") long labelId);

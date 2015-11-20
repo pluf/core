@@ -4,16 +4,16 @@ import java.util.List;
 
 import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.retrofit.RPaginatorPage;
-import ir.co.dpq.pluf.wiki.PWikiBook;
+import ir.co.dpq.pluf.wiki.PWikiPage;
 
 /**
  * 
  * @author maso
  *
  */
-public class RWikiBookPaginatorPage extends RPaginatorPage implements IPPaginatorPage<PWikiBook> {
+public class RWikiPaginatorPage extends RPaginatorPage implements IPPaginatorPage<PWikiPage> {
 
-	List<PWikiBook> items;
+	List<PWikiPage> items;
 
 	/*
 	 * (non-Javadoc)
@@ -31,7 +31,7 @@ public class RWikiBookPaginatorPage extends RPaginatorPage implements IPPaginato
 	 * @see ir.co.dpq.pluf.IPPaginatorPage#getItems()
 	 */
 	@Override
-	public List<PWikiBook> getItems() {
+	public List<PWikiPage> getItems() {
 		return items;
 	}
 
