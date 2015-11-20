@@ -18,7 +18,7 @@ import javax.persistence.TemporalType;
  */
 @Entity(name = "wiki_page")
 @Table(name = "wiki_page")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PWikiPage extends PWikiPageItem {
 
 	@Column(name = "state")
@@ -71,6 +71,22 @@ public class PWikiPage extends PWikiPageItem {
 
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
+	}
+
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getModification() {
+		return modification;
+	}
+
+	public void setModification(Date modification) {
+		this.modification = modification;
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
-import ir.co.dpq.pluf.wiki.PWikiPage;
 import retrofit.Callback;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
@@ -36,7 +35,7 @@ public interface IRWikiPageService {
 	 * @param callback
 	 */
 	@GET("/api/wiki/{language}/{pageId}")
-	void getWikiPage(@Path("language") String lang, @Path("pageId") String pageId, Callback<PWikiPage> callback);
+	void getWikiPage(@Path("language") String lang, @Path("pageId") String pageId, Callback<RWikiPage> callback);
 
 	/**
 	 * یک صفحه ویکی را بازیابی می‌کند
@@ -47,35 +46,35 @@ public interface IRWikiPageService {
 	 * @return
 	 */
 	@GET("/api/wiki/{language}/{pageId}")
-	PWikiPage getWikiPage(@Path("language") String lang, @Path("pageId") String pageId);
+	RWikiPage getWikiPage(@Path("language") String lang, @Path("pageId") String pageId);
 
 	@FormUrlEncoded
 	@POST("/api/wiki/page/create")
-	PWikiPage createWikiPage(@FieldMap Map<String, Object> params);
+	RWikiPage createWikiPage(@FieldMap Map<String, Object> params);
 
 	@GET("/api/wiki/page/{pageId}")
-	PWikiPage getWikiPage(@Path("pageId") long id);
+	RWikiPage getWikiPage(@Path("pageId") long id);
 
 	@DELETE("/api/wiki/page/{pageId}")
-	PWikiPage deleteWikiPage(@Path("pageId") long id);
+	RWikiPage deleteWikiPage(@Path("pageId") long id);
 
 	@GET("/api/wiki/page/find")
-	IPPaginatorPage<PWikiPage> findWikiPage(@QueryMap Map<String, Object> params);
+	IPPaginatorPage<RWikiPage> findWikiPage(@QueryMap Map<String, Object> params);
 
 	@POST("/api/wiki/page/{pageId}/label/{labelId}")
-	PWikiPage addLabelToPage(@Path("pageId") long pageId, @Path("labelId") long labelId);
+	RWikiPage addLabelToPage(@Path("pageId") long pageId, @Path("labelId") long labelId);
 
 	@GET("/api/wiki/page/{pageId}/labels")
 	Map<String, PLabel> getPageLabels(@Path("pageId") long pageId);
 
 	@DELETE("/api/wiki/page/{pageId}/label/{labelId}")
-	PWikiPage deleteLabelFromPage(@Path("pageId") long pageId, @Path("labelId") long labelId);
+	RWikiPage deleteLabelFromPage(@Path("pageId") long pageId, @Path("labelId") long labelId);
 
 	@POST("/api/wiki/page/{pageId}/category/{categoryId}")
-	PWikiPage addCategoryToPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
+	RWikiPage addCategoryToPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
 
 	@DELETE("/api/wiki/page/{pageId}/category/{categoryId}")
-	PWikiPage deleteCategoryFromPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
+	RWikiPage deleteCategoryFromPage(@Path("pageId") long pageId, @Path("categoryId") long categoryId);
 
 	@GET("/api/wiki/page/{pageId}/categories")
 	Map<String, PCategory> getPageCategories(@Path("pageId") long pageId);

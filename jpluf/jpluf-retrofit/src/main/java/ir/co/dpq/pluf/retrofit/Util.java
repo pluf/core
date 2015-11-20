@@ -8,9 +8,11 @@ import ir.co.dpq.pluf.PPaginatorParameter;
 import ir.co.dpq.pluf.retrofit.user.RProfile;
 import ir.co.dpq.pluf.retrofit.user.RUser;
 import ir.co.dpq.pluf.retrofit.wiki.RWikiBook;
+import ir.co.dpq.pluf.retrofit.wiki.RWikiPage;
 import ir.co.dpq.pluf.user.PProfile;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.PWikiBook;
+import ir.co.dpq.pluf.wiki.PWikiPage;
 
 /**
  * برخی از فراخوانی‌های پرکاربرد سیستم را ایجاد می‌کند.
@@ -103,5 +105,11 @@ public class Util {
 		if(user instanceof RUser)
 			return (RUser) user;
 		return new RUser(user);
+	}
+
+	public static RWikiPage toRObject(PWikiPage page) {
+		if(page instanceof RWikiPage)
+			return (RWikiPage) page;
+		return new RWikiPage(page);
 	}
 }

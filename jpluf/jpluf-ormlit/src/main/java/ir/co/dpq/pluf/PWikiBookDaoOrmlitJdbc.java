@@ -15,10 +15,22 @@ import ir.co.dpq.pluf.wiki.PWikiBook;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 import ir.co.dpq.pluf.wiki.PWikiPageItem;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 
 	private Dao<PWikiBook, Long> wikiDao;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#createWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook createWikiBook(PWikiBook book) {
 		try {
@@ -32,6 +44,11 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#getWikiBook(java.lang.Long)
+	 */
 	@Override
 	public PWikiBook getWikiBook(Long bookId) {
 		try {
@@ -42,6 +59,13 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#updateWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook updateWikiBook(PWikiBook book) {
 		try {
@@ -52,6 +76,13 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#deleteWikiBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook)
+	 */
 	@Override
 	public PWikiBook deleteWikiBook(PWikiBook book) {
 		try {
@@ -63,9 +94,14 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#findWikiBook(ir.co.dpq.pluf.
+	 * PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiBook> findWikiBook(PPaginatorParameter param) {
-
 		QueryBuilder<PWikiBook, Long> queryBuilder = wikiDao.queryBuilder();
 		try {
 			// count
@@ -77,7 +113,7 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 					.limit((long) param.getItemPerPage())//
 					.offset((long) param.getPage() * param.getItemPerPage());
 			PreparedQuery<PWikiBook> preparedQuery = queryBuilder.prepare();
-			List<PWikiBook> list = wikiDao.query(preparedQuery);;
+			List<PWikiBook> list = wikiDao.query(preparedQuery);
 
 			PPaginatedWikiBook page = new PPaginatedWikiBook();
 			page.setItemsPerPage(param.getItemPerPage())//
@@ -89,43 +125,6 @@ public class PWikiBookDaoOrmlitJdbc implements IPWikiBookDao {
 		} catch (SQLException e) {
 			throw new PException(e.getMessage(), e);
 		}
-
-		//
-		// Query query = null;
-		// Query q = null;
-		//
-		// wikiDao.queryBuilder().where().
-		// if (parameter.getQuery() != null &&
-		// parameter.getQuery().trim().length() > 0) {
-		// query = session.createQuery("FROM AuditLog a WHERE " //
-		// + "(a.message like :query) OR " //
-		// + "(a.subject like :query) OR " //
-		// + "(a.object like :query)");
-		// q = session.createQuery("SELECT COUNT(*) FROM AuditLog a WHERE " //
-		// + "(a.message like :query) OR " //
-		// + "(a.subject like :query) OR " //
-		// + "(a.object like :query)");
-		// query.setString("query", parameter.getQuery().trim());
-		// q.setString("query", parameter.getQuery().trim());
-		// } else {
-		// query = session.createQuery("FROM AuditLog");
-		// q = session.createQuery("SELECT COUNT(*) FROM AuditLog a");
-		// }
-		//
-		// query.setFirstResult(parameter.getPageNumber() *
-		// parameter.getItemsPerPage());
-		// query.setMaxResults(parameter.getItemsPerPage());
-		//
-		// @SuppressWarnings("unchecked")
-		// List<AuditLog> list = query.list();
-		//
-		//
-		// PaginatedPage<AuditLog> page = new PaginatedPage<>(list);
-		// page.setItemsPerPage(parameter.getItemsPerPage());
-		// page.setCurrentPage(parameter.getPageNumber());
-		// page.setPageNumber(count.intValue() / parameter.getItemsPerPage()
-		// + ((count.intValue() % parameter.getItemsPerPage() != 0) ? 1 : 0));
-		// return page;
 	}
 
 	@Override
