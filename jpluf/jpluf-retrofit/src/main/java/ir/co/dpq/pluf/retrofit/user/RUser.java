@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 import ir.co.dpq.pluf.retrofit.IRObject;
+import ir.co.dpq.pluf.retrofit.Util;
 import ir.co.dpq.pluf.user.PUser;
 
 /**
@@ -38,12 +39,16 @@ public class RUser extends PUser implements IRObject {
 
 		// copy attrigutes
 		setId(user.getId());
+		setFirstName(user.getFirstName());
+		setLastName(user.getLastName());
+		setLogin(user.getLogin());
 		setEmail(user.getEmail());
 		setAdministrator(user.isAdministrator());
 		setStaff(user.isStaff());
 		setActive(user.isActive());
 		setLanguage(user.getLanguage());
 		setTimezone(user.getTimezone());
+		setPassword(user.getPassword());
 		setDateJoined(user.getDateJoined());
 		setLastLogin(user.getLastLogin());
 	}
@@ -94,14 +99,20 @@ public class RUser extends PUser implements IRObject {
 	public Map<String, Object> toMap() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("email", getEmail());
 		map.put("active", isActive());
 		map.put("administrator", isAdministrator());
 		map.put("staff", isStaff());
 		map.put("language", getLanguage());
 		map.put("timezone", getTimezone());
+		
+		map.put("login", getLogin());
+		map.put("email", getEmail());
 		map.put("first_name", getFirstName());
 		map.put("last_name", getLastName());
+		
+		map.put("password", getPassword());
+		
+		Util.filterMap(map);
 		
 		return map;
 	}

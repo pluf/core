@@ -36,7 +36,7 @@ function User_Shortcuts_UserProfileDateFactory ($object)
  */
 function User_Shortcuts_UserJsonResponse ($user)
 {
-    $user->password = '****';
+    $user->password = null;
     return new Pluf_HTTP_Response_Json($user);
 }
 

@@ -2,28 +2,48 @@ package ir.co.dpq.pluf.user;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+
 /**
  * ساختار داده‌ای کاربر را تعیین می‌کند.
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
+@Entity(name = "user")
+@Table(name = "user")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PUser extends PUserItem {
 
+	@Column(name = "email")
 	private String email;
 
+	@Column(name = "administrator")
 	private boolean administrator;
 
+	@Column(name = "staff")
 	private boolean staff;
 
+	@Column(name = "active")
 	private boolean active;
 
+	@Column(name = "language")
 	private String language;
 
+	@Column(name = "timezone")
 	private String timezone;
 
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "date_joined")
 	Date dateJoined;
 
+	@Column(name = "last_login")
 	Date lastLogin;
 
 	public String getEmail() {
@@ -90,4 +110,13 @@ public class PUser extends PUserItem {
 		this.lastLogin = lastLogin;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	
 }

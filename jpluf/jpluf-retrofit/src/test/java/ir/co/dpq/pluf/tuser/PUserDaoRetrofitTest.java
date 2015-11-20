@@ -17,6 +17,11 @@ import ir.co.dpq.pluf.user.IPUserDao;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public class PUserDaoRetrofitTest extends PUserDaoTest {
 
 	private IRUserService userSerivece;
@@ -29,35 +34,16 @@ public class PUserDaoRetrofitTest extends PUserDaoTest {
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder//
-				.setDateFormat("yyyy-MM-dd HH:mm:ss")
-				// .registerTypeAdapter(new
-				// TypeToken<PPaginatorPage<PCategory>>() {
-				// }.getType(), new DeserializerJson<PCategory>())//
-				// .registerTypeAdapter(new TypeToken<PPaginatorPage<PLabel>>()
-				// {
-				// }.getType(), new DeserializerJson<PLabel>())//
-				// .registerTypeAdapter(new
-				// TypeToken<PPaginatorPage<PWikiPage>>() {
-				// }.getType(), new DeserializerJson<PWikiPage>())//
-				// .registerTypeAdapter(new
-				// TypeToken<PPaginatorPage<RWikiPageItem>>() {
-				// }.getType(), new DeserializerJson<RWikiPageItem>())//
-				// .registerTypeAdapter(new
-				// TypeToken<PPaginatorPage<RWikiBook>>() {
-				// }.getType(), new DeserializerJson<RWikiBook>());
-		;//
+				.setDateFormat("yyyy-MM-dd HH:mm:ss");//
 		Gson gson = gsonBuilder.create();
 
 		RestAdapter restAdapter = new RestAdapter.Builder()//
 				.setConverter(new GsonConverter(gson))//
-				// تعیین کنترل کننده خطا
-				.setErrorHandler(new PErrorHandler())
-				// تعیین آدرس سایت مورد نظر
-				.setEndpoint(API_URL)
-				// ایجاد یک نمونه
+				.setErrorHandler(new PErrorHandler())//
+				.setEndpoint(API_URL)//
 				.build();
 		this.userSerivece = restAdapter.create(IRUserService.class);
-		
+
 		userDao = new PUserDaoRetrofit();
 		userDao.setUserService(userSerivece);
 	}

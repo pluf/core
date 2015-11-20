@@ -19,7 +19,7 @@ public abstract class PUserDaoTest {
 		usr = getUserDaoInstance();
 	}
 
-	protected abstract IPUserDao getUserDaoInstance() ;
+	protected abstract IPUserDao getUserDaoInstance();
 
 	@Test
 	public void getSessionUser() {
@@ -83,5 +83,28 @@ public abstract class PUserDaoTest {
 
 		PUser nuser = usr.update(user);
 		assertNotNull(nuser);
+	}
+
+	@Test
+	public void signupUserTest00() {
+		usr.logout();
+		
+		String pass = "pass" + Math.random();
+
+		PUser user = new PUser();
+		user.setLogin("login" + Math.random());
+		user.setFirstName("first name");
+		user.setLastName("last name");
+		user.setEmail("mostafa.barmshory@dpq.co.ir");
+		user.setPassword(pass);
+
+		PUser nuser = usr.signup(user);
+		assertNotNull(nuser);
+
+		PUser u = usr.login(user.getLogin(), pass);
+		assertNotNull(u);
+		assertEquals(user.getLogin(), u.getLogin());
+		
+		usr.logout();
 	}
 }
