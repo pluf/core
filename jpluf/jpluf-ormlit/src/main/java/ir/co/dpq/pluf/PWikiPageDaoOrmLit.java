@@ -56,6 +56,13 @@ public class PWikiPageDaoOrmLit implements IPWikiPageDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiPageDao#deleteWikiPage(ir.co.dpq.pluf.wiki.
+	 * PWikiPage)
+	 */
 	@Override
 	public PWikiPage deleteWikiPage(PWikiPage page) {
 		try {
@@ -69,6 +76,12 @@ public class PWikiPageDaoOrmLit implements IPWikiPageDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiPageDao#findWikiPage(ir.co.dpq.pluf.
+	 * PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiPage> findWikiPage(PPaginatorParameter param) {
 		try {
