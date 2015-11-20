@@ -7,6 +7,11 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import ir.co.dpq.pluf.PWikiPageDaoOrmLit;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public class PWikiPageDaoOrmlitMySqlTest extends PWikiPageDaoOrmlitH2Test {
 
 	public PWikiPageDaoOrmlitMySqlTest() throws Exception {

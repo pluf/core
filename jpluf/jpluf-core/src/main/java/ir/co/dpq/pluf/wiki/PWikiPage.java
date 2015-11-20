@@ -21,6 +21,9 @@ import javax.persistence.TemporalType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PWikiPage extends PWikiPageItem {
 
+	@Column(name = "book")
+	private Long book;
+
 	@Column(name = "language")
 	private String language;
 
@@ -87,6 +90,14 @@ public class PWikiPage extends PWikiPageItem {
 
 	public void setModification(Date modification) {
 		this.modification = modification;
+	}
+
+	public Long getBook() {
+		return book;
+	}
+
+	public void setBook(Long book) {
+		this.book = book;
 	}
 
 }

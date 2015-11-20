@@ -13,6 +13,11 @@ import ir.co.dpq.pluf.test.wiki.PWikiPageDaoTest;
 import ir.co.dpq.pluf.wiki.IPWikiPageDao;
 import ir.co.dpq.pluf.wiki.PWikiPage;
 
+/**
+ * 
+ * @author maso
+ *
+ */
 public class PWikiPageDaoOrmlitH2Test extends PWikiPageDaoTest {
 
 	PWikiPageDaoOrmLit wikiPageDao;
@@ -25,7 +30,7 @@ public class PWikiPageDaoOrmlitH2Test extends PWikiPageDaoTest {
 	void setupService() throws Exception {
 		ConnectionSource connectionSource = new JdbcConnectionSource(DATABASE_URL);
 		setupDatabase(connectionSource);
-		
+
 		wikiPageDao = new PWikiPageDaoOrmLit();
 		wikiPageDao.setWikiPageDao(wikiDao);
 	}

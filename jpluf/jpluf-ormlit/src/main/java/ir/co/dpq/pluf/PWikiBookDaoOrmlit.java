@@ -23,6 +23,7 @@ import ir.co.dpq.pluf.wiki.PWikiPageItem;
 public class PWikiBookDaoOrmlit implements IPWikiBookDao {
 
 	private Dao<PWikiBook, Long> wikiDao;
+	private Dao<PWikiPage, Long> wikiPageDao;
 
 	/*
 	 * (non-Javadoc)
@@ -164,22 +165,75 @@ public class PWikiBookDaoOrmlit implements IPWikiBookDao {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#getBookPages(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PWikiPageItem> getBookPages(PWikiBook book, PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			// count
+			QueryBuilder<PWikiPage, Long> queryBuilder = wikiPageDao.queryBuilder();
+			queryBuilder.where().eq("book", book.getId());
+			Long count = queryBuilder.countOf();
+
+			// Items
+			queryBuilder = wikiPageDao.queryBuilder();
+			queryBuilder//
+					.limit((long) param.getItemPerPage())//
+					.offset((long) param.getPage() * param.getItemPerPage()).where().eq("book", book.getId());
+			PreparedQuery<PWikiPage> preparedQuery = queryBuilder.prepare();
+			List<PWikiPage> list = wikiPageDao.query(preparedQuery);
+
+			PPaginatedWikiItemPage page = new PPaginatedWikiItemPage();
+			page//
+					.setItems(list)//
+					.setItemsPerPage(param.getItemPerPage())//
+					.setCurrentPage(param.getPage())//
+					.setPageNumber(count.intValue() / param.getItemPerPage()
+							+ ((count.intValue() % param.getItemPerPage() != 0) ? 1 : 0));
+			return page;
+		} catch (Exception e) {
+			throw new PException(e.getMessage(), e);
+		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiBookDao#addPageToBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.wiki.PWikiPage)
+	 */
 	@Override
 	public PWikiPage addPageToBook(PWikiBook book, PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			PWikiPage cpage = wikiPageDao.queryForId(page.getId());
+			cpage.setBook(book.getId());
+			wikiPageDao.update(cpage);
+			return cpage;
+		} catch (Exception e) {
+			throw new PException(e.getMessage(), e);
+		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.wiki.IPWikiBookDao#deletePageFromBook(ir.co.dpq.pluf.wiki.
+	 * PWikiBook, ir.co.dpq.pluf.wiki.PWikiPage)
+	 */
 	@Override
 	public PWikiPage deletePageFromBook(PWikiBook book, PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			page.setBook(0l);
+			wikiPageDao.update(page);
+			return page;
+		} catch (Exception e) {
+			throw new PException(e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -202,6 +256,10 @@ public class PWikiBookDaoOrmlit implements IPWikiBookDao {
 
 	public void setWikiDao(Dao<PWikiBook, Long> wikiDao) {
 		this.wikiDao = wikiDao;
+	}
+
+	public void setWikiPageDao(Dao<PWikiPage, Long> wikiPageDao) {
+		this.wikiPageDao = wikiPageDao;
 	}
 
 }
