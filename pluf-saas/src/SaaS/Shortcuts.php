@@ -112,6 +112,7 @@ function SaaS_Shortcuts_LoadLibFromJson($filename, $create){
                 $lib->version = $package['version'];
                 $lib->mode = $package['mode'];
                 $lib->type = $package['type'];
+                $lib->description = $package['description'];
                 $lib->path = $package['path'];
                 $list[] = $lib;
             }

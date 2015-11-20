@@ -32,7 +32,7 @@
     "path": "/lib/angular-material/angular-material.min.js"
   },
   {
-    "name": "angular-material",
+    "name": "angular-material-css",
     "version": "0.11.4",
     "mode": "2",
     "type": "2",
@@ -42,7 +42,7 @@
   {
     "name": "angular-pluf",
     "version": "0.1.0",
-    "mode": "1",
+    "mode": "2",
     "type": "1",
     "description": "Angualr Pluf Core",
     "path": "/lib/angular-pluf/src/pluf.js"
@@ -50,7 +50,7 @@
   {
     "name": "angular-pluf-help",
     "version": "0.1.0",
-    "mode": "1",
+    "mode": "2",
     "type": "1",
     "description": "Angualr Pluf Help",
     "path": "/lib/angular-pluf/src/pluf.help.js"
@@ -58,7 +58,7 @@
   {
     "name": "angular-pluf-hm",
     "version": "0.1.0",
-    "mode": "1",
+    "mode": "2",
     "type": "1",
     "description": "Angualr Pluf House Automation",
     "path": "/lib/angular-pluf/src/pluf.hm.js"
@@ -66,7 +66,7 @@
   {
     "name": "angular-pluf-saas",
     "version": "0.1.0",
-    "mode": "1",
+    "mode": "2",
     "type": "1",
     "description": "Angualr Pluf House Automation",
     "path": "/lib/angular-pluf/src/pluf.saas.js"
@@ -98,26 +98,34 @@
   {
     "name": "angular-validation-match",
     "version": "1.5.2",
-    "mode": "",
-    "type": "",
+    "mode": "2",
+    "type": "1",
     "description": "",
     "path": "/lib/angular-validation-match/index.js"
   },
   {
     "name": "angular-xeditable",
     "version": "0.1.9",
-    "mode": "",
-    "type": "",
+    "mode": "2",
+    "type": "1",
     "description": "",
     "path": "/lib/angular-xeditable/dist/js/xeditable.min.js"
   },
   {
     "name": "angular-xeditable",
     "version": "0.1.9",
-    "mode": "",
-    "type": "",
+    "mode": "2",
+    "type": "2",
     "description": "",
     "path": "/lib/angular-xeditable/dist/css/xeditable.css"
+  },
+  {
+    "name": "material-design-icons",
+    "version": "0.1.9",
+    "mode": "2",
+    "type": "2",
+    "description": "Material design icons",
+    "path": "/assets/css/material-design-icons.css"
   },
   {
     "name": "markdown",
@@ -126,5 +134,13 @@
     "type": "1",
     "description": "Markdown Compiler",
     "path": "/lib/markdown/lib/markdown.js"
+  },
+  {
+    "name": "ng-appcache",
+    "version": "2.0.1",
+    "mode": "2",
+    "type": "1",
+    "description": "Angular module for working with AppCache",
+    "path": "/lib/ng-appcache/dist/appcache.js"
   }
 ]
