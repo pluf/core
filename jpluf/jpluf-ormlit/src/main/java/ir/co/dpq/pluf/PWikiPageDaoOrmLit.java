@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import ir.co.dpq.pluf.km.PCategory;
 import ir.co.dpq.pluf.km.PLabel;
@@ -39,22 +41,60 @@ public class PWikiPageDaoOrmLit implements IPWikiPageDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.wiki.IPWikiPageDao#getWikiPage(java.lang.Long)
+	 */
 	@Override
 	public PWikiPage getWikiPage(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			PWikiPage rbook = wikiPageDao.queryForId(id);
+			return rbook;
+		} catch (SQLException e) {
+			throw new PException("error", e);
+		}
 	}
 
 	@Override
 	public PWikiPage deleteWikiPage(PWikiPage page) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			PWikiPage tpage = getWikiPage(page.getId());
+			Assert.assertNotNull(tpage, "page not found");
+			wikiPageDao.delete(tpage);
+			tpage.setId(0l);
+			return tpage;
+		} catch (SQLException e) {
+			throw new PException("error", e);
+		}
 	}
 
 	@Override
 	public IPPaginatorPage<PWikiPage> findWikiPage(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			// count
+			QueryBuilder<PWikiPage, Long> queryBuilder = wikiPageDao.queryBuilder();
+			Long count = queryBuilder.countOf();
+
+			// Items
+			queryBuilder = wikiPageDao.queryBuilder();
+			queryBuilder//
+					.limit((long) param.getItemPerPage())//
+					.offset((long) param.getPage() * param.getItemPerPage());
+			PreparedQuery<PWikiPage> preparedQuery = queryBuilder.prepare();
+			List<PWikiPage> list = wikiPageDao.query(preparedQuery);
+
+			PPaginatedWikiPage page = new PPaginatedWikiPage();
+			page//
+					.setItems(list)//
+					.setItemsPerPage(param.getItemPerPage())//
+					.setCurrentPage(param.getPage())//
+					.setPageNumber(count.intValue() / param.getItemPerPage()
+							+ ((count.intValue() % param.getItemPerPage() != 0) ? 1 : 0));
+			return page;
+		} catch (SQLException e) {
+			throw new PException(e.getMessage(), e);
+		}
 	}
 
 	@Override

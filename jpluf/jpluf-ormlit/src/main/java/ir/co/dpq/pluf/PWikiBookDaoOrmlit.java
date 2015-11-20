@@ -116,8 +116,9 @@ public class PWikiBookDaoOrmlit implements IPWikiBookDao {
 			List<PWikiBook> list = wikiDao.query(preparedQuery);
 
 			PPaginatedWikiBook page = new PPaginatedWikiBook();
-			page.setItemsPerPage(param.getItemPerPage())//
+			page//
 					.setItems(list)//
+					.setItemsPerPage(param.getItemPerPage())//
 					.setCurrentPage(param.getPage())//
 					.setPageNumber(count.intValue() / param.getItemPerPage()
 							+ ((count.intValue() % param.getItemPerPage() != 0) ? 1 : 0));
