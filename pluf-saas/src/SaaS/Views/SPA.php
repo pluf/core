@@ -8,17 +8,17 @@ Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Views_SAP
+class SaaS_Views_SPA
 {
 
-    public function sap ($request, $match)
+    public function spa ($request, $match)
     {
         $app = $request->application;
         if ($app->isAnonymous()) {
             throw new Pluf_Exception("Non app??");
         }
         $sap = $app->get_sap();
-        $repo = Pluf::f('saas_sap_repository');
+        $repo = Pluf::f('saas_spa_repository');
         
         $package = $sap->loadPackage();
         list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
@@ -33,7 +33,7 @@ class SaaS_Views_SAP
                 'cssLibs' => $cssLib,
                 'package' => $package
         );
-        return Pluf_Shortcuts_RenderToResponse('sap.html', $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('spa.html', $params, $request);
     }
 
     public function appcache ($request, $match)
@@ -43,7 +43,7 @@ class SaaS_Views_SAP
             throw new Pluf_Exception("Non app??");
         }
         $sap = $app->get_sap();
-        $repo = Pluf::f('saas_sap_repository');
+        $repo = Pluf::f('saas_spa_repository');
         $package = $sap->loadPackage();
         list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
         
