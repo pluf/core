@@ -11,7 +11,7 @@ function SaaS_Migrations_Install_setup ($params = null)
     $models = array(
             'SaaS_Application',
             'SaaS_Configuration',
-            'SaaS_SAP',
+            'SaaS_SPA',
             'SaaS_Lib',
             'SaaS_Resource'
     );
@@ -93,7 +93,7 @@ function SaaS_Migrations_Install_teardown ($params = null)
     $models = array(
             'SaaS_Application',
             'SaaS_Configuration',
-            'SaaS_SAP',
+            'SaaS_SPA',
             'SaaS_Lib',
             'SaaS_Resource'
     );

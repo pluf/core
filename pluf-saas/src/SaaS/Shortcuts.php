@@ -48,15 +48,17 @@ function SaaS_Shortcuts_libraryFactory ($object = null)
     return $object;
 }
 
-function SaaS_Shortcuts_GetSAPOr404($id){
-    $item = new SaaS_SAP($id);
+function SaaS_Shortcuts_GetSAPOr404 ($id)
+{
+    $item = new SaaS_SPA($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
     throw new Pluf_HTTP_Error404("SAP not found (" . $id . ")");
 }
 
-function SaaS_Shortcuts_GetApplicationOr404($id){
+function SaaS_Shortcuts_GetApplicationOr404 ($id)
+{
     $item = new SaaS_Application($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
@@ -86,19 +88,21 @@ function SaaS_Shortcuts_LibFindCount ($request)
     return 20;
 }
 
-
 /**
  * نصب کتابخانه‌ها بر اساس یک فایل جیسون
- * 
- * فهرست تمام کتابخانه‌ها را با قالب جیسون دریافت کرده و آنها را به کلاس‌های معادل
- * تبدیل می‌کند. در صورتی که پارامتر $create مقدار درستی باشد آنها را در پایگاه داده
+ *
+ * فهرست تمام کتابخانه‌ها را با قالب جیسون دریافت کرده و آنها را به کلاس‌های
+ * معادل
+ * تبدیل می‌کند. در صورتی که پارامتر $create مقدار درستی باشد آنها را در پایگاه
+ * داده
  * ذخیره نیز می‌کند.
- * 
- * @param string $filename
- * @param boolean $create
+ *
+ * @param string $filename            
+ * @param boolean $create            
  * @return library list
  */
-function SaaS_Shortcuts_LoadLibFromJson($filename, $create){
+function SaaS_Shortcuts_LoadLibFromJson ($filename, $create)
+{
     $list = array();
     {
         if (is_readable($filename)) {
@@ -106,7 +110,7 @@ function SaaS_Shortcuts_LoadLibFromJson($filename, $create){
             $json = fread($myfile, filesize($filename));
             fclose($myfile);
             $packages = json_decode($json, true);
-            foreach($packages as $package){
+            foreach ($packages as $package) {
                 $lib = new SaaS_Lib();
                 $lib->name = $package['name'];
                 $lib->version = $package['version'];
@@ -118,10 +122,100 @@ function SaaS_Shortcuts_LoadLibFromJson($filename, $create){
             }
         }
     }
-    if($create){
-        foreach ($list as $lib){
+    if ($create) {
+        foreach ($list as $lib) {
             $lib->create();
         }
     }
     return $list;
 }
+
+function SaaS_Shortcuts_LoadSPAFromRepository ()
+{
+    $repo = Pluf::f('saas_spa_repository') . '/';
+    $list = SaaS_Shortcuts_SPAStorageList();
+    foreach ($list as $path) {
+        $filename = $repo . $path . Pluf::f('saas_spa_package', "/spa.json");
+        if (is_readable($filename)) {
+            $myfile = fopen($filename, "r") or die("Unable to open file!");
+            $json = fread($myfile, filesize($filename));
+            fclose($myfile);
+            $package = json_decode($json, true);
+        
+            $mprofile = new SaaS_SPA();
+            $mprofile->path = '/' . $path;
+            $mprofile->name = $package['name'];
+            $mprofile->descritpion = $package['description'];
+            $mprofile->license = $package['license'];
+            $mprofile->homepage = $package['homepage'];
+            $mprofile->version = $package['version'];
+            $mprofile->create();
+        }
+    }
+}
+
+/**
+ * فهرستی از تمام نرم افزارهایی را تعیین می‌کند که در مخزن ایجاد شده اند.
+ *
+ * @param unknown $directory            
+ */
+function SaaS_Shortcuts_SPAStorageList ()
+{
+    $directory = Pluf::f('saas_spa_repository') . '/';
+    $results = array();
+    $handler = opendir($directory);
+    while ($file = readdir($handler)) {
+        if ($file != "." && $file != "..") {
+            $spaFile = $directory . $file .
+                     Pluf::f('saas_spa_package', "/spa.json");
+            if (is_file($spaFile) && is_readable($spaFile)) {
+                $results[] = $file;
+            }
+        }
+    }
+    closedir($handler);
+    return $results;
+}
+
+
+// $mprofile = new SaaS_SPA();
+// $mprofile->path = '/mprofile';
+// $mprofile->title = 'Profile manager';
+// $mprofile->descritpion = 'Ghazal default profile manager';
+// $mprofile->type = 'free';
+// $mprofile->create();
+
+// $mwiki = new SaaS_SPA();
+// $mwiki->path = '/mwiki';
+// $mwiki->title = 'Wiki viewer';
+// $mwiki->descritpion = 'Ghazal default wiki viewer';
+// $mwiki->type = 'free';
+// $mwiki->create();
+
+// $main = new SaaS_SPA();
+// $main->path = '/main';
+// $main->title = 'Ghazal main app';
+// $main->descritpion = 'Ghazal';
+// $main->type = 'free';
+// $main->create();
+
+// $ghazalr = new SaaS_SPA();
+// $ghazalr->path = '/ghazal-register';
+// $ghazalr->title = 'Ghazal register';
+// $ghazalr->descritpion = 'Ghazal main user application';
+// $ghazalr->type = 'free';
+// $ghazalr->create();
+
+// $ghazalu = new SaaS_SPA();
+// $ghazalu->path = '/ghazal-user';
+// $ghazalu->title = 'Ghazal user';
+// $ghazalu->descritpion = 'Ghazal main user application';
+// $ghazalu->type = 'free';
+// $ghazalu->create();
+
+// $ghazal = new SaaS_SPA();
+// $ghazal->path = '/ghazal';
+// $ghazal->title = 'Ghazal';
+// $ghazal->descritpion = 'Ghazal main application';
+// $ghazal->type = 'free';
+// $ghazal->create();

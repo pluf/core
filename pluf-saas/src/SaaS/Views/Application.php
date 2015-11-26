@@ -166,13 +166,13 @@ class SaaS_Views_Application
 
     public function saps ($request, $match)
     {
-        $pag = new Pluf_Paginator(new SaaS_SAP());
+        $pag = new Pluf_Paginator(new SaaS_SPA());
         $pag->model_view = 'sap_application';
         // $pag->model_view = 'sap_application_permission';
         
         $sql = new Pluf_SQL('model_class=%s AND owner_class=%s AND owner_id=%s', 
                 array(
-                        'SaaS_SAP',
+                        'SaaS_SPA',
                         'SaaS_Application',
                         $request->application->id
                 ));

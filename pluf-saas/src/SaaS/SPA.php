@@ -5,7 +5,7 @@
  * @author maso
  *
  */
-class SaaS_SAP extends Pluf_Model
+class SaaS_SPA extends Pluf_Model
 {
 
     /**
@@ -15,20 +15,20 @@ class SaaS_SAP extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'SaaS_SAP';
-        $this->_a['table'] = 'saas_sap';
+        $this->_model = 'SaaS_SPA';
+        $this->_a['table'] = 'saas_spa';
         $this->_a['model'] = $this->_model;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'title' => array(
+                'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 100
                 ),
-                'type' => array(
+                'license' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 250
@@ -38,7 +38,17 @@ class SaaS_SAP extends Pluf_Model
                         'blank' => true,
                         'size' => 250
                 ),
+                'version' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 100
+                ),
                 'path' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 100
+                ),
+                'homepage' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 100
@@ -52,22 +62,26 @@ class SaaS_SAP extends Pluf_Model
                         'blank' => true
                 )
         );
-
+        
         $this->_a['views'] = array(
-                'sap_application' => array(
-                        'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_sap.id='.$this->_con->pfx.'rowpermissions.model_id',
-                        'select' => $this->getSelect().', permission',
-                        'props' => array(
-                                'permission' => 'permission'
-                        ),
-                        'group'=>'rowpermissions.model_id'
+                'spa_application' => array(
+                        'join' => 'LEFT JOIN ' . $this->_con->pfx .
+                                 'rowpermissions ON saas_sap.id=' .
+                                 $this->_con->pfx . 'rowpermissions.model_id',
+                                'select' => $this->getSelect() . ', permission',
+                                'props' => array(
+                                        'permission' => 'permission'
+                                ),
+                                'group' => 'rowpermissions.model_id'
                 ),
-                'sap_application_permission' => array(
-                        'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_sap.id='.$this->_con->pfx.'rowpermissions.model_id',
-                        'select' => $this->getSelect().', permission',
+                'spa_application_permission' => array(
+                        'join' => 'LEFT JOIN ' . $this->_con->pfx .
+                         'rowpermissions ON saas_spa.id=' . $this->_con->pfx .
+                         'rowpermissions.model_id',
+                        'select' => $this->getSelect() . ', permission',
                         'props' => array(
                                 'permission' => 'permission'
-                        ),
+                        )
                 )
         );
     }
@@ -108,11 +122,11 @@ class SaaS_SAP extends Pluf_Model
 
     public function loadPackage ()
     {
-        $repo = Pluf::f('saas_sap_repository');
+        $repo = Pluf::f('saas_spa_repository');
         $package = array();
         {
             $filename = $repo . $this->path .
-                     Pluf::f('saas_sap_package', "/sap.json");
+                     Pluf::f('saas_spa_package', "/spa.json");
             if (is_readable($filename)) {
                 $myfile = fopen($filename, "r") or die("Unable to open file!");
                 $json = fread($myfile, filesize($filename));

@@ -74,7 +74,7 @@ class SaaS_Application extends Pluf_Model
                 ),
                 'sap' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_SAP',
+                        'model' => 'SaaS_SPA',
                         'blank' => true,
                         'verbose' => __('Default SAP for this application')
                 ),
