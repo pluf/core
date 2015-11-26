@@ -17,7 +17,10 @@ class SaaS_Views_SPA
         if ($app->isAnonymous()) {
             throw new Pluf_Exception("Non app??");
         }
-        $sap = $app->get_sap();
+        if ($app->sap != 0)
+            $sap = $app->get_sap();
+        else
+            $sap = new SaaS_SPA(Pluf::f('saas_spa_default', 1));
         $repo = Pluf::f('saas_spa_repository');
         
         $package = $sap->loadPackage();
