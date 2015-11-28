@@ -23,28 +23,24 @@ public interface IPTenantService {
 
 	@FormUrlEncoded
 	@POST("/api/saas/app/create")
-	PTenant createTenant(@FieldMap Map<String, Object> properties);
+	RTenant createTenant(@FieldMap Map<String, Object> properties);
 
 	@GET("/api/saas/app/{appId}")
-	PTenant getTenant(@Path("appId") Long id);
+	RTenant getTenant(@Path("appId") Long id);
 
 	@GET("/api/saas/app")
-	PTenant getTenant();
+	RTenant getTenant();
 
 	@FormUrlEncoded
 	@POST("/api/saas/app/{appId}")
-	PTenant updateTenant(@Path("appId") Long id, @FieldMap Map<String, Object> map);
+	RTenant updateTenant(@Path("appId") Long id, @FieldMap Map<String, Object> map);
 
 	@DELETE("/api/saas/app/{appId}")
-	PTenant deleteTenant(@Path("appId") Long id);
+	RTenant deleteTenant(@Path("appId") Long id);
 
 	@GET("/api/saas/app/list")
-	IPPaginatorPage<PTenant> findTenant(@QueryMap Map<String, Object> params);
+	IPPaginatorPage<RTenant> findTenant(@QueryMap Map<String, Object> params);
 
 	@GET("/api/saas/app/userList")
-	IPPaginatorPage<PTenant> findUserTenant(@QueryMap Map<String, Object> params);
-
-	@Multipart
-	@POST("/api/saas/app/{appId}/resource/create")
-	PResource createResource(@Path("appId") Long id, @Part("file") TypedFile file, @Part("description") String description);
+	IPPaginatorPage<RTenant> findUserTenant(@QueryMap Map<String, Object> params);
 }

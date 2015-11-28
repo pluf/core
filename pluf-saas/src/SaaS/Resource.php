@@ -24,7 +24,7 @@ class SaaS_Resource extends Pluf_Model
         $this->_model = 'SaaS_Resource';
         
         $this->_a['cols'] = array(
-                'id' => array(
+                'resource_id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
@@ -40,6 +40,11 @@ class SaaS_Resource extends Pluf_Model
                 'file_size' => array(
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false
+                ),
+                'mime_type' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 50
                 ),
                 'downloads' => array(
                         'type' => 'Pluf_DB_Field_Integer',

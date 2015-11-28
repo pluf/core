@@ -1,23 +1,11 @@
-package ir.co.dpq.pluf.retrofit.saas;
+package ir.co.dpq.pluf.saas;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.annotations.SerializedName;
-
-/**
- * 
- * @author maso <mostafa.barmshory@dpq.co.ir>
- *
- */
 public class PTenant {
-
 	Long id;
 	Long level;
 
-	@SerializedName("access_count")
 	Long accessCount;
-	
+
 	Boolean validate;
 	String title;
 	String domain;
@@ -96,15 +84,6 @@ public class PTenant {
 
 	public void setBackground(String background) {
 		this.background = background;
-	}
-
-	public Map<String, Object> toMap() {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		map.put("title", getTitle());
-		map.put("description", getDescription());
-
-		return map;
 	}
 
 	public Long getSap() {
