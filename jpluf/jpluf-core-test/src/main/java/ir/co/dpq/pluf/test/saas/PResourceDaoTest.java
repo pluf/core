@@ -40,7 +40,7 @@ public abstract class PResourceDaoTest {
 		PResource resource = new PResource();
 		resource.setFile(EXAMPLE_FILE);
 		resource.setFilePath(EXAMPLE_FILE_PATH);
-		resource.setDescription("This is an example file.");
+		resource.setDescription("createResourceTest00");
 
 		PResource cresource = resourceDao.create(resource);
 		assertNotNull(cresource);
@@ -53,7 +53,7 @@ public abstract class PResourceDaoTest {
 		PResource resource = new PResource();
 		resource.setFile(EXAMPLE_FILE);
 		resource.setFilePath(EXAMPLE_FILE_PATH);
-		resource.setDescription("This is an example file.");
+		resource.setDescription("getResourceTest00");
 
 		PResource cresource = resourceDao.create(resource);
 		assertNotNull(cresource);
