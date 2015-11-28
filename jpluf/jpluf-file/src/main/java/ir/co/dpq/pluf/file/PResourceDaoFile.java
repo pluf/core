@@ -73,6 +73,12 @@ public class PResourceDaoFile implements IPResourceDao {
 		return new File(getBasePath(), "storage.json");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#create(ir.co.dpq.pluf.saas.PResource)
+	 */
 	@Override
 	public PResource create(PResource resource) {
 		try {
@@ -92,10 +98,16 @@ public class PResourceDaoFile implements IPResourceDao {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.saas.IPResourceDao#get(java.lang.Long)
+	 */
 	@Override
 	public PResource get(Long id) {
+		Assert.assertNotNull(id, "Resource id is null");
 		for (PResource resource : resources) {
-			if(resource.getId().equals(id)){
+			if (resource.getId().equals(id)) {
 				return resource;
 			}
 		}
@@ -104,26 +116,38 @@ public class PResourceDaoFile implements IPResourceDao {
 
 	@Override
 	public PResource delete(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		PResource re = get(resource.getId());
+		FileUtil.toJavaFile(re).deleteOnExit();
+		resources.remove(re);
+		return re;
 	}
 
 	@Override
 	public PResource update(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		delete(get(resource.getId()));
+		return create(resource);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#getFile(ir.co.dpq.pluf.saas.PResource)
+	 */
 	@Override
 	public File getFile(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		return FileUtil.toJavaFile(resource);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.saas.IPResourceDao#find(ir.co.dpq.pluf.
+	 * PPaginatorParameter)
+	 */
 	@Override
 	public IPPaginatorPage<PResource> find(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PResourcePaginatorPage(this.resources);
 	}
 
 }

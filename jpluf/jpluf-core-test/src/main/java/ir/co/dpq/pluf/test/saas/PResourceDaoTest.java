@@ -36,7 +36,7 @@ public abstract class PResourceDaoTest {
 	protected abstract IPResourceDao getPResourceDao();
 
 	@Test
-	public void createPageTest00() {
+	public void createResourceTest00() {
 		PResource resource = new PResource();
 		resource.setFile(EXAMPLE_FILE);
 		resource.setFilePath(EXAMPLE_FILE_PATH);
@@ -48,4 +48,21 @@ public abstract class PResourceDaoTest {
 		assertEquals(resource.getDescription(), cresource.getDescription());
 	}
 
+	@Test
+	public void getResourceTest00() {
+		PResource resource = new PResource();
+		resource.setFile(EXAMPLE_FILE);
+		resource.setFilePath(EXAMPLE_FILE_PATH);
+		resource.setDescription("This is an example file.");
+
+		PResource cresource = resourceDao.create(resource);
+		assertNotNull(cresource);
+		assertEquals(resource.getFile(), cresource.getFile());
+		assertEquals(resource.getDescription(), cresource.getDescription());
+		
+		cresource = resourceDao.get(cresource.getId());
+		assertNotNull(cresource);
+		assertEquals(resource.getFile(), cresource.getFile());
+		assertEquals(resource.getDescription(), cresource.getDescription());
+	}
 }
