@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PResource {
 
-	@Column(name = "resource_id")
+	@Column(name = "id")
 	Long id;
 
 	@Column(name = "file")

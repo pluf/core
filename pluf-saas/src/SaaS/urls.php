@@ -178,6 +178,28 @@ return array(
                 )
         ),
         array(
+                'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
+        array(
+                'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                ),
+                'saas' => array(
+                        'match-application' => 1
+                )
+        ),
+        array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
                 'model' => 'SaaS_Views_ApplicationResource',
                 'method' => 'download',
@@ -188,8 +210,10 @@ return array(
                         'match-application' => 1
                 )
         ),
-        /*
+        /**
+         * **************************************************************************
          * کتابخانه‌ها
+         * **************************************************************************
          */
         array(
                 'regex' => '#^/lib/create$#',

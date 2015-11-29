@@ -19,17 +19,17 @@ public interface IResourceService {
 	@POST("/api/saas/app/{appId}/resource/create")
 	RResource create(@Path("appId") Long appId, @Part("file") TypedFile file, @Part("description") String description);
 
-	@GET("/api/saas/app/{appId}/resouce/{resourceId}")
+	@GET("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource get(@Path("appId") Long appId, @Path("resourceId") Long resourceId);
 
 	@FormUrlEncoded
-	@POST("/api/saas/app/{appId}/resouce/{resourceId}")
+	@POST("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource update(@Path("appId") Long appId, @Path("resourceId") Long resourceId,
 			@FieldMap Map<String, Object> param);
 
-	@DELETE("/api/saas/app/{appId}/resouce/{resourceId}")
+	@DELETE("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource delete(@Path("appId") Long appId, @Path("resourceId") Long resourceId);
 
-	@GET("/api/saas/app/{appId}/resouce/find")
+	@GET("/api/saas/app/{appId}/resource/find")
 	RResourcePaginatorPage find(@Path("appId") Long appId, @QueryMap Map<String, Object> param);
 }

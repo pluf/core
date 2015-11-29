@@ -40,6 +40,47 @@ class SaaS_Views_ApplicationResource
         return new Pluf_HTTP_Response_Json($resource);
     }
 
+    public function update ($request, $match)
+    {
+        // GET data
+        $app = new SaaS_Application($match[1]);
+        $resource = new SaaS_Resource($match[2]);
+        // Check permission
+        if ($app->id != $resource->application) {
+            throw new Pluf_Exception('association fail');
+        }
+        SaaS_Precondition::userCanAccessApplication($request, $app);
+        SaaS_Precondition::userCanUpdateResource($request, $resource);
+        // Do
+        $params = array(
+                'application' => $app,
+                'user' => $request->user,
+                'resource' => $resource
+        );
+        $form = new SaaS_Form_ResourceUpdate(
+                array_merge($request->REQUEST, $request->FILES), $params);
+        $res = $form->update();
+        return new Pluf_HTTP_Response_Json($res);
+    }
+
+    public function delete ($request, $match)
+    {
+        // GET data
+        $app = new SaaS_Application($match[1]);
+        $resource = new SaaS_Resource($match[2]);
+        // Check permission
+        if ($app->id != $resource->application) {
+            throw new Pluf_Exception('association fail');
+        }
+        SaaS_Precondition::userCanAccessApplication($request, $app);
+        SaaS_Precondition::userCanDeleteResource($request, $resource);
+        
+        $temp = new SaaS_Resource($match[2]);
+        $temp->delete();
+        // Do
+        return new Pluf_HTTP_Response_Json($resource);
+    }
+
     public function download ($request, $match)
     {
         // GET data

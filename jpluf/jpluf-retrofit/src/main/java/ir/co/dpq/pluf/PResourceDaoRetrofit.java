@@ -1,8 +1,10 @@
 package ir.co.dpq.pluf;
 
 import java.io.File;
+import java.net.URL;
 
 import ir.co.dpq.pluf.retrofit.Assert;
+import ir.co.dpq.pluf.retrofit.Util;
 import ir.co.dpq.pluf.retrofit.saas.IResourceService;
 import ir.co.dpq.pluf.retrofit.saas.RResource;
 import ir.co.dpq.pluf.saas.IPResourceDao;
@@ -33,24 +35,31 @@ public class PResourceDaoRetrofit implements IPResourceDao {
 
 	@Override
 	public PResource get(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		PTenant tenant = tenantDao.current();
+		Assert.assertNotNull(tenantDao, "Current tenant is not set?!");
+		RResource ntenant = resourceService.get(tenant.getId(), id);
+		return ntenant;
 	}
 
 	@Override
 	public PResource delete(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		PTenant tenant = tenantDao.current();
+		Assert.assertNotNull(tenantDao, "Current tenant is not set?!");
+		RResource ntenant = resourceService.delete(tenant.getId(), resource.getId());
+		return ntenant;
 	}
 
 	@Override
 	public PResource update(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		PTenant tenant = tenantDao.current();
+		Assert.assertNotNull(tenantDao, "Current tenant is not set?!");
+		RResource rr = Util.toRObject(resource);
+		RResource ntenant = resourceService.update(tenant.getId(), resource.getId(), rr.toMap());
+		return ntenant;
 	}
 
 	@Override
-	public File getFile(PResource resource) {
+	public URL getFile(PResource resource) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -63,5 +72,9 @@ public class PResourceDaoRetrofit implements IPResourceDao {
 
 	public void setResourceService(IResourceService resourceService) {
 		this.resourceService = resourceService;
+	}
+
+	public void setTenantDao(IPTenantDao tenantDao) {
+		this.tenantDao = tenantDao;
 	}
 }

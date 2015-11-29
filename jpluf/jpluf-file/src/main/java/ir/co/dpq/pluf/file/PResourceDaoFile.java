@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +29,11 @@ public class PResourceDaoFile implements IPResourceDao {
 	public PResourceDaoFile() {
 		resources = new CopyOnWriteArrayList<PResource>();
 		setBasePath("resource");
+	}
+
+	public PResourceDaoFile(File dir) {
+		resources = new CopyOnWriteArrayList<PResource>();
+		setBasePath(dir);
 	}
 
 	private File getBasePath() {
@@ -136,8 +143,12 @@ public class PResourceDaoFile implements IPResourceDao {
 	 * ir.co.dpq.pluf.saas.IPResourceDao#getFile(ir.co.dpq.pluf.saas.PResource)
 	 */
 	@Override
-	public File getFile(PResource resource) {
-		return FileUtil.toJavaFile(resource);
+	public URL getFile(PResource resource) {
+		try {
+			return FileUtil.toJavaFile(resource).toURI().toURL();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException("", e);
+		}
 	}
 
 	/*

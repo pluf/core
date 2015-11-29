@@ -1,6 +1,7 @@
 package ir.co.dpq.pluf.retrofit.saas;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
@@ -24,6 +25,23 @@ public class RResource extends PResource implements IRObject {
 
 	@SerializedName("modif_dtime")
 	Date modification;
+
+	public RResource() {
+		super();
+	}
+
+	public RResource(PResource resource) {
+		setDescription(resource.getDescription());
+		setApplication(resource.getApplication());
+		setFile(resource.getFile());
+		setFilePath(getFilePath());
+		setFileSize(resource.getFileSize());
+		setMimeType(resource.getMimeType());
+		setCreation(resource.getCreation());
+		setModification(resource.getModification());
+		setSubmitter(resource.getSubmitter());
+		setDownloads(resource.getDownloads());
+	}
 
 	public String getFilePath() {
 		return filePath;
@@ -67,7 +85,8 @@ public class RResource extends PResource implements IRObject {
 
 	@Override
 	public Map<String, Object> toMap() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("description", getDescription());
+		return map;
 	}
 }

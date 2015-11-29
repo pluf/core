@@ -129,8 +129,14 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
     function save ($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Exception(
-                    __('Cannot save the model from an invalid form.'));
+            $string1 = "";
+            foreach ($this->errors as $err) {
+                foreach ($err as $value) {
+                    $string1 .= $value . " ";
+                }
+            }
+            throw new Pluf_Exception(
+                    __('Cannot save the model from an invalid form.').$string1);
         }
         // // Add a tag for each label
         // $tags = array();

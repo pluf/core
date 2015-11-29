@@ -1,12 +1,15 @@
 package ir.co.dpq.pluf.retrofit;
 
+import java.io.File;
 import java.util.HashMap;
 
 import ir.co.dpq.pluf.PPaginatorParameter;
+import ir.co.dpq.pluf.retrofit.saas.RResource;
 import ir.co.dpq.pluf.retrofit.user.RProfile;
 import ir.co.dpq.pluf.retrofit.user.RUser;
 import ir.co.dpq.pluf.retrofit.wiki.RWikiBook;
 import ir.co.dpq.pluf.retrofit.wiki.RWikiPage;
+import ir.co.dpq.pluf.saas.PResource;
 import ir.co.dpq.pluf.user.PProfile;
 import ir.co.dpq.pluf.user.PUser;
 import ir.co.dpq.pluf.wiki.PWikiBook;
@@ -57,5 +60,15 @@ public class Util {
 				map.remove(key);
 			}
 		}
+	}
+
+	public static File localFile(PResource resource) {
+		return new File(resource.getFilePath(), resource.getFile());
+	}
+
+	public static RResource toRObject(PResource resource) {
+		if (resource instanceof RResource)
+			return (RResource) resource;
+		return new RResource(resource);
 	}
 }

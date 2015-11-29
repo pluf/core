@@ -24,7 +24,7 @@ class SaaS_Resource extends Pluf_Model
         $this->_model = 'SaaS_Resource';
         
         $this->_a['cols'] = array(
-                'resource_id' => array(
+                'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
