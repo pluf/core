@@ -36,6 +36,7 @@ public class PResourceDaoFile implements IPResourceDao {
 	public void setBasePath(File basePFile) {
 		this.basePath = basePFile;
 		try {
+			this.basePath.mkdir();
 			loadList();
 		} catch (Exception ex) {
 			// throw new PException("Store resource list", ex);
