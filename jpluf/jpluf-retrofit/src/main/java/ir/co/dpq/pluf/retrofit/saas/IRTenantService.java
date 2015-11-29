@@ -19,7 +19,7 @@ import retrofit.mime.TypedFile;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPTenantService {
+public interface IRTenantService {
 
 	@FormUrlEncoded
 	@POST("/api/saas/app/create")

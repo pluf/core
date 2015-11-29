@@ -1,13 +1,21 @@
-package ir.co.dpq.pluf.retrofit.saas;
+package ir.co.dpq.pluf.saas;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 /**
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
+@Entity(name = "saas_library")
+@Table(name = "saas_library")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PLibrary {
 
 	public static final int MODE_DEBUG = 1;
@@ -16,16 +24,32 @@ public class PLibrary {
 	public static final int TYPE_JAVASCRITP = 1;
 	public static final int TYPE_CSS = 2;
 
+	@Column(name = "id")
 	private Long id;
+
+	@Column(name = "mode")
 	private Integer mode;
+
+	@Column(name = "type")
 	private Integer type;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "version")
 	private String version;
+
+	@Column(name = "description")
 	private String description;
+
+	@Column(name = "path")
 	private String path;
 
-	// Date creation_dtime;
-	// Date modif_dtime;
+	@Column(name = "creation_dtime")
+	Date creation;
+
+	@Column(name = "modif_dtime")
+	Date modification;
 
 	public Long getId() {
 		return id;
@@ -83,18 +107,20 @@ public class PLibrary {
 		this.path = path;
 	}
 
-	public Map<String, Object> toMap() {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		map.put("id", getId());
-		map.put("mode", getMode());
-		map.put("type", getType());
-		map.put("name", getName());
-		map.put("version", getVersion());
-		map.put("description", getDescription());
-		map.put("path", getPath());
-
-		return map;
+	public Date getCreation() {
+		return creation;
 	}
 
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
+	public Date getModification() {
+		return modification;
+	}
+
+	public void setModification(Date modification) {
+		this.modification = modification;
+	}
+	
 }

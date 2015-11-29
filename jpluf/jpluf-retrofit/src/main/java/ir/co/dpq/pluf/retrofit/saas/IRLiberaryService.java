@@ -16,23 +16,23 @@ import retrofit.http.QueryMap;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-public interface IPLiberaryService {
+public interface IRLiberaryService {
 
 	@FormUrlEncoded
 	@POST("/api/saas/lib/create")
-	PLibrary createLibrary(@FieldMap Map<String, Object> map);
+	RLibrary createLibrary(@FieldMap Map<String, Object> map);
 
 	@GET("/api/saas/lib/{libId}")
-	PLibrary getLibrary(@Path("libId") Long id);
+	RLibrary getLibrary(@Path("libId") Long id);
 
 	@FormUrlEncoded
 	@POST("/api/saas/lib/{libId}")
-	PLibrary updateLibrary(@Path("libId") Long id, @FieldMap Map<String, Object> map);
+	RLibrary updateLibrary(@Path("libId") Long id, @FieldMap Map<String, Object> map);
 
 	@DELETE("/api/saas/lib/{libId}")
-	PLibrary deleteLibrary(@Path("libId") Long id);
+	RLibrary deleteLibrary(@Path("libId") Long id);
 
 	@GET("/api/saas/lib/list")
-	IPPaginatorPage<PLibrary> findLibrary(@QueryMap Map<String, Object> params);
+	IPPaginatorPage<RLibrary> findLibrary(@QueryMap Map<String, Object> params);
 
 }
