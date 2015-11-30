@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 
 import ir.co.dpq.pluf.PResourceDaoRetrofit;
 import ir.co.dpq.pluf.PUserDaoRetrofit;
+import ir.co.dpq.pluf.retrofit.IRConfigurationService;
 import ir.co.dpq.pluf.retrofit.PErrorHandler;
 import ir.co.dpq.pluf.retrofit.saas.IResourceService;
 import ir.co.dpq.pluf.retrofit.user.IRUserService;
@@ -66,17 +67,16 @@ public class ResourceDaoAdminTest extends PResourceDaoTest {
 		resourceDaoRetrofit = new PResourceDaoRetrofit();
 		resourceDaoRetrofit.setResourceService(resourceService);
 		resourceDaoRetrofit.setTenantDao(new IPTenantDao() {
-			
 			@Override
 			public PTenant setCurrent(Long id) {
 				return null;
 			}
-			
+
 			@Override
 			public PTenant get(Long id) {
 				return null;
 			}
-			
+
 			@Override
 			public PTenant current() {
 				PTenant tenant = new PTenant();
@@ -85,7 +85,13 @@ public class ResourceDaoAdminTest extends PResourceDaoTest {
 				return tenant;
 			}
 		});
-		
+		resourceDaoRetrofit.setConfigurationService(new IRConfigurationService() {
+			@Override
+			public String getEndpoint() {
+				return API_URL;
+			}
+		});
+
 		userDaoRetrofit = new PUserDaoRetrofit();
 		userDaoRetrofit.setUserService(userSerivece);
 	}

@@ -1,9 +1,12 @@
 package ir.co.dpq.pluf;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import ir.co.dpq.pluf.retrofit.Assert;
+import ir.co.dpq.pluf.retrofit.IRConfigurationService;
+import ir.co.dpq.pluf.retrofit.RPaginatorParameter;
 import ir.co.dpq.pluf.retrofit.Util;
 import ir.co.dpq.pluf.retrofit.saas.IResourceService;
 import ir.co.dpq.pluf.retrofit.saas.RResource;
@@ -18,6 +21,8 @@ public class PResourceDaoRetrofit implements IPResourceDao {
 	IResourceService resourceService;
 
 	IPTenantDao tenantDao;
+
+	IRConfigurationService configurationService;
 
 	private TypedFile getFileType(PResource resource) {
 		File file = new File(resource.getFilePath(), resource.getFile());
@@ -60,14 +65,23 @@ public class PResourceDaoRetrofit implements IPResourceDao {
 
 	@Override
 	public URL getFile(PResource resource) {
-		// TODO Auto-generated method stub
-		return null;
+		String path = String.format("%s/api/saas/app/%d/resource/%d/download", //
+				configurationService.getEndpoint(), //
+				tenantDao.current().getId(), //
+				resource.getId());//
+		try {
+			return new URL(path);
+		} catch (MalformedURLException e) {
+			throw new PException("", e);
+		}
 	}
 
 	@Override
 	public IPPaginatorPage<PResource> find(PPaginatorParameter param) {
-		// TODO Auto-generated method stub
-		return null;
+		PTenant tenant = tenantDao.current();
+		Assert.assertNotNull(tenantDao, "Current tenant is not set?!");
+		RPaginatorParameter rparams = Util.toRObject(param);
+		return resourceService.find(tenant.getId(), rparams.toMap());
 	}
 
 	public void setResourceService(IResourceService resourceService) {
@@ -76,5 +90,9 @@ public class PResourceDaoRetrofit implements IPResourceDao {
 
 	public void setTenantDao(IPTenantDao tenantDao) {
 		this.tenantDao = tenantDao;
+	}
+
+	public void setConfigurationService(IRConfigurationService configurationService) {
+		this.configurationService = configurationService;
 	}
 }

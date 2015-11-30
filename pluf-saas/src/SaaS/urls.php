@@ -156,7 +156,7 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/app/(\d+)/resource/list$#',
+                'regex' => '#^/app/(\d+)/resource/find$#',
                 'model' => 'SaaS_Views_ApplicationResource',
                 'method' => 'find',
                 'http-method' => array(

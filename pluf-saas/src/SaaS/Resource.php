@@ -162,4 +162,16 @@ class SaaS_Resource extends Pluf_Model
         // XXX: maso, 1394: تعیین نوع پرونده
         return Pluf::f('upload_path') . $this->file_path . '/' . $this->file;
     }
+    
+    /**
+     * Hook run just before deleting a model from the database.
+     *
+     * Just overwrite it into your model to perform custom actions.
+     */
+    function preDelete ()
+    {
+        $filename = $this->getAbslotePath();
+        unlink($filename);
+    }
+    
 }

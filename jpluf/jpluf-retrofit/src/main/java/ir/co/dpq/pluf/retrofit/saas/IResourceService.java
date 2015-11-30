@@ -27,7 +27,7 @@ public interface IResourceService {
 	RResource update(@Path("appId") Long appId, @Path("resourceId") Long resourceId,
 			@FieldMap Map<String, Object> param);
 
-	@DELETE("/api/saas/app/{appId}/resource/{resourceId}")
+	@DELETE("/api/saas/app/{appId}/resource/{resourceId}?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14489029591401")
 	RResource delete(@Path("appId") Long appId, @Path("resourceId") Long resourceId);
 
 	@GET("/api/saas/app/{appId}/resource/find")
