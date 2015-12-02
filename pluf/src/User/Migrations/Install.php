@@ -16,6 +16,19 @@ function User_Migrations_Install_setup ($params = '')
         $schema->model = new $model();
         $schema->createTables();
     }
+    
+
+    /*
+     * موجودیت‌های پیش فرض سیستم
+     */
+    $users = new Pluf_User ();
+    $users->login = 'admin';
+    $users->last_name = 'admin';
+    $users->email = 'admin@dpq.co.ir';
+    $users->setPassword ( 'admin' );
+    $users->administrator = true;
+    $users->staff = true;
+    $users->create ();
 }
 
 /**

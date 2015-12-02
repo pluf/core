@@ -22,14 +22,14 @@ function Jayab_Migrations_Install_setup($params = '') {
 	/*
 	 * موجودیت‌های پیش فرض سیستم
 	 */
-	$users = new Pluf_User ();
-	$users->login = 'admin';
-	$users->last_name = 'admin';
-	$users->email = 'admin@dpq.co.ir';
-	$users->setPassword ( 'admin' );
-	$users->administrator = true;
-	$users->staff = true;
-	$users->create ();
+	$users = new Pluf_User (1);
+// 	$users->login = 'admin';
+// 	$users->last_name = 'admin';
+// 	$users->email = 'admin@dpq.co.ir';
+// 	$users->setPassword ( 'admin' );
+// 	$users->administrator = true;
+// 	$users->staff = true;
+// 	$users->create ();
 	
 	
 	$tag = new Jayab_Tag();
