@@ -18,7 +18,7 @@ class SaaS_Views_SPA
             throw new Pluf_Exception("Non app??");
         }
         if ($app->spa != 0)
-            $spa = $app->get_sap();
+            $spa = $app->get_spa();
         else
             $spa = new SaaS_SPA(Pluf::f('saas_spa_default', 1));
         $repo = Pluf::f('saas_spa_repository');
