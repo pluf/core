@@ -1,0 +1,63 @@
+<!DOCTYPE html>{*
+*************************************************************************
+                           Appcache
+                           
+حمایت از زبان و کش نرم افزار. در این قسمت زبان و کش کردن نرم افزار
+بررسی شده و بخش‌های مورد نیاز به آن اضافه می‌شود.
+*************************************************************************
+*}<html {*
+*}{if array_key_exists('appcache', $package) && filter_var($package['appcache'], FILTER_VALIDATE_BOOLEAN)}manifest="{url 'SaaS_Views_SPA::appcache', array($app->id, $spa->id)}"{/if} {*
+*}{if $language}language="{$language}"{/if} {*
+*}>{*
+*************************************************************************
+                             Meta datas
+*************************************************************************
+*}{if array_key_exists('meta', $package)}{assign $metas=$package['meta']}
+{foreach $metas as $meta}{*
+	*}<meta {foreach $meta as $key=>$val}{$key}="{$val}" {/foreach}/>
+{/foreach}
+{/if}{* 
+*************************************************************************
+                               Links
+*************************************************************************
+*}{if array_key_exists('link', $package)}{assign $links=$package['link']}
+{foreach $links as $link}{*
+	*}<link {foreach $link as $key=>$val}{$key}="{$val}" {/foreach}/>
+{/foreach}
+{/if}
+{if $cssLibs}
+{foreach $cssLibs as $cssLib}{*
+	*}<link rel="stylesheet" type="text/css" href="/api/saas/lib/{$cssLib->id}/download"/>
+{/foreach}
+{/if}
+</head>
+<body>
+{cfg 'debug', false, false}
+{*
+*************************************************************************
+						Application View
+*************************************************************************
+*}{spaView $mainView}
+{*
+*************************************************************************
+                         Dependencies
+*************************************************************************
+*}{if $jsLibs}
+{foreach $jsLibs as $jsLib}{*
+	*}<script type="text/javascript" src="/api/saas/lib/{$jsLib->id}/download"></script>
+{/foreach}
+{/if}
+{*
+*************************************************************************
+                        Application Source
+*************************************************************************
+*}{if $cfg_debug && array_key_exists('src', $package)}{assign $srcs=$package['src']}
+{foreach $srcs as $src}{*
+	*}<script type="text/javascript" src="{$spa->path}/{$src}"></script>
+{/foreach}
+{/if}
+{if !$cfg_debug}{*
+	*}<script type="text/javascript" src="{$spa->path}/app.min.js"></script>
+{/if}
+</body>
+</html>
