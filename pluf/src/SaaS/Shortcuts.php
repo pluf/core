@@ -88,6 +88,13 @@ function SaaS_Shortcuts_LibFindCount ($request)
     return 20;
 }
 
+function SaaS_Shortcuts_LoadLibs ()
+{
+    SaaS_Shortcuts_LoadLibFromJson( //
+            Pluf::f('saas_lib_repository') . '/' . Pluf::f('saas_lib_index'),  //
+            true);
+}
+
 /**
  * نصب کتابخانه‌ها بر اساس یک فایل جیسون
  *
@@ -141,7 +148,7 @@ function SaaS_Shortcuts_LoadSPAFromRepository ()
             $json = fread($myfile, filesize($filename));
             fclose($myfile);
             $package = json_decode($json, true);
-        
+            
             $mprofile = new SaaS_SPA();
             $mprofile->path = '/' . $path;
             $mprofile->name = $package['name'];
@@ -177,45 +184,3 @@ function SaaS_Shortcuts_SPAStorageList ()
     return $results;
 }
 
-
-// $mprofile = new SaaS_SPA();
-// $mprofile->path = '/mprofile';
-// $mprofile->title = 'Profile manager';
-// $mprofile->descritpion = 'Ghazal default profile manager';
-// $mprofile->type = 'free';
-// $mprofile->create();
-
-// $mwiki = new SaaS_SPA();
-// $mwiki->path = '/mwiki';
-// $mwiki->title = 'Wiki viewer';
-// $mwiki->descritpion = 'Ghazal default wiki viewer';
-// $mwiki->type = 'free';
-// $mwiki->create();
-
-// $main = new SaaS_SPA();
-// $main->path = '/main';
-// $main->title = 'Ghazal main app';
-// $main->descritpion = 'Ghazal';
-// $main->type = 'free';
-// $main->create();
-
-// $ghazalr = new SaaS_SPA();
-// $ghazalr->path = '/ghazal-register';
-// $ghazalr->title = 'Ghazal register';
-// $ghazalr->descritpion = 'Ghazal main user application';
-// $ghazalr->type = 'free';
-// $ghazalr->create();
-
-// $ghazalu = new SaaS_SPA();
-// $ghazalu->path = '/ghazal-user';
-// $ghazalu->title = 'Ghazal user';
-// $ghazalu->descritpion = 'Ghazal main user application';
-// $ghazalu->type = 'free';
-// $ghazalu->create();
-
-// $ghazal = new SaaS_SPA();
-// $ghazal->path = '/ghazal';
-// $ghazal->title = 'Ghazal';
-// $ghazal->descritpion = 'Ghazal main application';
-// $ghazal->type = 'free';
-// $ghazal->create();
