@@ -36,11 +36,14 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
      */
     function render($output_body=true)
     {
-        $this->headers['Content-Length'] = (string)filesize($this->content);
+        $this->headers['Content-Length'] = (string) filesize($this->content);
         $this->outputHeaders();
         if ($output_body) {
             $fp = fopen($this->content, 'rb');
-            fpassthru($fp);
+            while(!feof($fp)) {
+                $buffer = fread($fp, 2048);
+                echo $buffer;
+            }
             fclose($fp);
         }
         if ($this->delete_file) {

@@ -121,10 +121,16 @@ class SaaS_Views_ApplicationResource
         );
         $search_fields = array(
                 'file',
-                'description'
+                'description',
+                'mime_type'
         );
         $sort_fields = array(
-                'creation_dtime'
+                'mime_type',
+                'creation_dtime',
+                'modef_dtime'
+        );
+        $pag->list_filters = array(
+                'mime_type'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();

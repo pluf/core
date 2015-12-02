@@ -280,7 +280,7 @@
 
 فراخوانی زیر برای دسترسی به فهرست تنظیم‌ها در نظر گرفته شده است:
 
-	/saas/app/{applicaation id}/configs
+	/app/{applicaation id}/configs
 
 این فراخوانی باید با متد GET به کار گرفته شود. خروجی بر اساس دسترسی‌های کاربر می‌تواند متفاوت باشد. برای نمونه اگر بدون ورود به سیستم این فراخوانی انجام شود تنها خصوصیت‌های عمومی را در اختیار قرار می‌دهد.
 
@@ -288,17 +288,17 @@
 
 ## گرفتن مقدار
 
-	/saas/app/{applicaation id}/config/{name}
+	/app/{applicaation id}/config/{name}
 	Method : GET
 
 ## حذف مقدار
 
-	/saas/app/{applicaation id}/config/{name}
+	/app/{applicaation id}/config/{name}
 	Method : DELETE
 
 ## به روز کردن
 
-	/saas/app/{applicaation id}/configs
+	/app/{applicaation id}/configs
 	Method : POST
 
 مقدار هر تنظیم باید به صورت کلید مقدار در بده باشد.
@@ -308,8 +308,35 @@
 
 ## اضافه کردن 
 
+	/app/1/resource/create
+	Method : POST
+
+پارامترهای ساخت:
+
+- file : پرونده مورد نظر
+- description : توضیحات
+
 ## حذف کردن
 
 ## گرفتن
 
 ## فهرست
+
+	/app/{application id}/resource/find
+	Method : GET
+	
+کلید‌های فیلتر
+
+- mime_type
+
+کلیدهای جستجو
+
+- file
+- description
+- mime_type
+
+کلیدهای مرتب سازی
+
+- mime_type
+- creation_dtime
+- modif_dtime

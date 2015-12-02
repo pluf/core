@@ -22,6 +22,12 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
                         'label' => __('description'),
                         'initial' => ''
                 ));
+        $this->fields['mime_type'] = new Pluf_Form_Field_Varchar(
+                array(
+                        'required' => false,
+                        'label' => __('mimetype'),
+                        'initial' => 'application/octet-stream'
+                ));
         $this->fields['file'] = new Pluf_Form_Field_File(
                 array(
                         'required' => true,
@@ -166,6 +172,7 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
         $upload->file_size = filesize(
                 Pluf::f('upload_path') . $upload->file_path);
         $upload->downloads = 0;
+        $upload->mime_type = $this->cleaned_data['mime_type'];
         
         $upload->owner_write = true;
         $upload->owner_read = true;
