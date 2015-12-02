@@ -34,9 +34,6 @@ function HM_Migrations_Install_setup ($params = '')
     $user->staff = true;
     $user->create();
     
-    SaaS_Shortcuts_LoadLibFromJson(dirname(__FILE__) . "/lib.json", true);
-    SaaS_Shortcuts_LoadSPAFromRepository();
-    
     
     $apartment = new SaaS_Application();
     $apartment->title = 'Admin demo apartment';
@@ -95,25 +92,4 @@ function HM_Migrations_Install_setup ($params = '')
     $themeConfig->create();
     
     Pluf_RowPermission::add($user, $apartment, 'SaaS.software-owner');
-}
-
-/**
- * تمام داده‌های ایجاد شده را از سیستم حذف می‌کند.
- *
- * @param string $params            
- */
-function HM_Migrations_Install_teardown ($params = '')
-{
-    $models = array(
-            'HM_Profile',
-            'HM_Message',
-            'HM_Part',
-            'HM_Payment'
-    );
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    foreach ($models as $model) {
-        $schema->model = new $model();
-        $schema->dropTables();
-    }
 }

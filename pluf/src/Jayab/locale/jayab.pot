@@ -1,0 +1,128 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-08 23:54+0330\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Jayab/Vote.php:31
+msgid "user"
+msgstr ""
+
+#: Jayab/Vote.php:32
+msgid "id of a user"
+msgstr ""
+
+#: Jayab/Vote.php:38
+msgid "location"
+msgstr ""
+
+#: Jayab/Vote.php:39
+msgid "id of a location"
+msgstr ""
+
+#: Jayab/Vote.php:44
+msgid "like"
+msgstr ""
+
+#: Jayab/Vote.php:45
+msgid "like or dislike filed of a location"
+msgstr ""
+
+#: Jayab/Views/Location.php:94 Jayab/Views/Location.php:137
+msgid "location title"
+msgstr ""
+
+#: Jayab/Views/Location.php:95 Jayab/Views/Location.php:138
+msgid "description"
+msgstr ""
+
+#: Jayab/Views/Location.php:175
+#, php-format
+msgid "the location %s has been created."
+msgstr ""
+
+#: Jayab/Views/Location.php:206
+#, php-format
+msgid "the location %s has been updated."
+msgstr ""
+
+#: Jayab/Views/Location.php:240
+#, php-format
+msgid "the location %s has been deleted."
+msgstr ""
+
+#: Jayab/Form/Location.php:31
+msgid "location name"
+msgstr ""
+
+#: Jayab/Form/Location.php:38
+msgid "location description"
+msgstr ""
+
+#: Jayab/Form/Location.php:45
+msgid "latitude"
+msgstr ""
+
+#: Jayab/Form/Location.php:52
+msgid "longitude"
+msgstr ""
+
+#: Jayab/Form/Location.php:69 Jayab/Form/Location.php:94
+msgid "cannot save the location from an invalid form"
+msgstr ""
+
+#: Jayab/Form/Location.php:76
+msgid "fail to create the location"
+msgstr ""
+
+#: Jayab/Form/Location.php:101
+#, php-format
+msgid "fail to update the location %s"
+msgstr ""
+
+#: Jayab/Form/Vote.php:37
+msgid "vote value"
+msgstr ""
+
+#: Jayab/Form/Vote.php:46 Jayab/Form/Vote.php:64
+msgid "cannot vote the location from an invalid form"
+msgstr ""
+
+#: Jayab/Form/Vote.php:54 Jayab/Form/Vote.php:70
+msgid "fail to update the vote of the location"
+msgstr ""
+
+#: Jayab/Shortcuts.php:124
+#, php-format
+msgid "location not found (%s)"
+msgstr ""
+
+#: Jayab/Shortcuts.php:134
+#, php-format
+msgid "tag not found (%s)"
+msgstr ""
+
+#: Jayab/Precondition.php:45
+msgid "you are allowed to access the location"
+msgstr ""
+
+#: Jayab/Tag.php:46
+msgid "creation date"
+msgstr ""
+
+#: Jayab/Tag.php:51
+msgid "modification date"
+msgstr ""

@@ -72,6 +72,14 @@
     "path": "/lib/angular-pluf/src/pluf.saas.js"
   },
   {
+    "name": "angular-pluf-jayab",
+    "version": "0.1.0",
+    "mode": "2",
+    "type": "1",
+    "description": "Angualr Pluf House Automation",
+    "path": "/lib/angular-pluf/src/pluf.jayab.js"
+  },
+  {
     "name": "angular-touch",
     "version": "1.4.7",
     "mode": "2",
