@@ -32,7 +32,7 @@ return array(
         array( // گرفتن جاری
                 'regex' => '#^/app$#',
                 'model' => 'SaaS_Views_Application',
-                'method' => 'get',
+                'method' => 'current',
                 'http-method' => array(
                         'GET'
                 ),

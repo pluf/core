@@ -142,5 +142,37 @@
     "type": "1",
     "description": "Angular module for working with AppCache",
     "path": "/lib/ng-appcache/dist/appcache.js"
+  },
+  {
+    "name": "angular-materialize",
+    "version": "0.1.1",
+    "mode": "2",
+    "type": "1",
+    "description": "Angular",
+    "path": "/lib/angular-materialize/src/angular-materialize.js"
+  },
+  {
+    "name": "jquery",
+    "version": "2.1.3",
+    "mode": "2",
+    "type": "1",
+    "description": "JQuery",
+    "path": "/lib/jquery/dist/jquery.min.js"
+  },
+  {
+    "name": "materialize",
+    "version": "0.98.3",
+    "mode": "2",
+    "type": "1",
+    "description": "A modern responsive front-end framework based on Material Design",
+    "path": "/lib/materialize/dist/js/materialize.min.js"
+  },  
+  {
+    "name": "materialize-css",
+    "version": "0.98.3",
+    "mode": "2",
+    "type": "2",
+    "description": "A modern responsive front-end framework based on Material Design",
+    "path": "/lib/materialize/dist/css/materialize.min.jcss"
   }
 ]

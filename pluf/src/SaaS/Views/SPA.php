@@ -36,7 +36,7 @@ class SaaS_Views_SPA
                 'cssLibs' => $cssLib,
                 'package' => $package
         );
-        return Pluf_Shortcuts_RenderToResponse('spa.html', $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, $request);
     }
 
     public function spa ($request, $match)
@@ -61,7 +61,7 @@ class SaaS_Views_SPA
                 'cssLibs' => $cssLib,
                 'package' => $package
         );
-        return Pluf_Shortcuts_RenderToResponse('spa.html', $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, $request);
     }
 
     public function appcache ($request, $match)
