@@ -15,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import ir.co.dpq.pluf.IPCallback;
 import ir.co.dpq.pluf.IPPaginatorPage;
 import ir.co.dpq.pluf.PException;
 import ir.co.dpq.pluf.PPaginatorParameter;
@@ -109,6 +110,19 @@ public class PResourceDaoFile implements IPResourceDao {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#create(ir.co.dpq.pluf.saas.PResource,
+	 * ir.co.dpq.pluf.IPCallback)
+	 */
+	@Override
+	public void create(PResource resource, IPCallback<PResource> callback) {
+		PResource t = create(resource);
+		callback.success(t);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ir.co.dpq.pluf.saas.IPResourceDao#get(java.lang.Long)
 	 */
 	@Override
@@ -122,6 +136,23 @@ public class PResourceDaoFile implements IPResourceDao {
 		throw new PException("Resource not fount");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see ir.co.dpq.pluf.saas.IPResourceDao#get(java.lang.Long, ir.co.dpq.pluf.IPCallback)
+	 */
+	@Override
+	public void get(Long id, IPCallback<PResource> callback) {
+		PResource t = get(id);
+		callback.success(t);
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#delete(ir.co.dpq.pluf.saas.PResource)
+	 */
 	@Override
 	public PResource delete(PResource resource) {
 		PResource re = get(resource.getId());
@@ -130,10 +161,42 @@ public class PResourceDaoFile implements IPResourceDao {
 		return re;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#delete(ir.co.dpq.pluf.saas.PResource,
+	 * ir.co.dpq.pluf.IPCallback)
+	 */
+	@Override
+	public void delete(PResource resource, IPCallback<PResource> callback) {
+		PResource t = delete(resource);
+		callback.success(t);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#update(ir.co.dpq.pluf.saas.PResource)
+	 */
 	@Override
 	public PResource update(PResource resource) {
 		delete(get(resource.getId()));
 		return create(resource);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ir.co.dpq.pluf.saas.IPResourceDao#update(ir.co.dpq.pluf.saas.PResource,
+	 * ir.co.dpq.pluf.IPCallback)
+	 */
+	@Override
+	public void update(PResource resource, IPCallback<PResource> callback) {
+		PResource t = update(resource);
+		callback.success(t);
 	}
 
 	/*
@@ -160,6 +223,18 @@ public class PResourceDaoFile implements IPResourceDao {
 	@Override
 	public IPPaginatorPage<PResource> find(PPaginatorParameter param) {
 		return new PResourcePaginatorPage(this.resources);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ir.co.dpq.pluf.saas.IPResourceDao#find(ir.co.dpq.pluf.
+	 * PPaginatorParameter, ir.co.dpq.pluf.IPCallback)
+	 */
+	@Override
+	public void find(PPaginatorParameter param, IPCallback<IPPaginatorPage<PResource>> callback) {
+		IPPaginatorPage<PResource> result = find(param);
+		callback.success(result);
 	}
 
 }

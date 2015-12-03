@@ -2,6 +2,7 @@ package ir.co.dpq.pluf.retrofit.saas;
 
 import java.util.Map;
 
+import retrofit.Callback;
 import retrofit.http.DELETE;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -19,17 +20,37 @@ public interface IResourceService {
 	@POST("/api/saas/app/{appId}/resource/create")
 	RResource create(@Path("appId") Long appId, @Part("file") TypedFile file, @Part("description") String description);
 
+	@Multipart
+	@POST("/api/saas/app/{appId}/resource/create")
+	void create(@Path("appId") Long appId, @Part("file") TypedFile file, @Part("description") String description,
+			Callback<RResource> callback);
+
 	@GET("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource get(@Path("appId") Long appId, @Path("resourceId") Long resourceId);
+
+	@GET("/api/saas/app/{appId}/resource/{resourceId}")
+	void get(@Path("appId") Long appId, @Path("resourceId") Long resourceId, Callback<RResource> callback);
 
 	@FormUrlEncoded
 	@POST("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource update(@Path("appId") Long appId, @Path("resourceId") Long resourceId,
 			@FieldMap Map<String, Object> param);
 
-	@DELETE("/api/saas/app/{appId}/resource/{resourceId}?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=14489029591401")
+	@FormUrlEncoded
+	@POST("/api/saas/app/{appId}/resource/{resourceId}")
+	void update(@Path("appId") Long appId, @Path("resourceId") Long resourceId, @FieldMap Map<String, Object> param,
+			Callback<RResource> callback);
+
+	@DELETE("/api/saas/app/{appId}/resource/{resourceId}")
 	RResource delete(@Path("appId") Long appId, @Path("resourceId") Long resourceId);
+
+	@DELETE("/api/saas/app/{appId}/resource/{resourceId}")
+	void delete(@Path("appId") Long appId, @Path("resourceId") Long resourceId, Callback<RResource> callback);
 
 	@GET("/api/saas/app/{appId}/resource/find")
 	RResourcePaginatorPage find(@Path("appId") Long appId, @QueryMap Map<String, Object> param);
+
+	@GET("/api/saas/app/{appId}/resource/find")
+	void find(@Path("appId") Long appId, @QueryMap Map<String, Object> param,
+			Callback<RResourcePaginatorPage> callback);
 }
