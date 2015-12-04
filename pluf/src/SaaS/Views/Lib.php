@@ -38,8 +38,7 @@ class SaaS_Views_Lib
         $lib->downloads += 1;
         $lib->update();
         $p = $lib->getAbslotePath();
-        $response = new Pluf_HTTP_Response_File($p, 
-                $lib->getMimeType());
+        $response = new Pluf_HTTP_Response_File($p, $lib->getMimeType());
         $response->headers['Content-Disposition'] = 'attachment; filename="' .
                  $lib->name . '"';
         return $response;

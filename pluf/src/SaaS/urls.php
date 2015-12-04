@@ -80,7 +80,7 @@ return array(
                 )
         ),
         /*
-         * SAP of applications
+         * SPA of applications
          */
         array(
                 'regex' => '#^/app/(\d+)/sap/list$#',

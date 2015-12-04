@@ -101,7 +101,7 @@ class SaaS_Views_ApplicationResource
                  $resource->file . '"';
         return $response;
     }
-
+    
     public function find ($request, $match)
     {
         // GET data

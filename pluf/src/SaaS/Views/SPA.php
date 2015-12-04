@@ -36,7 +36,8 @@ class SaaS_Views_SPA
                 'cssLibs' => $cssLib,
                 'package' => $package
         );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
+                $request);
     }
 
     public function spa ($request, $match)
@@ -61,7 +62,32 @@ class SaaS_Views_SPA
                 'cssLibs' => $cssLib,
                 'package' => $package
         );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, $request);
+        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
+                $request);
+    }
+
+    public function source ($request, $match)
+    {
+        $spa = new SaaS_SPA();
+        $spa = $spa->getOne(array(
+                'filter' =>"name='".$match[1]."'"
+        ));
+        $repo = Pluf::f('saas_spa_repository');
+        
+        // Check access
+        SaaS_Precondition::userCanAccessSpa($request, $spa);
+        
+        $p = Pluf::f('saas_spa_repository') . '/'.$spa->name.'/'. $match[2];
+        $response = new Pluf_HTTP_Response_File($p);
+        return $response;
+    }
+
+    public function assets ($request, $match)
+    {
+        $repo = Pluf::f('saas_spa_repository');
+        $p = Pluf::f('saas_spa_repository') . '/assets/'. $match[1];
+        $response = new Pluf_HTTP_Response_File($p);
+        return $response;
     }
 
     public function appcache ($request, $match)

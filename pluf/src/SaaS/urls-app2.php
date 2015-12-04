@@ -15,6 +15,23 @@ return array(
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'spa'
         ),
+        
+        array( // صفحه اصلی نرم‌افزار
+                'regex' => '#^/assets/(.*)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'assets',
+                'precond' => array()
+        ),
+        array( // صفحه اصلی نرم‌افزار
+                'regex' => '#^/([^/]+)/(.*)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'source',
+                'precond' => array()
+        ),
+        
+        
+        
+        
 		array (//  صفحه اصلی سیستم
 				'regex' => '#^/$#',
 				'model' => 'SaaS_Views_SPA',

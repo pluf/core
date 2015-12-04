@@ -53,11 +53,11 @@
 *************************************************************************
 *}{if $cfg_debug && array_key_exists('src', $package)}{assign $srcs=$package['src']}
 {foreach $srcs as $src}{*
-	*}<script type="text/javascript" src="{$spa->path}/{$src}"></script>
+	*}<script type="text/javascript" src="{url 'SaaS_Views_SPA::source', array($spa->name, $src)}"></script>
 {/foreach}
 {/if}
 {if !$cfg_debug}{*
-	*}<script type="text/javascript" src="{$spa->path}/app.min.js"></script>
+	*}<script type="text/javascript" src="{url 'SaaS_Views_SPA::source', array($spa->name, 'app.min.js')}"></script>
 {/if}
 </body>
 </html>

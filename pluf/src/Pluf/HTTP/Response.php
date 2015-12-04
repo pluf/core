@@ -117,7 +117,13 @@ class Pluf_HTTP_Response
     function __construct($content='', $mimetype=null)
     {
         if (is_null($mimetype)) {
-            $mimetype = Pluf::f('mimetype', 'text/html').'; charset=utf-8';
+            $temp =  Pluf::f('mimetype', 'text/html');
+            $match = array();
+            if(preg_match("/([^\.]*$)/", $content, $match)){
+                if($match[1] === 'css')
+                    $temp = "text/css";
+            }
+            $mimetype = $temp.'; charset=utf-8';
         }
         $this->content = $content;
         $this->headers['Content-Type'] = $mimetype;
