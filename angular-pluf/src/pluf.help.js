@@ -3,79 +3,10 @@
 angular.module('pluf.help', ['pluf'])
 
 /**
- * مدیریت صفحه‌های ویکی را ایجاد می‌کند این مدیریت قادر است یک صفحه ویکی را در
- * اختیار کاربران قرار دهد.
- */
-.service('$help',
-        function($http, $httpParamSerializerJQLike, $q, PException, WikiPage) {
-          this._pool = {}
-          this._get = function(id) {
-            return this._pool[id];
-          }
-          this._ret = function(id, data) {
-            var instance = this._pool[id];
-            if (instance) {
-              instance.setData(data);
-            } else {
-              instance = new WikiPage(data);
-              this._pool[id] = instance;
-            }
-            return instance;
-          }
-          /* فراخوانی‌های عمومی */
-          /**
-           * صفحه معادل با شناسه را تعیین می‌کند.
-           * 
-           * @param i
-           *          شناسه صفحه
-           * @return promise برای اجرا
-           */
-          this.get = function(i) {
-            return this.page({
-              id: i,
-              languate: 'fa'
-            });
-          }
-
-          /**
-           * صفحه مورد نظر را لود می‌کند.
-           */
-          this.page = function($p) {
-            var p = this._get($p.id);
-            if (p) {
-              var d = $q.defer();
-              d.resolve(p);
-              return d.promise;
-            }
-            if (!('language' in $p)) {
-              $p.language = 'fa';
-            }
-            var scope = this;
-            return $http({
-              method: 'GET',
-              url: '/api/wiki/' + $p.language + '/' + $p.id,
-            }).then(function(res) {
-              var m = scope._ret(res.data.id, res.data);
-              return m;
-            }, function(res) {
-              throw new PException(res.data);
-            });
-          }
-        })
-
-/**
- * فیلتر نمایش صفحه‌ها را ایجاد می‌کند.
- */
-.filter('unsafe', function($sce) {
-  return function(val) {
-    return $sce.trustAsHtml(val);
-  };
-})
-
-/**
  * ساختار داده‌ای نرم‌افزار را ایجاد می‌کند.
  */
-.factory('WikiPage', function() {
+.factory('PWikiPage', function(PObject) {
+
   var wikiPage = function(d) {
     if (d) {
       this.setData(d);
@@ -94,4 +25,163 @@ angular.module('pluf.help', ['pluf'])
     }
   };
   return wikiPage;
+})
+
+/*
+ * Wiki Book
+ */
+.factory("PWikiBook", function(PObject, PException, PWikiPage, $http, $q) {
+  var pWikiBook = function() {
+    PObject.apply(this, arguments);
+  };
+  pWikiBook.prototype = new PObject();
+  /**
+   * صحفه‌های کتاب را تعیین می‌کند.
+   * 
+   * @param param
+   */
+  pWikiBook.prototype.pages = function(param) {
+    var scope = this;
+    return $http({
+      method: 'GET',
+      url: '/api/wiki/book/' + scope.id + '/pages',
+      params: p.getParameter(),
+    }).then(function(data) {
+      var page = new PaginatorPage(res.data);
+      var items = [];
+      for (var i = 0; i < page.counts; i++) {
+        var t = scope._retBook(page.items[i]);
+        items.push(t);
+      }
+      page.items = items;
+      return page;
+    }, function(data) {
+      throw new PException(data);
+    });
+  }
+  return pWikiBook;
+})
+/**
+ * مدیریت صفحه‌های ویکی را ایجاد می‌کند این مدیریت قادر است یک صفحه ویکی را در
+ * اختیار کاربران قرار دهد.
+ */
+.service(
+        '$help',
+        function($http, $httpParamSerializerJQLike, $q, PException, PWikiPage,
+                PWikiBook, PaginatorPage) {
+          /*
+           * کار با صفحه‌ها
+           */
+          this._ppage = {}
+          this._getPage = function(id) {
+            return this._ppage[id];
+          }
+          this._setPage = function(page) {
+            this._ppage[page.id] = page;
+          }
+          this._retPage = function(id, data) {
+            var instance = this._getPage(id);
+            if (instance) {
+              instance.setData(data);
+            } else {
+              instance = new PWikiPage(data);
+              this._setPage(instance);
+            }
+            return instance;
+          }
+
+          /*
+           * کار با کتابها
+           */
+          this._pbook = {}
+          this._getBook = function(id) {
+            return this._pbook[id];
+          }
+          this._setBook = function(page) {
+            this._pbook[page.id] = page;
+          }
+          this._retBook = function(id, data) {
+            var instance = this._getBook(id);
+            if (instance) {
+              instance.setData(data);
+            } else {
+              instance = new PWikiBook(data);
+              this._setBook(instance);
+            }
+            return instance;
+          }
+
+          /* فراخوانی‌های عمومی */
+          this.books = function(p) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/wiki/book/find',
+              params: p.getParameter(),
+            }).then(function(res) {
+              var page = new PaginatorPage(res.data);
+              var items = [];
+              for (var i = 0; i < page.counts; i++) {
+                var t = scope._retBook(page.items[i].id, page.items[i]);
+                items.push(t);
+              }
+              page.items = items;
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+          
+          this.createBook = function(b){
+            var scope = this;
+            return $http({
+              method: 'POST',
+              url: '/api/wiki/book/create',
+              data : $httpParamSerializerJQLike(b),
+              headers : {
+                'Content-Type' : 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              var page = new PaginatorPage(res.data);
+              var items = [];
+              for (var i = 0; i < page.counts; i++) {
+                var t = scope._retBook(page.items[i].id, page.items[i]);
+                items.push(t);
+              }
+              page.items = items;
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+          this.pages = function(p) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/wiki/page/find',
+              params: p.getParameter(),
+            }).then(function(res) {
+              var page = new PaginatorPage(res.data);
+              var items = [];
+              for (var i = 0; i < page.counts; i++) {
+                var t = scope._retPage(page.items[i].id, page.items[i]);
+                items.push(t);
+              }
+              page.items = items;
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+        })
+
+/**
+ * فیلتر نمایش صفحه‌ها را ایجاد می‌کند.
+ */
+.filter('unsafe', function($sce) {
+  return function(val) {
+    return $sce.trustAsHtml(val);
+  };
 });

@@ -34,6 +34,9 @@ angular.module("pluf.core", [])
 	  isAnonymous : function () {
 		  return !(this.id && this.id > 0);
 	  },
+	  isAdministrator : function () {
+	    return !(this.id && this.id > 0 && this.administrator);
+	  },
 	  /**
 		 * تعیین می‌کنه که آیا داده‌های کاربر منقضی شده یا نه. در صورتی که داده‌ها
 		 * منقضی شده باشه دیگه نباید از آنها استفاده کرد.
@@ -219,6 +222,7 @@ angular.module("pluf.core", [])
 				var handler = scope._handlers[$ci][i];
 				handler['handle'].apply(handler, args);
 			}
+      def.resolve();
 		}, 1);
 		return def.promise;
 	}
