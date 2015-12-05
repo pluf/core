@@ -117,15 +117,14 @@ class Pluf_HTTP_Response
     function __construct($content='', $mimetype=null)
     {
         if (is_null($mimetype)) {
-            $temp =  Pluf::f('mimetype', 'text/html');
-            $match = array();
-            if(preg_match("/([^\.]*$)/", $content, $match)){
-                if($match[1] === 'css')
-                    $temp = "text/css";
-            }
-            $mimetype = $temp.'; charset=utf-8';
+            $mimetype = Pluf::f('mimetype', 'text/html').'; charset=utf-8';
         }
         $this->content = $content;
+        
+        if(is_array($mimetype)){
+            $mimetype = $mimetype[0]; 
+        }
+        
         $this->headers['Content-Type'] = $mimetype;
         $this->headers['X-Powered-By'] = 'Pluf (Phoenix Scholars Co.) - http://dpq.co.ir';
         $this->status_code = 200;

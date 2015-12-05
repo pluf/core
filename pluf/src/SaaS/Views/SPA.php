@@ -11,83 +11,64 @@ Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
 class SaaS_Views_SPA
 {
 
+    /**
+     * نرم افزار پیش فرض را تعیین کرده و آن را اجرا می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @throws Pluf_Exception
+     * @return Pluf_HTTP_Response
+     */
     public function main ($request, $match)
     {
         $app = $request->application;
-        if ($app->isAnonymous()) {
-            throw new Pluf_Exception("Non app??");
-        }
         if ($app->spa != 0)
             $spa = $app->get_spa();
         else
             $spa = new SaaS_SPA(Pluf::f('saas_spa_default', 1));
-        $repo = Pluf::f('saas_spa_repository');
+            
+            // Check access
+        SaaS_Precondition::userCanAccessApplication($request, $app);
+        SaaS_Precondition::userCanAccessSpa($request, $spa);
         
-        $package = $spa->loadPackage();
-        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
-        
-        // نمایش اصلی
-        $params = array(
-                'spa' => $spa,
-                'app' => $app,
-                'title' => __('ghazal'),
-                'mainView' => $repo . $spa->path . $package['view'],
-                'jsLibs' => $jsLib,
-                'cssLibs' => $cssLib,
-                'package' => $package
-        );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
-                $request);
+        return $this->loadSpa($request, $app, $spa);
     }
 
     public function spa ($request, $match)
     {
         $app = $request->application;
         $spa = new SaaS_SPA($match[2]);
-        $repo = Pluf::f('saas_spa_repository');
         
         // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanAccessSpa($request, $spa);
         
         // نمایش اصلی
-        $package = $spa->loadPackage();
-        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
-        $params = array(
-                'spa' => $spa,
-                'app' => $app,
-                'title' => __('ghazal'),
-                'mainView' => $repo . $spa->path . $package['view'],
-                'jsLibs' => $jsLib,
-                'cssLibs' => $cssLib,
-                'package' => $package
-        );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
-                $request);
+        return $this->loadSpa($request, $app, $spa);
     }
 
     public function source ($request, $match)
     {
         $spa = new SaaS_SPA();
-        $spa = $spa->getOne(array(
-                'filter' =>"name='".$match[1]."'"
-        ));
+        $spa = $spa->getOne(
+                array(
+                        'filter' => "name='" . $match[1] . "'"
+                ));
         $repo = Pluf::f('saas_spa_repository');
         
         // Check access
         SaaS_Precondition::userCanAccessSpa($request, $spa);
         
-        $p = Pluf::f('saas_spa_repository') . '/'.$spa->name.'/'. $match[2];
-        $response = new Pluf_HTTP_Response_File($p);
-        return $response;
+        // Do
+        return $this->loadSource($request, $spa, $match[2]);
     }
 
     public function assets ($request, $match)
     {
-        $repo = Pluf::f('saas_spa_repository');
-        $p = Pluf::f('saas_spa_repository') . '/assets/'. $match[1];
-        $response = new Pluf_HTTP_Response_File($p);
-        return $response;
+        // Load data
+        // Check access
+        // DO
+        return $this->loadAssets($request, $match[1]);
     }
 
     public function appcache ($request, $match)
@@ -97,7 +78,6 @@ class SaaS_Views_SPA
         if ($app->isAnonymous()) {
             throw new Pluf_Exception("Non app??");
         }
-        $repo = Pluf::f('saas_spa_repository');
         $package = $spa->loadPackage();
         list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
         
@@ -106,7 +86,7 @@ class SaaS_Views_SPA
                 'spa' => $spa,
                 'app' => $app,
                 'title' => __('ghazal'),
-                'mainView' => $repo . $spa->path . $package['view'],
+                'mainView' => $spa->getMainViewPath(),
                 'jsLibs' => $jsLib,
                 'cssLibs' => $cssLib,
                 'package' => $package
@@ -145,5 +125,36 @@ class SaaS_Views_SPA
                 $cssLib,
                 $libs
         );
+    }
+
+    private function loadSpa ($request, $app, $spa)
+    {
+        $package = $spa->loadPackage();
+        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
+        
+        // نمایش اصلی
+        $params = array(
+                'spa' => $spa,
+                'app' => $app,
+                'title' => __('ghazal'),
+                'mainView' => $spa->getMainViewPath(),
+                'jsLibs' => $jsLib,
+                'cssLibs' => $cssLib,
+                'package' => $package
+        );
+        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
+                $request);
+    }
+
+    private function loadSource ($request, $spa, $name)
+    {
+        $p = $spa->getSourcePath($name);
+        return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
+    }
+
+    private function loadAssets ($request, $name)
+    {
+        $p = SaaS_SPA::getAssetsPath($name);
+        return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
     }
 }

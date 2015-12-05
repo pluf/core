@@ -8,6 +8,9 @@
 class SaaS_SPA extends Pluf_Model
 {
 
+    var $package = null;
+    var $packagePath = null;
+
     /**
      * (non-PHPdoc)
      *
@@ -120,20 +123,76 @@ class SaaS_SPA extends Pluf_Model
         //
     }
 
+    /**
+     * تنظیم‌های بسته را از سیستم لود می‌کند.
+     */
     public function loadPackage ()
     {
-        $repo = Pluf::f('saas_spa_repository');
-        $package = array();
-        {
+        $filename = $this->getPackagePath() .
+                 Pluf::f('saas_spa_package', "/spa.json");
+        $myfile = fopen($filename, "r") or die("Unable to open file!");
+        $json = fread($myfile, filesize($filename));
+        fclose($myfile);
+        $this->package = json_decode($json, true);
+        return $this->package;
+    }
+
+    public function getPackagePath ()
+    {
+        if ($this->packagePath != null) {
+            return $this->packagePath;
+        }
+        
+        $repos = Pluf::f('saas_spa_repository');
+        if (! is_array($repos)) {
+            $repos = array(
+                    Pluf::f('saas_spa_repository')
+            );
+        }
+        
+        foreach ($repos as $repo) { // Load the package
             $filename = $repo . $this->path .
                      Pluf::f('saas_spa_package', "/spa.json");
-            if (is_readable($filename)) {
-                $myfile = fopen($filename, "r") or die("Unable to open file!");
-                $json = fread($myfile, filesize($filename));
-                fclose($myfile);
-                $package = json_decode($json, true);
+            if (! is_readable($filename)) {
+                continue;
             }
+            $this->packagePath = $repo . $this->path;
+            break;
         }
-        return $package;
+        if ($this->packagePath == null) {
+            // TODO: Exception handling
+            throw new Pluf_Exception("The SPA package is not accessable.");
+        }
+        return $this->packagePath;
+    }
+
+    public function getMainViewPath ()
+    {
+        $p = $this->loadPackage();
+        return $this->getPackagePath() . $p['view'];
+    }
+
+    public function getSourcePath ($name)
+    {
+        return $this->getPackagePath() . '/' . $name;
+    }
+
+    public static function getAssetsPath ($name)
+    {
+        $repos = Pluf::f('saas_spa_repository');
+        if (! is_array($repos)) {
+            $repos = array(
+                    Pluf::f('saas_spa_repository')
+            );
+        }
+        
+        foreach ($repos as $repo) { // Load the package
+            $filename = $repo. '/assets/' . $name;
+            if (! is_readable($filename)) {
+                continue;
+            }
+            return $filename;
+        }
+        throw new Pluf_Exception("The SPA package is not accessable.");
     }
 }
