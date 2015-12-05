@@ -5,62 +5,75 @@ angular.module('pluf.help', ['pluf'])
 /**
  * ساختار داده‌ای نرم‌افزار را ایجاد می‌کند.
  */
+.factory('PWikiPageItem', function(PObject) {
+  var wikiPageItem = function(d) {
+    if (d) {
+      this.setData(d);
+    }
+  };
+  wikiPageItem.prototype = new PObject();
+  return wikiPageItem;
+})
+/*
+ * 
+ */
 .factory('PWikiPage', function(PObject) {
-
   var wikiPage = function(d) {
     if (d) {
       this.setData(d);
     }
   };
-  wikiPage.prototype = {
-    setData: function(d) {
-      this.data = d;
-    },
-    isAvailable: function() {
-      if (this.id && this.id > 0) { return true; }
-      return false;
-    },
-    render: function() {
-      if (this.data.content) { return markdown.toHTML(this.data.content); }
-    }
-  };
+  wikiPage.prototype = new PObject();
+  wikiPage.prototype.render = function() {
+    return markdown.toHTML(this.content);
+  }
   return wikiPage;
 })
-
 /*
  * Wiki Book
  */
-.factory("PWikiBook", function(PObject, PException, PWikiPage, $http, $q) {
-  var pWikiBook = function() {
-    PObject.apply(this, arguments);
-  };
-  pWikiBook.prototype = new PObject();
-  /**
-   * صحفه‌های کتاب را تعیین می‌کند.
-   * 
-   * @param param
-   */
-  pWikiBook.prototype.pages = function(param) {
-    var scope = this;
-    return $http({
-      method: 'GET',
-      url: '/api/wiki/book/' + scope.id + '/pages',
-      params: p.getParameter(),
-    }).then(function(data) {
-      var page = new PaginatorPage(res.data);
-      var items = [];
-      for (var i = 0; i < page.counts; i++) {
-        var t = scope._retBook(page.items[i]);
-        items.push(t);
-      }
-      page.items = items;
-      return page;
-    }, function(data) {
-      throw new PException(data);
-    });
-  }
-  return pWikiBook;
-})
+.factory("PWikiBook",
+        function(PObject, PException, PWikiPageItem, PaginatorPage, $http, $q) {
+          var pWikiBook = function() {
+            PObject.apply(this, arguments);
+          };
+          pWikiBook.prototype = new PObject();
+          /**
+           * صحفه‌های کتاب را تعیین می‌کند.
+           * 
+           * @param param
+           */
+          pWikiBook.prototype.pages = function(p) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/wiki/book/' + scope.id + '/pages',
+              params: p.getParameter(),
+            }).then(function(res) {
+              var items = [];
+              for (var i = 0; i < res.data.length; i++) {
+                var t = new PWikiPageItem(res.data[i]);
+                items.push(t);
+              }
+              return items;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+          pWikiBook.prototype.addPage = function(page) {
+            var scope = this;
+            return $http({
+              method: 'POST',
+              url: '/api/wiki/book/' + scope.id + '/page/' + page.id,
+            }).then(function(res) {
+              return scope;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+          return pWikiBook;
+        })
 /**
  * مدیریت صفحه‌های ویکی را ایجاد می‌کند این مدیریت قادر است یک صفحه ویکی را در
  * اختیار کاربران قرار دهد.
@@ -131,25 +144,19 @@ angular.module('pluf.help', ['pluf'])
               throw new PException(data);
             });
           }
-          
-          this.createBook = function(b){
+
+          this.createBook = function(b) {
             var scope = this;
             return $http({
               method: 'POST',
               url: '/api/wiki/book/create',
-              data : $httpParamSerializerJQLike(b),
-              headers : {
-                'Content-Type' : 'application/x-www-form-urlencoded'
+              data: $httpParamSerializerJQLike(b),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
               }
             }).then(function(res) {
-              var page = new PaginatorPage(res.data);
-              var items = [];
-              for (var i = 0; i < page.counts; i++) {
-                var t = scope._retBook(page.items[i].id, page.items[i]);
-                items.push(t);
-              }
-              page.items = items;
-              return page;
+              var t = scope._retBook(res.data.id, res.data);
+              return t;
             }, function(data) {
               throw new PException(data);
             });
@@ -170,6 +177,36 @@ angular.module('pluf.help', ['pluf'])
               }
               page.items = items;
               return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+          this.page = function(id) {
+            var scope = this;
+            return $http({
+              method: 'GET',
+              url: '/api/wiki/page/' + id,
+            }).then(function(res) {
+              var page = scope._retPage(res.data.id, res.data);
+              return page;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+
+          this.createPage = function(p) {
+            var scope = this;
+            return $http({
+              method: 'POST',
+              url: '/api/wiki/page/create',
+              data: $httpParamSerializerJQLike(p),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              var t = scope._retPage(res.data.id, res.data);
+              return t;
             }, function(data) {
               throw new PException(data);
             });
