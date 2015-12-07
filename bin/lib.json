@@ -109,7 +109,7 @@
     "mode": "2",
     "type": "1",
     "description": "",
-    "path": "/lib/angular-validation-match/index.js"
+    "path": "/lib/angular-validation-match/src/angular-validation-match.js"
   },
   {
     "name": "angular-xeditable",
