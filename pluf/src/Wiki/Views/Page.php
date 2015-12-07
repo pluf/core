@@ -80,6 +80,23 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
+    public function update ($request, $match)
+    {
+        // تعیین داده‌ها
+        $page = Wiki_Shortcuts_GetPageOr404($match[1]);
+        // حق دسترسی
+        Wiki_Precondition::userCanUpdatePage($request, $page);
+        // اجرای درخواست
+        $extra = array(
+                'user' => $request->user,
+                'page' => $page
+        );
+        $form = new Wiki_Form_PageUpdate(
+                array_merge($request->REQUEST, $request->FILES), $extra);
+        $page = $form->update();
+        return new Pluf_HTTP_Response_Json($page);
+    }
+
     public function delete ($request, $match)
     {
         // تعیین داده‌ها

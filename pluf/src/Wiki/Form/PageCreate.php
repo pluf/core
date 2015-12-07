@@ -12,18 +12,10 @@ class Wiki_Form_PageCreate extends Pluf_Form
 {
 
     public $user = null;
-    
-    // public $project = null;
-    
-    // public $show_full = false;
+
     public function initFields ($extra = array())
     {
         $this->user = $extra['user'];
-        // $this->project = $extra['project'];
-        // if ($this->user->hasPerm('IDF.project-owner', $this->project) or
-        // $this->user->hasPerm('IDF.project-member', $this->project)) {
-        // $this->show_full = true;
-        // }
         $initial = __('empty page');
         $initname = (! empty($extra['name'])) ? $extra['name'] : __('page name');
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
@@ -72,96 +64,8 @@ class Wiki_Form_PageCreate extends Pluf_Form
                                 'rows' => 26
                         )
                 ));
-        
-        // if ($this->show_full) {
-        // for ($i = 1; $i < 4; $i ++) {
-        // $this->fields['label' . $i] = new Pluf_Form_Field_Varchar(
-        // array(
-        // 'required' => false,
-        // 'label' => __('Labels'),
-        // 'initial' => '',
-        // 'widget_attrs' => array(
-        // 'maxlength' => 50,
-        // 'size' => 20
-        // )
-        // ));
-        // }
-        // }
     }
 
-//     public function clean_title ()
-//     {
-//         $title = $this->cleaned_data['title'];
-//         if (preg_match('/[^a-zA-Z0-9\-]/', $title)) {
-//             throw new Pluf_Form_Invalid(
-//                     __('The title contains invalid characters.'));
-//         }
-//         // $sql = new Pluf_SQL('project=%s AND title=%s',
-//         // array(
-//         // $this->project->id,
-//         // $title
-//         // ));
-//         // $pages = Pluf::factory('IDF_WikiPage')->getList(
-//         // array(
-//         // 'filter' => $sql->gen()
-//         // ));
-//         // if ($pages->count() > 0) {
-//         // throw new Pluf_Form_Invalid(
-//         // __('A page with this title already exists.'));
-//         // }
-//         return $title;
-//     }
-    
-    // /**
-    // * Validate the interconnection in the form.
-    // */
-    // public function clean ()
-    // {
-    // if (! $this->show_full) {
-    // return $this->cleaned_data;
-    // }
-    // $conf = new IDF_Conf();
-    // $conf->setProject($this->project);
-    // $onemax = array();
-    // foreach (explode(',',
-    // $conf->getVal('labels_wiki_one_max',
-    // IDF_Form_WikiConf::init_one_max)) as $class) {
-    // if (trim($class) != '') {
-    // $onemax[] = mb_strtolower(trim($class));
-    // }
-    // }
-    // $count = array();
-    // for ($i = 1; $i < 4; $i ++) {
-    // $this->cleaned_data['label' . $i] = trim(
-    // $this->cleaned_data['label' . $i]);
-    // if (strpos($this->cleaned_data['label' . $i], ':') !== false) {
-    // list ($class, $name) = explode(':',
-    // $this->cleaned_data['label' . $i], 2);
-    // list ($class, $name) = array(
-    // mb_strtolower(trim($class)),
-    // trim($name)
-    // );
-    // } else {
-    // $class = 'other';
-    // $name = $this->cleaned_data['label' . $i];
-    // }
-    // if (! isset($count[$class]))
-    // $count[$class] = 1;
-    // else
-    // $count[$class] += 1;
-    // if (in_array($class, $onemax) and $count[$class] > 1) {
-    // if (! isset($this->errors['label' . $i]))
-    // $this->errors['label' . $i] = array();
-    // $this->errors['label' . $i][] = sprintf(
-    // __(
-    // 'You cannot provide more than label from the %s class to a page.'),
-    // $class);
-    // throw new Pluf_Form_Invalid(__('You provided an invalid label.'));
-    // }
-    // }
-    // return $this->cleaned_data;
-    // }
-    
     /**
      * Save the model in the database.
      *
@@ -174,7 +78,7 @@ class Wiki_Form_PageCreate extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('cannot save the model from an invalid form'));
+                    __('Cannot save the page from an invalid form'));
         }
         // // Add a tag for each label
         // $tags = array();

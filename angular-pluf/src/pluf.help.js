@@ -32,8 +32,10 @@ angular.module('pluf.help', ['pluf'])
 /*
  * Wiki Book
  */
-.factory("PWikiBook",
-        function(PObject, PException, PWikiPageItem, PaginatorPage, $http, $q) {
+.factory(
+        "PWikiBook",
+        function(PObject, PException, PWikiPageItem, PaginatorPage, $http, $q,
+                $timeout) {
           var pWikiBook = function() {
             PObject.apply(this, arguments);
           };
@@ -43,19 +45,52 @@ angular.module('pluf.help', ['pluf'])
            * 
            * @param param
            */
-          pWikiBook.prototype.pages = function(p) {
+          pWikiBook.prototype.getFisrtPage = function() {
+            var def = $q.defer();
+            var scope = this;
+            $timeout(function() {
+              def.resolve(scope.items[0]);
+            }, 1);
+            return def.promise;
+          }
+          pWikiBook.prototype.retItem = function(id, data) {
+            var item = null;
+            for ( var i in this.items) {
+              if (this.items[i].id == id) {
+                item = this.items[i];
+                break;
+              }
+            }
+            if (!item) {
+              item = new PWikiPageItem(data);
+              this.items.push(item);
+            }
+            item.setData(data);
+            return item;
+          }
+          pWikiBook.prototype.updateItem = function(id, data) {
+            var item = null;
+            for ( var i in this.items) {
+              if (this.items[i].id == id) {
+                item = this.items[i];
+                break;
+              }
+            }
+            if (!item) { return null; }
+            item.setData(data);
+            return item;
+          }
+          pWikiBook.prototype.pages = function() {
             var scope = this;
             return $http({
               method: 'GET',
               url: '/api/wiki/book/' + scope.id + '/pages',
-              params: p.getParameter(),
             }).then(function(res) {
-              var items = [];
+              scope.items = [];
               for (var i = 0; i < res.data.length; i++) {
-                var t = new PWikiPageItem(res.data[i]);
-                items.push(t);
+                scope.retItem(res.data[i].id, res.data[i]);
               }
-              return items;
+              return scope.items;
             }, function(data) {
               throw new PException(data);
             });
@@ -161,6 +196,24 @@ angular.module('pluf.help', ['pluf'])
               throw new PException(data);
             });
           }
+          this.updateBook = function(b, k, v) {
+            var scope = this;
+            var param = {};
+            param[k] = v;
+            return $http({
+              method: 'POST',
+              url: '/api/wiki/book/' + b.id,
+              data: $httpParamSerializerJQLike(param),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              var t = scope._retBook(res.data.id, res.data);
+              return t;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
 
           this.pages = function(p) {
             var scope = this;
@@ -207,6 +260,27 @@ angular.module('pluf.help', ['pluf'])
             }).then(function(res) {
               var t = scope._retPage(res.data.id, res.data);
               return t;
+            }, function(data) {
+              throw new PException(data);
+            });
+          }
+          this.updatePage = function(p, k, v) {
+            var scope = this;
+            var param = {};
+            param[k] = v;
+            return $http({
+              method: 'POST',
+              url: '/api/wiki/page/' + p.id,
+              data: $httpParamSerializerJQLike(param),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }).then(function(res) {
+              var b = scope._getBook(res.data.book);
+              if (b) {
+                b.updateItem(res.data.id, res.data);
+              }
+              return scope._retPage(res.data.id, res.data);
             }, function(data) {
               throw new PException(data);
             });

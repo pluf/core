@@ -120,7 +120,7 @@
     "path": "/lib/angular-xeditable/dist/js/xeditable.min.js"
   },
   {
-    "name": "angular-xeditable",
+    "name": "angular-xeditable-css",
     "version": "0.1.9",
     "mode": "2",
     "type": "2",
