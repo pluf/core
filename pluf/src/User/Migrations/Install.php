@@ -1,5 +1,7 @@
 <?php
 
+Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
+Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
 /**
  * ساختارهای اولیه داده‌ای و پایگاه داده را ایجاد می‌کند.
  * 
@@ -7,44 +9,13 @@
  */
 function User_Migrations_Install_setup ($params = '')
 {
-    $models = array(
-            'User_Profile'
-    );
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    foreach ($models as $model) {
-        $schema->model = new $model();
-        $schema->createTables();
-    }
-    
+    $filename = dirname(__FILE__).'/../module.json';
+    $myfile = fopen($filename, "r") or die("Unable to open module.json!");
+    $json = fread($myfile, filesize($filename));
+    fclose($myfile);
+    $moduel = json_decode($json, true);
 
-    /*
-     * موجودیت‌های پیش فرض سیستم
-     */
-    $users = new Pluf_User ();
-    $users->login = 'admin';
-    $users->last_name = 'admin';
-    $users->email = 'admin@dpq.co.ir';
-    $users->setPassword ( 'admin' );
-    $users->administrator = true;
-    $users->staff = true;
-    $users->create ();
+    Pluf_Shortcuts_LoadModels($moduel);
+    Pluf_Shortcuts_LoadPermissions($moduel);
 }
 
-/**
- * تمام داده‌های ایجاد شده را از سیستم حذف می‌کند.
- *
- * @param string $params            
- */
-function User_Migrations_Install_teardown ($params = '')
-{
-    $models = array(
-            'User_Profile'
-    );
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    foreach ($models as $model) {
-        $schema->model = new $model();
-        $schema->dropTables();
-    }
-}

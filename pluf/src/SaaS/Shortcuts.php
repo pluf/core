@@ -139,24 +139,33 @@ function SaaS_Shortcuts_LoadLibFromJson ($filename, $create)
 
 function SaaS_Shortcuts_LoadSPAFromRepository ()
 {
-    $repo = Pluf::f('saas_spa_repository') . '/';
-    $list = SaaS_Shortcuts_SPAStorageList();
-    foreach ($list as $path) {
-        $filename = $repo . $path . Pluf::f('saas_spa_package', "/spa.json");
-        if (is_readable($filename)) {
-            $myfile = fopen($filename, "r") or die("Unable to open file!");
-            $json = fread($myfile, filesize($filename));
-            fclose($myfile);
-            $package = json_decode($json, true);
-            
-            $mprofile = new SaaS_SPA();
-            $mprofile->path = '/' . $path;
-            $mprofile->name = $package['name'];
-            $mprofile->descritpion = $package['description'];
-            $mprofile->license = $package['license'];
-            $mprofile->homepage = $package['homepage'];
-            $mprofile->version = $package['version'];
-            $mprofile->create();
+    $repos = Pluf::f('saas_spa_repository');
+    if (! is_array($repos)) {
+        $repos = array(
+                Pluf::f('saas_spa_repository')
+        );
+    }
+    
+    foreach ($repos as $repo) {
+        $repo = $repo . '/';
+        $list = SaaS_Shortcuts_SPAStorageList();
+        foreach ($list as $path) {
+            $filename = $repo . $path . Pluf::f('saas_spa_package', "/spa.json");
+            if (is_readable($filename)) {
+                $myfile = fopen($filename, "r") or die("Unable to open file!");
+                $json = fread($myfile, filesize($filename));
+                fclose($myfile);
+                $package = json_decode($json, true);
+                
+                $mprofile = new SaaS_SPA();
+                $mprofile->path = '/' . $path;
+                $mprofile->name = $package['name'];
+                $mprofile->descritpion = $package['description'];
+                $mprofile->license = $package['license'];
+                $mprofile->homepage = $package['homepage'];
+                $mprofile->version = $package['version'];
+                $mprofile->create();
+            }
         }
     }
 }
@@ -168,19 +177,28 @@ function SaaS_Shortcuts_LoadSPAFromRepository ()
  */
 function SaaS_Shortcuts_SPAStorageList ()
 {
-    $directory = Pluf::f('saas_spa_repository') . '/';
+    $repos = Pluf::f('saas_spa_repository');
+    if (! is_array($repos)) {
+        $repos = array(
+                Pluf::f('saas_spa_repository')
+        );
+    }
+    
     $results = array();
-    $handler = opendir($directory);
-    while ($file = readdir($handler)) {
-        if ($file != "." && $file != "..") {
-            $spaFile = $directory . $file .
-                     Pluf::f('saas_spa_package', "/spa.json");
-            if (is_file($spaFile) && is_readable($spaFile)) {
-                $results[] = $file;
+    foreach ($repos as $directory) {
+        $directory = $directory . '/';
+        $handler = opendir($directory);
+        while ($file = readdir($handler)) {
+            if ($file != "." && $file != "..") {
+                $spaFile = $directory . $file .
+                         Pluf::f('saas_spa_package', "/spa.json");
+                if (is_file($spaFile) && is_readable($spaFile)) {
+                    $results[] = $file;
+                }
             }
         }
+        closedir($handler);
     }
-    closedir($handler);
     return $results;
 }
 

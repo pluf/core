@@ -1,0 +1,9 @@
+{
+  "name": "User",
+  "version": "1",
+  "title": "User Management",
+  "model": [
+    "User_Profile"
+  ],
+  "permisson": []
+}

@@ -16,10 +16,5 @@ function SaaS_Migrations_Install_setup ($params = null)
     Pluf_Shortcuts_LoadPermissions($moduel);
     SaaS_Shortcuts_LoadLibs();
     SaaS_Shortcuts_LoadSPAFromRepository();
-    
-    $apartment = new SaaS_Application();
-    $apartment->title = 'Default SaaS';
-    $apartment->description = 'Auto generated application';
-    $apartment->create();
 }
 
