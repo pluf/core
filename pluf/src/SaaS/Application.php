@@ -47,7 +47,14 @@ class SaaS_Application extends Pluf_Model
                 'domain' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 100
+                        'unique' => true,
+                        'size' => 50
+                ),
+                'subdomain' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'unique' => true,
+                        'size' => 50
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -77,15 +84,17 @@ class SaaS_Application extends Pluf_Model
                         'model' => 'SaaS_SPA',
                         'blank' => true,
                         'verbose' => __('Default SAP for this application')
-                ),
+                )
         );
         $this->_a['views'] = array(
                 'user_model_permission' => array(
-        	    	'join' => 'LEFT JOIN '.$this->_con->pfx.'rowpermissions ON saas_application.id='.$this->_con->pfx.'rowpermissions.model_id',
-        	    	'select' => $this->getSelect().', permission',
-        	    	'props' => array(
-        	    	        'permission' => 'permission'
-        	    	),
+                        'join' => 'LEFT JOIN ' . $this->_con->pfx .
+                                 'rowpermissions ON saas_application.id=' .
+                                 $this->_con->pfx . 'rowpermissions.model_id',
+                                'select' => $this->getSelect() . ', permission',
+                                'props' => array(
+                                        'permission' => 'permission'
+                                )
                 )
         );
     }
@@ -341,20 +350,13 @@ class SaaS_Application extends Pluf_Model
             return $config;
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+    public function bySubDomain ($subdomain)
+    {
+        $sql = new Pluf_SQL('subdomain=%s', $subdomain);
+        return Pluf::factory('SaaS_Application')->getOne($sql->gen());
+    }
+
     /**
      * Cache of the permissions.
      */
@@ -375,7 +377,7 @@ class SaaS_Application extends Pluf_Model
         $this->_cache_perms = array();
         if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
             $growp = new Pluf_RowPermission();
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s',
+            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s', 
                     array(
                             $this->id,
                             $this->_model
@@ -387,13 +389,13 @@ class SaaS_Application extends Pluf_Model
                     ));
             foreach ($perms as $perm) {
                 $perm_string = $perm->application . '.' . $perm->code_name . '#' .
-                        $perm->model_class . '(' . $perm->model_id . ')';
-                        if ($perm->negative) {
-                            $perm_string = '!' . $perm_string;
-                        }
-                        if (! in_array($perm_string, $this->_cache_perms)) {
-                            $this->_cache_perms[] = $perm_string;
-                        }
+                         $perm->model_class . '(' . $perm->model_id . ')';
+                if ($perm->negative) {
+                    $perm_string = '!' . $perm_string;
+                }
+                if (! in_array($perm_string, $this->_cache_perms)) {
+                    $this->_cache_perms[] = $perm_string;
+                }
             }
         }
         return $this->_cache_perms;

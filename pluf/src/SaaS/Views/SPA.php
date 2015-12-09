@@ -11,23 +11,30 @@ Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
 class SaaS_Views_SPA
 {
 
-    /**
-     * نرم افزار پیش فرض را تعیین کرده و آن را اجرا می‌کند
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @throws Pluf_Exception
-     * @return Pluf_HTTP_Response
-     */
+    public function tenant ($request, $match)
+    {
+        return $this->main($request, $match);
+    }
+
+    public function tenantSpa ($request, $match)
+    {
+        return $this->spa($request, $match);
+    }
+
     public function main ($request, $match)
     {
-        $app = $request->application;
+        if($request->tenant->isAnonymous()){
+            // XXX: maso redirect to othre                                                                          
+        }
+        $app = $request->tenant;
         if ($app->spa != 0)
             $spa = $app->get_spa();
-        else
-            $spa = new SaaS_SPA(Pluf::f('saas_spa_default', 1));
+        else{
+            $spa = SaaS_SPA::getByName(Pluf::f('saas_spa_default', 'main'));
+            return $this->loadSpa($request, $app, $spa);
+        }
             
-            // Check access
+        // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanAccessSpa($request, $spa);
         
@@ -36,8 +43,8 @@ class SaaS_Views_SPA
 
     public function spa ($request, $match)
     {
-        $app = $request->application;
-        $spa = new SaaS_SPA($match[2]);
+        $app = $request->tenant;
+        $spa = SaaS_SPA::getByName($match[1]);
         
         // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);
@@ -73,20 +80,14 @@ class SaaS_Views_SPA
 
     public function appcache ($request, $match)
     {
-        $app = $request->application;
-        $spa = new SaaS_SPA($match[2]);
-        if ($app->isAnonymous()) {
-            throw new Pluf_Exception("Non app??");
-        }
+        $spa = new SaaS_SPA($match[1]);
         $package = $spa->loadPackage();
         list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
         
         // نمایش اصلی
         $params = array(
                 'spa' => $spa,
-                'app' => $app,
                 'title' => __('ghazal'),
-                'mainView' => $spa->getMainViewPath(),
                 'jsLibs' => $jsLib,
                 'cssLibs' => $cssLib,
                 'package' => $package
@@ -140,7 +141,8 @@ class SaaS_Views_SPA
                 'mainView' => $spa->getMainViewPath(),
                 'jsLibs' => $jsLib,
                 'cssLibs' => $cssLib,
-                'package' => $package
+                'package' => $package,
+                'base' => $request->query
         );
         return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
                 $request);

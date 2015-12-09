@@ -9,6 +9,7 @@ class SaaS_SPA extends Pluf_Model
 {
 
     var $package = null;
+
     var $packagePath = null;
 
     /**
@@ -28,8 +29,9 @@ class SaaS_SPA extends Pluf_Model
                 ),
                 'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
-                        'size' => 100
+                        'blank' => false,
+                        'unique' => true,
+                        'size' => 50
                 ),
                 'license' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -123,6 +125,12 @@ class SaaS_SPA extends Pluf_Model
         //
     }
 
+    public static function getByName ($name)
+    {
+        $sql = new Pluf_SQL('name=%s', $name);
+        return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
+    }
+
     /**
      * تنظیم‌های بسته را از سیستم لود می‌کند.
      */
@@ -187,7 +195,7 @@ class SaaS_SPA extends Pluf_Model
         }
         
         foreach ($repos as $repo) { // Load the package
-            $filename = $repo. '/assets/' . $name;
+            $filename = $repo . '/assets/' . $name;
             if (! is_readable($filename)) {
                 continue;
             }

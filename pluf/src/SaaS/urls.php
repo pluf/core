@@ -21,9 +21,6 @@ return array(
                 'regex' => '#^/app/(\d+)$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'get',
-                'saas' => array(
-                        'match-application' => 1
-                ),
                 'http-method' => array(
                         'GET'
                 ),
@@ -44,9 +41,6 @@ return array(
                 'method' => 'update',
                 'http-method' => array(
                         'POST'
-                ),
-                'saas' => array(
-                        'match-application' => 1
                 ),
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
@@ -75,9 +69,6 @@ return array(
                 'regex' => '#^/app/(\d+)/member/list$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'members',
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         /*
          * SPA of applications
@@ -87,9 +78,6 @@ return array(
                 'model' => 'SaaS_Views_Application',
                 'method' => 'saps',
                 'http-method' => 'GET',
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         /*
          *  تنظیم‌ها 
@@ -99,9 +87,6 @@ return array(
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'configurations',
                 'http-method' => 'GET',
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array( // دسترسی به تنظیم‌ها با شناسه
                 'regex' => '#^/app/(\d+)/config/(\d+)$#',
@@ -120,18 +105,12 @@ return array(
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'getByName',
                 'http-method' => 'GET',
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array( // ایجاد یک تنظیم جدید
                 'regex' => '#^/app/(\d+)/config/create$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'create',
                 'http-method' => 'POST',
-                'saas' => array(
-                        'match-application' => 1
-                ),
                 'freemium' => array(
                         'level' => Pluf::f('saas_freemium_full', 5)
                 )
@@ -148,9 +127,6 @@ return array(
                 'http-method' => array(
                         'POST'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                ),
                 'freemium' => array(
                         'level' => Pluf::f('saas_freemium_full', 5)
                 )
@@ -162,9 +138,6 @@ return array(
                 'http-method' => array(
                         'GET'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -173,9 +146,6 @@ return array(
                 'http-method' => array(
                         'GET'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -184,9 +154,6 @@ return array(
                 'http-method' => array(
                         'DELETE'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -195,9 +162,6 @@ return array(
                 'http-method' => array(
                         'POST'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
@@ -206,9 +170,6 @@ return array(
                 'http-method' => array(
                         'GET'
                 ),
-                'saas' => array(
-                        'match-application' => 1
-                )
         ),
         /**
          * **************************************************************************

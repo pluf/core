@@ -1,40 +1,48 @@
 <?php
 return array(
-        array( // مانیفست نرم‌افزارها
-                'regex' => '#^/(\d+)/(\d+)/saas.appcache$#',
+
+        array( // A Tenant main page
+                'regex' => '#^/'.Pluf::f('saas_tenant_url_prefix', 'tenant-').'[^/]+$#',
                 'model' => 'SaaS_Views_SPA',
-                'method' => 'appcache'
+                'method' => 'tenant'
         ),
-        array( // صفحه اصلی نرم‌افزار
-                'regex' => '#^/(\d+)$#',
+        array( // Application of a Tenant
+                'regex' => '#^/'.Pluf::f('saas_tenant_url_prefix', 'tenant-').'[^/]+/([^/]+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'tenantSpa'
+        ),
+        
+        /*
+         * نرم افزار پیش فرض
+         */
+        array ( // Main tenant
+                'regex' => '#^/$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'main'
         ),
-        array( // صفحه اصلی نرم‌افزار
-                'regex' => '#^/(\d+)/(\d+)$#',
+        array( // Application of Main Tenant
+                'regex' => '#^/([^/]+)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'spa'
         ),
+
         
-        array( // صفحه اصلی نرم‌افزار
+        
+        array( // A SPA AppCache
+                'regex' => '#^/saas.appcache/(.+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'appcache'
+        ),
+        array( // SPAs Assets
                 'regex' => '#^/assets/(.*)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'assets',
                 'precond' => array()
         ),
-        array( // صفحه اصلی نرم‌افزار
+        array( // A SPA Resources
                 'regex' => '#^/([^/]+)/(.*)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'source',
                 'precond' => array()
         ),
-        
-        
-        
-        
-		array (//  صفحه اصلی سیستم
-				'regex' => '#^/$#',
-				'model' => 'SaaS_Views_SPA',
-				'method' => 'main'
-		),
 );
