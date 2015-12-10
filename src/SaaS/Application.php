@@ -351,7 +351,7 @@ class SaaS_Application extends Pluf_Model
         }
     }
 
-    public function bySubDomain ($subdomain)
+    public static function bySubDomain ($subdomain)
     {
         $sql = new Pluf_SQL('subdomain=%s', $subdomain);
         return Pluf::factory('SaaS_Application')->getOne($sql->gen());

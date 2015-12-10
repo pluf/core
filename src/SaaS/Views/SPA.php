@@ -82,8 +82,8 @@ class SaaS_Views_SPA
                 ));
         $repo = Pluf::f('saas_spa_repository');
         
-        // Check access
-        SaaS_Precondition::userCanAccessSpa($request, $spa);
+        // TODO: Check access (No Tentant)
+//         SaaS_Precondition::userCanAccessSpa($request, $spa);
         
         // Do
         return $this->loadSource($request, $spa, $match[2]);
