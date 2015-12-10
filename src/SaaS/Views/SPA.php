@@ -33,7 +33,7 @@ class SaaS_Views_SPA
     {
         // TODO: maso, 1394: Redirect if there is domain
         $app = $request->tenant;
-        $spa = SaaS_SPA::getByName($match[1]);
+        $spa = new SaaS_SPA($match[1]);
         
         // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);

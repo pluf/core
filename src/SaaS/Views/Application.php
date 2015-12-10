@@ -167,8 +167,8 @@ class SaaS_Views_Application
     public function saps ($request, $match)
     {
         $pag = new Pluf_Paginator(new SaaS_SPA());
-        $pag->model_view = 'sap_application';
-        // $pag->model_view = 'sap_application_permission';
+        $pag->model_view = 'spa_application';
+        // $pag->model_view = 'spa_application_permission';
         
         $sql = new Pluf_SQL('model_class=%s AND owner_class=%s AND owner_id=%s', 
                 array(
@@ -179,14 +179,12 @@ class SaaS_Views_Application
         
         // Permissions
         $perms = array();
-        if ($request->user->isAnonymous()) {
+        $perms[] = Pluf_Permission::getFromString('SaaS.spa-anonymous-access');
+        if (! $request->user->isAnonymous()) {
             $perms[] = Pluf_Permission::getFromString(
-                    'SaaS.sap-anonymous-access');
-        } else {
-            $perms[] = Pluf_Permission::getFromString(
-                    'SaaS.sap-authorized-access');
-            $perms[] = Pluf_Permission::getFromString('SaaS.sap-member-access');
-            $perms[] = Pluf_Permission::getFromString('SaaS.sap-owner-access');
+                    'SaaS.spa-authorized-access');
+            $perms[] = Pluf_Permission::getFromString('SaaS.spa-member-access');
+            $perms[] = Pluf_Permission::getFromString('SaaS.spa-owner-access');
         }
         
         $permSql = new Pluf_SQL();

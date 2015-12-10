@@ -71,7 +71,7 @@ class SaaS_SPA extends Pluf_Model
         $this->_a['views'] = array(
                 'spa_application' => array(
                         'join' => 'LEFT JOIN ' . $this->_con->pfx .
-                                 'rowpermissions ON saas_sap.id=' .
+                                 'rowpermissions ON saas_spa.id=' .
                                  $this->_con->pfx . 'rowpermissions.model_id',
                                 'select' => $this->getSelect() . ', permission',
                                 'props' => array(

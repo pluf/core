@@ -6,7 +6,7 @@ return array(
                 'method' => 'tenant'
         ),
         array( // A Tenant main page
-                'regex' => '#^/(\d+)$#',
+                'regex' => '#^/\d+$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'tenantById'
         ),
@@ -16,7 +16,7 @@ return array(
                 'method' => 'tenantSpa'
         ),
         array( // Application of a Tenant
-                'regex' => '#^/(\d+)/(\d+)$#',
+                'regex' => '#^/\d+/(\d+)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'tenantSpaById'
         ),
