@@ -20,15 +20,21 @@ class SaaS_Middleware_TenantFromRequestMatch
             try {
                 $match = array();
                 if (preg_match($regex['regex'], $request->query, $match)) {
-                    $app = SaaS_Application::bySubDomain($match[$regex['match']]);
-                    if(!$app)
+                    $app = false;
+                    if ($regex['value'] == 'subdomain') {
+                        $app = SaaS_Application::bySubDomain(
+                                $match[$regex['match']]);
+                    } elseif ($regex['value'] == 'id') {
+                        $app = new SaaS_Application($match[$regex['match']]);
+                    }
+                    if (! $app)
                         continue;
                     $request->tenant = $app;
                     $request->application = $app;
                     return false;
                 }
             } catch (Exception $e) {
-//                 echo $e->getMessage();
+                // echo $e->getMessage();
             }
         }
         

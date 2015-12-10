@@ -13,27 +13,46 @@ class SaaS_Views_SPA
 
     public function tenant ($request, $match)
     {
+        // TODO: maso, 1394: Redirect if there is domain
+        return $this->main($request, $match);
+    }
+
+    public function tenantById ($request, $match)
+    {
+        // TODO: maso, 1394: Redirect if there is domain
         return $this->main($request, $match);
     }
 
     public function tenantSpa ($request, $match)
     {
+        // TODO: maso, 1394: Redirect if there is domain
         return $this->spa($request, $match);
+    }
+
+    public function tenantSpaById ($request, $match)
+    {
+        // TODO: maso, 1394: Redirect if there is domain
+        $app = $request->tenant;
+        $spa = SaaS_SPA::getByName($match[1]);
+        
+        // Check access
+        SaaS_Precondition::userCanAccessApplication($request, $app);
+        SaaS_Precondition::userCanAccessSpa($request, $spa);
+        
+        // نمایش اصلی
+        return $this->loadSpa($request, $app, $spa);
     }
 
     public function main ($request, $match)
     {
-        if($request->tenant->isAnonymous()){
-            // XXX: maso redirect to othre                                                                          
-        }
         $app = $request->tenant;
         if ($app->spa != 0)
             $spa = $app->get_spa();
-        else{
+        else {
             $spa = SaaS_SPA::getByName(Pluf::f('saas_spa_default', 'main'));
             return $this->loadSpa($request, $app, $spa);
         }
-            
+        
         // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanAccessSpa($request, $spa);

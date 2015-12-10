@@ -1,15 +1,24 @@
 <?php
 return array(
-
         array( // A Tenant main page
                 'regex' => '#^/'.Pluf::f('saas_tenant_url_prefix', 'tenant-').'[^/]+$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'tenant'
         ),
+        array( // A Tenant main page
+                'regex' => '#^/(\d+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'tenantById'
+        ),
         array( // Application of a Tenant
                 'regex' => '#^/'.Pluf::f('saas_tenant_url_prefix', 'tenant-').'[^/]+/([^/]+)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'tenantSpa'
+        ),
+        array( // Application of a Tenant
+                'regex' => '#^/(\d+)/(\d+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'tenantSpaById'
         ),
         
         /*
