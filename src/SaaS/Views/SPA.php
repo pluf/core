@@ -11,6 +11,18 @@ Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
 class SaaS_Views_SPA
 {
 
+    public function getByName ($request, $match)
+    {
+        $spa = SaaS_SPA::getByName($match[1]);
+        return new Pluf_HTTP_Response_Json($spa);
+    }
+
+    public function getById ($request, $match)
+    {
+        $spa = new SaaS_SPA($match[1]);
+        return new Pluf_HTTP_Response_Json($spa);
+    }
+
     public function tenant ($request, $match)
     {
         // TODO: maso, 1394: Redirect if there is domain
@@ -83,7 +95,7 @@ class SaaS_Views_SPA
         $repo = Pluf::f('saas_spa_repository');
         
         // TODO: Check access (No Tentant)
-//         SaaS_Precondition::userCanAccessSpa($request, $spa);
+        // SaaS_Precondition::userCanAccessSpa($request, $spa);
         
         // Do
         return $this->loadSource($request, $spa, $match[2]);

@@ -68,7 +68,7 @@ return array(
         array( // فهرستی از تمام اعضا
                 'regex' => '#^/app/(\d+)/member/list$#',
                 'model' => 'SaaS_Views_Application',
-                'method' => 'members',
+                'method' => 'members'
         ),
         /*
          * SPA of applications
@@ -77,7 +77,7 @@ return array(
                 'regex' => '#^/app/(\d+)/sap/list$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'saps',
-                'http-method' => 'GET',
+                'http-method' => 'GET'
         ),
         /*
          *  تنظیم‌ها 
@@ -86,7 +86,7 @@ return array(
                 'regex' => '#^/app/(\d+)/config/list$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'configurations',
-                'http-method' => 'GET',
+                'http-method' => 'GET'
         ),
         array( // دسترسی به تنظیم‌ها با شناسه
                 'regex' => '#^/app/(\d+)/config/(\d+)$#',
@@ -104,7 +104,7 @@ return array(
                 'regex' => '#^/app/(\d+)/configByName/(.+)$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'getByName',
-                'http-method' => 'GET',
+                'http-method' => 'GET'
         ),
         array( // ایجاد یک تنظیم جدید
                 'regex' => '#^/app/(\d+)/config/create$#',
@@ -137,7 +137,7 @@ return array(
                 'method' => 'find',
                 'http-method' => array(
                         'GET'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -145,7 +145,7 @@ return array(
                 'method' => 'get',
                 'http-method' => array(
                         'GET'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -153,7 +153,7 @@ return array(
                 'method' => 'delete',
                 'http-method' => array(
                         'DELETE'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
@@ -161,7 +161,7 @@ return array(
                 'method' => 'update',
                 'http-method' => array(
                         'POST'
-                ),
+                )
         ),
         array(
                 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
@@ -169,7 +169,7 @@ return array(
                 'method' => 'download',
                 'http-method' => array(
                         'GET'
-                ),
+                )
         ),
         /**
          * **************************************************************************
@@ -229,5 +229,22 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::staffRequired'
                 )
+        ),
+        
+        /**
+         * *****************************************************************
+         * SPA
+         * *****************************************************************
+         */
+        array(
+                'regex' => '#^/spa/(\d+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'getById',
+        ),
+        array(
+                'regex' => '#^/spa/([^/]+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'getByName',
         )
-);
+)
+;
