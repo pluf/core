@@ -242,6 +242,11 @@ return array(
                 'method' => 'getById',
         ),
         array(
+                'regex' => '#^/spa/(\d+)/detail$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'detail',
+        ),
+        array(
                 'regex' => '#^/spa/([^/]+)$#',
                 'model' => 'SaaS_Views_SPA',
                 'method' => 'getByName',

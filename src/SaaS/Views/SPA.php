@@ -1,6 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('SaaS_Shortcuts_GetSAPOr404');
+Pluf::loadFunction('SaaS_Shortcuts_GetSPAOr404');
 Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
 
 /**
@@ -21,6 +21,13 @@ class SaaS_Views_SPA
     {
         $spa = new SaaS_SPA($match[1]);
         return new Pluf_HTTP_Response_Json($spa);
+    }
+
+    public function detail ($request, $match)
+    {
+        $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
+        $package = $spa->loadPackage();
+        return new Pluf_HTTP_Response_Json($package);
     }
 
     public function tenant ($request, $match)

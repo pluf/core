@@ -48,13 +48,13 @@ function SaaS_Shortcuts_libraryFactory ($object = null)
     return $object;
 }
 
-function SaaS_Shortcuts_GetSAPOr404 ($id)
+function SaaS_Shortcuts_GetSPAOr404 ($id)
 {
     $item = new SaaS_SPA($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404("SAP not found (" . $id . ")");
+    throw new Pluf_HTTP_Error404("Application not found (" . $id . ")");
 }
 
 function SaaS_Shortcuts_GetApplicationOr404 ($id)
@@ -160,6 +160,7 @@ function SaaS_Shortcuts_LoadSPAFromRepository ()
                 $mprofile = new SaaS_SPA();
                 $mprofile->path = '/' . $path;
                 $mprofile->name = $package['name'];
+                $mprofile->title = $package['title'];
                 $mprofile->descritpion = $package['description'];
                 $mprofile->license = $package['license'];
                 $mprofile->homepage = $package['homepage'];
