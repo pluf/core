@@ -158,13 +158,15 @@ function SaaS_Shortcuts_LoadSPAFromRepository ()
                 $package = json_decode($json, true);
                 
                 $mprofile = new SaaS_SPA();
+                $mprofile->setFromFormData($package);
                 $mprofile->path = '/' . $path;
-                $mprofile->name = $package['name'];
-                $mprofile->title = $package['title'];
-                $mprofile->descritpion = $package['description'];
-                $mprofile->license = $package['license'];
-                $mprofile->homepage = $package['homepage'];
-                $mprofile->version = $package['version'];
+//                 $mprofile->name = $package['name'];
+//                 if (array_key_exists('title', $package))
+//                     $mprofile->title = $package['title'];
+//                 $mprofile->descritpion = $package['description'];
+//                 $mprofile->license = $package['license'];
+//                 $mprofile->homepage = $package['homepage'];
+//                 $mprofile->version = $package['version'];
                 $mprofile->create();
             }
         }

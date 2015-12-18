@@ -36,7 +36,7 @@ class SaaS_SPA extends Pluf_Model
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
-                        'unique' => true,
+                        'unique' => false,
                         'size' => 50
                 ),
                 'license' => array(
