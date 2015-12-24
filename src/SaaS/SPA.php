@@ -142,12 +142,42 @@ class SaaS_SPA extends Pluf_Model
      */
     public function loadPackage ()
     {
+        if ($this->package != null) {
+            return $this->package;
+        }
         $filename = $this->getPackagePath() .
                  Pluf::f('saas_spa_package', "/spa.json");
         $myfile = fopen($filename, "r") or die("Unable to open file!");
         $json = fread($myfile, filesize($filename));
         fclose($myfile);
         $this->package = json_decode($json, true);
+        
+        { // Load file list
+            $pkeys = array(
+                    'src',
+                    'resource'
+            );
+            $pp = $this->getPackagePath() . '/';
+            foreach ($pkeys as $key) {
+                if (array_key_exists($key, $this->package)) { // Load source
+                    $tmp = $this->package[$key];
+                    $this->package[$key] = array();
+                    foreach ($tmp as $value) {
+                        $tp = $pp . $value;
+                        foreach (glob($tp) as $filename) {
+                            // TODO: Check if is file
+                            // TODO: Check if is readable
+                            // Remove prefix
+                            $str = substr($filename, strlen($pp));
+                            $this->package[$key][] = $str;
+                        }
+                    }
+                } else { // Default value
+                    $this->package[$key] = array();
+                }
+            }
+        }
+        
         return $this->package;
     }
 
