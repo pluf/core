@@ -125,7 +125,7 @@ class SaaS_Views_SPA
         // نمایش اصلی
         $params = array(
                 'spa' => $spa,
-                'title' => __('ghazal'),
+                'title' => __('Pluf PaaS'),
                 'jsLibs' => $jsLib,
                 'cssLibs' => $cssLib,
                 'package' => $package
