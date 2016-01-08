@@ -37,11 +37,31 @@ class SaaS_Views_Application
      * @throws Pluf_Exception
      * @return Pluf_HTTP_Response_Json
      */
-    public function current ($request, $match)
+    public function getCurrent ($request, $match)
     {
         return new Pluf_HTTP_Response_Json($request->application);
     }
 
+    /**
+     * ملک جاری را به روز می‌کند.
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     */
+    public function updateCurrent ($request, $match)
+    {
+        // Check permission
+        SaaS_Precondition::userCanUpdateApplication($request, $request->tenant);
+        // Do update
+        $params = array(
+                'application' => $request->tenant
+        );
+        $form = new SaaS_Form_ApplicationUpdate(
+                array_merge($request->REQUEST, $request->FILES), $params);
+        $app2 = $form->update();
+        return new Pluf_HTTP_Response_Json($app2);
+    }
+    
     /**
      * یک نرم‌افزار را تعیین می‌کند
      *
@@ -151,17 +171,6 @@ class SaaS_Views_Application
         );
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
-    }
-
-    /**
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     */
-    public function members ($request, $match)
-    {
-        return new Pluf_HTTP_Response_Json(
-                $request->application->getMembershipData('txt'));
     }
 
     public function saps ($request, $match)

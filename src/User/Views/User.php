@@ -80,7 +80,7 @@ class User_Views_User
     {
         // Create account
         $extra = array();
-        $form = new User_Form_User(array_merge($request->POST, $request->FILES), 
+        $form = new User_Form_User(array_merge($request->REQUEST, $request->FILES), 
                 $extra);
         $cuser = $form->save();
         

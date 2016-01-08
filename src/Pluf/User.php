@@ -70,7 +70,8 @@ class Pluf_User extends Pluf_Model
                         'blank' => false,
                         'verbose' => __('password'),
                         'size' => 150,
-                        'help_text' => __('Format: [algo]:[salt]:[hash]')
+                        'help_text' => __('Format: [algo]:[salt]:[hash]'),
+                        'secure' => true
                 ),
                 'groups' => array(
                         'type' => 'Pluf_DB_Field_Manytomany',
@@ -144,6 +145,10 @@ class Pluf_User extends Pluf_Model
                 ),
                 'secure' => array(
                         'select' => $this->getSecureSelect()
+                ),
+                'user_permission' => array(
+                        'select' => $this->getSecureSelect(),
+                        'join' => 'LEFT JOIN rowpermissions ON users.id=rowpermissions.owner_id'
                 )
         );
         if (Pluf::f('pluf_custom_user', false))
@@ -155,18 +160,19 @@ class Pluf_User extends Pluf_Model
      */
     function getSecureSelect ()
     {
-        if (isset($this->_cache['getSelect']))
-            return $this->_cache['getSelect'];
+        if (isset($this->_cache['getSecureSelect']))
+            return $this->_cache['getSecureSelect'];
         $select = array();
         $table = $this->getSqlTable();
         foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany' && $col !== 'password') {
+            if ($val['type'] != 'Pluf_DB_Field_Manytomany' && ! (array_key_exists(
+                    'secure', $val) && $val['secure'] == true)) {
                 $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
                          $this->_con->qn($col);
             }
         }
-        $this->_cache['getSelect'] = implode(', ', $select);
-        return $this->_cache['getSelect'];
+        $this->_cache['getSecureSelect'] = implode(', ', $select);
+        return $this->_cache['getSecureSelect'];
     }
 
     /**

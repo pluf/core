@@ -29,12 +29,34 @@ class SaaS_Form_Application extends Pluf_Form
                         'label' => __('title'),
                         'initial' => $this->application->title
                 ));
+        $this->fields['domain'] = new Pluf_Form_Field_Varchar(
+                array(
+                        'required' => false,
+                        'label' => __('domain'),
+                        'initial' => $this->application->domain
+                ));
+        $this->fields['subdomain'] = new Pluf_Form_Field_Varchar(
+                array(
+                        'required' => false,
+                        'label' => __('subdomain'),
+                        'initial' => $this->application->subdomain
+                ));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('description'),
                         'initial' => $this->application->description
                 ));
+    }
+
+    function clean_domain ()
+    {
+        $domain = $this->cleaned_data['domain'];
+        if (empty($domain)) {
+            $domain = $this->data['subdomain'] .'.'.
+                     Pluf::f('domian', 'localhost');
+        }
+        return $domain;
     }
 
     /**
