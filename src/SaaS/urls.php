@@ -80,158 +80,100 @@ return array(
                 )
         ),
         
-
         /**
          * *****************************************************************
-         * Tenants (Owner)
+         * Tenants (owner, member, authorized)
          * *****************************************************************
          */
         array( // فهرستی از تمام اعضا
-                'regex' => '#^/owners$#',
+                'regex' => '#^/(owner|member|authorize)/find$#',
                 'model' => 'SaaS_Views_ApplicationMember',
-                'method' => 'owners',
+                'method' => 'find',
                 'http-method' => array(
                         'GET'
-                ),
+                )
         ),
         array( //
-                'regex' => '#^/owner/(\d+)$#',
+                'regex' => '#^/(owner|member|authorize)/(\d+)$#',
                 'model' => 'SaaS_Views_ApplicationMember',
-                'method' => 'ownerAdd',
+                'method' => 'memberAdd',
                 'http-method' => array(
                         'POST'
                 ),
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
         ),
         array( //
-                'regex' => '#^/owner/(\d+)$#',
+                'regex' => '#^/(owner|member|authorize)/(\d+)$#',
                 'model' => 'SaaS_Views_ApplicationMember',
-                'method' => 'ownerRemove',
+                'method' => 'memberRemove',
                 'http-method' => array(
                         'DELETE'
                 ),
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
         ),
         
+   
+        // /**
+        // * *****************************************************************
+        // * Application resource
+        // * *****************************************************************
+        // */
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/create$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'create',
+        // 'http-method' => array(
+        // 'POST'
+        // ),
+        // 'freemium' => array(
+        // 'level' => Pluf::f('saas_freemium_full', 5)
+        // )
+        // ),
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/find$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'find',
+        // 'http-method' => array(
+        // 'GET'
+        // )
+        // ),
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'get',
+        // 'http-method' => array(
+        // 'GET'
+        // )
+        // ),
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'delete',
+        // 'http-method' => array(
+        // 'DELETE'
+        // )
+        // ),
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'update',
+        // 'http-method' => array(
+        // 'POST'
+        // )
+        // ),
+        // array(
+        // 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
+        // 'model' => 'SaaS_Views_ApplicationResource',
+        // 'method' => 'download',
+        // 'http-method' => array(
+        // 'GET'
+        // )
+        // ),
         
-
-        /**
-         * *****************************************************************
-         * Tenants (members)
-         * *****************************************************************
-         */
-        array( // فهرستی از تمام اعضا
-                'regex' => '#^/members$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'GET'
-                ),
-        ),
-        array( // 
-                'regex' => '#^/member/(\d+)$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'POST'
-                ),
-        ),
-        array( // 
-                'regex' => '#^/member/(\d+)$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'DELETE'
-                ),
-        ),
-
-        /**
-         * *****************************************************************
-         * Tenants (authorizeds)
-         * *****************************************************************
-         */
-        array( // فهرستی از تمام اعضا
-                'regex' => '#^/authorizeds$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'GET'
-                ),
-        ),
-        array( //
-                'regex' => '#^/authorized/(\d+)$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'POST'
-                ),
-        ),
-        array( //
-                'regex' => '#^/authorized/(\d+)$#',
-                'model' => 'SaaS_Views_Application',
-                'method' => 'members',
-                'http-method' => array(
-                        'DELETE'
-                ),
-        ),
-        
-        
-
-//         /**
-//          * *****************************************************************
-//          * Application resource
-//          * *****************************************************************
-//          */
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/create$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'create',
-//                 'http-method' => array(
-//                         'POST'
-//                 ),
-//                 'freemium' => array(
-//                         'level' => Pluf::f('saas_freemium_full', 5)
-//                 )
-//         ),
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/find$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'find',
-//                 'http-method' => array(
-//                         'GET'
-//                 )
-//         ),
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'get',
-//                 'http-method' => array(
-//                         'GET'
-//                 )
-//         ),
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'delete',
-//                 'http-method' => array(
-//                         'DELETE'
-//                 )
-//         ),
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'update',
-//                 'http-method' => array(
-//                         'POST'
-//                 )
-//         ),
-//         array(
-//                 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
-//                 'model' => 'SaaS_Views_ApplicationResource',
-//                 'method' => 'download',
-//                 'http-method' => array(
-//                         'GET'
-//                 )
-//         ),
-
         /**
          * **************************************************************************
          * Libs
@@ -290,72 +232,72 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::staffRequired'
                 )
-        ),
-        
-//         /**
-//          * *****************************************************************
-//          * SPA
-//          * *****************************************************************
-//          */
-//         array(
-//                 'regex' => '#^/spa/(\d+)$#',
-//                 'model' => 'SaaS_Views_SPA',
-//                 'method' => 'getById'
-//         ),
-//         array(
-//                 'regex' => '#^/spa/(\d+)/detail$#',
-//                 'model' => 'SaaS_Views_SPA',
-//                 'method' => 'detail'
-//         ),
-//         array(
-//                 'regex' => '#^/spa/([^/]+)$#',
-//                 'model' => 'SaaS_Views_SPA',
-//                 'method' => 'getByName'
-//         ),
-//         /*
-//          * SPA of applications
-//          */
-//         array(
-//                 'regex' => '#^/spa/find$#',
-//                 'model' => 'SaaS_Views_Application',
-//                 'method' => 'saps',
-//                 'http-method' => 'GET'
-//         ),
+        )
+)
+// /**
+// * *****************************************************************
+// * SPA
+// * *****************************************************************
+// */
+// array(
+// 'regex' => '#^/spa/(\d+)$#',
+// 'model' => 'SaaS_Views_SPA',
+// 'method' => 'getById'
+// ),
+// array(
+// 'regex' => '#^/spa/(\d+)/detail$#',
+// 'model' => 'SaaS_Views_SPA',
+// 'method' => 'detail'
+// ),
+// array(
+// 'regex' => '#^/spa/([^/]+)$#',
+// 'model' => 'SaaS_Views_SPA',
+// 'method' => 'getByName'
+// ),
+// /*
+// * SPA of applications
+// */
+// array(
+// 'regex' => '#^/spa/find$#',
+// 'model' => 'SaaS_Views_Application',
+// 'method' => 'saps',
+// 'http-method' => 'GET'
+// ),
 
-        //         /*
-        //          *  تنظیم‌ها
-        //          */
-        //         array( // فهرستی از تنظیم‌ها
-        //                 'regex' => '#^/app/(\d+)/config/list$#',
-        //                 'model' => 'SaaS_Views_Configuration',
-        //                 'method' => 'configurations',
-        //                 'http-method' => 'GET'
-        //         ),
-        //         array( // دسترسی به تنظیم‌ها با شناسه
-        //                 'regex' => '#^/app/(\d+)/config/(\d+)$#',
-        //                 'model' => 'SaaS_Views_Configuration',
-        //                 'method' => 'get',
-        //                 'http-method' => 'GET',
-        //                 'saas' => array(
-        //                         'match-application' => 1
-        //                 ),
-        //                 'freemium' => array(
-        //                         'level' => Pluf::f('saas_freemium_full', 5)
-        //                 )
-        //         ),
-        //         array( // دسترسی به تنظیم‌ها با نام
-        //                 'regex' => '#^/app/(\d+)/configByName/(.+)$#',
-        //                 'model' => 'SaaS_Views_Configuration',
-        //                 'method' => 'getByName',
-        //                 'http-method' => 'GET'
-        //         ),
-        //         array( // ایجاد یک تنظیم جدید
-        //                 'regex' => '#^/app/(\d+)/config/create$#',
-        //                 'model' => 'SaaS_Views_Configuration',
-        //                 'method' => 'create',
-        //                 'http-method' => 'POST',
-        //                 'freemium' => array(
-        //                         'level' => Pluf::f('saas_freemium_full', 5)
-        //                 )
-        //         ),
-);
+// /*
+// * تنظیم‌ها
+// */
+// array( // فهرستی از تنظیم‌ها
+// 'regex' => '#^/app/(\d+)/config/list$#',
+// 'model' => 'SaaS_Views_Configuration',
+// 'method' => 'configurations',
+// 'http-method' => 'GET'
+// ),
+// array( // دسترسی به تنظیم‌ها با شناسه
+// 'regex' => '#^/app/(\d+)/config/(\d+)$#',
+// 'model' => 'SaaS_Views_Configuration',
+// 'method' => 'get',
+// 'http-method' => 'GET',
+// 'saas' => array(
+// 'match-application' => 1
+// ),
+// 'freemium' => array(
+// 'level' => Pluf::f('saas_freemium_full', 5)
+// )
+// ),
+// array( // دسترسی به تنظیم‌ها با نام
+// 'regex' => '#^/app/(\d+)/configByName/(.+)$#',
+// 'model' => 'SaaS_Views_Configuration',
+// 'method' => 'getByName',
+// 'http-method' => 'GET'
+// ),
+// array( // ایجاد یک تنظیم جدید
+// 'regex' => '#^/app/(\d+)/config/create$#',
+// 'model' => 'SaaS_Views_Configuration',
+// 'method' => 'create',
+// 'http-method' => 'POST',
+// 'freemium' => array(
+// 'level' => Pluf::f('saas_freemium_full', 5)
+// )
+// ),
+;

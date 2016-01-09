@@ -10,50 +10,88 @@ class SaaS_Views_ApplicationMember
 {
 
     /**
+     * خلاصه‌ای از کاربران سیستم
      *
      * @param unknown $request            
      * @param unknown $match            
      */
-    public function membersList ($request, $match)
+    public function summery ($request, $match)
     {
         return new Pluf_HTTP_Response_Json(
                 $request->application->getMembershipData('txt'));
     }
 
-    public function owners ($request, $match)
+    /**
+     * فهرست تمام اعضا بر اساس نوع دسترسی
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function find ($request, $match)
     {
-        $operm = Pluf_Permission::getFromString('SaaS.software-owner');
+        // (owner|member|authorize)
+        $permStr = $this->toPermission($match[1]);
+        return $this->listUsers($request, $permStr);
+    }
+
+    /**
+     * اضافه کردن یک دسترسی به یک کاربر
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     */
+    public function memberAdd ($request, $match)
+    {
+        // (owner|member|authorize) : permission
+        $permStr = $this->toPermission($match[1]);
+        // (\d+) : user
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match[2]);
+        Pluf_RowPermission::add($user, $request->tenant, $permStr);
+        return new Pluf_HTTP_Response_Json($request->tenant);
+    }
+
+    /**
+     * حذف یک دسترسی از یک کاربر
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function memberRemove ($request, $match)
+    {
+        // (owner|member|authorize) : permission
+        $permStr = $this->toPermission($match[1]);
+        // (\d+) : user
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match[2]);
+        Pluf_RowPermission::remove($user, $request->tenant, $permStr);
+        return new Pluf_HTTP_Response_Json($request->tenant);
+    }
+
+    /**
+     * فهرست کردن کاربران بر اساس نوع دسترسی
+     *
+     * در صورتی که نوع دسترسی مشخص باشد، با این فراخوانی می‌توانید فهرست کاربران
+     * را ایجاد کنید.
+     *
+     * @param unknown $request            
+     * @param unknown $permStr            
+     */
+    private function listUsers ($request, $permStr)
+    {
+        $operm = Pluf_Permission::getFromString($permStr);
         $db = & Pluf::db();
         $false = Pluf_DB_BooleanToDb(false, $db);
         $sql = new Pluf_SQL(
                 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
-                $false,
-                array(
-                        'SaaS_Application',
-                        $request->tenant->id,
-                        'Pluf_User',
-                        $operm->id
-                ));
-        return $this->listUsers($request, $sql);
-    }
-
-    public function ownerAdd ($request, $match)
-    {
-        $user = new Pluf_User($match[1]);
-        Pluf_RowPermission::add($user, $request->tenant, 'SaaS.software-owner');
-        return new Pluf_HTTP_Response_Json($request->tenant);
-    }
-
-    public function ownerRemove ($request, $match)
-    {
-        $user = new Pluf_User($match[1]);
-        Pluf_RowPermission::remove($user, $request->tenant, 'SaaS.software-owner');
-        return new Pluf_HTTP_Response_Json($request->tenant);
-    }
-    
-    
-    private function listUsers ($request, $sql)
-    {
+                         $false, 
+                        array(
+                                'SaaS_Application',
+                                $request->tenant->id,
+                                'Pluf_User',
+                                $operm->id
+                        ));
+        
         $pag = new Pluf_Paginator(new Pluf_User());
         $pag->model_view = 'user_permission';
         $pag->forced_where = $sql;
@@ -94,5 +132,19 @@ class SaaS_Views_ApplicationMember
             $count = $request->GET['_px_count'];
         }
         return $count;
+    }
+
+    private function toPermission ($perm)
+    {
+        // (owner|member|authorize) : permission
+        switch ($perm) {
+            case 'owner':
+                return 'SaaS.software-owner';
+            case 'member':
+                return 'SaaS.software-member';
+            case 'authorize':
+                return 'SaaS.software-authorized-user';
+        }
+        throw new Pluf_Exception('no permission found for ' . $perm);
     }
 }

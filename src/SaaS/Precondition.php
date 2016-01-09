@@ -42,18 +42,11 @@ class SaaS_Precondition
      */
     static public function baseAccess ($request, $app = null)
     {
-        if ($request->application == null) {
-            $request->application = $app;
+        if ($request->tenant == null) {
+            $request->tenant = $app;
         }
-        if (($request->application == null ||
-                 $request->application->isAnonymous()) &&
-                 isset($request->view['ctrl']['saas']['match-application'])) {
-            $request->application = Pluf_Shortcuts_GetObjectOr404(
-                    'SaaS_Application', 
-                    $request->view['match'][$request->view['ctrl']['saas']['match-application']]);
-        }
-        if ($request->application == null) {
-            throw new Pluf_Exception("Application is not defined.");
+        if ($request->tenant == null || $request->tenant->isAnonymous()) {
+            throw new Pluf_Exception("Tenant is not defined.");
         }
         if (Pluf::f('saas_freemium_enable', false)) {
             SaaS_Precondition::freemium($request);
@@ -70,7 +63,7 @@ class SaaS_Precondition
      */
     static public function applicationOwner ($request, $app = null)
     {
-        $res = Pluf_Precondition::loginRequired($request, $app);
+        $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
             return $res;
         }
@@ -78,8 +71,7 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.software-owner', 
-                $request->application)) {
+        if ($request->user->hasPerm('SaaS.software-owner', $request->tenant)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
