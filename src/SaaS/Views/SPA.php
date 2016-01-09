@@ -8,45 +8,8 @@ Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Views_SPA
+class SaaS_Views_SPA extends SaaS_Views_ApplicationSpa
 {
-
-    public function getByName ($request, $match)
-    {
-        $spa = SaaS_SPA::getByName($match[1]);
-        return new Pluf_HTTP_Response_Json($spa);
-    }
-
-    public function getById ($request, $match)
-    {
-        $spa = new SaaS_SPA($match[1]);
-        return new Pluf_HTTP_Response_Json($spa);
-    }
-
-    public function detail ($request, $match)
-    {
-        $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        $package = $spa->loadPackage();
-        return new Pluf_HTTP_Response_Json($package);
-    }
-
-    public function tenant ($request, $match)
-    {
-        // TODO: maso, 1394: Redirect if there is domain
-        return $this->main($request, $match);
-    }
-
-    public function tenantById ($request, $match)
-    {
-        // TODO: maso, 1394: Redirect if there is domain
-        return $this->main($request, $match);
-    }
-
-    public function tenantSpa ($request, $match)
-    {
-        // TODO: maso, 1394: Redirect if there is domain
-        return $this->spa($request, $match);
-    }
 
     public function tenantSpaById ($request, $match)
     {
@@ -134,7 +97,7 @@ class SaaS_Views_SPA
                 $request);
     }
 
-    private function loadLibrary ($package)
+    function loadLibrary ($package)
     {
         // کتابخانه‌ها
         $cssLib = array();
@@ -166,33 +129,13 @@ class SaaS_Views_SPA
         );
     }
 
-    private function loadSpa ($request, $app, $spa)
-    {
-        $package = $spa->loadPackage();
-        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
-        
-        // نمایش اصلی
-        $params = array(
-                'spa' => $spa,
-                'app' => $app,
-                'title' => __('ghazal'),
-                'mainView' => $spa->getMainViewPath(),
-                'jsLibs' => $jsLib,
-                'cssLibs' => $cssLib,
-                'package' => $package,
-                'base' => $request->query
-        );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, 
-                $request);
-    }
-
-    private function loadSource ($request, $spa, $name)
+    function loadSource ($request, $spa, $name)
     {
         $p = $spa->getSourcePath($name);
         return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
     }
 
-    private function loadAssets ($request, $name)
+    function loadAssets ($request, $name)
     {
         $p = SaaS_SPA::getAssetsPath($name);
         return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));

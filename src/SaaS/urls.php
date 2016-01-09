@@ -116,7 +116,6 @@ return array(
                 )
         ),
         
-   
         // /**
         // * *****************************************************************
         // * Application resource
@@ -232,72 +231,104 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::staffRequired'
                 )
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenant (SPA)
+         * *****************************************************************
+         */
+        array( // SPA of applications
+                'regex' => '#^/spa/find$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/spa/default$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getDefaultSpa',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/spa/(\d+)/default$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'setDefaultSpa',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getById',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        array(
+                'regex' => '#^/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'removePermissions',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        array(
+                'regex' => '#^/spa/(\d+)/detail$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'detail',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/spa/([^/]+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getByName',
+                'http-method' => 'GET'
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenant (Configuration)
+         * *****************************************************************
+         */
+        array( // فهرستی از تنظیم‌ها
+                'regex' => '#^/app/(\d+)/config/list$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'configurations',
+                'http-method' => 'GET'
+        ),
+        array( // دسترسی به تنظیم‌ها با شناسه
+                'regex' => '#^/app/(\d+)/config/(\d+)$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'saas' => array(
+                        'match-application' => 1
+                ),
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
+        ),
+        array( // دسترسی به تنظیم‌ها با نام
+                'regex' => '#^/app/(\d+)/configByName/(.+)$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'getByName',
+                'http-method' => 'GET'
+        ),
+        array( // ایجاد یک تنظیم جدید
+                'regex' => '#^/app/(\d+)/config/create$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
         )
-)
-// /**
-// * *****************************************************************
-// * SPA
-// * *****************************************************************
-// */
-// array(
-// 'regex' => '#^/spa/(\d+)$#',
-// 'model' => 'SaaS_Views_SPA',
-// 'method' => 'getById'
-// ),
-// array(
-// 'regex' => '#^/spa/(\d+)/detail$#',
-// 'model' => 'SaaS_Views_SPA',
-// 'method' => 'detail'
-// ),
-// array(
-// 'regex' => '#^/spa/([^/]+)$#',
-// 'model' => 'SaaS_Views_SPA',
-// 'method' => 'getByName'
-// ),
-// /*
-// * SPA of applications
-// */
-// array(
-// 'regex' => '#^/spa/find$#',
-// 'model' => 'SaaS_Views_Application',
-// 'method' => 'saps',
-// 'http-method' => 'GET'
-// ),
-
-// /*
-// * تنظیم‌ها
-// */
-// array( // فهرستی از تنظیم‌ها
-// 'regex' => '#^/app/(\d+)/config/list$#',
-// 'model' => 'SaaS_Views_Configuration',
-// 'method' => 'configurations',
-// 'http-method' => 'GET'
-// ),
-// array( // دسترسی به تنظیم‌ها با شناسه
-// 'regex' => '#^/app/(\d+)/config/(\d+)$#',
-// 'model' => 'SaaS_Views_Configuration',
-// 'method' => 'get',
-// 'http-method' => 'GET',
-// 'saas' => array(
-// 'match-application' => 1
-// ),
-// 'freemium' => array(
-// 'level' => Pluf::f('saas_freemium_full', 5)
-// )
-// ),
-// array( // دسترسی به تنظیم‌ها با نام
-// 'regex' => '#^/app/(\d+)/configByName/(.+)$#',
-// 'model' => 'SaaS_Views_Configuration',
-// 'method' => 'getByName',
-// 'http-method' => 'GET'
-// ),
-// array( // ایجاد یک تنظیم جدید
-// 'regex' => '#^/app/(\d+)/config/create$#',
-// 'model' => 'SaaS_Views_Configuration',
-// 'method' => 'create',
-// 'http-method' => 'POST',
-// 'freemium' => array(
-// 'level' => Pluf::f('saas_freemium_full', 5)
-// )
-// ),
-;
+);

@@ -44,9 +44,9 @@ class SaaS_Views_Application
 
     /**
      * ملک جاری را به روز می‌کند.
-     * 
-     * @param unknown $request
-     * @param unknown $match
+     *
+     * @param unknown $request            
+     * @param unknown $match            
      */
     public function updateCurrent ($request, $match)
     {
@@ -61,7 +61,7 @@ class SaaS_Views_Application
         $app2 = $form->update();
         return new Pluf_HTTP_Response_Json($app2);
     }
-    
+
     /**
      * یک نرم‌افزار را تعیین می‌کند
      *
@@ -163,62 +163,6 @@ class SaaS_Views_Application
                 'creation_dtime'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = $this->getListCount($request);
-        $pag->no_results_text = __('No apartment is added yet.');
-        $pag->sort_order = array(
-                'creation_dtime',
-                'DESC'
-        );
-        $pag->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($pag->render_object());
-    }
-
-    public function saps ($request, $match)
-    {
-        $pag = new Pluf_Paginator(new SaaS_SPA());
-        $pag->model_view = 'spa_application';
-        // $pag->model_view = 'spa_application_permission';
-        
-        $sql = new Pluf_SQL('model_class=%s AND owner_class=%s AND owner_id=%s', 
-                array(
-                        'SaaS_SPA',
-                        'SaaS_Application',
-                        $request->application->id
-                ));
-        
-        // Permissions
-        $perms = array();
-        $perms[] = Pluf_Permission::getFromString('SaaS.spa-anonymous-access');
-        if (! $request->user->isAnonymous()) {
-            $perms[] = Pluf_Permission::getFromString(
-                    'SaaS.spa-authorized-access');
-            $perms[] = Pluf_Permission::getFromString('SaaS.spa-member-access');
-            $perms[] = Pluf_Permission::getFromString('SaaS.spa-owner-access');
-        }
-        
-        $permSql = new Pluf_SQL();
-        foreach ($perms as $permission) {
-            $permSql->SOr(
-                    new Pluf_SQL('permission=%s', 
-                            array(
-                                    $permission->id
-                            )));
-        }
-        $sql->SAnd($permSql);
-        
-        $pag->forced_where = $sql;
-        
-        $list_display = array(
-                'id' => __('id'),
-                'title' => __('title'),
-                'creation_dtime' => __('create')
-        );
-        $search_fields = array();
-        $sort_fields = array(
-                'creation_dtime'
-        );
-        $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->action = array();
         $pag->items_per_page = $this->getListCount($request);
         $pag->no_results_text = __('No apartment is added yet.');
         $pag->sort_order = array(
