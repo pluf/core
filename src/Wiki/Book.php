@@ -96,7 +96,15 @@ class Wiki_Book extends Pluf_Model
                         'blank' => true,
                         'verbose' => __('categories'),
                         'help_text' => __('categories')
-                )
+                ),
+                'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'relate_name' => 'tenant',
+                        'verbose' => __('tenant'),
+                        'help_text' => __('Related tenant.')
+                ),
         );
     }
 

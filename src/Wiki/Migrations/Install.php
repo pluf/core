@@ -1,40 +1,16 @@
 <?php
+Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
+Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
 
-/**
- * ساختارهای اولیه داده‌ای و پایگاه داده را ایجاد می‌کند.
- * 
- * @param string $params
- */
-function Wiki_Migrations_Install_setup ($params = '')
+function Wiki_Migrations_Install_setup ($params = null)
 {
-    $models = array(
-            'Wiki_Page',
-            'Wiki_Book'
-    );
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    foreach ($models as $model) {
-        $schema->model = new $model();
-        $schema->createTables();
-    }
+    $filename = dirname(__FILE__) . '/../module.json';
+    $myfile = fopen($filename, "r") or die("Unable to open module.json!");
+    $json = fread($myfile, filesize($filename));
+    fclose($myfile);
+    $moduel = json_decode($json, true);
     
-    /*
-     * موجودیت‌های پیش فرض سیستم
-     */
-
-    // Install the permissions
-    $perm = new Pluf_Permission();
-    $perm->name = 'Wiki book ownership';
-    $perm->code_name = 'book-owner';
-    $perm->description = 'Permission given to wiki book owners.';
-    $perm->application = 'Wiki';
-    $perm->create();
-    
-    $perm = new Pluf_Permission();
-    $perm->name = 'Wiki page ownership';
-    $perm->code_name = 'page-owner';
-    $perm->description = 'Permission given to wiki page owners.';
-    $perm->application = 'Wiki';
-    $perm->create();
+    Pluf_Shortcuts_LoadModels($moduel);
+    Pluf_Shortcuts_LoadPermissions($moduel);
 }
 

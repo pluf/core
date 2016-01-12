@@ -74,7 +74,6 @@ return array (
                 'http-method' => 'DELETE'
         ),
         
-        
         /*
          * کار با کتابها
          */

@@ -24,6 +24,7 @@ class Wiki_Precondition
 
     public static function userCanDeleteBook ($request, $book)
     {
+        // User is not owner of the tenant
         return true;
     }
 

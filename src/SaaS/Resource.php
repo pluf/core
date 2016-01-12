@@ -114,7 +114,6 @@ class SaaS_Resource extends Pluf_Model
                 /*
                  * رابطه‌ها
                  */
-
                 'application' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'SaaS_Application',

@@ -16,7 +16,8 @@ class Wiki_Views_Book
     {
         // initial page data
         $extra = array(
-                'user' => $request->user
+                'user' => $request->user,
+                'tenant' => $request->tenant
         );
         $form = new Wiki_Form_BookCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
@@ -64,7 +65,7 @@ class Wiki_Views_Book
         // بررسی حق دسترسی
         Wiki_Precondition::userCanDeleteBook($request, $book);
         // اجرای درخواست
-        $book2 = new Wiki_Page($book->id);
+        $book2 = Wiki_Shortcuts_GetBookOr404($match[1]);
         $book2->delete();
         return new Pluf_HTTP_Response_Json($book);
     }
@@ -73,6 +74,11 @@ class Wiki_Views_Book
     {
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
         $pag = new Pluf_Paginator(new Wiki_Book());
+        $sql = new Pluf_SQL('tenant=%s',
+                array(
+                        $request->tenant->id
+                ));
+        $pag->forced_where = $sql;
         $pag->list_filters = array(
                 'id',
                 'title'
@@ -223,13 +229,25 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($pages->getArrayCopy());
     }
 
+    /**
+     * صفحه را به کتاب اضافه می‌کند
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @throws Pluf_Exception
+     * @return Pluf_HTTP_Response_Json
+     */
     public function addPage ($request, $match)
     {
         // تعیین داده‌ها
         $book = Wiki_Shortcuts_GetBookOr404($match[1]);
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match[2]);
+        $page = Wiki_Shortcuts_GetPageOr404($match[2]);
         // بررسی دسترسی‌ها
         Wiki_Precondition::userCanUpdateBook($request, $book);
+        Wiki_Precondition::userCanUpdatePage($request, $page);
+        if($book->tenant != $page->tenant) {
+            throw new Pluf_Exception("You are about to add a page from other tenant.");
+        }
         // اجرای دستور
         if ($page->book != 0) {
             throw new Pluf_Exception("Page is added into the another book.");
@@ -239,6 +257,14 @@ class Wiki_Views_Book
         return new Pluf_HTTP_Response_Json($book);
     }
 
+    /**
+     * یک صفحه را از کتاب حذف می‌کند
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @throws Pluf_Exception
+     * @return Pluf_HTTP_Response_Json
+     */
     public function removePage ($request, $match)
     {
         // تعیین داده‌ها

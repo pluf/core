@@ -52,13 +52,21 @@ class Wiki_Views_Page
         throw new Wiki_Exception_PageNotFound(__('requeisted page not found.'));
     }
 
+    /**
+     * یک صفحه جدید را ایجاد می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function create ($request, $match)
     {
         // تعیین دسترسی
         Wiki_Precondition::userCanCreatePage($request);
         // اجرای درخواست
         $extra = array(
-                'user' => $request->user
+                'user' => $request->user,
+                'tenant' => $request->tenant
         );
         $form = new Wiki_Form_PageCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
@@ -70,6 +78,13 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
+    /**
+     * یک صفحه را با شناسه تعیین می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function get ($request, $match)
     {
         // تعیین داده‌ها
@@ -80,6 +95,12 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
+    /**
+     * صفحه را به روز می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     */
     public function update ($request, $match)
     {
         // تعیین داده‌ها
@@ -97,6 +118,13 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
+    /**
+     * صفحه را حذف می‌کند.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
@@ -109,10 +137,22 @@ class Wiki_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
+    /**
+     * جستجوی صفحه‌ها را انجام می‌دهد
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
     public function find ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
         $pag = new Pluf_Paginator(new Wiki_Page());
+        $sql = new Pluf_SQL('tenant=%s', 
+                array(
+                        $request->tenant->id
+                ));
+        $pag->forced_where = $sql;
         $pag->list_filters = array(
                 'id',
                 'title'
