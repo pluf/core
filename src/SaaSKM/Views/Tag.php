@@ -65,29 +65,38 @@ class SaaSKM_Views_Tag
 
     public function update ($request, $match)
     {
-        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
+        // Input
+        $tag = SaaSKM_Shortcuts_GetTagOr404($match[1]);
+        // Access
+        SaaSKM_Precondition::userCanUpdateTag($request, $tag);
+        // DO
         $extra = array(
-                'user' => $request->user,
-                'parent' => null,
-                'category' => $cat
+                'tag' => $tag
         );
-        $form = new KM_Form_CategoryUpdate(
+        $form = new SaaSKM_Form_TagUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
-        $cat = $form->update();
-        return new Pluf_HTTP_Response_Json($cat);
+        return new Pluf_HTTP_Response_Json($form->update());
     }
 
     public function delete ($request, $match)
     {
-        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
-        $d = new KM_Category($cat->id);
+        // Input
+        $tag = SaaSKM_Shortcuts_GetTagOr404($match[1]);
+        // Access
+        SaaSKM_Precondition::userCanDeleteTag($request, $tag);
+        // DO
+        $d = SaaSKM_Shortcuts_GetTagOr404($match[1]);
         $d->delete();
-        return new Pluf_HTTP_Response_Json($cat);
+        return new Pluf_HTTP_Response_Json($tag);
     }
 
     public function get ($request, $match)
     {
-        $cat = KM_Shortcuts_GetCategoryOr404($match[1]);
-        return new Pluf_HTTP_Response_Json($cat);
+        // Input
+        $tag = SaaSKM_Shortcuts_GetTagOr404($match[1]);
+        // Access
+        SaaSKM_Precondition::userCanAccessTags($request, $tag);
+        // DO
+        return new Pluf_HTTP_Response_Json($tag);
     }
 }

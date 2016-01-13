@@ -57,7 +57,7 @@ class SaaSKM_Form_TagCreate extends Pluf_Form
         $tag->setFromFormData($this->cleaned_data);
         $tag->tenant = $this->tenant;
         
-        {// XXX: maso, 1394: converto to clean (Check tag exist)
+        { // XXX: maso, 1394: converto to clean (Check tag exist)
             $sqlSelect = new Pluf_SQL(
                     'tag_key=%s AND tag_value=%s AND tenant=%s', 
                     array(
@@ -78,24 +78,5 @@ class SaaSKM_Form_TagCreate extends Pluf_Form
             $tag->create();
         }
         return $tag;
-    }
-
-    /**
-     * داده‌های کاربر را به روز می‌کند.
-     *
-     * @throws Pluf_Exception
-     */
-    function update ($commit = true)
-    {
-        if (! $this->isValid()) {
-            throw new Pluf_Exception(
-                    __('cannot update a label from an invalid form'));
-        }
-        $this->label_data->setFromFormData($this->cleaned_data);
-        // $this->label_data->user = $this->user;
-        if ($commit) {
-            $this->label_data->update();
-        }
-        return $this->label_data;
     }
 }
