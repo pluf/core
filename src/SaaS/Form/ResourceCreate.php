@@ -36,7 +36,7 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
                         'max_size' => Pluf::f('upload_max_size', 2097152),
                         'move_function_params' => array(
                                 'upload_path' => Pluf::f('upload_path') . '/' .
-                                         $this->app->id . '/files',
+                                         $this->app->id . '/resource',
                                         'upload_path_create' => true,
                                         'upload_overwrite' => false
                         )
@@ -116,10 +116,10 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
     function failed ()
     {
         if (! empty($this->cleaned_data['file']) and file_exists(
-                Pluf::f('upload_path') . '/' . $this->app->id . '/files/' .
+                Pluf::f('upload_path') . '/' . $this->app->id . '/resource/' .
                          $this->cleaned_data['file'])) {
             @unlink(
-                    Pluf::f('upload_path') . '/' . $this->app->id . '/files/' .
+                    Pluf::f('upload_path') . '/' . $this->app->id . '/resource/' .
                      $this->cleaned_data['file']);
         }
     }
@@ -170,7 +170,7 @@ class SaaS_Form_ResourceCreate extends Pluf_Form
         $upload->submitter = $this->user;
         $upload->description = trim($this->cleaned_data['description']);
         $upload->file = $this->cleaned_data['file'];
-        $upload->file_path = '/' . $this->app->id . '/files';
+        $upload->file_path = '/' . $this->app->id . '/resource';
         $upload->file_size = filesize(
                 Pluf::f('upload_path') . $upload->file_path);
         $upload->downloads = 0;

@@ -66,6 +66,15 @@ function SaaS_Shortcuts_GetApplicationOr404 ($id)
     throw new Pluf_HTTP_Error404("Application not found (" . $id . ")");
 }
 
+function SaaS_Shortcuts_GetResourceOr404 ($id)
+{
+    $item = new SaaS_Resource($id);
+    if (!$item->isAnonymous()) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404("Resource not found (" . $id . ")");
+}
+
 /**
  *
  * @param unknown $request            
@@ -160,13 +169,13 @@ function SaaS_Shortcuts_LoadSPAFromRepository ()
                 $mprofile = new SaaS_SPA();
                 $mprofile->setFromFormData($package);
                 $mprofile->path = '/' . $path;
-//                 $mprofile->name = $package['name'];
-//                 if (array_key_exists('title', $package))
-//                     $mprofile->title = $package['title'];
-//                 $mprofile->descritpion = $package['description'];
-//                 $mprofile->license = $package['license'];
-//                 $mprofile->homepage = $package['homepage'];
-//                 $mprofile->version = $package['version'];
+                // $mprofile->name = $package['name'];
+                // if (array_key_exists('title', $package))
+                // $mprofile->title = $package['title'];
+                // $mprofile->descritpion = $package['description'];
+                // $mprofile->license = $package['license'];
+                // $mprofile->homepage = $package['homepage'];
+                // $mprofile->version = $package['version'];
                 $mprofile->create();
             }
         }

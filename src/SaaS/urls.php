@@ -116,62 +116,62 @@ return array(
                 )
         ),
         
-        // /**
-        // * *****************************************************************
-        // * Application resource
-        // * *****************************************************************
-        // */
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/create$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'create',
-        // 'http-method' => array(
-        // 'POST'
-        // ),
-        // 'freemium' => array(
-        // 'level' => Pluf::f('saas_freemium_full', 5)
-        // )
-        // ),
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/find$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'find',
-        // 'http-method' => array(
-        // 'GET'
-        // )
-        // ),
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'get',
-        // 'http-method' => array(
-        // 'GET'
-        // )
-        // ),
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'delete',
-        // 'http-method' => array(
-        // 'DELETE'
-        // )
-        // ),
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/(\d+)$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'update',
-        // 'http-method' => array(
-        // 'POST'
-        // )
-        // ),
-        // array(
-        // 'regex' => '#^/app/(\d+)/resource/(\d+)/download$#',
-        // 'model' => 'SaaS_Views_ApplicationResource',
-        // 'method' => 'download',
-        // 'http-method' => array(
-        // 'GET'
-        // )
-        // ),
+        /**
+         * *****************************************************************
+         * Application resource
+         * *****************************************************************
+         */
+        array(
+                'regex' => '#^/resource/create$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                ),
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
+        ),
+        array(
+                'regex' => '#^/resource/find$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)/download$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'download',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
         
         /**
          * **************************************************************************

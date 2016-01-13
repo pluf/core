@@ -6,7 +6,7 @@
  * در سیستم دارند.
  * 
  * 
- * @author maso
+ * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
 class Pluf_RowPermission extends Pluf_Model

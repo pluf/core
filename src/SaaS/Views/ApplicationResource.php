@@ -1,5 +1,5 @@
 <?php
-
+Pluf::loadFunction('SaaS_Shortcuts_GetResourceOr404');
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
@@ -10,13 +10,11 @@ class SaaS_Views_ApplicationResource
 
     public function create ($request, $match)
     {
-        // GET data
-        $app = new SaaS_Application($match[1]);
         // Check permission
-        SaaS_Precondition::userCanUpdateApplication($request, $app);
+        SaaS_Precondition::userCanUpdateApplication($request, $request->tenant);
         // Do update
         $params = array(
-                'application' => $app,
+                'application' => $request->tenant,
                 'user' => $request->user
         );
         $form = new SaaS_Form_ResourceCreate(
@@ -28,12 +26,9 @@ class SaaS_Views_ApplicationResource
     public function get ($request, $match)
     {
         // GET data
-        $app = new SaaS_Application($match[1]);
-        $resource = new SaaS_Resource($match[2]);
+        $app = $request->tenant;
+        $resource = SaaS_Shortcuts_GetResourceOr404($match[1]);
         // Check permission
-        if ($app->id != $resource->application) {
-            throw new Pluf_Exception('association fail');
-        }
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanAccessResource($request, $resource);
         // Do
@@ -43,12 +38,9 @@ class SaaS_Views_ApplicationResource
     public function update ($request, $match)
     {
         // GET data
-        $app = new SaaS_Application($match[1]);
-        $resource = new SaaS_Resource($match[2]);
+        $app = $request->tenant;
+        $resource = SaaS_Shortcuts_GetResourceOr404($match[1]);
         // Check permission
-        if ($app->id != $resource->application) {
-            throw new Pluf_Exception('association fail');
-        }
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanUpdateResource($request, $resource);
         // Do
@@ -66,16 +58,13 @@ class SaaS_Views_ApplicationResource
     public function delete ($request, $match)
     {
         // GET data
-        $app = new SaaS_Application($match[1]);
-        $resource = new SaaS_Resource($match[2]);
+        $app = $request->tenant;
+        $resource = SaaS_Shortcuts_GetResourceOr404($match[1]);
         // Check permission
-        if ($app->id != $resource->application) {
-            throw new Pluf_Exception('association fail');
-        }
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanDeleteResource($request, $resource);
-        
-        $temp = new SaaS_Resource($match[2]);
+
+        $temp = SaaS_Shortcuts_GetResourceOr404($match[1]);
         $temp->delete();
         // Do
         return new Pluf_HTTP_Response_Json($resource);
@@ -84,12 +73,9 @@ class SaaS_Views_ApplicationResource
     public function download ($request, $match)
     {
         // GET data
-        $app = new SaaS_Application($match[1]);
-        $resource = new SaaS_Resource($match[2]);
+        $app = $request->tenant;
+        $resource = SaaS_Shortcuts_GetResourceOr404($match[1]);
         // Check permission
-        if ($app->id != $resource->application) {
-            throw new Pluf_Exception('association fail');
-        }
         SaaS_Precondition::userCanAccessApplication($request, $app);
         SaaS_Precondition::userCanAccessResource($request, $resource);
         // Do
@@ -105,14 +91,13 @@ class SaaS_Views_ApplicationResource
     public function find ($request, $match)
     {
         // GET data
-        $app = new SaaS_Application($match[1]);
         // Check permission
-        SaaS_Precondition::userCanAccessApplication($request, $app);
+        SaaS_Precondition::userCanAccessApplication($request, $request->tenant);
         // Do find
         $pag = new Pluf_Paginator(new SaaS_Resource());
         $sql = new Pluf_SQL('application=%s', 
                 array(
-                        $app->id
+                        $request->tenant->id
                 ));
         $pag->forced_where = $sql;
         $list_display = array(
