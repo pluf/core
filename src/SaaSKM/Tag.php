@@ -34,12 +34,17 @@ class SaaSKM_Tag extends Pluf_Model
                         'blank' => false,
                         'size' => 25
                 ),
-                'description' => array(
+                'tag_title' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50
+                ),
+                'tag_description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 250
                 ),
-                'metainfo' => array(
+                'tag_metainfo' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 250
@@ -64,6 +69,12 @@ class SaaSKM_Tag extends Pluf_Model
                         'blank' => false,
                         'verbose' => __('tenant'),
                         'help_text' => __('Related tenant.')
+                )
+        );
+        $this->_a['idx'] = array(
+                'tag_combo_idx' => array(
+                        'type' => 'unique',
+                        'col' => 'tag_key, tag_value, tenant'
                 )
         );
     }

@@ -50,7 +50,7 @@ class SaaSKM_TagRow extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-                'tag_combo_idx' => array(
+                'tagrow_combo_idx' => array(
                         'type' => 'unique',
                         'col' => 'tag_id, owner_id, owner_class'
                 )

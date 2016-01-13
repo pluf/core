@@ -13,9 +13,12 @@ class SaaSKM_Views_Tag
 
     public function find ($request, $match)
     {
+        // Precondition
+        SaaSKM_Precondition::userCanAccessTags($request);
+        
         $count = 20;
         $pag = new Pluf_Paginator(new SaaSKM_Tag());
-        $sql = new Pluf_SQL('tenant=%s',
+        $sql = new Pluf_SQL('tenant=%s', 
                 array(
                         $request->tenant->id
                 ));
@@ -25,8 +28,14 @@ class SaaSKM_Views_Tag
                 'description' => __('description'),
                 'color' => __('color')
         );
-        $search_fields = array();
+        $search_fields = array(
+                'tag_key',
+                'tag_value',
+                'tag_title',
+                'tag_description'
+        );
         $sort_fields = array(
+                'tag_key',
                 'creation_date'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
@@ -45,15 +54,13 @@ class SaaSKM_Views_Tag
 
     public function create ($request, $match)
     {
-        $parent = $this->internalGetRootCategory($request, $match);
+        SaaSKM_Precondition::userCanCreateTag($request);
         $extra = array(
-                'user' => $request->user,
-                'parent' => $parent
+                'tenant' => $request->tenant
         );
-        $form = new KM_Form_CategoryCreate(
+        $form = new SaaSKM_Form_TagCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
-        $cat = $form->save();
-        return new Pluf_HTTP_Response_Json($cat);
+        return new Pluf_HTTP_Response_Json($form->save());
     }
 
     public function update ($request, $match)
