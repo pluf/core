@@ -16,7 +16,18 @@ return array(
                 'model' => 'SaaSKM_Views_Tag',
                 'method' => 'create',
                 'precond' => array(
-                        'Pluf_Precondition::loginRequired'
+                        'SaaSKM_Precondition::userCanCreateTag'
+                ),
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/tag/bulkyCreate$#',
+                'model' => 'SaaSKM_Views_TagBulky',
+                'method' => 'create',
+                'precond' => array(
+                        'SaaSKM_Precondition::userCanCreateTag'
                 ),
                 'http-method' => array(
                         'POST'
