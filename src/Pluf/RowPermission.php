@@ -103,7 +103,7 @@ class Pluf_RowPermission extends Pluf_Model
             // Find matching permission
             $found = Pluf_Permission::getFromString($perm);
             if (false === $found) {
-                throw new Exception(
+                throw new Pluf_Exception(
                         sprintf('The permission %s does not exist.', $perm));
             }
             $perm = $found;
@@ -133,7 +133,7 @@ class Pluf_RowPermission extends Pluf_Model
         if (! is_object($perm)) {
             $found = Pluf_Permission::getFromString($perm);
             if (false === $found) {
-                throw new Exception(
+                throw new Pluf_Exception(
                         sprintf('The permission %s does not exist.', $perm));
             }
             $perm = $found;

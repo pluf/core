@@ -77,6 +77,20 @@ class SaaSKM_Tag extends Pluf_Model
                         'col' => 'tag_key, tag_value, tenant'
                 )
         );
+        
+        $this->_a['views'] = array(
+                'join_row' => array(
+                        'select' => $this->getSelect() . ',' . 
+                        $this->_con->pfx .'saaskm_tagrow.owner_class as owner_class' . ',' . 
+                        $this->_con->pfx .'saaskm_tagrow.owner_id as owner_id',
+                        'props' => array(
+                                'owner_class' => 'owner_class',
+                                'owner_id' => 'owner_id',
+                        ),
+                        'join' => 'LEFT JOIN ' . $this->_con->pfx .
+                         'saaskm_tagrow ON saaskm_tagrow.tag=' . $this->_con->pfx .'saaskm_tag.id'
+                )
+        );
     }
 
     /**
@@ -91,5 +105,42 @@ class SaaSKM_Tag extends Pluf_Model
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
+    }
+
+    /**
+     * تک معادل با رشته ورودی را تعیین می‌کند.
+     *
+     * هر تگ به صورت منحصربه فرد با استفاده از یک رشته قابل نمایش است. ساختار
+     * کلی تعریف یک تگ با رشته به صورت زیر است:
+     *
+     * {tag key}.{tag value}
+     *
+     * این فراخوانی این عبارت را دریافت کرده و تگ معادل با آن را تعیین می‌کند.
+     * در صورتی
+     * که این تگ موجود نباشد مقدار نا درستی به عنوان خروجی ارسال می‌شود.
+     *
+     * @param
+     *            tag رشته‌ای که تگ را تعیین می‌کند برای نمونه 'aminity.bank'
+     * @param
+     *            tenant ملک معادل
+     * @return false|SaaSKM_Tag The matching permission or false.
+     */
+    public static function getFromString ($tenant, $tag)
+    {
+        list ($key, $value) = explode('.', trim($tag));
+        $sql = new Pluf_SQL('tag_key=%s AND tag_value=%s AND tenant=%s', 
+                array(
+                        $key,
+                        $value,
+                        $tenant->id
+                ));
+        $tags = Pluf::factory('SaaSKM_Tag')->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
+        if ($tags->count() != 1) {
+            return false;
+        }
+        return $tags[0];
     }
 }

@@ -86,7 +86,8 @@ class Pluf_Paginator
     public $forced_where = null;
 
     /**
-     * View of the model to be used.
+     * نمایشی از مدل داده‌ای را تعیین می‌کند که باید در این صفحه بندی استفاده
+     * شود.
      */
     public $model_view = null;
 
@@ -365,7 +366,7 @@ class Pluf_Paginator
                 'counts' => $items->count(),
                 'current_page' => $this->current_page,
                 'items_per_page' => $this->items_per_page,
-                'page_number' => $this->page_number,
+                'page_number' => $this->page_number
         );
     }
 

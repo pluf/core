@@ -18,12 +18,6 @@ class SaaSKM_TagRow extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'tag_id' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaSKM_Tag',
-                        'blank' => false,
-                        'verbose' => __('tag')
-                ),
                 'owner_id' => array(
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false,
@@ -46,13 +40,29 @@ class SaaSKM_TagRow extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('modification date')
+                ),
+                /*
+                 * relations 
+                 */
+                'tag' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaSKM_Tag',
+                        'blank' => false,
+                        'verbose' => __('tag')
+                ),
+                'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'verbose' => __('tenant'),
+                        'help_text' => __('Related tenant.')
                 )
         );
         
         $this->_a['idx'] = array(
                 'tagrow_combo_idx' => array(
                         'type' => 'unique',
-                        'col' => 'tag_id, owner_id, owner_class'
+                        'col' => 'tag, owner_id, owner_class, tenant'
                 )
         );
         $t_perm = $this->_con->pfx . 'saaskm_tag';
@@ -87,5 +97,55 @@ class SaaSKM_TagRow extends Pluf_Model
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
+    }
+
+    public static function add ($tenant, $owner, $tag)
+    {
+        if (! is_object($tag)) {
+            // Find matching tag
+            $found = SaaSKM_Tag::getFromString($tenant, $tag);
+            if (false === $found) {
+                throw new Pluf_Exception(
+                        sprintf('The tag %s does not exist.', $tag));
+            }
+            $perm = $found;
+        }
+        SaaSKM_TagRow::remove($tenant, $owner, $tag);
+        $nperm = new SaaSKM_TagRow();
+        $nperm->owner_id = $owner->id;
+        $nperm->owner_class = $owner->_a['model'];
+        $nperm->tenant = $tenant;
+        $nperm->tag = $tag;
+        $nperm->create();
+        return true;
+    }
+
+    public static function remove ($tenant, $owner, $tag)
+    {
+        if (! is_object($tag)) {
+            $found = SaaSKM_Tag::getFromString($tag);
+            if (false === $found) {
+                throw new Pluf_Exception(
+                        sprintf('The tag %s does not exist.', $tag));
+            }
+            $tag = $found;
+        }
+        $growp = new SaaSKM_TagRow();
+        $sql = new Pluf_SQL(
+                'owner_id=%s AND owner_class=%s AND tag=%s AND tenant=%s', 
+                array(
+                        $owner->id,
+                        $owner->_a['model'],
+                        $tag->id,
+                        $tenant->id
+                ));
+        $rows = $growp->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
+        foreach ($rows as $p) {
+            $p->delete();
+        }
+        return true;
     }
 }

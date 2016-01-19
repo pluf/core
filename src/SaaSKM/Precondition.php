@@ -19,6 +19,11 @@ class SaaSKM_Precondition
     {
         return true;
     }
+    
+    public static function userCanAccessTag ($request, $tag)
+    {
+        return true;
+    }
 
     public static function userCanUpdateTag ($request, $tag)
     {
