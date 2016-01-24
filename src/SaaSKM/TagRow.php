@@ -99,23 +99,23 @@ class SaaSKM_TagRow extends Pluf_Model
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
 
-    public static function add ($tenant, $owner, $tag)
+    public static function add ($tenant, $owner, $tag, $force = false)
     {
         if (! is_object($tag)) {
             // Find matching tag
-            $found = SaaSKM_Tag::getFromString($tenant, $tag);
+            $found = SaaSKM_Tag::getFromString($tenant, $tag, $force);
             if (false === $found) {
                 throw new Pluf_Exception(
                         sprintf('The tag %s does not exist.', $tag));
             }
             $perm = $found;
         }
-        SaaSKM_TagRow::remove($tenant, $owner, $tag);
+        SaaSKM_TagRow::remove($tenant, $owner, $perm);
         $nperm = new SaaSKM_TagRow();
         $nperm->owner_id = $owner->id;
         $nperm->owner_class = $owner->_a['model'];
         $nperm->tenant = $tenant;
-        $nperm->tag = $tag;
+        $nperm->tag = $perm;
         $nperm->create();
         return true;
     }
@@ -123,7 +123,7 @@ class SaaSKM_TagRow extends Pluf_Model
     public static function remove ($tenant, $owner, $tag)
     {
         if (! is_object($tag)) {
-            $found = SaaSKM_Tag::getFromString($tag);
+            $found = SaaSKM_Tag::getFromString($tenant, $tag);
             if (false === $found) {
                 throw new Pluf_Exception(
                         sprintf('The tag %s does not exist.', $tag));
