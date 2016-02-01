@@ -62,7 +62,7 @@ class SaaSKM_TagRow extends Pluf_Model
         $this->_a['idx'] = array(
                 'tagrow_combo_idx' => array(
                         'type' => 'unique',
-                        'col' => 'tag, owner_id, owner_class, tenant'
+                        'col' => 'tenant, owner_id, owner_class, tag'
                 )
         );
         $t_perm = $this->_con->pfx . 'saaskm_tag';

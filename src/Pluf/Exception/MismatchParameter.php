@@ -18,8 +18,8 @@ class Pluf_Exception_MismatchParameter extends Pluf_Exception {
 	 */
 	public function __construct($message = null, $previous = null, $link = null, $developerMessage = null) {
 		if (! isset ( $message ) || is_null($message)) {
-			$message = __ ( 'ِRequired parameters are not defined.' );
+			$message = __ ( 'Required parameters are not defined.' );
 		}
-		parent::__construct ( $message, 4042, $previous, 404, $link, $developerMessage );
+		parent::__construct ( $message, 4101, $previous, 404, $link, $developerMessage );
 	}
 }

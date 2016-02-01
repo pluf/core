@@ -9,5 +9,11 @@ return array(
                 'relate_to' => array(
                         'SaaS_Application'
                 )
+        ),
+        'SaaSKM_Vote' => array(
+                'relate_to' => array(
+                        'SaaS_Application',
+                        'Pluf_User'
+                )
         )
 );

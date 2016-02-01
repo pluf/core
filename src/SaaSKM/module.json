@@ -4,7 +4,8 @@
   "title": "SaaS KM framework",
   "model": [
     "SaaSKM_Tag",
-    "SaaSKM_TagRow"
+    "SaaSKM_TagRow",
+    "SaaSKM_Vote"
   ],
   "permisson": [
     
