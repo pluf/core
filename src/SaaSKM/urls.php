@@ -42,6 +42,14 @@ return array(
                 )
         ),
         array(
+                'regex' => '#^/tag$#',
+                'model' => 'SaaSKM_Views_Tag',
+                'method' => 'getByString',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
                 'regex' => '#^/tag/(\d+)$#',
                 'model' => 'SaaSKM_Views_Tag',
                 'method' => 'update',

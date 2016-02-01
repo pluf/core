@@ -99,4 +99,20 @@ class SaaSKM_Views_Tag
         // DO
         return new Pluf_HTTP_Response_Json($tag);
     }
+
+    public function getByString ($request, $match)
+    {
+        // Input
+        $tag_key = $request->REQUEST['tag_key'];
+        $tag_value = $request->REQUEST['tag_value'];
+        $tag = SaaSKM_Tag::getFromString($request->tenant, 
+                $tag_key . '.' . $tag_value);
+        if (! $tag) {
+            throw new Pluf_Exception_DoesNotExist("Tag not found");
+        }
+        // Access
+        SaaSKM_Precondition::userCanAccessTags($request, $tag);
+        // DO
+        return new Pluf_HTTP_Response_Json($tag);
+    }
 }
