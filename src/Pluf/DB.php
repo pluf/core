@@ -132,6 +132,10 @@ function Pluf_DB_defaultTypecast ()
             'Pluf_DB_Field_Compressed' => array(
                     'Pluf_DB_CompressedFromDb',
                     'Pluf_DB_CompressedToDb'
+            ),
+            'Pluf_DB_Field_Point' => array(
+                    'Pluf_DB_PointFromDb',
+                    'Pluf_DB_PointToDb'
             )
     );
 }
@@ -139,7 +143,7 @@ function Pluf_DB_defaultTypecast ()
 /**
  * Identity function.
  *
- * @param
+ * @params
  *            mixed Value
  * @return mixed Value
  */
@@ -239,4 +243,14 @@ function Pluf_DB_PasswordToDb ($val, $db)
 function Pluf_DB_SlugToDB ($val, $db)
 {
     return $db->esc(Pluf_DB_Field_Slug::slugify($val));
+}
+
+function Pluf_DB_PointFromDb ($val)
+{
+    return null;
+}
+
+function Pluf_DB_PointToDb ($val, $db)
+{
+    return (null === $val) ? 'NULL' : (string) "PointFromText('POINT(".$val.")')";
 }

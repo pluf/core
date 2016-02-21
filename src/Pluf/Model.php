@@ -546,7 +546,7 @@ class Pluf_Model implements JsonSerializable
         }
         if (! is_null($p['filter'])) {
             if (is_array($p['filter'])) {
-                $p['filter'] = implode(' AND ', $p['filter']);
+                $p['filter'] = implode(' AND _fromDb', $p['filter']);
             }
             if (strlen($query['where']) > 0) {
                 $query['where'] .= ' AND ';

@@ -99,8 +99,8 @@ class Pluf_Form implements Iterator, ArrayAccess
         $form_methods = get_class_methods($this);
         $form_vars = get_object_vars($this);
         foreach ($this->fields as $name => $field) {
-            $value = $field->widget->valueFromFormData(
-                    $this->addPrefix($name), $this->data);
+            $value = $field->widget->valueFromFormData($this->addPrefix($name), 
+                    $this->data);
             try {
                 $value = $field->clean($value);
                 $this->cleaned_data[$name] = $value;
@@ -147,10 +147,8 @@ class Pluf_Form implements Iterator, ArrayAccess
      * فرآیند اصلی پاک کردن داده‌ها در فرم
      *
      * با استفاده از این فراخوانی می‌توان تمام پارامترهای یک فرم را بررسی کرد.
-     * تفاوت
-     * اصلی این بررسی با سایر موارد این است که در اینجا تمام پارامترها به صورت
-     * همزمان
-     * در نظر گرفته خواهد شد.
+     * تفاوت اصلی این بررسی با سایر موارد این است که در اینجا تمام پارامترها به
+     * صورت همزمان در نظر گرفته خواهد شد.
      *
      * در صورتی که بررسی به یک خطا روبرو شده باید خطای Pluf_Form_Invalid صادر
      * شود.
