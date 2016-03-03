@@ -6,7 +6,7 @@
 بررسی شده و بخش‌های مورد نیاز به آن اضافه می‌شود.
 *************************************************************************
 *}<html {*
-*}{if array_key_exists('appcache', $package) && filter_var($package['appcache'], FILTER_VALIDATE_BOOLEAN)}manifest="{url 'SaaS_Views_SPA::appcache', array($app->id, $spa->id)}"{/if} {*
+*}{if array_key_exists('appcache', $package) && filter_var($package['appcache'], FILTER_VALIDATE_BOOLEAN)}manifest="{url 'SaaS_Views_SPA::appcache', array($spa->id)}"{/if} {*
 *}{if $language}language="{$language}"{/if} {*
 *}>{*
 *************************************************************************
