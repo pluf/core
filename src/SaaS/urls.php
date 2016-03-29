@@ -14,7 +14,7 @@ return array(
                 )
         ),
         array( // فهرست
-                'regex' => '#^/userFind$#',
+                'regex' => '#^/users$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'userApplications',
                 'http-method' => array(
@@ -22,7 +22,7 @@ return array(
                 )
         ),
         array( // ایجاد
-                'regex' => '#^/create$#',
+                'regex' => '#^/new$#',
                 'model' => 'SaaS_Views_Application',
                 'method' => 'create',
                 'http-method' => array(
@@ -122,7 +122,7 @@ return array(
          * *****************************************************************
          */
         array(
-                'regex' => '#^/resource/create$#',
+                'regex' => '#^/resource/new$#',
                 'model' => 'SaaS_Views_ApplicationResource',
                 'method' => 'create',
                 'http-method' => array(
@@ -179,7 +179,7 @@ return array(
          * **************************************************************************
          */
         array(
-                'regex' => '#^/lib/create$#',
+                'regex' => '#^/lib/new$#',
                 'model' => 'SaaS_Views_Lib',
                 'method' => 'create',
                 'http-method' => 'POST',
@@ -299,13 +299,13 @@ return array(
          * *****************************************************************
          */
         array( // فهرستی از تنظیم‌ها
-                'regex' => '#^/app/(\d+)/config/list$#',
+                'regex' => '#^/config/find$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'configurations',
                 'http-method' => 'GET'
         ),
         array( // دسترسی به تنظیم‌ها با شناسه
-                'regex' => '#^/app/(\d+)/config/(\d+)$#',
+                'regex' => '#^/config/(\d+)$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'get',
                 'http-method' => 'GET',
@@ -317,13 +317,13 @@ return array(
                 )
         ),
         array( // دسترسی به تنظیم‌ها با نام
-                'regex' => '#^/app/(\d+)/configByName/(.+)$#',
+                'regex' => '#^/config/byName/(.+)$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'getByName',
                 'http-method' => 'GET'
         ),
         array( // ایجاد یک تنظیم جدید
-                'regex' => '#^/app/(\d+)/config/create$#',
+                'regex' => '#^/config/new$#',
                 'model' => 'SaaS_Views_Configuration',
                 'method' => 'create',
                 'http-method' => 'POST',

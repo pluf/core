@@ -1,0 +1,10 @@
+{
+  "name": "SaaSCMS",
+  "version": "1",
+  "title": "SaaS Content Management System",
+  "model": [
+    "SaaSCMS_Page",
+    "SaaSCMS_Menu"
+  ],
+  "permisson": []
+}
