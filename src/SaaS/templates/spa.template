@@ -37,7 +37,11 @@ Base URL:
 {/foreach}
 {/if}
 </head>
+{if array_key_exists('body', $package)}{assign $bodyd=$package['body']['attribute']}
+<body {foreach $bodyd as $key=>$val}{$key}="{$val}" {/foreach} >
+{else}
 <body>
+{/if}
 {cfg 'debug', false, false}
 {*
 *************************************************************************

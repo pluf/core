@@ -97,7 +97,7 @@ class SaaS_Views_SPA extends SaaS_Views_ApplicationSpa
                 $request);
     }
 
-    function loadLibrary ($package)
+    static function loadLibrary ($package)
     {
         // کتابخانه‌ها
         $cssLib = array();

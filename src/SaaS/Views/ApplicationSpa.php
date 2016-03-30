@@ -182,7 +182,7 @@ class SaaS_Views_ApplicationSpa
     protected function loadSpa ($request, $app, $spa)
     {
         $package = $spa->loadPackage();
-        list ($jsLib, $cssLib, $libs) = $this->loadLibrary($package);
+        list ($jsLib, $cssLib, $libs) = SaaS_Views_SPA::loadLibrary($package);
         
         // نمایش اصلی
         $params = array(
