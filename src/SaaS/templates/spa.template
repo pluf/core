@@ -26,21 +26,24 @@ Base URL:
 *************************************************************************
                                Links
 *************************************************************************
-*}{if array_key_exists('link', $package)}{assign $links=$package['link']}
-{foreach $links as $link}{*
-	*}<link {foreach $link as $key=>$val}{$key}="{$val}" {/foreach}/>
-{/foreach}
+*}
+{if array_key_exists('link', $package)}
+	{assign $links=$package['link']}
+	{foreach $links as $link}
+		<link {foreach $link as $key=>$val}{$key}="{$val}" {/foreach}/>
+	{/foreach}
 {/if}
 {if $cssLibs}
-{foreach $cssLibs as $cssLib}{*
-	*}<link rel="stylesheet" type="text/css" href="/api/saas/lib/{$cssLib->id}/download"/>
-{/foreach}
+	{foreach $cssLibs as $cssLib}
+	<link rel="stylesheet" type="text/css" href="/api/saas/lib/{$cssLib->id}/download"/>
+	{/foreach}
 {/if}
 </head>
-{if array_key_exists('body', $package)}{assign $bodyd=$package['body']['attribute']}
-<body {foreach $bodyd as $key=>$val}{$key}="{$val}" {/foreach} >
+{if array_key_exists('body', $package) && array_key_exists('attribute', $package['body'])}
+	{assign $bodyd=$package['body']['attribute']}
+	<body {foreach $bodyd as $key=>$val}{$key}="{$val}" {/foreach} >
 {else}
-<body>
+	<body>
 {/if}
 {cfg 'debug', false, false}
 {*
