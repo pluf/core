@@ -1,0 +1,16 @@
+<?php
+Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
+Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
+
+function SaaSNewspaper_Migrations_Install_setup ($params = null)
+{
+    $filename = dirname(__FILE__) . '/../module.json';
+    $myfile = fopen($filename, "r") or die("Unable to open module.json!");
+    $json = fread($myfile, filesize($filename));
+    fclose($myfile);
+    $moduel = json_decode($json, true);
+    
+    Pluf_Shortcuts_LoadModels($moduel);
+    // Pluf_Shortcuts_LoadPermissions($moduel);
+}
+

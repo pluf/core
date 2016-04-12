@@ -1,0 +1,11 @@
+{
+  "name": "SaaSNewspaper",
+  "version": "1",
+  "title": "SaaS Newspaper framework",
+  "model": [
+    "SaaSNewspaper_Follower"
+  ],
+  "permisson": [
+    
+  ]
+}

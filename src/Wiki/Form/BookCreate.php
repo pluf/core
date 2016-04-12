@@ -23,7 +23,7 @@ class Wiki_Form_BookCreate extends Pluf_Form
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
-                        'label' => __('حage title'),
+                        'label' => __('page title'),
                         'initial' => $initname,
                         'widget_attrs' => array(
                                 'maxlength' => 200,
