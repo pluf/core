@@ -30,6 +30,7 @@ class SaaSNewspaper_Follower extends Pluf_Model
                 'email' => array(
                         'type' => 'Pluf_DB_Field_Email',
                         'blank' => false,
+                		'unique' => true,
                 ),
         		'validated' => array(
         				'type' => 'Pluf_DB_Field_Boolean',
