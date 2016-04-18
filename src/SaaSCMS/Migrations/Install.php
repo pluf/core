@@ -2,7 +2,7 @@
 Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
 Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
 
-function SaaSKM_Migrations_Install_setup ($params = null)
+function SaaSCMS_Migrations_Install_setup ($params = null)
 {
     $filename = dirname(__FILE__) . '/../module.json';
     $myfile = fopen($filename, "r") or die("Unable to open module.json!");

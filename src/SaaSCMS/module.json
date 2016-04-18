@@ -3,8 +3,8 @@
   "version": "1",
   "title": "SaaS Content Management System",
   "model": [
-    "SaaSCMS_Page",
-    "SaaSCMS_Menu"
+    "SaaSCMS_Content",
+    "SaaSCMS_Page"
   ],
   "permisson": []
 }
