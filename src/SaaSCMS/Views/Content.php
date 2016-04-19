@@ -126,4 +126,5 @@ class SaaSCMS_Views_Content
         $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
         return $response;
     }
+    
 }

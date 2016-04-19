@@ -13,7 +13,6 @@ class SaaSCMS_Form_ContentUpdate extends Pluf_Form
     
     // public $user = null;
     public $content = null;
-
     public $tenant = null;
 
     public function initFields($extra = array())

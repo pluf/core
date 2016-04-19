@@ -70,17 +70,23 @@ return array(
         'http-method' => 'GET'
     ),
     // related content of page
+//     array(
+//         'regex' => '#^/page/(\w+)/content$#',
+//         'model' => 'SaaSCMS_Views_Page',
+//         'method' => 'getContentByName',
+//         'http-method' => 'GET'
+//     ),
     array(
-        'regex' => '#^/page/(\d+)/content$#',
+        'regex' => '#^/page/(\w+)$#',
         'model' => 'SaaSCMS_Views_Page',
-        'method' => 'getContentById',
+        'method' => 'getContentFile',
         'http-method' => 'GET'
     ),
     array(
-        'regex' => '#^/page/(\w+)/content$#',
+        'regex' => '#^/page/(\w+)$#',
         'model' => 'SaaSCMS_Views_Page',
-        'method' => 'getContentByName',
-        'http-method' => 'GET'
+        'method' => 'updateContentFile',
+        'http-method' => 'POST'
     ),
     // ************************************************************* Report
 //     array( // Report urls
