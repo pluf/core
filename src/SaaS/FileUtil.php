@@ -133,7 +133,7 @@ class SaaS_FileUtil
                 $info['extension']
         );
     }
-
+    
     /**
      * Find the mime type of a file using the fileinfo class.
      *
