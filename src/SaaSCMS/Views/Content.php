@@ -122,9 +122,26 @@ class SaaSCMS_Views_Content
         // Do
         $content->downloads += 1;
         $content->update();
-        $response = new Pluf_HTTP_Response_File($content->file_path . '/' . $content->file_name, $content->mime_type);
+        $response = new Pluf_HTTP_Response_File($content->file_path . '/' . $content->id, $content->mime_type);
         $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
         return $response;
     }
     
+    public static function updateFile($request, $match){
+        // GET data
+        $app = $request->tenant;
+        $content = SaaSCMS_Shortcuts_GetContentOr404($match[1]);
+        // Check permission
+        // SaaS_Precondition::userCanAccessApplication($request, $app);
+        // SaaS_Precondition::userCanAccessResource($request, $content);
+        
+        // Do
+        $myfile = fopen($content->file_path . '/' . $content->id, "w") or die("Unable to open file!");
+        $entityBody = file_get_contents('php://input', 'r');
+        fwrite($myfile, $entityBody);
+        fclose($myfile);
+        $content->file_size = filesize($content->file_path . '/' . $content->id);
+        $content->update();
+        return new Pluf_HTTP_Response_Json($content);
+    }
 }

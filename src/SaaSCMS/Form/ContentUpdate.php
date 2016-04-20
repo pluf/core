@@ -13,6 +13,7 @@ class SaaSCMS_Form_ContentUpdate extends Pluf_Form
     
     // public $user = null;
     public $content = null;
+
     public $tenant = null;
 
     public function initFields($extra = array())
@@ -35,11 +36,26 @@ class SaaSCMS_Form_ContentUpdate extends Pluf_Form
             'help_text' => 'Description about content'
         ));
         
+        $this->fields['file_name'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => 'File Name',
+            'initial' => $this->content->file_name,
+            'help_text' => 'Name for file related to content'
+        ));
+        
+        $this->fields['mime_type'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => 'MIME Type',
+            'initial' => $this->content->mime_type,
+            'help_text' => 'MIME type of content'
+        ));
+        
         $this->fields['file'] = new Pluf_Form_Field_File(array(
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
             'move_function_params' => array(
-                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms/' . $this->content->id,
+                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms',
+                'file_name' => $this->content->id,
                 'upload_path_create' => true,
                 'upload_overwrite' => true
             )
@@ -56,11 +72,15 @@ class SaaSCMS_Form_ContentUpdate extends Pluf_Form
         
         if (array_key_exists('file', $this->cleaned_data)) {
             // Extract information of file
-            $this->content->file_path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms/' . $this->content->id;
-            $this->content->file_name = $this->cleaned_data['file'];
-            $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->file_name);
+            $myFile = $this->data['file'];
+            $this->content->file_name = $myFile['name'];
+            $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_name);
             $this->content->mime_type = $fileInfo[0];
-            $this->content->file_size = filesize($this->content->file_path . '/' . $this->content->file_name);
+            $this->content->file_path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms';
+            // $this->content->file_name = $this->cleaned_data['file'];
+            // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
+            // $this->content->mime_type = $fileInfo[0];
+            $this->content->file_size = filesize($this->content->file_path . '/' . $this->content->id);
         }
         
         if ($commit) {

@@ -38,6 +38,12 @@ return array(
         'method' => 'download',
         'http-method' => 'GET'
     ),
+    array(
+        'regex' => '#^/content/(\d+)/download$#',
+        'model' => 'SaaSCMS_Views_Content',
+        'method' => 'updateFile',
+        'http-method' => 'POST'
+    ),
     // ************************************************************* Page
     array( // Page urls
         'regex' => '#^/page/new$#',
