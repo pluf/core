@@ -78,19 +78,19 @@ return array(
     array(
         'regex' => '#^/page/(\w+)$#',
         'model' => 'SaaSCMS_Views_Page',
-        'method' => 'get',
+        'method' => 'getByName',
         'http-method' => 'GET'
     ),
     array(
         'regex' => '#^/page/(\w+)$#',
         'model' => 'SaaSCMS_Views_Page',
-        'method' => 'update',
+        'method' => 'updateByName',
         'http-method' => 'POST'
     ),
     array(
         'regex' => '#^/page/(\w+)$#',
         'model' => 'SaaSCMS_Views_Page',
-        'method' => 'delete',
+        'method' => 'deleteByName',
         'http-method' => 'DELETE'
     ),
     // related content of page

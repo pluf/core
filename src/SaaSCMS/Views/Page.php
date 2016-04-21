@@ -93,58 +93,114 @@ class SaaSCMS_Views_Page
         return new Pluf_HTTP_Response_Json($page);
     }
 
-//     protected static function getContentById($id)
-//     {
-//         // تعیین داده‌ها
-//         $page = SaaSCMS_Shortcuts_GetPageOr404($id);
-//         // حق دسترسی
-//         // SaaSCMS_Precondition::userCanAccessPage($request, $page);
-//         // اجرای درخواست
-//         $content = SaaSCMS_Shortcuts_GetContentOr404($page->content);
-//         return new $content;
-//     }
+    public static function getByName($request, $match)
+    {
+        // حق دسترسی
+        // SaaSCMS_Precondition::userCanAccessPage($request, $page);
+        // اجرای درخواست
+        $name = $match[1];
+        $params = array(
+            'filter' => 'name=' . '"' . $name . '"',
+            'nb' => 1
+        );
+        $pages = (new SaaSCMS_Page())->getList($params);
+        if ($pages->count() == 0)
+            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+        $page = $pages[0];
+        return new Pluf_HTTP_Response_Json($page);
+    }
 
-//     protected static function getContentByName($name)
-//     {
-//         // حق دسترسی
-//         // SaaSCMS_Precondition::userCanAccessPage($request, $page);
-//         // اجرای درخواست
-//         $params = array(
-//             'filter' => 'name=' . '"' . $name . '"',
-//             'nb' => 1
-//         );
-//         $pages = (new SaaSCMS_Page())->getList($params);
-//         if ($pages->count() == 0)
-//             throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
-//         $mypage = $pages[0];
-//         $content = SaaSCMS_Shortcuts_GetContentOr404($mypage->content);
-//         return $content;
-//     }
+    public static function updateByName($request, $match)
+    {
+        // حق دسترسی
+        // SaaSCMS_Precondition::userCanUpdatePage($request, $page);
+        // اجرای درخواست
+        $name = $match[1];
+        $params = array(
+            'filter' => 'name=' . '"' . $name . '"',
+            'nb' => 1
+        );
+        $pages = (new SaaSCMS_Page())->getList($params);
+        if ($pages->count() == 0)
+            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+        $extra = array(
+            // 'user' => $request->user,
+            'page' => $pages[0]
+        );
+        $form = new SaaSCMS_Form_PageUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+        $page = $form->update();
+        return new Pluf_HTTP_Response_Json($page);
+    }
 
-//     public static function getContentFile($request, $match){
-//         $content = SaaSCMS_Views_Page::getContentByName($match[1]);
-
-//         // Do
-//         // TODO: Hadi: نیاز به بازبینی دارد. در صورت امکان همان متد download از کلاس Content صدا زده شود.
-//         $content->downloads += 1;
-//         $content->update();
-//         $response = new Pluf_HTTP_Response_File($content->file_path . '/' . $content->file_name, $content->mime_type);
-//         $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
-//         return $response;
-// //         $match[1] = $content->id;
-// //         return SaaSCMS_Views_Content::download($request, $match);
-//     }
+    public static function deleteByName($request, $match)
+    {
+        // دسترسی
+        // SaaSCMS_Precondition::userCanDeletePage($request, $page);
+        // اجرا
+        $name = $match[1];
+        $params = array(
+            'filter' => 'name=' . '"' . $name . '"',
+            'nb' => 1
+        );
+        $pages = (new SaaSCMS_Page())->getList($params);
+        if ($pages->count() == 0)
+            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . " not found");
+        $page2 = SaaSCMS_Shortcuts_GetPageOr404($pages[0]->id);
+        $page2->delete();
+        return new Pluf_HTTP_Response_Json($pages[0]);
+    }
     
-//     public static function updateContentFile($request, $match){
-//         $content = SaaSCMS_Views_Page::getContentByName($match[1]);
-//         $extra = array(
-//             // 'user' => $request->user,
-//             'content' => $content,
-//             'tenant' => $request->tenant
-//         );
-//         $form = new SaaSCMS_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
-//         $content = $form->update();
-//         return new Pluf_HTTP_Response_Json($content);
-//     }
+    // protected static function getContentById($id)
+    // {
+    // // تعیین داده‌ها
+    // $page = SaaSCMS_Shortcuts_GetPageOr404($id);
+    // // حق دسترسی
+    // // SaaSCMS_Precondition::userCanAccessPage($request, $page);
+    // // اجرای درخواست
+    // $content = SaaSCMS_Shortcuts_GetContentOr404($page->content);
+    // return new $content;
+    // }
     
+    // protected static function getContentByName($name)
+    // {
+    // // حق دسترسی
+    // // SaaSCMS_Precondition::userCanAccessPage($request, $page);
+    // // اجرای درخواست
+    // $params = array(
+    // 'filter' => 'name=' . '"' . $name . '"',
+    // 'nb' => 1
+    // );
+    // $pages = (new SaaSCMS_Page())->getList($params);
+    // if ($pages->count() == 0)
+    // throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+    // $mypage = $pages[0];
+    // $content = SaaSCMS_Shortcuts_GetContentOr404($mypage->content);
+    // return $content;
+    // }
+    
+    // public static function getContentFile($request, $match){
+    // $content = SaaSCMS_Views_Page::getContentByName($match[1]);
+    
+    // // Do
+    // // TODO: Hadi: نیاز به بازبینی دارد. در صورت امکان همان متد download از کلاس Content صدا زده شود.
+    // $content->downloads += 1;
+    // $content->update();
+    // $response = new Pluf_HTTP_Response_File($content->file_path . '/' . $content->file_name, $content->mime_type);
+    // $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
+    // return $response;
+    // // $match[1] = $content->id;
+    // // return SaaSCMS_Views_Content::download($request, $match);
+    // }
+    
+    // public static function updateContentFile($request, $match){
+    // $content = SaaSCMS_Views_Page::getContentByName($match[1]);
+    // $extra = array(
+    // // 'user' => $request->user,
+    // 'content' => $content,
+    // 'tenant' => $request->tenant
+    // );
+    // $form = new SaaSCMS_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+    // $content = $form->update();
+    // return new Pluf_HTTP_Response_Json($content);
+    // }
 }
