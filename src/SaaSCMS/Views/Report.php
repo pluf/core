@@ -7,7 +7,8 @@ class SaaSCMS_Views_Report
 
     public static $reportTypes = array(
         'used_memory' => 'Used memory by your tenant',
-        'file_count' => "Number of files of your tenant"
+        'file_count' => "Number of files of your tenant",
+        'summary' => "Summary report"
     );
 
     public static function getTypes($request, $match)
@@ -23,13 +24,21 @@ class SaaSCMS_Views_Report
         // اجرای درخواست
         switch ($match[1]) {
             case 'used_memory':
-                $result = SaaSCMS_Views_Report::computeUsedMemory($request);
-//                 $result = SaaSCMS_Views_Report::folderSize(Pluf::f('upload_path') . '/' . $request->tenant->id);
+//                 $result = SaaSCMS_Views_Report::computeUsedMemory($request);
+                $result = SaaSCMS_Views_Report::folderSize(Pluf::f('upload_path') . '/' . $request->tenant->id);
                 return new Pluf_HTTP_Response_Json($result);
             case 'file_count':
+                $result = SaaSCMS_Views_Report::fileCounter(Pluf::f('upload_path') . '/' . $request->tenant->id);
+                return new Pluf_HTTP_Response_Json($result);
+                break;
+            case 'summary':
+                $result = array(
+                    'used_memory' => SaaSCMS_Views_Report::folderSize(Pluf::f('upload_path') . '/' . $request->tenant->id),
+                    'file_count' => SaaSCMS_Views_Report::fileCounter(Pluf::f('upload_path') . '/' . $request->tenant->id)
+                ); 
+                return new Pluf_HTTP_Response_Json($result);
                 break;
         }
-        
         return new Pluf_HTTP_Response_Json("{}");
     }
 
@@ -49,7 +58,7 @@ class SaaSCMS_Views_Report
         return $memory;
     }
 
-    public static function folderSize($dir)
+    protected static function folderSize($dir)
     {
         $count_size = 0;
         $count = 0;
@@ -69,25 +78,21 @@ class SaaSCMS_Views_Report
         return $count_size;
     }
     
-    public static function fileCounter($dir)
+    protected static function fileCounter($dir)
     {
-        $count_size = 0;
-        $fileCount = 0;
-        $folderCount = 0;
+        $count = 0;
         $dir_array = scandir($dir);
         foreach ($dir_array as $key => $filename) {
             if ($filename != ".." && $filename != ".") {
                 if (is_dir($dir . "/" . $filename)) {
-                    $folderCount ++;
-                    $new_folderCount = SaaSCMS_Views_Report::fileCounter($dir . "/" . $filename);
-                    $folderCount = $count_size + $new_foldersize;
+                    $new_counter = SaaSCMS_Views_Report::fileCounter($dir . "/" . $filename);
+                    $count = $count + $new_counter + 1;
                 } else
                     if (is_file($dir . "/" . $filename)) {
-                        $count_size = $count_size + filesize($dir . "/" . $filename);
-                        $fileCount ++;
+                        $count ++;
                     }
             }
         }
-        return $count_size;
+        return $count;
     }
 }
