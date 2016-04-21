@@ -160,8 +160,12 @@ class Pluf_DB_Schema_MySQL
             if (! isset($val['col'])) {
                 $val['col'] = $idx;
             }
+            $type = '';
+            if(isset($val['type']) && strcasecmp($val['type'], 'normal') != 0){
+                $type = $val['type'];
+            }
             $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf(
-                    'CREATE INDEX `%s` ON `%s` (%s);', $idx, 
+                    'CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx, 
                     $this->con->pfx . $model->_a['table'], 
                     Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
         }

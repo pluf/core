@@ -55,9 +55,13 @@ class SaaSCMS_Page extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-            'voter_class_idx' => array(
-                'type' => 'unique',
-                'col' => 'tenant, name'
+            'page_class_idx' => array(
+                'col' => 'tenant, name',
+                'type' => 'unique', // fulltext, spatial
+                'index_type' => 'btree', // hash
+                'index_option' => '',
+                'algorithm_option' => '',
+                'lock_option' => ''
             )
         );
     }
