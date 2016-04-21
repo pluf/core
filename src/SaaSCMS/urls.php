@@ -75,6 +75,24 @@ return array(
         'method' => 'find',
         'http-method' => 'GET'
     ),
+    array(
+        'regex' => '#^/page/(\w+)$#',
+        'model' => 'SaaSCMS_Views_Page',
+        'method' => 'get',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/page/(\w+)$#',
+        'model' => 'SaaSCMS_Views_Page',
+        'method' => 'update',
+        'http-method' => 'POST'
+    ),
+    array(
+        'regex' => '#^/page/(\w+)$#',
+        'model' => 'SaaSCMS_Views_Page',
+        'method' => 'delete',
+        'http-method' => 'DELETE'
+    ),
     // related content of page
 //     array(
 //         'regex' => '#^/page/(\w+)/content$#',
@@ -82,43 +100,13 @@ return array(
 //         'method' => 'getContentByName',
 //         'http-method' => 'GET'
 //     ),
-    array(
-        'regex' => '#^/page/(\w+)$#',
-        'model' => 'SaaSCMS_Views_Page',
-        'method' => 'getContentFile',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/page/(\w+)$#',
-        'model' => 'SaaSCMS_Views_Page',
-        'method' => 'updateContentFile',
-        'http-method' => 'POST'
-    ),
     // ************************************************************* Report
-//     array( // Report urls
-//         'regex' => '#^/report/new$#',
-//         'model' => 'SaaSCMS_Views_Report',
-//         'method' => 'create',
-//         'http-method' => 'POST'
-//     ),
-    array(
-        'regex' => '#^/report/(\d+)$#',
+    array( // Report urls
+        'regex' => '#^/report/(\w+)$#',
         'model' => 'SaaSCMS_Views_Report',
         'method' => 'get',
         'http-method' => 'GET'
     ),
-//     array(
-//         'regex' => '#^/report/(\d+)$#',
-//         'model' => 'SaaSCMS_Views_Report',
-//         'method' => 'delete',
-//         'http-method' => 'DELETE'
-//     ),
-//     array(
-//         'regex' => '#^/report/(\d+)$#',
-//         'model' => 'SaaSCMS_Views_Report',
-//         'method' => 'update',
-//         'http-method' => 'POST'
-//     ),
     array(
         'regex' => '#^/report$#',
         'model' => 'SaaSCMS_Views_Report',
