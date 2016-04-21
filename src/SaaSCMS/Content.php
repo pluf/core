@@ -85,9 +85,9 @@ class SaaSCMS_Content extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-        		'device_idx' => array(
+        		'content_idx' => array(
         				'type' => 'unique',
-        				'col' => 'tenant, file_name, file_path'
+        				'col' => 'tenant'
         		)
         );
     }
