@@ -76,7 +76,6 @@ class SaaSCMS_Form_ContentUpdate extends Pluf_Form
             $this->content->file_name = $myFile['name'];
             $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_name);
             $this->content->mime_type = $fileInfo[0];
-            $this->content->file_path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms';
             // $this->content->file_name = $this->cleaned_data['file'];
             // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
             // $this->content->mime_type = $fileInfo[0];

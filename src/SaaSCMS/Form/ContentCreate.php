@@ -42,6 +42,12 @@ class SaaSCMS_Form_ContentCreate extends Pluf_Form
         // Create the content
         $content = new SaaSCMS_Content();
         $content->setFromFormData($this->cleaned_data);
+        $content->file_path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms';
+        if(!is_dir($content->file_path)) {
+        	if (false == @mkdir($content->file_path, 0777, true)) {
+        		throw new Pluf_Form_Invalid('An error occured when creating the upload path. Please try to send the file again.');
+        	}
+        }
 //         $content->user = $this->user;
         $content->tenant = $this->tenant;
         if ($commit) {
