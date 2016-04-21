@@ -1,5 +1,4 @@
 <?php
-Pluf::loadFunction('DigiDoci_Shortcuts_GetDeviceOr404');
 
 class SaaSNewspaper_Views_Follower
 {
