@@ -86,7 +86,7 @@ class SaaSCMS_Content extends Pluf_Model
         
         $this->_a['idx'] = array(
         		'content_idx' => array(
-        				'type' => 'unique',
+        				'type' => 'normal',
         				'col' => 'tenant'
         		)
         );
