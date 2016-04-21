@@ -105,7 +105,7 @@ class SaaSCMS_Views_Page
         );
         $pages = (new SaaSCMS_Page())->getList($params);
         if ($pages->count() == 0)
-            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . " not found");
         $page = $pages[0];
         return new Pluf_HTTP_Response_Json($page);
     }
@@ -122,7 +122,7 @@ class SaaSCMS_Views_Page
         );
         $pages = (new SaaSCMS_Page())->getList($params);
         if ($pages->count() == 0)
-            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+            throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . " not found");
         $extra = array(
             // 'user' => $request->user,
             'page' => $pages[0]
@@ -172,7 +172,7 @@ class SaaSCMS_Views_Page
     // );
     // $pages = (new SaaSCMS_Page())->getList($params);
     // if ($pages->count() == 0)
-    // throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . "not found");
+    // throw new SaaSCMS_Exception_ObjectNotFound("SaaSCMS page with name " . $name . " not found");
     // $mypage = $pages[0];
     // $content = SaaSCMS_Shortcuts_GetContentOr404($mypage->content);
     // return $content;
