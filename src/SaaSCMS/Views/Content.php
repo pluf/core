@@ -126,8 +126,9 @@ class SaaSCMS_Views_Content
         $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
         return $response;
     }
-    
-    public static function updateFile($request, $match){
+
+    public static function updateFile($request, $match)
+    {
         // GET data
         $app = $request->tenant;
         $content = SaaSCMS_Shortcuts_GetContentOr404($match[1]);
@@ -135,13 +136,25 @@ class SaaSCMS_Views_Content
         // SaaS_Precondition::userCanAccessApplication($request, $app);
         // SaaS_Precondition::userCanAccessResource($request, $content);
         
-        // Do
-        $myfile = fopen($content->file_path . '/' . $content->id, "w") or die("Unable to open file!");
-        $entityBody = file_get_contents('php://input', 'r');
-        fwrite($myfile, $entityBody);
-        fclose($myfile);
-        $content->file_size = filesize($content->file_path . '/' . $content->id);
-        $content->update();
+        if (array_key_exists('file', $request->FILES)) {
+            $extra = array(
+                // 'user' => $request->user,
+                'content' => $content,
+                'tenant' => $request->tenant
+            );
+            $form = new SaaSCMS_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+            $content = $form->update();
+//             return new Pluf_HTTP_Response_Json($content);
+        } else {
+            
+            // Do
+            $myfile = fopen($content->file_path . '/' . $content->id, "w") or die("Unable to open file!");
+            $entityBody = file_get_contents('php://input', 'r');
+            fwrite($myfile, $entityBody);
+            fclose($myfile);
+            $content->file_size = filesize($content->file_path . '/' . $content->id);
+            $content->update();
+        }
         return new Pluf_HTTP_Response_Json($content);
     }
 }
