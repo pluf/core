@@ -76,19 +76,19 @@ return array(
         'http-method' => 'GET'
     ),
     array(
-        'regex' => '#^/page/(\w+)$#',
+        'regex' => '#^/page/(.+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'getByName',
         'http-method' => 'GET'
     ),
     array(
-        'regex' => '#^/page/(\w+)$#',
+        'regex' => '#^/page/(.+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'updateByName',
         'http-method' => 'POST'
     ),
     array(
-        'regex' => '#^/page/(\w+)$#',
+        'regex' => '#^/page/(.+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'deleteByName',
         'http-method' => 'DELETE'

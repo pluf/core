@@ -104,6 +104,18 @@ function SaaS_Shortcuts_LoadLibs ()
             true);
 }
 
+function SaaS_Shortcuts_UpdateLibs()
+{
+	$lib = new SaaS_Lib();
+	$list = $lib->getList();
+	foreach ($list as $lib){
+		$lib->delete();
+	}
+    SaaS_Shortcuts_LoadLibFromJson( //
+            Pluf::f('saas_lib_repository') . '/' . Pluf::f('saas_lib_index'),  //
+            true);
+}
+
 /**
  * نصب کتابخانه‌ها بر اساس یک فایل جیسون
  *
