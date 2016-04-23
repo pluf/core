@@ -2,7 +2,8 @@
 Pluf::loadFunction('SaaSCMS_Shortcuts_GetPageOr404');
 Pluf::loadFunction('SaaSCMS_Shortcuts_GetContentOr404');
 
-include 'SaaSCMS/Content.php';
+// Note: maso, 1395: روش‌های مرسوم PHP‌ اینجا کاربرد ندارد و تولید خطا می‌کند.
+// include 'SaaSCMS/Content.php';
 
 class SaaSCMS_Views_Page
 {
