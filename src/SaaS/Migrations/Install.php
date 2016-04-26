@@ -1,8 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
 Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
-Pluf::loadFunction('SaaS_Shortcuts_LoadLibs');
-Pluf::loadFunction('SaaS_Shortcuts_LoadSPAFromRepository');
 
 function SaaS_Migrations_Install_setup ($params = null)
 {

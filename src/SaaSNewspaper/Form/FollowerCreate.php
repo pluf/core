@@ -13,19 +13,19 @@ class SaaSNewspaper_Form_FollowerCreate extends Pluf_Form
 
     public $tenant = null;
 
-    public function initFields ($extra = array())
+    public function initFields($extra = array())
     {
         $this->tenant = $extra['tenant'];
         
-        $this->fields['email'] = new Pluf_Form_Field_Email(
-                array(
-                        'required' => true,
-                        'label' => 'Email',
-                        'help_text' => 'Your Email'
-                ));
+        $this->fields['type'] = new Pluf_Form_Field_Varchar(array(
+            'required' => true
+        ));
+        $this->fields['address'] = new Pluf_Form_Field_Varchar(array(
+            'required' => true
+        ));
     }
 
-    function save ($commit = true)
+    function save($commit = true)
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception('cannot save the follower from an invalid form');

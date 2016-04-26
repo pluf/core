@@ -27,8 +27,13 @@ class SaaSNewspaper_Follower extends Pluf_Model
                         'blank' => false
                 ),
                 // فیلدها
-                'email' => array(
-                        'type' => 'Pluf_DB_Field_Email',
+                'type' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                		'unique' => false,
+                ),
+                'address' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                 		'unique' => true,
                 ),
@@ -50,10 +55,11 @@ class SaaSNewspaper_Follower extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-        		'device_idx' => array(
-        				'type' => 'unique',
-        				'col' => 'tenant'
-        		)
+            // maso: 1395: روی کلیدهای خارجی به صورت خودکار اندیس گذاشته می‌شود.
+//         		'device_idx' => array(
+//         				'type' => 'unique',
+//         				'col' => 'tenant'
+//         		)
         );
     }
 

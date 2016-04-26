@@ -9,8 +9,7 @@ class SaaSNewspaper_Views_Follower
 		$extra = array(
 				'tenant' => $request->tenant
 		);
-		$form = new SaaSNewspaper_Form_FollowerCreate(
-				array_merge($request->REQUEST, $request->FILES), $extra);
+		$form = new SaaSNewspaper_Form_FollowerCreate($request->REQUEST, $extra);
 		$follower = $form->save();
 		return new Pluf_HTTP_Response_Json($follower);
 	}
