@@ -999,7 +999,10 @@ class Pluf_Model implements JsonSerializable
     {}
 
     /**
-     * Set the values from form data.
+     * مقادیر مدل را بر اساس یک فرم تعیین می‌کند
+     * 
+     * این مقادیر به صورت یک آرایه به عنوان ورودی دریافت شده و بر اساس
+     * آن داده‌های مورد نیاز مدل تعیین می‌شود.
      */
     function setFromFormData ($cleaned_values)
     {

@@ -14,7 +14,4 @@ function SaaS_Migrations_Install_setup ($params = null)
     
     Pluf_Shortcuts_LoadModels($moduel);
     Pluf_Shortcuts_LoadPermissions($moduel);
-    SaaS_Shortcuts_LoadLibs();
-    SaaS_Shortcuts_LoadSPAFromRepository();
 }
-
