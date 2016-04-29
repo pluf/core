@@ -11,5 +11,13 @@ return array(
                         'POST'
                 )
         ),
+        array(
+                'regex' => '#^/follower/find$#',
+                'model' => 'SaaSNewspaper_Views_Follower',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
        
 );
