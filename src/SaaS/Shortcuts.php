@@ -54,7 +54,7 @@ function SaaS_Shortcuts_GetSPAOr404 ($id)
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404("Application not found (" . $id . ")");
+    throw new Pluf_HTTP_Error404("SPA not found (" . $id . ")");
 }
 
 function SaaS_Shortcuts_GetApplicationOr404 ($id)

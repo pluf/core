@@ -3,6 +3,10 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('SaaS_Shortcuts_GetSPAOr404');
 
 /**
+ * کار با برنامه‌های کاربردی یک ملک
+ * 
+ * توی هر ملک دسته‌ای از نرم‌افزارهای کاربری وجود داده که مدیریت می‌تونه آنها را
+ * مدیریت کنه. این کلاس نمایش‌هایی برای این کار فراهم کرده است.
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
@@ -10,8 +14,23 @@ Pluf::loadFunction('SaaS_Shortcuts_GetSPAOr404');
 class SaaS_Views_ApplicationSpa
 {
 
-    public function getDefaultSpa ($request, $match)
+    /**
+     * برنامه کاربردی پیش فرض
+     * 
+     * برنامه کاربردی پیش فرض برای یک ملک را تعیین می‌کند. در صورتی که برنامه کاربردی
+     * پیش فرض برای ملک تعیین نشده باشد، برنامه کاربردی پیش فرض سیستم را به عنوان نتیجه
+     * این فراخوانی در نظر میگیرد. برنامه پیش فرض سیستم به صورتی زیر تعیین می‌شود.:
+     * 
+     * $cfg['saas-spa-default'] = 'spa name';
+     * 
+     * این برنامه در تنظیم‌های کلی سیستم تعیین می‌شود.
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     */
+    public static function getDefaultSpa ($request, $match)
     {
+        // TODO: در صورتی که برنامه پیش فرض تعیین نشده است، برنامه پیش فرض سیستم نمایش داده شود.
         return new Pluf_HTTP_Response_Json($request->tenant->get_spa());
     }
 
