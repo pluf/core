@@ -15,16 +15,14 @@ class SaaS_Precondition
      *
      * @param unknown $request            
      */
-    static public function freemium ($request)
+    static public function freemium($request)
     {
-        if (! isset($request->application) || $request->application == null ||
-                 $request->application->isAnonymous()) {
+        if (! isset($request->application) || $request->application == null || $request->application->isAnonymous()) {
             throw new Pluf_Exception("Application is not defined.");
         }
         $config = $request->application->fetchConfiguration("system");
         $level = $config->getData('level', 0);
-        if (isset($request->view['ctrl']['freemium']['level']) &&
-                 $level < $request->view['ctrl']['freemium']['level']) {
+        if (isset($request->view['ctrl']['freemium']['level']) && $level < $request->view['ctrl']['freemium']['level']) {
             throw new Pluf_Exception_PermissionDenied("Application level is low");
         }
         return true;
@@ -40,7 +38,7 @@ class SaaS_Precondition
      *            Pluf_HTTP_Request
      * @return mixed
      */
-    static public function baseAccess ($request, $app = null)
+    static public function baseAccess($request, $app = null)
     {
         if ($request->tenant == null) {
             $request->tenant = $app;
@@ -61,7 +59,7 @@ class SaaS_Precondition
      *            Pluf_HTTP_Request
      * @return mixed
      */
-    static public function applicationOwner ($request, $app = null)
+    static public function applicationOwner($request, $app = null)
     {
         $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
@@ -77,14 +75,7 @@ class SaaS_Precondition
         throw new Pluf_Exception_PermissionDenied();
     }
 
-    /**
-     * بررسی این که عضو و یا مالک یک نرم‌افزار
-     *
-     * @param
-     *            Pluf_HTTP_Request
-     * @return mixed
-     */
-    static public function applicationMemberOrOwner ($request, $app = null)
+    static public function tenantOwner($request)
     {
         $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
@@ -94,35 +85,91 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.software-owner', 
-                $request->application) || $request->user->hasPerm(
-                'SaaS.software-member', $request->application)) {
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
     }
 
-    public static function userCanCreateApplication ($request)
+    static public function tenantMember($reqeust)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) 
+                || $request->user->hasPerm('SaaS.software-member', $request->application)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
+    }
+
+    static public function tenantAuthorized($request)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) 
+                || $request->user->hasPerm('SaaS.software-member', $request->application)
+                || $request->user->hasPerm('SaaS.software-authorized-user', $request->application)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
+    }
+
+    /**
+     * بررسی این که عضو و یا مالک یک نرم‌افزار
+     *
+     * @param
+     *            Pluf_HTTP_Request
+     * @return mixed
+     */
+    static public function applicationMemberOrOwner($request, $app = null)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) || $request->user->hasPerm('SaaS.software-member', $request->application)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
+    }
+
+    public static function userCanCreateApplication($request)
     {
         return true;
     }
 
-    public static function userCanAccessApplication ($request, $app)
+    public static function userCanAccessApplication($request, $app)
     {
         return true;
     }
 
-    public static function userCanUpdateApplication ($request, $app)
+    public static function userCanUpdateApplication($request, $app)
     {
         return true;
     }
 
-    public static function userCanDeleteApplication ($request, $app)
+    public static function userCanDeleteApplication($request, $app)
     {
         return true;
     }
 
-    public static function userCanCreateSap ($request)
+    public static function userCanCreateSap($request)
     {
         return true;
     }
@@ -134,7 +181,7 @@ class SaaS_Precondition
      * @param unknown $spa
      *            در صورتی که تهی باشد پیش فرض در نظر گرفته می‌شود.
      */
-    public static function userCanAccessSpa ($request, $spa = null)
+    public static function userCanAccessSpa($request, $spa = null)
     {
         if ($request->application->isAnonymous()) {
             throw new Pluf_Exception("No SaaS is set");
@@ -144,71 +191,67 @@ class SaaS_Precondition
         }
         if ($request->application->hasPerm("SaaS.spa-anonymous-access", $spa)) {
             return $spa;
-        } elseif ($request->application->hasPerm("SaaS.spa-authorized-access", 
-                $spa) && ! $request->user - isAnonymous()) {
+        } elseif ($request->application->hasPerm("SaaS.spa-authorized-access", $spa) && ! $request->user - isAnonymous()) {
             return $spa;
-        } elseif ($request->application->hasPerm("SaaS.spa-member-access", $spa) && $request->user->hasPerm(
-                "SaaS.software-member", $request->application)) {
+        } elseif ($request->application->hasPerm("SaaS.spa-member-access", $spa) && $request->user->hasPerm("SaaS.software-member", $request->application)) {
             return $spa;
-        } elseif ($request->application->hasPerm("SaaS.spa-owner-access", $spa) && $request->user->hasPerm(
-                "SaaS.software-owner", $request->application)) {
+        } elseif ($request->application->hasPerm("SaaS.spa-owner-access", $spa) && $request->user->hasPerm("SaaS.software-owner", $request->application)) {
             return $spa;
         }
-        throw new Pluf_Exception(
-                "You are not authorized to use this application.");
+        throw new Pluf_Exception("You are not authorized to use this application.");
     }
 
-    public static function userCanUpdateSpa ($request, $sap)
+    public static function userCanUpdateSpa($request, $sap)
     {
         return true;
     }
 
-    public static function userCanDeleteSpa ($request, $sap)
+    public static function userCanDeleteSpa($request, $sap)
     {
         return true;
     }
 
-    public static function userCanCreateLib ($request)
+    public static function userCanCreateLib($request)
     {
         return true;
     }
 
-    public static function userCanAccessLibs ($request)
+    public static function userCanAccessLibs($request)
     {
         return true;
     }
 
-    public static function userCanAccessLib ($request, $lib)
+    public static function userCanAccessLib($request, $lib)
     {
         return true;
     }
 
-    public static function userCanUpdateLib ($request, $lib)
+    public static function userCanUpdateLib($request, $lib)
     {
         return true;
     }
 
-    public static function userCanDeleteLib ($request, $lib)
+    public static function userCanDeleteLib($request, $lib)
     {
         return true;
     }
 
-    public static function userCanCreateResource ($request)
+    public static function userCanCreateResource($request)
     {
         return true;
     }
 
-    public static function userCanAccessResource ($request, $app)
+    public static function userCanAccessResource($request, $app)
     {
         return true;
     }
 
-    public static function userCanUpdateResource ($request, $app)
+    public static function userCanUpdateResource($request, $app)
     {
         return true;
     }
 
-    public static function userCanDeleteResource ($request, $app)
+    public static function userCanDeleteResource($request, $app)
     {
         return true;
     }

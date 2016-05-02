@@ -1,4 +1,5 @@
 <?php
+Pluf::loadFunction('SaaSNewspaper_Shortcuts_GetFollowerListCount');
 
 class SaaSNewspaper_Views_Follower
 {
@@ -38,7 +39,7 @@ class SaaSNewspaper_Views_Follower
             'address'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = 20;
+        $pag->items_per_page = SaaSNewspaper_Shortcuts_GetFollowerListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }

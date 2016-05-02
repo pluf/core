@@ -20,14 +20,14 @@ function SaasNewspaper_Shortcuts_GetFollowerOr404 ($id)
 }
 
 
-// function SaaSNewspaper_Shortcuts_GetFollowerListCount ($request)
-// {
-//     $count = 20;
-//     if (array_key_exists('_px_count', $request->GET)) {
-//         $count = $request->GET['_px_count'];
-//         if ($count > 20) {
-//             $count = 20;
-//         }
-//     }
-//     return $count;
-// }
+function SaaSNewspaper_Shortcuts_GetFollowerListCount ($request)
+{
+    $count = 20;
+    if (array_key_exists('_px_c', $request->GET)) {
+        $count = $request->GET['_px_c'];
+        if ($count > 20) {
+            $count = 20;
+        }
+    }
+    return $count;
+}
