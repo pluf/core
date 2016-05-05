@@ -38,11 +38,8 @@ class SaaS_Precondition
      *            Pluf_HTTP_Request
      * @return mixed
      */
-    static public function baseAccess($request, $app = null)
+    static public function baseAccess($request)
     {
-        if ($request->tenant == null) {
-            $request->tenant = $app;
-        }
         if ($request->tenant == null || $request->tenant->isAnonymous()) {
             throw new Pluf_Exception("Tenant is not defined.");
         }
@@ -81,7 +78,7 @@ class SaaS_Precondition
         if (true !== $res) {
             return $res;
         }
-        SaaS_Precondition::baseAccess($request, $app);
+        SaaS_Precondition::baseAccess($request);
         if ($request->user->administrator) {
             return true;
         }
