@@ -18,6 +18,8 @@ class Pluf_Exception extends Exception implements JsonSerializable
     protected $link;
 
     protected $developerMessage;
+    
+    protected $data;
 
     /**
      * یک نمونه از این کلاس ایجاد می‌کند.
@@ -54,6 +56,14 @@ class Pluf_Exception extends Exception implements JsonSerializable
     {
         $this->status = $status;
     }
+    
+    public function setData($data){
+        $this->data = $data;
+    }
+    
+    public function getData(){
+        return $this->data;
+    }
 
     public function jsonSerialize ()
     {
@@ -63,6 +73,7 @@ class Pluf_Exception extends Exception implements JsonSerializable
                     'status' => $this->status,
                     'link' => $this->link,
                     'message' => $this->message,
+                    'data' => $this->data,
                     'developerMessage' => $this->developerMessage,
                     'stack' => $this->getTrace()
             );
@@ -71,7 +82,8 @@ class Pluf_Exception extends Exception implements JsonSerializable
                     'code' => $this->code,
                     'status' => $this->status,
                     'link' => $this->link,
-                    'message' => $this->message
+                    'message' => $this->message,
+                    'data' => $this->data,
             );
         }
     }
