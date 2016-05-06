@@ -1,6 +1,4 @@
 <?php
-// pluf::loadClass('SaaSCMS_Content');
-include 'SaaSCMS/Content.php';
 
 class SaaSCMS_Views_Report
 {

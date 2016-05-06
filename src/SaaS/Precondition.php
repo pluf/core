@@ -75,13 +75,20 @@ class SaaS_Precondition
         throw new Pluf_Exception_PermissionDenied();
     }
 
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که مالک tenant است یا نه.
+     * در صورتی که کاربر مالک tenant نباشد استثنای Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
     static public function tenantOwner($request)
     {
         $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
             return $res;
         }
-        SaaS_Precondition::baseAccess($request, $app);
+        // SaaS_Precondition::baseAccess($request, $app);
         if ($request->user->administrator) {
             return true;
         }
@@ -91,39 +98,122 @@ class SaaS_Precondition
         throw new Pluf_Exception_PermissionDenied();
     }
 
-    static public function tenantMember($reqeust)
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که عضو tenant است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد استثنای Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
+    static public function tenantMember($request)
     {
         $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
             return $res;
         }
-        SaaS_Precondition::baseAccess($request, $app);
+        // SaaS_Precondition::baseAccess($request, $app);
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.software-owner', $request->application) 
-                || $request->user->hasPerm('SaaS.software-member', $request->application)) {
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) || $request->user->hasPerm('SaaS.software-member', $request->application)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
     }
 
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که در tenant مجاز است یا نه.
+     * در صورتی که کاربر در tenant مجاز نباشد استثنای Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
     static public function tenantAuthorized($request)
     {
         $res = Pluf_Precondition::loginRequired($request);
         if (true !== $res) {
             return $res;
         }
-        SaaS_Precondition::baseAccess($request, $app);
+        // SaaS_Precondition::baseAccess($request, $app);
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.software-owner', $request->application) 
-                || $request->user->hasPerm('SaaS.software-member', $request->application)
-                || $request->user->hasPerm('SaaS.software-authorized-user', $request->application)) {
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) || $request->user->hasPerm('SaaS.software-member', $request->application) || $request->user->hasPerm('SaaS.software-authorized-user', $request->application)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که مالک tenant است یا نه.
+     * در صورتی که کاربر مالک tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param unknown $request            
+     * @return اگر کاربر مالک tenant باشد مقدار true وگرنه مقدار false برگردانده می‌شود
+     */
+    static public function isTenantOwner($request)
+    {
+        try {
+            Pluf_Precondition::loginRequired($request);
+        } catch (Pluf_Exception $ex) {
+            return false;
+        }
+        // SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که عضو tenant است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param unknown $request            
+     * @return اگر کاربر عضو tenant باشد مقدار true وگرنه مقدار false برگردانده می‌شود
+     */
+    static public function isTenantMember($request)
+    {
+        try {
+            Pluf_Precondition::loginRequired($request);
+        } catch (Pluf_Exception $ex) {
+            return false;
+        }
+        // SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) || $request->user->hasPerm('SaaS.software-member', $request->application)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که در tenant مجاز است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param unknown $request            
+     * @return اگر کاربر در tenant مجاز باشد مقدار true وگرنه مقدار false برگردانده می‌شود
+     */
+    static public function isTenantAuthorized($request)
+    {
+    try {
+            Pluf_Precondition::loginRequired($request);
+        } catch (Pluf_Exception $ex) {
+            return false;
+        }
+        // SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('SaaS.software-owner', $request->application) || $request->user->hasPerm('SaaS.software-member', $request->application) || $request->user->hasPerm('SaaS.software-authorized-user', $request->application)) {
+            return true;
+        }
+        return false;
     }
 
     /**

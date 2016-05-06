@@ -5,7 +5,12 @@ return array(
         'regex' => '#^/content/new$#',
         'model' => 'SaaSCMS_Views_Content',
         'method' => 'create',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+        
     ),
     array(
         'regex' => '#^/content/(\d+)$#',
@@ -17,13 +22,21 @@ return array(
         'regex' => '#^/content/(\d+)$#',
         'model' => 'SaaSCMS_Views_Content',
         'method' => 'delete',
-        'http-method' => 'DELETE'
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
+        )
     ),
     array(
         'regex' => '#^/content/(\d+)$#',
         'model' => 'SaaSCMS_Views_Content',
         'method' => 'update',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/content/find$#',
@@ -42,14 +55,22 @@ return array(
         'regex' => '#^/content/(\d+)/download$#',
         'model' => 'SaaSCMS_Views_Content',
         'method' => 'updateFile',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     // ************************************************************* Page
     array( // Page urls
         'regex' => '#^/page/new$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'create',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/page/(\d+)$#',
@@ -61,13 +82,21 @@ return array(
         'regex' => '#^/page/(\d+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'delete',
-        'http-method' => 'DELETE'
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/page/(\d+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'update',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/page/find$#',
@@ -85,13 +114,21 @@ return array(
         'regex' => '#^/page/(.+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'updateByName',
-        'http-method' => 'POST'
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/page/(.+)$#',
         'model' => 'SaaSCMS_Views_Page',
         'method' => 'deleteByName',
-        'http-method' => 'DELETE'
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     // related content of page
 //     array(
@@ -105,12 +142,20 @@ return array(
         'regex' => '#^/report/(\w+)$#',
         'model' => 'SaaSCMS_Views_Report',
         'method' => 'get',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
     array(
         'regex' => '#^/report$#',
         'model' => 'SaaSCMS_Views_Report',
         'method' => 'getTypes',
-        'http-method' => 'GET'
+        'http-method' => 'GET',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
     ),
 );
