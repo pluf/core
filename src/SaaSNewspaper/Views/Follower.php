@@ -43,66 +43,59 @@ class SaaSNewspaper_Views_Follower
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
-    
-    // /**
-    // * یک دستگاه را با شناسه تعیین می‌کند
-    // *
-    // * @param unknown $request
-    // * @param unknown $match
-    // * @return Pluf_HTTP_Response_Json
-    // */
-    // public static function get ($request, $match)
-    // {
-    // // تعیین داده‌ها
-    // $device = DigiDoci_Shortcuts_GetDeviceOr404($match[1]);
-    // // حق دسترسی
-    // // DigiDoci_Precondition::userCanAccessDevice($request, $device);
-    // // اجرای درخواست
-    // return new Pluf_HTTP_Response_Json($device);
-    // }
-    
-    // /**
-    // * دستگاه را به روز می‌کند
-    // *
-    // * @param unknown $request
-    // * @param unknown $match
-    // */
-    // public static function update ($request, $match)
-    // {
-    // // تعیین داده‌ها
-    // $device = DigiDoci_Shortcuts_GetDeviceOr404($match[1]);
-    // // حق دسترسی
-    // // DigiDoci_Precondition::userCanUpdateDevice($request, $device);
-    // // اجرای درخواست
-    // $extra = array(
-    // // 'user' => $request->user,
-    // 'device' => $device
-    // );
-    // // TODO: در اینجا از یک فرم استفاده شده برای به روزرسانی.
-    // // نمی‌دونم این فرم چیه باید درست بشه مثلا متد update که از این فرم
-    // // صدا زده شده رو مستقیما استفاده کنم
-    // $form = new DigiDoci_Form_DeviceUpdate(
-    // array_merge($request->REQUEST, $request->FILES), $extra);
-    // $device = $form->update();
-    // return new Pluf_HTTP_Response_Json($device);
-    // }
-    
-    // /**
-    // * دستگاه را حذف می‌کند.
-    // *
-    // * @param unknown $request
-    // * @param unknown $match
-    // * @return Pluf_HTTP_Response_Json
-    // */
-    // public static function delete ($request, $match)
-    // {
-    // // تعیین داده‌ها
-    // $device = DigiDoci_Shortcuts_GetDeviceOr404($match[1]);
-    // // دسترسی
-    // // DigiDoci_Precondition::userCanDeleteDevice($request, $device);
-    // // اجرا
-    // $device2 = new DigiDoci_Device($device->id);
-    // $device2->delete();
-    // return new Pluf_HTTP_Response_Json($device);
-    // }
+
+    /**
+     * یک دستگاه را با شناسه تعیین می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public static function get($request, $match)
+    {
+        // تعیین داده‌ها
+        $follower = SaaSNewspaper_Shortcuts_GetFollowerOr404($match[1]);
+        // اجرای درخواست
+        return new Pluf_HTTP_Response_Json($follower);
+    }
+
+    /**
+     * دستگاه را به روز می‌کند
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     */
+    public static function update($request, $match)
+    {
+        // تعیین داده‌ها
+        $follower = SaaSNewspaper_Shortcuts_GetFollowerOr404($match[1]);
+        // اجرای درخواست
+        $extra = array(
+            // 'user' => $request->user,
+            'follower' => $follower
+        );
+        // TODO: در اینجا از یک فرم استفاده شده برای به روزرسانی.
+        // نمی‌دونم این فرم چیه باید درست بشه مثلا متد update که از این فرم
+        // صدا زده شده رو مستقیما استفاده کنم
+        $form = new SaaSNewspaper_Form_FollowerUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+        $follower = $form->update();
+        return new Pluf_HTTP_Response_Json($follower);
+    }
+
+    /**
+     * دنبال‌کننده را حذف می‌کند.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public static function delete($request, $match)
+    {
+        // تعیین داده‌ها
+        $follower = SaasNewspaper_Shortcuts_GetFollowerOr404($match[1]);
+        // اجرا
+        $follower2 = new SaaSNewspaper_Follower($follower->id);
+        $follower2->delete();
+        return new Pluf_HTTP_Response_Json($follower);
+    }
 }
