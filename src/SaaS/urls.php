@@ -349,7 +349,7 @@ return array(
         'regex' => '#^/spa/refresh$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'refreshAll',
-        'http-method' => 'POST',
+        'http-method' => array( 'GET', 'POST'),
         'precond' => array(
             'Pluf_Precondition::staffRequired'
         )

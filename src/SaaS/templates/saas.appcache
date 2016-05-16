@@ -27,21 +27,15 @@ CACHE MANIFEST
 *************************************************************************
                         Application Source
 *************************************************************************
-*}{if $cfg_debug && array_key_exists('src', $package)}{assign $srcs=$package['src']}
+*}{if array_key_exists('src', $package)}{assign $srcs=$package['src']}
 {foreach $srcs as $src}{*
 	*}{$spa->path}/{$src}
 {/foreach}
-{/if}
-{if !$cfg_debug}{*
-	*}{$spa->path}/app.min.js
 {/if}
 {if array_key_exists('resource', $package)}{assign $resources=$package['resource']}
 {foreach $resources as $resource}{*
 	*}{$spa->path}/{$resource}
 {/foreach}
-{/if}
-{if !$cfg_debug}{*
-	*}{$spa->path}/app.min.js">
 {/if}
 
 NETWORK:

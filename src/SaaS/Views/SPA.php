@@ -113,6 +113,7 @@ class SaaS_Views_SPA
     public static function refreshAll($request, $match)
     {
         SaaS_Migrations_Update_spa();
+        SaaS_Migrations_Update_lib();
         // XXX: maso, 1395: مدل کلی انجام پردازش‌های سرور نیز تعیین شود.
         return new Pluf_HTTP_Response_Json(array(
             'id' => '0',
