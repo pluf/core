@@ -40,7 +40,7 @@ return array(
      * *****************************************************************
      */
     array( // گرفتن جاری
-        'regex' => '#^/curent$#',
+        'regex' => '#^/current$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'getCurrent',
         'http-method' => array(
@@ -49,7 +49,7 @@ return array(
         'precond' => array()
     ),
     array( // به روز کردن جاری
-        'regex' => '#^/curent$#',
+        'regex' => '#^/current$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'updateCurrent',
         'http-method' => array(
