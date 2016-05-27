@@ -1,4 +1,4 @@
-<!DOCTYPE html>{*
+{if $index}{spaView $index}{else}<!DOCTYPE html>{*
 *************************************************************************
                            Appcache
                            
@@ -70,4 +70,4 @@ Base URL:
 {/foreach}
 {/if}
 </body>
-</html>
+</html>{/if}

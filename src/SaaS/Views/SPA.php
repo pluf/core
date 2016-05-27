@@ -292,6 +292,7 @@ class SaaS_Views_SPA
             'app' => $app,
             'title' => __('ghazal'),
             'mainView' => $spa->getMainViewPath(),
+            'index' => $spa->getIndexPath(),
             'jsLibs' => $jsLib,
             'cssLibs' => $cssLib,
             'package' => $package,
