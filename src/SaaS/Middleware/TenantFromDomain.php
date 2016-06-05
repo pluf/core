@@ -10,6 +10,7 @@ class SaaS_Middleware_TenantEmpty
 
     function process_request (&$request)
     {
+    	// XXX: دامنه 
         if (! $request->tenant->isAnonymous()) {
             return false;
         }

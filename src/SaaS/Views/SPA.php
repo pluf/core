@@ -23,7 +23,6 @@ Pluf::loadFunction('SaaS_Migrations_Update_spa');
  */
 class SaaS_Views_SPA
 {
-
     /**
      * جستجوی نرم‌افزارهای کاربردی
      *
