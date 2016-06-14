@@ -9,7 +9,7 @@ Pluf::loadFunction('SaaS_Shortcuts_applicationFactory');
 class SaaS_Form_ApplicationUpdate extends Pluf_Form
 {
 
-    var $application = null;
+    var $tenant = null;
 
     /**
      *
@@ -19,18 +19,18 @@ class SaaS_Form_ApplicationUpdate extends Pluf_Form
      */
     public function initFields ($extra = array())
     {
-        $this->application = $extra['application'];
+        $this->tenant = $extra['tenant'];
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('title'),
-                        'initial' => $this->application->title
+                        'initial' => $this->tenant->title
                 ));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
                         'label' => __('description'),
-                        'initial' => $this->application->description
+                        'initial' => $this->tenant->description
                 ));
     }
 
@@ -45,16 +45,16 @@ class SaaS_Form_ApplicationUpdate extends Pluf_Form
     {
         if (! $this->isValid()) {
             throw new Pluf_Exception(
-                    __('cannot update the application from an invalid form'));
+                    __('cannot update the tenant from an invalid form'));
         }
         // Set attributes
-        $this->application->setFromFormData($this->cleaned_data);
+        $this->tenant->setFromFormData($this->cleaned_data);
         if ($commit) {
-            if (! $this->application->update()) {
-                throw new Pluf_Exception(__('fail to update the application'));
+            if (! $this->tenant->update()) {
+                throw new Pluf_Exception(__('fail to update the tenant'));
             }
         }
-        return $this->application;
+        return $this->tenant;
     }
 }
 

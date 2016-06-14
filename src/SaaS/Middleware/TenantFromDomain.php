@@ -3,20 +3,28 @@
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
+ * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class SaaS_Middleware_TenantEmpty
+class SaaS_Middleware_TenantFromDomain
 {
 
-    function process_request (&$request)
+    function process_request(&$request)
     {
-    	// XXX: دامنه 
         if (! $request->tenant->isAnonymous()) {
             return false;
         }
-        $app = new SaaS_Application();
-        $request->tenant = $app;
-        $request->application = $app;
+        try {
+            $domain = $request->http_host;
+            $domain = preg_replace('/^www\./', '', $domain);
+            $app = SaaS_Application::byDomain($domain);
+            if ($app) {
+                $request->tenant = $app;
+                $request->application = $app;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
         return false;
     }
 }

@@ -23,6 +23,7 @@ Pluf::loadFunction('SaaS_Migrations_Update_spa');
  */
 class SaaS_Views_SPA
 {
+
     /**
      * جستجوی نرم‌افزارهای کاربردی
      *
@@ -41,9 +42,18 @@ class SaaS_Views_SPA
             'title' => 'title',
             'creation_dtime' => 'creation time'
         );
-        $search_fields = array();
+        $search_fields = array(
+            'name',
+            'title',
+            'description',
+            'homepage'
+        );
         $sort_fields = array(
-            'creation_dtime'
+            'id',
+            'creation_dtime',
+            'title',
+            'homepage',
+            'license'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();
@@ -138,7 +148,7 @@ class SaaS_Views_SPA
     public static function appcache($request, $match)
     {
         $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        $package = $spa->loadPackage();
+        $package = $spa->loadConfig();
         list ($jsLib, $cssLib, $libs) = SaaS_Views_SPA::loadLibrary($package);
         
         // نمایش اصلی
@@ -164,8 +174,88 @@ class SaaS_Views_SPA
     public static function package($request, $match)
     {
         $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        $package = $spa->loadPackage();
+        $package = $spa->loadConfig();
         return new Pluf_HTTP_Response_Json($package);
+    }
+
+    /**
+     * **************************************************************************************
+     * XXX: Hadi, 1395: متدهای این قمست باید بررسی شوند
+     */
+    public static function loadSpaByName($request, $match)
+    {
+        $tenant = $request->tenant;
+        $spaName = $match[1];
+        if ($spaName) {
+            $spa = SaaS_SPA::getSpaByName($spaName);
+        } else {
+            $spa = $tenant->get_spa();
+        }
+        
+        // TODO: Check access
+        SaaS_Precondition::userCanAccessApplication($request, $tenant);
+        // SaaS_Precondition::userCanAccessSpa($request, $spa);
+        
+        // نمایش اصلی
+        return SaaS_Views_SPA::loadSpa($request, $tenant, $spa);
+    }
+
+    public static function loadDefaultSpa($request, $match)
+    {
+        $tenant = $request->tenant;
+        $spa = $tenant->get_spa();
+        
+        // TODO: Check access
+        SaaS_Precondition::userCanAccessApplication($request, $tenant);
+        // SaaS_Precondition::userCanAccessSpa($request, $spa);
+        
+        // Load spa
+        return SaaS_Views_SPA::loadSpa($request, $tenant, $spa);
+    }
+
+    public static function getResource($request, $match)
+    {
+        // Load data
+        $tenant = $request->tenant;
+        if ($match[1]) {
+            $spa = SaaS_SPA::getSpaByName($match[1]);
+        } else {
+            $spa = $tenant->get_spa();
+        }
+        
+        // TODO: Check access
+        
+        $resPath = $spa->getResourcePath($match[2]);
+        if (! $resPath) {
+            // Try to load resource form assets directory of platform
+            $resPath = SaaS_SPA::getAssetsPath($match[2]);
+        }
+        return new Pluf_HTTP_Response_File($resPath, SaaS_FileUtil::getMimeType($resPath));
+    }
+
+    public static function getResourceOfDefault($request, $match)
+    {
+        // Load data
+        $tenant = $request->tenant;
+        $spa = $tenant->get_spa();
+        
+        // TODO: Check access
+        
+        // Load resource form local resources of spa
+        $res = $spa->getResourcePath($match[1]);
+        if (! $res) {
+            // Try to load resource form assets directory of platform
+            $res = SaaS_SPA::getAssetsPath($match[1]);
+        }
+        return new Pluf_HTTP_Response_File($res, SaaS_FileUtil::getMimeType($res));
+    }
+
+    protected static function loadSpa($request, $app, $spa)
+    {
+        // نمایش اصلی
+        $mainPage = $spa->getMainPagePath();
+        
+        return new Pluf_HTTP_Response_File($mainPage, SaaS_FileUtil::getMimeType($mainPage));
     }
 
     /**
@@ -174,15 +264,32 @@ class SaaS_Views_SPA
     public function tenantSpaById($request, $match)
     {
         // TODO: maso, 1394: Redirect if there is domain
-        $app = $request->tenant;
-        $spa = new SaaS_SPA($match[1]);
+        $spaId = $match[1];
+        $tenantId = $match[2];
+        if ($tenantId) {
+            $tenant = SaaS_Shortcuts_GetApplicationOr404($tenantId);
+        } else {
+            $tenant = $request->tenant;
+        }
+        if ($spaId) {
+            $spa = SaaS_Shortcuts_GetSPAOr404($spaId);
+        } else {
+            if ($tenant->spa != 0)
+                $spa = $tenant->get_spa();
+            else {
+                $spa = SaaS_SPA::getSpaByName(Pluf::f('saas_spa_default', 'main'));
+            }
+        }
+        return $this->loadSpa($request, $tenant, $spa);
+        // $app = $request->tenant;
+        // $spa = new SaaS_SPA($match[1]);
         
-        // Check access
-        SaaS_Precondition::userCanAccessApplication($request, $app);
-        SaaS_Precondition::userCanAccessSpa($request, $spa);
+        // // Check access
+        // SaaS_Precondition::userCanAccessApplication($request, $app);
+        // SaaS_Precondition::userCanAccessSpa($request, $spa);
         
-        // نمایش اصلی
-        return $this->loadSpa($request, $app, $spa);
+        // // نمایش اصلی
+        // return $this->loadSpa($request, $app, $spa);
     }
 
     public function main($request, $match)
@@ -191,7 +298,7 @@ class SaaS_Views_SPA
         if ($app->spa != 0)
             $spa = $app->get_spa();
         else {
-            $spa = SaaS_SPA::getByName(Pluf::f('saas_spa_default', 'main'));
+            $spa = SaaS_SPA::getSpaByName(Pluf::f('saas_spa_default', 'main'));
             return $this->loadSpa($request, $app, $spa);
         }
         
@@ -205,7 +312,7 @@ class SaaS_Views_SPA
     public function spa($request, $match)
     {
         $app = $request->tenant;
-        $spa = SaaS_SPA::getByName($match[1]);
+        $spa = SaaS_SPA::getSpaByName($match[1]);
         
         // Check access
         SaaS_Precondition::userCanAccessApplication($request, $app);
@@ -235,37 +342,7 @@ class SaaS_Views_SPA
         // Load data
         // Check access
         // DO
-        return $this->loadAssets($request, $match[1]);
-    }
-
-    static function loadLibrary($package)
-    {
-        // کتابخانه‌ها
-        $cssLib = array();
-        $jsLib = array();
-        $libs = array();
-        $mlib = new SaaS_Lib();
-        foreach ($package['dependencies'] as $n => $v) {
-            $sql = new Pluf_SQL('name=%s', array(
-                $n
-            ));
-            $items = $mlib->getList(array(
-                'filter' => $sql->gen()
-            ));
-            if ($items->count() == 0) {
-                throw new Pluf_Exception('library ' . $n . ' does not exit.');
-            }
-            $libs[] = $items[0];
-            if ($items[0]->type == SaaS_LibType::JavaScript)
-                $jsLib[] = $items[0];
-            else
-                $cssLib[] = $items[0];
-        }
-        return array(
-            $jsLib,
-            $cssLib,
-            $libs
-        );
+        return SaaS_Views_SPA::loadAssets($request, $match[1]);
     }
 
     function loadSource($request, $spa, $name)
@@ -273,30 +350,10 @@ class SaaS_Views_SPA
         $p = $spa->getSourcePath($name);
         return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
     }
-
-    function loadAssets($request, $name)
+    
+    protected static function loadAssets($request, $name)
     {
         $p = SaaS_SPA::getAssetsPath($name);
         return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
-    }
-
-    protected function loadSpa($request, $app, $spa)
-    {
-        $package = $spa->loadPackage();
-        list ($jsLib, $cssLib, $libs) = SaaS_Views_SPA::loadLibrary($package);
-        
-        // نمایش اصلی
-        $params = array(
-            'spa' => $spa,
-            'app' => $app,
-            'title' => __('ghazal'),
-            'mainView' => $spa->getMainViewPath(),
-            'index' => $spa->getIndexPath(),
-            'jsLibs' => $jsLib,
-            'cssLibs' => $cssLib,
-            'package' => $package,
-            'base' => $request->query
-        );
-        return Pluf_Shortcuts_RenderToResponse('spa.template', $params, $request);
     }
 }

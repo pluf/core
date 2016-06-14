@@ -97,4 +97,14 @@ function SaaS_Shortcuts_LibFindCount ($request)
     return 20;
 }
 
-
+function SaaS_Shortcuts_GetItemListCount($request)
+{
+    $count = 20;
+    if (array_key_exists('_px_ps', $request->GET)) {
+        $count = $request->GET['_px_ps'];
+        if ($count == 0 || $count > 20) {
+            $count = 20;
+        }
+    }
+    return $count;
+}

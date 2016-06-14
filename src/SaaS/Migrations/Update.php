@@ -63,7 +63,7 @@ function SaaS_Migrations_Update_spa() {
 				fclose ( $myfile );
 				$package = json_decode ( $json, true );
 				
-				$mprofile = SaaS_SPA::getByName($package['name']);
+				$mprofile = SaaS_SPA::getSpaByName($package['name']);
 				if($mprofile == null){
 					$mprofile = new SaaS_SPA ();
 					$mprofile->setFromFormData ( $package );

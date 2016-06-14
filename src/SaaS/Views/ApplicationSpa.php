@@ -57,7 +57,7 @@ class SaaS_Views_ApplicationSpa
     public function detail ($request, $match)
     {
         $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        $package = $spa->loadPackage();
+        $package = $spa->loadConfig();
         return new Pluf_HTTP_Response_Json($package);
     }
 

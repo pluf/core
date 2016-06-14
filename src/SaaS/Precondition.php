@@ -271,7 +271,7 @@ class SaaS_Precondition
     public static function userCanAccessSpa($request, $spa = null)
     {
         if ($request->application->isAnonymous()) {
-            throw new Pluf_Exception("No SaaS is set");
+            throw new Pluf_Exception("No SaaS Tenant is set");
         }
         if ($spa == null) {
             $spa = $request->application->get_spa();

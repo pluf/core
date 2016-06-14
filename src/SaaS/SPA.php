@@ -3,14 +3,25 @@
 /**
  * 
  * @author maso
+ * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
 class SaaS_SPA extends Pluf_Model
 {
 
-    var $package = null;
+    /**
+     * اطلاعات موجود در فایل spa.json به صورت یک آرایه نام‌دار در این شی قرار می‌گیرد.
+     *
+     * @var config
+     */
+    var $config = null;
 
-    var $packagePath = null;
+    /**
+     * دایرکتوری ریشه spa که حاوی فایل spa.json و سایر فایل‌ها و پوشه‌های spa است
+     *
+     * @var rootPath
+     */
+    var $rootPath = null;
 
     /**
      * (non-PHPdoc)
@@ -30,13 +41,16 @@ class SaaS_SPA extends Pluf_Model
             'name' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
-                'unique' => true,
                 'size' => 50
+            ),
+            'version' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 100
             ),
             'title' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'unique' => false,
+                'blank' => true,
                 'size' => 50
             ),
             'license' => array(
@@ -49,19 +63,20 @@ class SaaS_SPA extends Pluf_Model
                 'blank' => true,
                 'size' => 250
             ),
-            'version' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 100
-            ),
             'path' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
                 'size' => 100
             ),
-            'homepage' => array(
+            'main_page' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
+                'default' => 'index.html',
+                'size' => 100
+            ),
+            'homepage' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
                 'size' => 100
             ),
             'creation_dtime' => array(
@@ -71,6 +86,17 @@ class SaaS_SPA extends Pluf_Model
             'modif_dtime' => array(
                 'type' => 'Pluf_DB_Field_Datetime',
                 'blank' => true
+            )
+        );
+        
+        $this->_a['idx'] = array(
+            'spa_idx' => array(
+                'col' => 'name, version',
+                'type' => 'unique', // normal, unique, fulltext, spatial
+                'index_type' => '', // hash, btree
+                'index_option' => '',
+                'algorithm_option' => '',
+                'lock_option' => ''
             )
         );
         
@@ -115,6 +141,9 @@ class SaaS_SPA extends Pluf_Model
     function preDelete()
     {
         // @unlink(Pluf::f('upload_issue_path').'/'.$this->attachment);
+        // TODO: hadi, 1395: قبل از حذف spa فایل‌های مربوط به این spa حذف شود
+        // TODO: maso, 1395: از signal-slot استفاده شود و یک signal ارسال شود تا سایرین که به
+        // این spa وابسته هستند داده‌های مربوطه‌شان را حذف کنند.
     }
 
     /**
@@ -127,59 +156,35 @@ class SaaS_SPA extends Pluf_Model
         //
     }
 
-    public static function getByName($name)
-    {
-        $sql = new Pluf_SQL('name=%s', $name);
-        return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
-    }
-
     /**
-     * تنظیم‌های بسته را از سیستم لود می‌کند.
+     * تنظیمات بسته را از سیستم بارگزاری می‌کند
+     *
+     * به عبارتی این متد محتویات فایل spa.josn را خوانده و در متغیر config از این کلاس ذخیره می‌کند.
      */
-    public function loadPackage()
+    public function loadConfig()
     {
-        if ($this->package != null) {
-            return $this->package;
+        if ($this->config != null) {
+            return $this->config;
         }
-        $filename = $this->getPackagePath() . Pluf::f('saas_spa_package', "/spa.json");
+        $filename = $this->getRootPath() . '/' . Pluf::f('saas_spa_config', "spa.json");
         $myfile = fopen($filename, "r") or die("Unable to open file!");
         $json = fread($myfile, filesize($filename));
         fclose($myfile);
-        $this->package = json_decode($json, true);
-        
-        { // Load file list
-            $pkeys = array(
-                'src',
-                'resource'
-            );
-            $pp = $this->getPackagePath() . '/';
-            foreach ($pkeys as $key) {
-                if (array_key_exists($key, $this->package)) { // Load source
-                    $tmp = $this->package[$key];
-                    $this->package[$key] = array();
-                    foreach ($tmp as $value) {
-                        $tp = $pp . $value;
-                        foreach (glob($tp) as $filename) {
-                            // TODO: Check if is file
-                            // TODO: Check if is readable
-                            // Remove prefix
-                            $str = substr($filename, strlen($pp));
-                            $this->package[$key][] = $str;
-                        }
-                    }
-                } else { // Default value
-                    $this->package[$key] = array();
-                }
-            }
-        }
-        
-        return $this->package;
+        $this->config = json_decode($json, true);
+        return $this->config;
     }
 
-    public function getPackagePath()
+    /**
+     * مسیر دایرکتوری ریشه spa را برمی گرداند.
+     *
+     * @throws Pluf_Exception
+     * @return
+     *
+     */
+    public function getRootPath()
     {
-        if ($this->packagePath != null) {
-            return $this->packagePath;
+        if ($this->rootPath != null) {
+            return $this->rootPath;
         }
         
         $repos = Pluf::f('saas_spa_repository');
@@ -190,47 +195,50 @@ class SaaS_SPA extends Pluf_Model
         }
         
         foreach ($repos as $repo) { // Load the package
-            $filename = $repo . $this->path . Pluf::f('saas_spa_package', "/spa.json");
+            $filename = $repo . $this->path . '/' . Pluf::f('saas_spa_config', "spa.json");
             if (! is_readable($filename)) {
                 continue;
             }
-            $this->packagePath = $repo . $this->path;
+            $this->rootPath = $repo . $this->path;
             break;
         }
-        if ($this->packagePath == null) {
+        if ($this->rootPath == null) {
             // TODO: Exception handling
-            throw new Pluf_Exception("The SPA package is not accessable.");
+            throw new Pluf_Exception("The root path of SPA is not accessible.");
         }
-        return $this->packagePath;
+        return $this->rootPath;
     }
 
     /**
-     * مسیر نمایش اصلی سایت را تعیین می‌کند.
+     * مسیر فایل اصلی برای نمایش spa را برمی‌گرداند.
+     * به عنوان مثال مسیر فایل index.html
+     * در صورتی که در تنظمیات spa فایل main_page تعیین نشده باشد
+     * نام index.html به عنوان نام پیش‌فرض صفحه اصلی در نظر گرفته می‌شود
      *
      * @return string
      */
-    public function getMainViewPath()
+    public function getMainPagePath()
     {
-        $p = $this->loadPackage();
-        if (array_key_exists('view', $p))
-            return $this->getPackagePath() . $p['view'];
-        return false;
+        if ($this->main_page)
+            return $this->getRootPath() . '/' . $this->main_page;
+        return $this->getRootPath() . '/index.html';
     }
 
-    public function getIndexPath()
+    public function getResourcePath($name)
     {
-        $p = $this->loadPackage();
-        if (array_key_exists('index', $p))
-            return $this->getPackagePath() . $p['index'];
-        return false;
+        return $this->getRootPath() . '/' . $name;
     }
 
-    public function getSourcePath($name)
-    {
-        return $this->getPackagePath() . '/' . $name;
-    }
-
-    public static function getAssetsPath($name)
+    /**
+     * مسیر دایرکتوری مربوط به asset های پلتفورم را برمی‌گرداند.
+     * این مسیر یک مسیر عمومی است و فقط مخصوص spa جاری نیست.
+     *
+     * مسیر asset مربوط به پلتفورم در تنظیمات کلی پلتفورم قابل تنظیم است
+     *
+     * @param unknown $name            
+     * @throws Pluf_Exception
+     */
+    public static function getAssetPath($name)
     {
         $repos = Pluf::f('saas_spa_repository');
         if (! is_array($repos)) {
@@ -246,6 +254,19 @@ class SaaS_SPA extends Pluf_Model
             }
             return $filename;
         }
-        throw new Pluf_Exception("The SPA package is not accessable.");
+        throw new Pluf_Exception("The SPA asset is not accessible.");
+    }
+
+    /**
+     * spa با نام تعیین شده را برمی‌گرداند.
+     * فرض می‌شود که نام spa ها یکتاست. در غیر این صورت
+     * اولین spa که نامش با نام تعیین شده یکی باشد برگردانده می‌شود
+     *
+     * @param $name نام            
+     */
+    public static function getSpaByName($name)
+    {
+        $sql = new Pluf_SQL('name=%s', $name);
+        return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
     }
 }

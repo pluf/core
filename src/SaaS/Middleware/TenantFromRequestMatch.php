@@ -11,7 +11,7 @@ class SaaS_Middleware_TenantFromRequestMatch
 
     function process_request (&$request)
     {
-        if (! $request->tenant->isAnonymous()) {
+        if (!$request->tenant->isAnonymous()) {
             return false;
         }
         
@@ -23,7 +23,7 @@ class SaaS_Middleware_TenantFromRequestMatch
                     $app = false;
                     if ($regex['value'] == 'subdomain') {
                         $app = SaaS_Application::bySubDomain(
-                                $match[$regex['match']]);
+                                $match[$regex['value']]);
                     } elseif ($regex['value'] == 'id') {
                         $app = new SaaS_Application($match[$regex['match']]);
                     }
@@ -34,7 +34,7 @@ class SaaS_Middleware_TenantFromRequestMatch
                     return false;
                 }
             } catch (Exception $e) {
-                // echo $e->getMessage();
+                echo $e->getMessage();
             }
         }
         

@@ -1,28 +1,52 @@
 <?php
 return array(
+    
     /**
      * *****************************************************************
-     * Tenants
+     * Tenant (Current tenant)
      * *****************************************************************
      */
-    array( // فهرست
-        'regex' => '#^/find$#',
+    array( // دریافت اطلاعات ملک جاری
+        'regex' => '#^/tenant$#',
         'model' => 'SaaS_Views_Application',
-        'method' => 'applications',
+        'method' => 'getCurrent',
         'http-method' => array(
             'GET'
-        )
+        ),
+        'precond' => array()
     ),
-    array( // فهرست
-        'regex' => '#^/users$#',
+    array( // به روزرسانی اطلاعات ملک جاری
+        'regex' => '#^/tenant$#',
         'model' => 'SaaS_Views_Application',
-        'method' => 'userApplications',
+        'method' => 'updateCurrent',
         'http-method' => array(
-            'GET'
+            'POST'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::userCanUpdateApplication'
         )
     ),
-    array( // ایجاد
-        'regex' => '#^/new$#',
+    array( // حذف ملک جاری
+        'regex' => '#^/tenant$#',
+        'model' => 'SaaS_Views_Application',
+        'method' => 'deleteCurrent',
+        'http-method' => array(
+            'DELETE'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::userCanDeleteApplication'
+        )
+    ),
+    
+    /**
+     * *****************************************************************
+     * Tenant
+     * *****************************************************************
+     */
+    array( // ایجاد ملک جدید
+        'regex' => '#^/tenant/new$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'create',
         'http-method' => array(
@@ -33,34 +57,8 @@ return array(
             'SaaS_Precondition::userCanCreateApplication'
         )
     ),
-
-    /**
-     * *****************************************************************
-     * Tenants
-     * *****************************************************************
-     */
-    array( // گرفتن جاری
-        'regex' => '#^/current$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'getCurrent',
-        'http-method' => array(
-            'GET'
-        ),
-        'precond' => array()
-    ),
-    array( // به روز کردن جاری
-        'regex' => '#^/current$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'updateCurrent',
-        'http-method' => array(
-            'POST'
-        ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        )
-    ),
-    array( // گرفتن
-        'regex' => '#^/(\d+)$#',
+    array( // دریافت اطلاعات یک ملک
+        'regex' => '#^/tenant/(\d+)$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'get',
         'http-method' => array(
@@ -68,17 +66,64 @@ return array(
         ),
         'precond' => array()
     ),
-    array( // به روز کردن
-        'regex' => '#^/(\d+)$#',
+    array( // به روزرسانی اطلاعات یک ملک
+        'regex' => '#^/tenant/(\d+)$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'update',
         'http-method' => array(
             'POST'
         ),
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::userCanUpdateApplication'
         )
     ),
+    array( // حذف یک ملک
+        'regex' => '#^/tenant/(\d+)$#',
+        'model' => 'SaaS_Views_Application',
+        'method' => 'delete',
+        'http-method' => array(
+            'DELETE'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::userCanDeleteApplication'
+        )
+    ),
+    /**
+     * *****************************************************************
+     * Tenants
+     * *****************************************************************
+     */
+    
+    array( // جستجو و فهرست کردن ملک‌ها
+        'regex' => '#^/tenant/find$#',
+        'model' => 'SaaS_Views_Application',
+        'method' => 'tenants',
+        'http-method' => array(
+            'GET'
+        )
+    ),
+    
+    
+    
+    
+    
+    /**
+     * *****************************************************************
+     * Tenants
+     * *****************************************************************
+     */
+    
+    array( // فهرست
+        'regex' => '#^/users$#',
+        'model' => 'SaaS_Views_Application',
+        'method' => 'userApplications',
+        'http-method' => array(
+            'GET'
+        )
+    ),
+    
     /**
      * *****************************************************************
      * Tenants (owner, member, authorized)
@@ -114,8 +159,7 @@ return array(
             'SaaS_Precondition::applicationOwner'
         )
     ),
-
-
+    
     /**
      * *****************************************************************
      * Tenant (SPA)
@@ -349,7 +393,10 @@ return array(
         'regex' => '#^/spa/refresh$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'refreshAll',
-        'http-method' => array( 'GET', 'POST'),
+        'http-method' => array(
+            'GET',
+            'POST'
+        ),
         'precond' => array(
             'Pluf_Precondition::staffRequired'
         )
@@ -389,6 +436,5 @@ return array(
         'model' => 'SaaS_Views_SPA',
         'method' => 'appcache',
         'http-method' => 'GET'
-    ),
-    
+    )
 );
