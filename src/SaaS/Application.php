@@ -421,12 +421,20 @@ class SaaS_Application extends Pluf_Model
         return false;
     }
 
+    /**
+     * ملک تعیین شده با زیردامنه تعیین شده را برمی‌گرداند
+     * @param string $subdomain
+     */
     public static function bySubDomain($subdomain)
     {
         $sql = new Pluf_SQL('subdomain=%s', $subdomain);
         return Pluf::factory('SaaS_Application')->getOne($sql->gen());
     }
 
+    /**
+     * ملک با دامنه تعیین شده را برمی‌گرداند.
+     * @param unknown $domain
+     */
     public static function byDomain($domain)
     {
         $sql = new Pluf_SQL('domain=%s', $domain);

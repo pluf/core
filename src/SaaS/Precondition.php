@@ -236,6 +236,45 @@ class SaaS_Precondition
         throw new Pluf_Exception_PermissionDenied();
     }
 
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که
+     * اجازه به روزرسانی اطلاعات ملک جاری را دارد یا نه.
+     * 
+     * @param unknown $request            
+     * @return boolean
+     */
+    static public function userCanUpdateTenant($request)
+    {
+        // TODO: hadi, 1395: بررسی اینکه کاربر حق به‌روزرسانی ملک جاری را دارد یا نه.
+        return true;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که
+     * اجازه حذف اطلاعات ملک جاری را دارد یا نه.
+     *
+     * @param unknown $request
+     * @return boolean
+     */
+    static public function userCanDeleteTenant($request)
+    {
+        // TODO: hadi, 1395: بررسی اینکه کاربر حق حذف ملک جاری را دارد یا نه.
+        return true;
+    }
+    
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که
+     * اجازه حذف اطلاعات ملک جاری را دارد یا نه.
+     *
+     * @param unknown $request
+     * @return boolean
+     */
+    static public function userCanCreateTenant($request)
+    {
+        // TODO: hadi, 1395: بررسی اینکه کاربر حق ایجاد ملک جدید را دارد یا نه.
+        return true;
+    }
+    
     public static function userCanCreateApplication($request)
     {
         return true;

@@ -24,7 +24,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanUpdateApplication'
+            'SaaS_Precondition::userCanUpdateTenant'
         )
     ),
     array( // حذف ملک جاری
@@ -36,7 +36,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanDeleteApplication'
+            'SaaS_Precondition::userCanDeleteTenant'
         )
     ),
     
@@ -54,7 +54,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanCreateApplication'
+            'SaaS_Precondition::userCanCreateTenant'
         )
     ),
     array( // دریافت اطلاعات یک ملک
@@ -75,7 +75,6 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanUpdateApplication'
         )
     ),
     array( // حذف یک ملک
@@ -87,7 +86,6 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanDeleteApplication'
         )
     ),
     /**
@@ -104,6 +102,76 @@ return array(
             'GET'
         )
     ),
+    
+    /**
+     * *****************************************************************
+     * SPA
+     * *****************************************************************
+     */
+    array(
+        'regex' => '#^/spa/(\d+)$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'get',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/spa/find$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'find',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/spa/new$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'create',
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::staffRequired'
+        )
+    ),
+    array(
+        'regex' => '#^/spa/refresh$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'refreshAll',
+        'http-method' => array(
+            'GET',
+            'POST'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::staffRequired'
+        )
+    ),
+    array(
+        'regex' => '#^/spa/(\d+)$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'delete',
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'Pluf_Precondition::staffRequired'
+        )
+    ),
+    array(
+        'regex' => '#^/spa/(\d+)/refresh$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'refresh',
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::staffRequired'
+        )
+    ),
+    array(
+        'regex' => '#^/spa/(\d+)/package$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'package',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/spa/(\d+)/appcache$#',
+        'model' => 'SaaS_Views_SPA',
+        'method' => 'appcache',
+        'http-method' => 'GET'
+    ),
+    
     
     
     
@@ -367,74 +435,5 @@ return array(
         'freemium' => array(
             'level' => Pluf::f('saas_freemium_full', 5)
         )
-    ),
-    
-    /**
-     * *****************************************************************
-     * SPA
-     * *****************************************************************
-     */
-    array(
-        'regex' => '#^/spa/find$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'find',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/new$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'create',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/refresh$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'refreshAll',
-        'http-method' => array(
-            'GET',
-            'POST'
-        ),
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(\d+)$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'get',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/(\d+)$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'delete',
-        'http-method' => 'DELETE',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(\d+)/refresh$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'refresh',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(\d+)/package$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'package',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/(\d+)/appcache$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'appcache',
-        'http-method' => 'GET'
     )
 );

@@ -50,14 +50,16 @@ class SaaS_Views_SPA
         );
         $sort_fields = array(
             'id',
-            'creation_dtime',
+            'name',
             'title',
             'homepage',
-            'license'
+            'license',
+            'version',
+            'creation_dtime'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();
-        $pag->items_per_page = 10;
+        $pag->items_per_page = SaaS_Shortcuts_GetItemListCount($request);
         $pag->sort_order = array(
             'creation_dtime',
             'DESC'
@@ -66,6 +68,23 @@ class SaaS_Views_SPA
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
+    /**
+     * اطلاعات یک spa
+     *
+     * این فراخوانی اطلاعات یک spa را در اختیار کاربران قرار می‌دهد. در حالت عادی دسترسی به
+     * اطلاعات نرم‌افزارها به دسترسی‌های خاصی نیاز ندارد و هر کاربری قادر است که به آنها دسترسی
+     * داشته باشد.
+     *
+     * @param unknown $request
+     * @param unknown $match
+     */
+    public static function get($request, $match)
+    {
+        $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
+        return new Pluf_HTTP_Response_Json($spa);
+    }
+    
+    
     /**
      * یک نرم افزار جدید را در سیستم ایجاد میکند.
      *
@@ -78,22 +97,6 @@ class SaaS_Views_SPA
      */
     public static function create($request, $match)
     {}
-
-    /**
-     * اطلاعات یک spa
-     *
-     * این فراخوانی اطلاعات یک spa را در اختیار کاربران قرار می‌دهد. در حالت عادی دسترسی به
-     * اطلاعات نرم‌افزارها به دسترسی‌های خاصی نیاز ندارد و هر کاربری قادر است که به آنها دسترسی
-     * داشته باشد.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     */
-    public static function get($request, $match)
-    {
-        $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        return new Pluf_HTTP_Response_Json($spa);
-    }
 
     /**
      * اطلاعات یک نرم افزار را به روز می‌کند.

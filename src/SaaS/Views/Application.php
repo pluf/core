@@ -35,8 +35,6 @@ class SaaS_Views_Application
      */
     public static function updateCurrent($request, $match)
     {
-        // Check permission
-        SaaS_Precondition::userCanUpdateApplication($request, $request->tenant);
         // Do update
         $params = array(
             'tenant' => $request->tenant
@@ -95,6 +93,10 @@ class SaaS_Views_Application
     public static function get($request, $match)
     {
         $app = SaaS_Shortcuts_GetApplicationOr404($match[1]);
+        
+        // TODO: check permission
+        SaaS_Precondition::userCanAccessApplication($request, $app);
+        
 //         $app = new SaaS_Application($match[1]);
         return new Pluf_HTTP_Response_Json($app);
     }
@@ -113,6 +115,10 @@ class SaaS_Views_Application
         // GET data
 //         $app = new SaaS_Application($match[1]);
         $app = SaaS_Shortcuts_GetApplicationOr404($match[1]);
+        
+        // TODO: Check permission
+        SaaS_Precondition::userCanUpdateApplication($request, $app);
+        
         // Do update
         $params = array(
             'tenant' => $app
@@ -131,6 +137,10 @@ class SaaS_Views_Application
     public static function delete($request, $match)
     {
         $tenant = SaaS_Shortcuts_GetApplicationOr404($match[1]);
+        
+        // TODO: check permission
+        SaaS_Precondition::userCanDeleteApplication($request, $tenant);
+        
         // TODO: Hadi, 1395: عملیات حذف tenant
         // ۱. حذف فولدرها
         // ۲. حذف سطر مربوطه از جدول ملک‌ها
