@@ -98,4 +98,5 @@ class SaaSNewspaper_Views_Follower
         $follower2->delete();
         return new Pluf_HTTP_Response_Json($follower);
     }
+
 }

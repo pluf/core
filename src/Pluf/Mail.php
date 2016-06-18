@@ -189,7 +189,7 @@ class Pluf_Mail
         $gmail = new Mail();
         $mail = $gmail->factory(Pluf::f('mail_backend', 'mail'), $params);
         if (Pluf::f('send_emails', true)) {
-            $mail->send($this->to_address, $hdrs, $body);
+            $ret = $mail->send($this->to_address, $hdrs, $body);
         }
         if (defined('IN_UNIT_TESTS')) {
             $GLOBALS['_PX_UNIT_TESTS']['emails'][] = array(
@@ -198,5 +198,6 @@ class Pluf_Mail
                     $body
             );
         }
+        return $ret;
     }
 }
