@@ -1,44 +1,6 @@
 <?php
 
 /**
- * کتابخانه‌های سیستم را به روز می‌کند
- *
- * کتابخانه‌ها به صورت عمومی در اختیار تمام کاربران هستند از این رو به
- * روز کردن آنها معادل این هست که تمام کتابخانه‌های موجود را از سیستم حذف
- * کنیم و دوباره اضافه کنیم. در این پیاده سازی این راهکار دنبال شده است.
- */
-function SaaS_Migrations_Update_lib() {
-	$lib = new SaaS_Lib ();
-	$list = $lib->getList ();
-	foreach ( $list as $lib ) {
-		$lib->delete ();
-	}
-	$filename = Pluf::f ( 'saas_lib_repository' ) . '/' . Pluf::f ( 'saas_lib_index' );
-	$create = true;
-	
-	$list = array ();
-	{
-		if (is_readable ( $filename )) {
-			$myfile = fopen ( $filename, "r" ) or die ( "Unable to open file!" );
-			$json = fread ( $myfile, filesize ( $filename ) );
-			fclose ( $myfile );
-			$packages = json_decode ( $json, true );
-			foreach ( $packages as $package ) {
-				$lib = new SaaS_Lib ();
-				$lib->setFromFormData($package);
-				$list [] = $lib;
-			}
-		}
-	}
-	if ($create) {
-		foreach ( $list as $lib ) {
-			$lib->create ();
-		}
-	}
-	return $list;
-}
-
-/**
  * به روز کردن برنامه‌های کاربردی
  *
  * تمام برنامه‌های کاربردی موجود در مخزن‌ها را در پایگاه داده به روز رسانی
