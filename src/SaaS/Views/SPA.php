@@ -75,16 +75,15 @@ class SaaS_Views_SPA
      * اطلاعات نرم‌افزارها به دسترسی‌های خاصی نیاز ندارد و هر کاربری قادر است که به آنها دسترسی
      * داشته باشد.
      *
-     * @param unknown $request
-     * @param unknown $match
+     * @param unknown $request            
+     * @param unknown $match            
      */
     public static function get($request, $match)
     {
         $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
         return new Pluf_HTTP_Response_Json($spa);
     }
-    
-    
+
     /**
      * یک نرم افزار جدید را در سیستم ایجاد میکند.
      *
@@ -125,7 +124,6 @@ class SaaS_Views_SPA
     public static function refreshAll($request, $match)
     {
         SaaS_Migrations_Update_spa();
-        SaaS_Migrations_Update_lib();
         // XXX: maso, 1395: مدل کلی انجام پردازش‌های سرور نیز تعیین شود.
         return new Pluf_HTTP_Response_Json(array(
             'id' => '0',
@@ -353,7 +351,7 @@ class SaaS_Views_SPA
         $p = $spa->getSourcePath($name);
         return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
     }
-    
+
     protected static function loadAssets($request, $name)
     {
         $p = SaaS_SPA::getAssetsPath($name);
