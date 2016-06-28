@@ -1,0 +1,11 @@
+{
+  "name": "Bank",
+  "version": "0.1.0",
+  "title": "SaaS Bank framework",
+  "model": [
+    "Bank_Receipt"
+  ],
+  "permisson": [
+    
+  ]
+}

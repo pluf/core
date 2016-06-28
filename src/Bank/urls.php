@@ -1,8 +1,8 @@
 <?php
 return array (
 		array (
-				'regex' => '#^/bank/receipt/mellat$#',
-				'model' => 'Bank_Views',
+				'regex' => '#^/receipt/mellat$#',
+				'model' => 'Bank_Views_Mellat',
 				'method' => 'mellat' 
 		) 
 );

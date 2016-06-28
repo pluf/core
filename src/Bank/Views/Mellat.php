@@ -1,14 +1,13 @@
 <?php
-Pluf::loadFunction ( 'Pluf_HTTP_URL_urlForView' );
-Pluf::loadFunction ( 'Pluf_Shortcuts_GetObjectOr404' );
-Pluf::loadFunction ( 'Pluf_Shortcuts_GetFormForModel' );
 
 /**
- *
+ * واسطه‌هایی را تعیین می‌کند که برای پرداخت از درگاه بانک ملت به کار می‌رود.
+ * 
+ * 
  * @author maso <mostafa.barmsohry@dpq.co.ir>
  *        
  */
-class Bank_Views {
+class Bank_Views_Mellat {
 	
 	/**
 	 * فراخوانی و دریافت بازخورد از درگاه بانک ملت

@@ -31,47 +31,59 @@ class Bank_Receipt extends Pluf_Model {
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
 						'blank' => true,
-						'verbose' => __ ( 'unique and no repreducable id fro reception' ) 
+						'verbose' => 'unique and no repreducable id fro reception' 
 				),
 				'amount' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 						'unique' => false,
-						'verbose' => __ ( 'amount of reception' ) 
+						'verbose' => 'amount of reception' 
 				),
 				'title' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
 						'size' => 50,
-						'verbose' => __ ( 'title of reception' ) 
+						'verbose' => 'title of reception' 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
-						'verbose' => __ ( 'description of reception' ) 
+						'verbose' => 'description of reception' 
 				),
 				'trans_id' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
-						'verbose' => __ ( 'successfull transaction id from bank' ) 
+						'verbose' => 'successfull transaction id from bank' 
 				),
 				'verification' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
-						'verbose' => __ ( 'verification of the receipt from the bank' ) 
+						'verbose' => 'verification of the receipt from the bank' 
+				),
+				'owner_id' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'verbose' => 'owner ID' 
+				),
+				'owner_class' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => false,
+						'size' => 50,
+						'verbose' => 'owner class',
+						'help_text' => 'For example Pluf_User or Pluf_Group.' 
 				),
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => true,
-						'verbose' => __ ( 'creation date' ) 
+						'verbose' => 'creation date' 
 				),
 				'modif_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => true,
-						'verbose' => __ ( 'modification date' ) 
+						'verbose' => 'modification date' 
 				) 
 		);
 		$this->_a ['views'] = array ();

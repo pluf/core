@@ -972,15 +972,23 @@ class Pluf_Model implements JsonSerializable
     {}
 
     /**
-     * Hook run just before saving a model in the database.
+     * دستگیره‌ای که درست قبل از ذخیره شدن در پایگاه داده اجرا می‌شود.
      *
-     * Just overwrite it into your model to perform custom actions.
+     * در صورتی که نیاز به انجام پردازش‌هایی قبل از ذخیره شدن مدل داده‌ای دارید، این فراخوانی
+     * را بازنویسی کنید.
      *
-     * @param
-     *            bool Create.
+     * @param bool Create.
      */
     function preSave ($create = false)
-    {}
+    {
+    	// TODO: maso, 1395: بررسی داده‌های پیش فرض و به روز رسانی آنها
+    	//
+    	// برخی داده‌ها در تمام مدلهای داده‌ای به صورت تکراری استفاده می‌شود. بهتر است که
+    	// وجود این داده‌ها بررسی شود و در صورت وجود همین جا به روز رسانی انجام شود.
+    	//
+    	// - creation_dtime
+    	// - modif_dtime
+    }
 
     /**
      * فراخوانی پس از ذخیره شدن
