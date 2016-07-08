@@ -61,6 +61,12 @@ return array(
         'method' => 'signup',
         'http-method' => 'POST'
     ),
+    array( // ثبت یک کاربر جدید
+        'regex' => '#^/new$#',
+        'model' => 'User_Views_User',
+        'method' => 'signup',
+        'http-method' => 'POST'
+    ),
     array( // دریافت پروفایل کاربر
         'regex' => '#^/profile$#',
         'model' => 'User_Views_Profile',
