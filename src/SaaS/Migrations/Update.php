@@ -14,7 +14,7 @@ function SaaS_Migrations_Update_spa()
             Pluf::f('saas_spa_repository')
         );
     }
-    $pd = Pluf::f('saas_spa_package', "/spa.json");
+    $pd = Pluf::f('saas_spa_package', "spa.json");
     foreach ($repos as $repo) {
         $repo = $repo . '/';
         $list = SaaS_Migrations_Update_SPAStorageList($repo);
@@ -62,7 +62,7 @@ function SaaS_Migrations_Update_SPAStorageList($directory)
     $handler = opendir($directory);
     while ($file = readdir($handler)) {
         if ($file != "." && $file != "..") {
-            $spaFile = $directory . $file . Pluf::f('saas_spa_package', "/spa.json");
+            $spaFile = $directory . $file . '/' . Pluf::f('saas_spa_package', "spa.json");
             if (is_file($spaFile) && is_readable($spaFile)) {
                 $results[] = $file;
             }
