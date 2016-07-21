@@ -3,6 +3,8 @@
 class SaaSDM_Asset extends Pluf_Model
 {
 
+	
+	
     /**
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
