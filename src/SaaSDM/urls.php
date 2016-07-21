@@ -1,14 +1,46 @@
 <?php
-return array(
-
-	array( // Content urls
-        'regex' => '#^/dm/link/(secure_link:.*)$#',
-        'model' => 'SaaSDM_Views_Link',
-        'method' => 'download',
-        'http-method' => 'GET',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
-        )
-    )
+return array (
+		
+		array ( // Content urls
+				'regex' => '#^/link/(secure_link:.*)$#',
+				'model' => 'SaaSDM_Views_Link',
+				'method' => 'download',
+				'http-method' => 'GET',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
+		),
+		array ( // Content urls
+				'regex' => '#^/asset/(?P<id>\d+)$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'get',
+				'http-method' => 'GET'
+// 				'precond' => array (
+// 						//'Pluf_Precondition::loginRequired',
+// 						//'SaaS_Precondition::tenantMember' 
+// 				) 
+		),
+		array (
+				'regex' => '#^/find$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'find',
+				'http-method' => 'GET'
+// 				'precond' => array (
+// 						//'Pluf_Precondition::loginRequired',
+// 						//'SaaS_Precondition::tenantMember' 
+// 				) 
+		),
+		array (
+				'regex' => '#^/update/(?P<id>\d+)$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'update',
+				'http-method' => 'POST'
+				// 				'precond' => array (
+						// 						//'Pluf_Precondition::loginRequired',
+						// 						//'SaaS_Precondition::tenantMember'
+						// 				)
+		)		
+				
+		
 );
