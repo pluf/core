@@ -2,6 +2,9 @@
   "name": "SaaSDM",
   "version": "1",
   "title": "SaaS Download Management System",
-  "model": [],
+  "model": [
+    "SaaSDM_Asset",
+    "SaaSDM_Link"
+  ],
   "permisson": []
 }

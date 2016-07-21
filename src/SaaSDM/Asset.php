@@ -10,7 +10,7 @@ class SaaSDM_Asset extends Pluf_Model
      */
     function init()
     {
-        $this->_a['table'] = 'saascdm_asset';
+        $this->_a['table'] = 'saasdm_asset';
         $this->_a['model'] = 'SaaSDM_Asset';
         $this->_model = 'SaaSDM_Asset';
         $this->_a['cols'] = array(
@@ -35,6 +35,12 @@ class SaaSDM_Asset extends Pluf_Model
             ),
  
             // relations
+        		'parent' => array(
+        				'type' => 'Pluf_DB_Field_Foreignkey',
+        				'model' => 'SaaSDM_Asset',
+        				'blank' => false,
+        				'relate_name' => 'parent'
+        		),           
             'tenant' => array(
                 'type' => 'Pluf_DB_Field_Foreignkey',
                 'model' => 'SaaS_Application',
