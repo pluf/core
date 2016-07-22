@@ -253,6 +253,11 @@ class SaaS_Views_SPA
 
     protected static function loadSpa($request, $app, $spa)
     {
+        // در صورتی که درخواست مربوط به seo باشد
+        if(array_key_exists('_escaped_fragment_', $request->GET)){
+            return SaaS_Shortcuts_SeoResponse($request, $spa);
+        }
+        
         // نمایش اصلی
         $mainPage = $spa->getMainPagePath();
         
