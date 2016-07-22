@@ -45,6 +45,9 @@ class SaaS_Views_ApplicationSpa
     public function getByName ($request, $match)
     {
         $spa = SaaS_SPA::getByName($match[1]);
+        if(array_key_exists('_escaped_fragment_', $request->GET)){
+        	return SaaS_Shortcuts_SeoResponse($request, $spa);
+        }
         return new Pluf_HTTP_Response_Json($spa);
     }
 
