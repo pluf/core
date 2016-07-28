@@ -32,7 +32,7 @@ return array (
 // 				) 
 		),
 		array (
-				'regex' => '#^/update/(?P<id>\d+)$#',
+				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'update',
 				'http-method' => 'POST'
