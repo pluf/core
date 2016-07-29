@@ -87,20 +87,19 @@ class SaaSDM_Views_Asset
         return new Pluf_HTTP_Response_Json($asset);
     }
 
-//     public static function delete($request, $match)
-//     {
-//         // تعیین داده‌ها
-//         $content = SaaSCMS_Shortcuts_GetContentOr404($match[1]);
-//         // دسترسی
-//         // SaaSCMS_Precondition::userCanDeleteContent($request, $content);
-//         // اجرا
-//         $content2 = SaaSCMS_Shortcuts_GetContentOr404($content->id);
-//         $content->delete();
+    public static function delete($request, $match)
+    {
+        // تعیین داده‌ها
+        $asset = SaaSDM_Shortcuts_GetContentOr404($match["id"]);
+        // دسترسی
+        // SaaSCMS_Precondition::userCanDeleteContent($request, $content);
+        // اجرا
+        $asset->delete();
         
-//         // TODO: فایل مربوط به کانتنت باید حذف شود
+        // TODO: فایل مربوط به کانتنت باید حذف شود
         
-//         return new Pluf_HTTP_Response_Json($content2);
-//     }
+        return new Pluf_HTTP_Response_Json($asset);
+    }
 
 //     public static function download($request, $match)
 //     {

@@ -3,8 +3,11 @@
   "version": "1",
   "title": "SaaS Download Management System",
   "model": [
-    "SaaSDM_Asset",
-    "SaaSDM_Link"
-  ],
-  "permisson": []
+		"SaaSDM_Asset",
+		"SaaSDM_Link",
+		"SaaSDM_Accounting",
+		"SaaSDM_Plan",
+		"SaaSDM_PlanTemplate"
+	],
+	"permisson": []
 }

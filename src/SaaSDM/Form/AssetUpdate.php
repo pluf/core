@@ -28,6 +28,55 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
             'initial' => $this->asset->name,
             'help_text' => 'Name of Asset'
         ));
+        $this->fields['path'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'Path of Asset',
+        		'initial' => $this->asset->path,
+        		'help_text' => 'Path of Asset'
+        ));
+        $this->fields['size'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'Size of Asset',
+        		'initial' => $this->asset->size,
+        		'help_text' => 'Size of Asset'
+        ));
+        $this->fields['download'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'download of Asset',
+        		'initial' => $this->asset->download,
+        		'help_text' => 'download of Asset'
+        ));
+        $this->fields['driver_type'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'driver_type of Asset',
+        		'initial' => $this->asset->driver_type,
+        		'help_text' => 'driver_type of Asset'
+        ));
+        $this->fields['driver_id'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'driver_id of Asset',
+        		'initial' => $this->asset->driver_id,
+        		'help_text' => 'driver_id of Asset'
+        ));
+        $this->fields['type'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'type of Asset',
+        		'initial' => $this->asset->type,
+        		'help_text' => 'type of Asset'
+        ));
+        $this->fields['content_name'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'content_name of Asset',
+        		'initial' => $this->asset->content_name,
+        		'help_text' => 'content_name of Asset'
+        ));
+        $this->fields['description'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'description of Asset',
+        		'initial' => $this->asset->description,
+        		'help_text' => 'description of Asset'
+        ));
+        
         
         $this->fields['parent'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,

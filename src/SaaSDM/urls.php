@@ -1,4 +1,4 @@
-<?php
+	<?php
 return array (
 		
 		array ( // Content urls
@@ -31,6 +31,16 @@ return array (
 // 						//'SaaS_Precondition::tenantMember' 
 // 				) 
 		),
+		array (
+				'regex' => '#^/delete/(?P<id>\d+)$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'delete',
+				'http-method' => 'GET'
+				// 				'precond' => array (
+						// 						//'Pluf_Precondition::loginRequired',
+						// 						//'SaaS_Precondition::tenantMember'
+						// 				)
+		),		
 		array (
 				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
