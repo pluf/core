@@ -130,17 +130,7 @@
 							'Pluf_Precondition::loginRequired',
 							'SaaS_Precondition::tenantMember'
 					)
-			),			
-			array ( // Aseets urls
-					'regex' => '#^/new$#',
-					'model' => 'SaaSDM_Views_Asset',
-					'method' => 'create',
-					'http-method' => 'POST',
-			),
-			// 'precond' => array (
-			// //'Pluf_Precondition::loginRequired',
-			// //'SaaS_Precondition::tenantMember'
-			// )			
+			),		
 			array ( // Content urls
 					'regex' => '#^/download/(secure_id:.*)$#',
 					'model' => 'SaaSDM_Views_Link',
@@ -172,7 +162,7 @@
 			// //'SaaS_Precondition::tenantMember'
 			// )
 			array (
-					'regex' => '#^/asset/(?P<id>\d+)$#',
+					'regex' => '#^/(?P<id>\d+)$#',
 					'model' => 'SaaSDM_Views_Asset',
 					'method' => 'update',
 					'http-method' => 'POST' 
