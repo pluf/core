@@ -12,7 +12,7 @@ return array (
 				) 
 		),
 		array ( // Content urls
-				'regex' => '#^/asset/(?P<id>\d+)$#',
+				'regex' => '#^/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'get',
 				'http-method' => 'GET'
