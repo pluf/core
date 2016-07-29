@@ -4,28 +4,28 @@ Pluf::loadFunction('SaaSDM_Shortcuts_GetAssetOr404');
 class SaaSDM_Views_Asset
 {
 
-//     public static function create($request, $match)
-//     {
-//         // initial content data
-//         $extra = array(
-//             // 'user' => $request->user,
-//             'tenant' => $request->tenant
-//         );
-//         // Create content and get its ID
-//         $form = new SaaSCMS_Form_ContentCreate($request->REQUEST, $extra);
-//         $content = $form->save();
+    public static function create($request, $match)
+    {
+        // initial asset data
+        $extra = array(
+            // 'user' => $request->user,
+            'tenant' => $request->tenant
+        );
+        // Create asset and get its ID
+        $form = new SaaSDM_Form_AssetCreate($request->REQUEST, $extra);
+        $asset = $form->save();
         
-//         // Upload content file and extract information about it (by updating content)
-//         $extra['content'] = $content;
-//         $form = new SaaSCMS_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
-//         try {
-//             $content = $form->update();
-//         } catch (Pluf_Exception $e) {
-//             $content->delete();
-//         }
+        // Upload asset file and extract information about it (by updating asset)
+        $extra['asset'] = $asset;
+        $form = new SaaSDM_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+        try {
+            $asset = $form->update();
+        } catch (Pluf_Exception $e) {
+            $asset->delete();
+        }
         
-//         return new Pluf_HTTP_Response_Json($content);
-//     }
+        return new Pluf_HTTP_Response_Json($asset);
+    }
 
     public static function find($request, $match)
     {

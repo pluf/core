@@ -39,11 +39,20 @@ class SaaSDM_PlanTemplate extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 				),				
-				
-				'content_string' => array (
+				'content_name' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
 						'size' => 500 
+				),
+				'price' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'size' => 20
+				),
+				'off' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'size' => 10
 				),
 				// relations
 				'tenant' => array (
