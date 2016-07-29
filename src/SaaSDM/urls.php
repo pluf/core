@@ -21,6 +21,16 @@ return array (
 // 						//'SaaS_Precondition::tenantMember' 
 // 				) 
 		),
+		array ( // Content urls
+				'regex' => '#^/(?P<id>\d+)/$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'get',
+				'http-method' => 'GET'
+				// 				'precond' => array (
+						// 						//'Pluf_Precondition::loginRequired',
+						// 						//'SaaS_Precondition::tenantMember'
+						// 				)
+		),		
 		array (
 				'regex' => '#^/find$#',
 				'model' => 'SaaSDM_Views_Asset',
