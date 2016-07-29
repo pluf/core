@@ -42,10 +42,10 @@ return array (
 // 				) 
 		),
 		array (
-				'regex' => '#^/delete/(?P<id>\d+)$#',
+				'regex' => '#^/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'delete',
-				'http-method' => 'GET'
+				'http-method' => 'DELETE'
 				// 				'precond' => array (
 						// 						//'Pluf_Precondition::loginRequired',
 						// 						//'SaaS_Precondition::tenantMember'
