@@ -20,7 +20,7 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
     {
         // $this->user = $extra['user'];
         $this->asset = $extra['asset'];
-        //$this->tenant = $extra['tenant'];
+        $this->tenant = $extra['tenant'];
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
@@ -93,16 +93,16 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
         ));
         
        
-//         $this->fields['file'] = new Pluf_Form_Field_File(array(
-//             'required' => false,
-//             'max_size' => Pluf::f('upload_max_size', 2097152),
-//             'move_function_params' => array(
-//                 'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/cms',
-//                 'file_name' => $this->asset->id,
-//                 'upload_path_create' => true,
-//                 'upload_overwrite' => true
-//             )
-//         ));
+        $this->fields['file'] = new Pluf_Form_Field_File(array(
+            'required' => false,
+            'max_size' => Pluf::f('upload_max_size', 2097152),
+            'move_function_params' => array(
+                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/dm',
+                'file_name' => $this->asset->id,
+                'upload_path_create' => true,
+                'upload_overwrite' => true
+            )
+        ));
     }
 
     function update($commit = true)
@@ -115,14 +115,14 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
         
         if (array_key_exists('file', $this->cleaned_data)) {
             // Extract information of file
-            // $myFile = $this->data['file'];
+            $myFile = $this->data['file'];
             $this->asset->file_name = $myFile['name'];
             $fileInfo = SaaS_FileUtil::getMimeType($this->asset->file_name);
-            $this->asset->mime_type = $fileInfo[0];
+            $this->asset->type = $fileInfo[0];
             // $this->content->file_name = $this->cleaned_data['file'];
             // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
             // $this->content->mime_type = $fileInfo[0];
-            $this->asset->file_size = filesize($this->asset->file_path . '/' . $this->asset->id);
+            $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }
         
         if ($commit) {
