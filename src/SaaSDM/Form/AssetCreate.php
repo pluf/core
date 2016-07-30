@@ -19,19 +19,73 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         $this->tenant = $extra['tenant'];
 //         $this->user = $extra['user'];
 
-        $this->fields['title'] = new Pluf_Form_Field_Varchar(
+        $this->fields['name'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
-                        'label' => 'Title',
-                        'help_text' => 'Title of asset'
+                        'label' => 'Name',
+                        'help_text' => 'Name of asset'
                 ));
         
+        $this->fields['path'] = new Pluf_Form_Field_Varchar(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['size'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['download'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['driver_type'] = new Pluf_Form_Field_Varchar(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['driver_id'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['parent'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['type'] = new Pluf_Form_Field_Varchar(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
+        $this->fields['content_name'] = new Pluf_Form_Field_Varchar(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
-        				'label' => 'Description',
-        				'help_text' => 'Description about asset'
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
         		));
+        $this->fields['tenant'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Path',
+        				'help_text' => 'Path of asset'
+        		));        
     }
 
     function save ($commit = true)
