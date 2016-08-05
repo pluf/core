@@ -7,7 +7,7 @@
  * @author maso <mostafa.barmsohry@dpq.co.ir>
  *        
  */
-class Bank_Views_Mellat {
+class SaaSBank_Views_Mellat {
 	
 	/**
 	 * فراخوانی و دریافت بازخورد از درگاه بانک ملت

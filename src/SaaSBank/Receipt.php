@@ -13,7 +13,7 @@
  * @author maso
  *
  */
-class Bank_Receipt extends Pluf_Model {
+class SaaSBank_Receipt extends Pluf_Model {
 	
 	/**
 	 * @brief مدل داده‌ای را بارگذاری می‌کند.
@@ -24,9 +24,9 @@ class Bank_Receipt extends Pluf_Model {
 	 * @see Pluf_Model::init()
 	 */
 	function init() {
-		$this->_a ['table'] = 'bank_receipt';
-		$this->_a ['model'] = 'Bank_Receipt';
-		$this->_model = 'Bank_Receipt';
+		$this->_a ['table'] = 'saasbank_receipt';
+		$this->_a ['model'] = 'SaaSBank_Receipt';
+		$this->_model = 'SaaSBank_Receipt';
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',

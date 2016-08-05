@@ -6,6 +6,6 @@
  * @author maso
  *
  */
-class Bank_Precondition {
+class SaaSBank_Precondition {
 	
 }

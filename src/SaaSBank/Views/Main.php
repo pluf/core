@@ -10,7 +10,7 @@
  * @author maso
  *
  */
-class Bank_Views_Main {
+class SaaSBank_Views_Main {
 	
 	/**
 	 * فهرست تمام درگاه‌های موجود را تعیین می‌کند.

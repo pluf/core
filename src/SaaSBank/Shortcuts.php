@@ -8,7 +8,7 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
  * @param unknown $object
  * @return HM_Models_Apartment|unknown
  */
-function Bank_Shortcuts_receiptFactory($object) {
+function SaaSBank_Shortcuts_receiptFactory($object) {
 	if ($object == null || ! isset ( $object ))
 		return new Bank_Receipt();
 	return $object;

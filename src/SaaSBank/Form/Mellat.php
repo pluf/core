@@ -12,7 +12,7 @@ Pluf::loadFunction ( 'Bank_Shortcuts_receiptFactory' );
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Bank_Form_Mellat extends Pluf_Form {
+class SaaSBank_Form_Mellat extends Pluf_Form {
 	var $profile_data = null;
 	public function initFields($extra = array()) {
 		if (array_key_exists ( 'user_profile', $extra )) {

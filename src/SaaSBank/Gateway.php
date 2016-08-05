@@ -1,6 +1,6 @@
 <?php
 
-class Bank_Gateway extends Pluf_Model {
+class SaaSBank_Gateway extends Pluf_Model {
 	
 	/**
 	 * @brief مدل داده‌ای را بارگذاری می‌کند.
@@ -12,8 +12,8 @@ class Bank_Gateway extends Pluf_Model {
 	 */
 	function init() {
 		$this->_a ['table'] = 'bank_receipt';
-		$this->_a ['model'] = 'Bank_Receipt';
-		$this->_model = 'Bank_Receipt';
+		$this->_a ['model'] = 'SaaSBank_Gateway';
+		$this->_model = 'SaaSBank_Gateway';
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
