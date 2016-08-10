@@ -28,40 +28,43 @@ class SaaSBank_Receipt extends Pluf_Model {
 		$this->_a ['model'] = 'SaaSBank_Receipt';
 		$this->_model = 'SaaSBank_Receipt';
 		$this->_a ['cols'] = array (
+				/*
+				 * داده‌های عمومی برای یک پرداخت
+				 */
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
 						'blank' => true,
-						'verbose' => 'unique and no repreducable id fro reception' 
 				),
 				'amount' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 						'unique' => false,
-						'verbose' => 'amount of reception' 
 				),
 				'title' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
 						'size' => 50,
-						'verbose' => 'title of reception' 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
-						'verbose' => 'description of reception' 
 				),
-				'trans_id' => array (
+				'paied' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
-						'verbose' => 'successfull transaction id from bank' 
 				),
-				'verification' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 200,
-						'verbose' => 'verification of the receipt from the bank' 
+				
+				/*
+				 * مالک این پرداخت را تعیین می‌کند. این مالک می‌تواند هر موجودیتی در
+				 * سیستم باشد.
+				 */
+				'tenant' => array(
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'SaaS_Application',
+						'blank' => false,
+						'relate_name' => 'tenant'
 				),
 				'owner_id' => array (
 						'type' => 'Pluf_DB_Field_Integer',
@@ -75,6 +78,29 @@ class SaaSBank_Receipt extends Pluf_Model {
 						'verbose' => 'owner class',
 						'help_text' => 'For example Pluf_User or Pluf_Group.' 
 				),
+				
+
+				
+				/*
+				 * درگاهی را تعیین می کند که پرداخت از طریق آن انجام
+				 * شده است.
+				 */
+				'bakend_id'=> array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'verbose' => 'owner ID' 
+				),
+				'bakend_class'=> array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => false,
+						'size' => 50,
+				),
+				'bakend_data' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => true,
+						'size' => 300,
+				),
+				
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => true,
