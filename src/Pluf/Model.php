@@ -3,6 +3,7 @@
 /**
  * Sort of Active Record Class
  *
+ * @author maso<mostafa.barmshory@dpq.co.ir>
  * @date 1394 روش کدگزاری JSON به کلاس اضافه شده است تا به سادگی بتوان به عنوان نتیجه از یک مدل
  * استفاده شود.
  */

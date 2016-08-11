@@ -1,9 +1,15 @@
 <?php
 /**
- * File based cache.
- *
- * Info are stored in the 'cache_file_folder' folder. In the folder, 2
- * subdirectories are created based on the md5 of the key.
+ * کش مبتنی بر فایل
+ * 
+ * در این مدل تمام داده‌هایی که کش می شود در پرونده‌هایی در یک پوشه قرار می‌گیرد.
+ * این پوشه نیز در تنظیم‌ها به صورت زیر تعیین می‌شود:
+ * 
+ * <pre><code>
+ * 	cfg['cache_file_folder'] = 'path';
+ * </code></pre>
+ * 
+ * تمام زیر پوشه‌هایی که در این مسیر ایجاد می‌شود با استفاده MD5 تعیین نام خواهد شد.
  */
 class Pluf_Cache_File extends Pluf_Cache {
 	/**
