@@ -3,7 +3,8 @@ return array(
     'SaaSDM_Link' => array(
         'relate_to' => array(
             'SaaS_Application',
-            'SaaSDM_Asset'
+            'SaaSDM_Asset',
+        		'SaaSDM_Account'
         )
     ),
     'SaaSDM_Asset' => array(

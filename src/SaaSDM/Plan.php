@@ -15,20 +15,34 @@ class SaaSDM_Plan extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Sequence',
 						'blank' => false 
 				),
+				'period' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'size' => 250
+				),				
 				'expiry' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 						'size' => 250 
 				),
-				'count' => array (
+				'max_count' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 						'size' => 250 
 				),
-				'volume' => array (
+				'remain_count' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'size' => 250
+				),				
+				'max_volume' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
 				),
+				'remain_volume' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+				),				
 				'active' => array (
 						'type' => 'Pluf_DB_Field_Boolean',
 						'blank' => false,
@@ -39,7 +53,13 @@ class SaaSDM_Plan extends Pluf_Model {
 						'model' => 'SaaS_Application',
 						'blank' => false,
 						'relate_name' => 'tenant' 
-				) 
+				),
+				'account' => array (
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'SaaS_Account',
+						'blank' => false,
+						'relate_name' => 'account'
+				)
 		);
 	}
 	
