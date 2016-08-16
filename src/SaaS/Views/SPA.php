@@ -136,34 +136,6 @@ class SaaS_Views_SPA
     }
 
     /**
-     * مدیریت منابع برای HTML5
-     *
-     * توی HTML5 ابزارهایی برای اجرای سایت‌ها به صورت افلاین وجود دارد. این ابزارها
-     * فهرست منابع را از سرور تهیه می‌کنند. این فراخوانی بر اساس تنظیم‌های پروژه فهرست
-     * منابع را برای کاربران ایجاد می‌کند.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    public static function appcache($request, $match)
-    {
-        $spa = SaaS_Shortcuts_GetSPAOr404($match[1]);
-        $package = $spa->loadConfig();
-        list ($jsLib, $cssLib, $libs) = SaaS_Views_SPA::loadLibrary($package);
-        
-        // نمایش اصلی
-        $params = array(
-            'spa' => $spa,
-            'title' => 'Pluf PaaS',
-            'jsLibs' => $jsLib,
-            'cssLibs' => $cssLib,
-            'package' => $package
-        );
-        return Pluf_Shortcuts_RenderToResponse('saas.appcache', $params, $request);
-    }
-
-    /**
      * اطلاعات پیاده سازی بسته را تعیین می‌کند
      *
      * هر نرم افزار بر اساس یک پرونده spa.json ایجاد می‌شود. این فراخوانی امکان دسترسی به
