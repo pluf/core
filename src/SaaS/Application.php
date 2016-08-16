@@ -438,6 +438,7 @@ class SaaS_Application extends Pluf_Model
     public static function byDomain($domain)
     {
         $sql = new Pluf_SQL('domain=%s', $domain);
-        return Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        $result = Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        return $result;
     }
 }

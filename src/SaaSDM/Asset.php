@@ -73,14 +73,20 @@ class SaaSDM_Asset extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
 						'size' => 250
-				),	
+				),
+				'mime_type' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => false,
+						'size' => 250
+				),
 				// relations
 				'tenant' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaS_Application',
 						'blank' => false,
 						'relate_name' => 'tenant' 
-				) 
+				)			
+				
 		);
 		
 		$this->_a ['idx'] = array (

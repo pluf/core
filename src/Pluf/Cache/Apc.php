@@ -1,7 +1,7 @@
 <?php
 
 /**
- * APC based cache.
+ * کش مبتنی بر APC
  *
  * You need APC installed on your server for this cache system to
  * work. You can install APC with <code>$ sudo pecl install apc</code>
@@ -26,19 +26,24 @@
  */
 class Pluf_Cache_Apc extends Pluf_Cache {
 	/**
-	 * Prefix added to all the keys.
+	 * پیشوندی که به تمام کلیدهای کش اضافه می‌شود.
+	 * این کلید در تنظیم‌های
+	 * سیستم تعیین می‌شود.
 	 */
 	private $keyprefix = '';
 	
 	/**
-	 * Auto compress the data to save memory against a small
-	 * performance loss.
+	 * فشرده کردن داده‌ها را تعیین می‌کند.
+	 * در صورتی که فشرده سازی فعال شود
+	 * یک مقدار سربار محاسباتی داریم اما حجم استفاده شده کاهش پیدا می‌کنه.
 	 */
 	private $compress = false;
 	
 	/**
-	 * Create the cache object and initialize it from the
-	 * configuration.
+	 * یک نمونه جدید از این کلاس ایجاد می‌کند
+	 *
+	 * نمونه ایجاد شده با استفاده از تنظیم‌هایی که در تنظیم‌های سرور تعیین شده\
+	 * است مقدار دهی و راه اندازی می‌شود.
 	 */
 	public function __construct() {
 		$this->keyprefix = Pluf::f ( 'cache_apc_keyprefix', '' );
@@ -46,15 +51,15 @@ class Pluf_Cache_Apc extends Pluf_Cache {
 	}
 	
 	/**
-	 * Set a value in the cache.
+	 * یک مقدار را در کش قرار می‌دهد
 	 *
 	 * @param
-	 *        	string Key to store the information
+	 *        	string Key کلیدی که برای ذخیره سازی استفاده می‌شود
 	 * @param
-	 *        	mixed Value to store
+	 *        	mixed Value مقداری که باید کش شود
 	 * @param
-	 *        	int Timeout in seconds (null)
-	 * @return bool Success
+	 *        	int Timeout زمان انقضا را بر اساس ثانیه تعیین می‌کند
+	 * @return bool حالت موفقیت انجام این عمل را تعیین می‌کند.
 	 */
 	public function set($key, $value, $timeout = null) {
 		if ($timeout == null)
@@ -76,7 +81,8 @@ class Pluf_Cache_Apc extends Pluf_Cache {
 	 */
 	public function get($key, $default = null) {
 		$success = false;
-        $value = apc_fetch($this->keyprefix.$key, &$success);
+		// NOTE: maso, 1395: این نوع ارسال اشاره‌گر در نسخه ۷ php حذف شده است.
+		$value = apc_fetch ( $this->keyprefix . $key, &$success );
 		if (! $success)
 			return $default;
 		if ($this->compress)

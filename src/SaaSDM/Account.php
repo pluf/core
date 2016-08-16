@@ -1,5 +1,5 @@
 <?php
-class SaaSDM_Accounting extends Pluf_Model {
+class SaaSDM_Account extends Pluf_Model {
 	
 	/**
 	 * @brief مدل اکانتینگ را بارگذاری می‌کند.
@@ -7,9 +7,9 @@ class SaaSDM_Accounting extends Pluf_Model {
 	 * @see Pluf_Model::init()
 	 */
 	function init() {
-		$this->_a ['table'] = 'saasdm_accounting';
-		$this->_a ['model'] = 'SaaSDM_Accounting';
-		$this->_model = 'SaaSDM_Accounting';
+		$this->_a ['table'] = 'saasdm_account';
+		$this->_a ['model'] = 'SaaSDM_Account';
+		$this->_model = 'SaaSDM_Account';
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
