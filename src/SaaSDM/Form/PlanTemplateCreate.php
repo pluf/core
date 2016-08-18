@@ -19,94 +19,78 @@ class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
         $this->tenant = $extra['tenant'];
 //         $this->user = $extra['user'];
 
-        $this->fields['name'] = new Pluf_Form_Field_Varchar(
+        $this->fields['label'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
-                        'label' => 'Name',
-                        'help_text' => 'Name of asset'
+                        'label' => 'plantemplate',
+                        'help_text' => 'label of a plan template'
                 ));
         
-        $this->fields['path'] = new Pluf_Form_Field_Varchar(
+        $this->fields['description'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['size'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['download'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['driver_type'] = new Pluf_Form_Field_Varchar(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['driver_id'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['parent'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['type'] = new Pluf_Form_Field_Varchar(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'description',
+        				'help_text' => 'description of a plan template'
         		));
         $this->fields['content_name'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'content_name',
+        				'help_text' => 'Content Name of a plan template'
         		));
-        $this->fields['description'] = new Pluf_Form_Field_Varchar(
+        $this->fields['period'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'Period',
+        				'help_text' => 'Duration of a plan template'
+        		));
+        $this->fields['max_count'] = new Pluf_Form_Field_Integer(
         		array(
         				'required' => false,
         				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'help_text' => 'Maximum count of allowed downloads in a plan template'
+        		));
+        $this->fields['max_volume'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'max_volume',
+        				'help_text' => 'Maximum volume of plan template'
+        		));
+        $this->fields['price'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'price',
+        				'help_text' => 'Price of a plan template'
+        		));
+        $this->fields['off'] = new Pluf_Form_Field_Integer(
+        		array(
+        				'required' => false,
+        				'label' => 'off',
+        				'help_text' => 'Discount of a plan template'
         		));
         $this->fields['tenant'] = new Pluf_Form_Field_Integer(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));        
+        				'label' => 'Tenant',
+        				'help_text' => 'Related Tenant of plan template'
+        		));
     }
 
     function save ($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Pluf_Exception('cannot save the asset from an invalid form');
+            throw new Pluf_Exception('cannot save the plan template from an invalid form');
         }
-        // Create the asset
-        $asset = new SaaSDM_Asset();
-        $asset->setFromFormData($this->cleaned_data);
-        $asset->path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/dm';
-        if(!is_dir($asset->path)) {
-        	if (false == @mkdir($asset->path, 0777, true)) {
-        		throw new Pluf_Form_Invalid('An error occured when creating the upload path. Please try to send the file again.');
-        	}
-        }
+        // Create the plan template
+        $plantemplate = new SaaSDM_PlanTemplate();
+        $plantemplate->setFromFormData($this->cleaned_data);
+
 //         $asset->user = $this->user;
-        $asset->tenant = $this->tenant;
+
+        $plantemplate->tenant = $this->tenant;
         if ($commit) {
-            $asset->create();
+            $plantemplate->create();
         }
-        return $asset;
+        return $plantemplate;
     }
 }
