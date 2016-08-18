@@ -1,20 +1,22 @@
 <?php
 
 /**
- * ایجاد یک قالب پلن جدید
+ * به روزرسانی یک قالب پلن
  *
- * با استفاده از این فرم می‌توان یک قالب جدید برای پلن ها را ایجاد کرد.
- * 
- * @author mahdi
+ * با استفاده از این فرم می‌توان اطلاعات یک قالب پلن را به روزرسانی کرد.
+ *
+ * @author Mahdi
  *
  */
-class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
+class SaaSDM_Form_PlanTemplateUpdate extends Pluf_Form
 {
+    
+    // public $user = null;
+    public $plantemplate = null;
 
     public $tenant = null;
-//     public $user = null;
 
-    public function initFields ($extra = array())
+    public function initFields($extra = array())
     {
         $this->tenant = $extra['tenant'];
 //         $this->user = $extra['user'];
@@ -76,21 +78,29 @@ class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
         		));
     }
 
-    function save ($commit = true)
+    function update($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Pluf_Exception('cannot save the plan template from an invalid form');
+            throw new Pluf_Exception('cannot save(update) the plan template from an invalid form');
         }
-        // Create the plan template
-        $plantemplate = new SaaSDM_PlanTemplate();
-        $plantemplate->setFromFormData($this->cleaned_data);
-
-//         $asset->user = $this->user;
-
-        $plantemplate->tenant = $this->tenant;
+        // update the asset
+        $this->plantemplate->setFromFormData($this->cleaned_data);
+        
+        if (array_key_exists('file', $this->cleaned_data)) {
+            // Extract information of file
+            $myFile = $this->data['file'];
+            $this->plantemplate->file_name = $myFile['name'];
+            $fileInfo = SaaS_FileUtil::getMimeType($this->plantemplate->file_name);
+            $this->plantemplate->type = $fileInfo[0];
+            // $this->content->file_name = $this->cleaned_data['file'];
+            // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
+            // $this->content->mime_type = $fileInfo[0];
+            $this->plantemplate->size = filesize($this->plantemplate->path . '/' . $this->plantemplate->id);
+        }
+        
         if ($commit) {
-            $plantemplate->create();
+            $this->plantemplate->update();
         }
-        return $plantemplate;
+        return $this->plantemplate;
     }
 }
