@@ -83,8 +83,8 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         $this->fields['tenant'] = new Pluf_Form_Field_Integer(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'tenant',
+        				'help_text' => 'Related Tenant of asset'
         		));        
     }
 
