@@ -24,10 +24,10 @@ class SaaSDM_Views_Asset {
 	}
 	public static function find($request, $match) {
 		$asset = new Pluf_Paginator ( new SaaSDM_Asset () );
-// 		$sql = new Pluf_SQL('tenant=%s', array(
-// 		$request->tenant->id
-// 		));
-// 		$asset->forced_where = $sql;
+		// $sql = new Pluf_SQL('tenant=%s', array(
+		// $request->tenant->id
+		// ));
+		// $asset->forced_where = $sql;
 		$asset->list_filters = array (
 				'id',
 				'name',
@@ -37,16 +37,16 @@ class SaaSDM_Views_Asset {
 				'driver_type',
 				'driver_id' 
 		);
-		$list_display = array ()
+		$list_display = array ();
 
-		;
+		
 		$search_fields = array (
 				'name',
 				'path',
 				'size',
 				'download',
 				'driver_type',
-				'driver_id'  
+				'driver_id' 
 		);
 		$sort_fields = array (
 				'id',
@@ -79,10 +79,10 @@ class SaaSDM_Views_Asset {
 		// اجرای درخواست
 		$extra = array (
 				// 'user' => $request->user,
-				'asset' => $asset 
-		)
-		// 'tenant' => $request->tenant
-		;
+				'asset' => $asset,
+				'tenant' => $request->tenant 
+		);
+		
 		$form = new SaaSDM_Form_AssetUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 		$asset = $form->update ();
 		return new Pluf_HTTP_Response_Json ( $asset );
@@ -95,7 +95,7 @@ class SaaSDM_Views_Asset {
 		// اجرا
 		$asset->delete ();
 		
-		// TODO: فایل مربوط به کانتنت باید حذف شود
+		// TODO: فایل مربوط به است باید حذف شود
 		
 		return new Pluf_HTTP_Response_Json ( $asset );
 	}
@@ -116,35 +116,33 @@ class SaaSDM_Views_Asset {
 	// $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
 	// return $response;
 	// }
-	
-	// public static function updateFile($request, $match)
-	// {
-	// // GET data
-	// $app = $request->tenant;
-	// $content = SaaSCMS_Shortcuts_GetContentOr404($match[1]);
-	// // Check permission
-	// // SaaS_Precondition::userCanAccessApplication($request, $app);
-	// // SaaS_Precondition::userCanAccessResource($request, $content);
-	
-	// if (array_key_exists('file', $request->FILES)) {
-	// $extra = array(
-	// // 'user' => $request->user,
-	// 'content' => $content,
-	// 'tenant' => $request->tenant
-	// );
-	// $form = new SaaSCMS_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
-	// $content = $form->update();
-	// // return new Pluf_HTTP_Response_Json($content);
-	// } else {
-	
-	// // Do
-	// $myfile = fopen($content->file_path . '/' . $content->id, "w") or die("Unable to open file!");
-	// $entityBody = file_get_contents('php://input', 'r');
-	// fwrite($myfile, $entityBody);
-	// fclose($myfile);
-	// $content->file_size = filesize($content->file_path . '/' . $content->id);
-	// $content->update();
-	// }
-	// return new Pluf_HTTP_Response_Json($content);
-	// }
+	public static function updateFile($request, $match) {
+		// GET data
+		$app = $request->tenant;
+		$asset = SaaSCMS_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		// Check permission
+		// SaaS_Precondition::userCanAccessApplication($request, $app);
+		// SaaS_Precondition::userCanAccessResource($request, $content);
+		
+		if (array_key_exists ( 'file', $request->FILES )) {
+			$extra = array (
+					// 'user' => $request->user,
+					'asset' => $asset,
+					'tenant' => $request->tenant 
+			);
+			$form = new SaaSCMS_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+			$asset = $form->update ();
+			// return new Pluf_HTTP_Response_Json($content);
+		} else {
+			
+			// Do
+			$myfile = fopen ( $asset->path . '/' . $asset->id, "w" ) or die ( "Unable to open file!" );
+			$entityBody = file_get_contents ( 'php://input', 'r' );
+			fwrite ( $myfile, $entityBody );
+			fclose ( $myfile );
+			$asset->file_size = filesize ( $asset->path . '/' . $asset->id );
+			$asset->update ();
+		}
+		return new Pluf_HTTP_Response_Json ( $asset );
+	}
 }
