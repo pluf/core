@@ -35,6 +35,11 @@ class SaaSBank_Receipt extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Sequence',
 						'blank' => true,
 				),
+				'secure_id' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => false,
+						'size' => 64,
+				),
 				'amount' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
@@ -50,12 +55,28 @@ class SaaSBank_Receipt extends Pluf_Model {
 						'blank' => true,
 						'size' => 200,
 				),
+				'email' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => true,
+						'size' => 100,
+				),
 				'paied' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => true,
 						'size' => 200,
 				),
-				
+
+				'payRef' => array (
+						'type' => 'Pluf_DB_Field_Varchar',
+						'blank' => true,
+						'size' => 200,
+				),
+				'backend' => array(
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'SaaSBank_Backend',
+						'blank' => false,
+						'relate_name' => 'backend'
+				),
 				/*
 				 * مالک این پرداخت را تعیین می‌کند. این مالک می‌تواند هر موجودیتی در
 				 * سیستم باشد.
@@ -80,26 +101,6 @@ class SaaSBank_Receipt extends Pluf_Model {
 				),
 				
 
-				
-				/*
-				 * درگاهی را تعیین می کند که پرداخت از طریق آن انجام
-				 * شده است.
-				 */
-				'bakend_id'=> array (
-						'type' => 'Pluf_DB_Field_Integer',
-						'blank' => false,
-						'verbose' => 'owner ID' 
-				),
-				'bakend_class'=> array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => false,
-						'size' => 50,
-				),
-				'bakend_data' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 300,
-				),
 				
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
