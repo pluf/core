@@ -15,6 +15,15 @@ class SaaSBank_Views_Engine {
 	 */
 	public function find($request, $match) {
 		// XXX: maso, 1395: 
+		$items = SaaSBank_Service::engines();
+		$page =  array(
+				'items' => $items->getArrayCopy(),
+				'counts' => $items->count(),
+				'current_page' => 0,
+				'items_per_page' => $items->count(),
+				'page_number' => 1
+		);
+        return new Pluf_HTTP_Response_Json($page);
 	}
 
 	/**

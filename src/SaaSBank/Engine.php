@@ -7,29 +7,18 @@
  *
  */
 class SaaSBank_Engine implements JsonSerializable {
-	
+	const ENGINE_PREFIX = 'saasbank_engine_';
 	/**
 	 *
 	 * @return string
 	 */
 	public function getType() {
-		return 'type';
-	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function getTitle() {
-		return 'title';
-	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function getDescription() {
-		return 'description';
+		$name = strtolower ( get_class ( $this ) );
+		// NOTE: maso, 1395: تمام متورهای پرداخت باید در پوشه تعیین شده قرار بگیرند
+		if (strpos ( $name, SaaSBank_Engine::ENGINE_PREFIX ) !== 0) {
+			throw new SaaSBank_Exception_EngineLoad ( 'Engine class must be placed in engine package.' );
+		}
+		return substr ( $name, strlen ( SaaSBank_Engine::ENGINE_PREFIX ) );
 	}
 	
 	/**
@@ -37,7 +26,23 @@ class SaaSBank_Engine implements JsonSerializable {
 	 * @return string
 	 */
 	public function getSymbol() {
-		return 'symbol';
+		return $this->getType();
+	}
+	
+	/**
+	 *
+	 * @return string
+	 */
+	public function getTitle() {
+		return '';
+	}
+	
+	/**
+	 *
+	 * @return string
+	 */
+	public function getDescription() {
+		return '';
 	}
 	
 	/**

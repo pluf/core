@@ -54,4 +54,16 @@ class SaaSBank_Service {
 		// XXX: maso, 1395: به روز کردن حالت پرداخت
 		return $receipt;
 	}
+	
+	/**
+	 * فهرست متورهای پرداخت موجود را تعیین می‌کند
+	 * 
+	 * @return SaaSBank_Engine_Mellat[]|SaaSBank_Engine_Zarinpal[]
+	 */
+	public static function engines(){
+		return array(
+				new SaaSBank_Engine_Mellat(),
+				new SaaSBank_Engine_Zarinpal()
+		);
+	}
 }
