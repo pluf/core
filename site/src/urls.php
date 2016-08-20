@@ -2,11 +2,6 @@
 $base = '';
 return array (
 		array (
-				'regex' => '#^/api/netipet#',
-				'base' => $base,
-				'sub' => include '../netipet/server/src/NetiPet/urls.php' 
-		),
-		array (
 				'regex' => '#^/api/user#',
 				'base' => $base,
 				'sub' => include 'User/urls.php' 

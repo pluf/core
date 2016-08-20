@@ -6,10 +6,10 @@ $cfg = array();
  * Basic Configuration
  * ----------------------------------------------------------------------------
  */
-$cfg['general_domain'] = 'netipet.ir';
-$cfg['general_from_email'] = 'info@netipet.ir';
+$cfg['general_domain'] = 'localhost';
+$cfg['general_from_email'] = 'info@localhost';
 $cfg['general_admin_email'] = array(
-        'info@netipet.ir'
+        'info@localhost'
 );
 
 /*
@@ -25,8 +25,7 @@ $cfg['installed_apps'] = array(
         'SaaS',
 		'SaaSNewspaper',
 		'SaaSCMS',
-		'Wiki',
-		'NetiPet'
+		'Wiki'
 );
 
 /*
@@ -121,7 +120,7 @@ $cfg['db_engine'] = 'MySQL';
 $cfg['db_login'] = 'root';
 $cfg['db_password'] = '';
 $cfg['db_server'] = 'localhost';
-$cfg['db_database'] = 'netipet';
+$cfg['db_database'] = 'test';
 
 /*
  * گاهی نیاز است که در یک پایگاه داده چندین نرم‌افزار را نصب کرد از این رو به هر
@@ -259,29 +258,17 @@ $cfg['saas_freemium_full'] = 5;
  * برنامه‌های کاربردی در مخزن‌های متفاوتی قرار دارند. در این مسیر تمام
  * مخزن‌ها فهرست شده تا سیستم در صورت نیاز آنها را بازیابی و در اختیار
  * کاربران قرار دهد.
- * 
- * به صورت پیش فرض برنامه مدیریت SPA تمام نرم افزارهای نصب شده را در
- * مسیر REPO_BASE/spa ذخیره می‌کند. علاوه بر این دسته‌ای از برنامه‌های 
- * پیش فرض سرور نیز در مسیر SRC_BASE/spa قرار دارد. سایر مسیرهای مورد
- * نیاز باید به صورت دستی اضافه شود.
  */
 $cfg['saas_spa_repository'] = array(
-		SRC_BASE.'/spa',
-		REPO_BASE.'/spa'
+		SRC_BASE.'/spa'
+		// TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
 );
 $cfg['saas_spa_package'] = "/spa.json";
 $cfg['saas_spa_view'] = '/main.html';
-$cfg['saas_spa_default'] = 'netipet-main';
+$cfg['saas_spa_default'] = 'test';
 
-$cfg['saas_tenant_url_prefix'] = 'dd-';
 $cfg['saas_tenant_default'] = 'main';
 $cfg['saas_tenant_match'] = array();
-
-/*
- * کتابخانه‌های جاواسکریپت در این مسیر ایجاد می‌شود
- */
-$cfg['saas_lib_repository'] = REPO_BASE;
-$cfg['saas_lib_index'] = 'lib.json';
 
 return $cfg;
 
