@@ -10,7 +10,8 @@ class SaaSBank_Views_Backend
 {
 
     /**
-     *
+     * فهرست تمام پشتوانه‌ها رو تعیین می‌کنه.
+     * 
      * @param unknown $request            
      * @param unknown $match            
      */
@@ -35,6 +36,14 @@ class SaaSBank_Views_Backend
                 'DESC'
         );
         $pag->setFromRequest($request);
+        if (! Pluf::f('saas_bank_centeral', true)) {
+            // XXX: maso, 1395: این بخش باید تست بشه
+            $pag->forced_where = new Pluf_SQL('tenant=%s' . $false, 
+                    array(
+                            'tenant',
+                            $request->tenant->id
+                    ));
+        }
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
