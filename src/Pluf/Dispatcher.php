@@ -123,43 +123,40 @@ class Pluf_Dispatcher
      */
     public static function match ($req, $firstpass = true)
     {
-        try {
-            $views = $GLOBALS['_PX_views'];
-            $to_match = $req->query;
-            $n = count($views);
-            $i = 0;
-            while ($i < $n) {
-                $ctl = $views[$i];
-                // maso, 1394: بررسی متد لایه کنترل
-                if (isset($ctl['http-method'])) {
-                    $methods = $ctl['http-method'];
-                    if ((! is_array($methods) &&
-                             $ctl['http-method'] !== $req->method) || (is_array(
-                                    $methods) &&
-                             ! in_array($req->method, $methods))) {
-                        $i ++;
-                        continue;
-                    }
+        // پیدا کردن و اجرای نمایش مناسب
+        $views = $GLOBALS['_PX_views'];
+        $to_match = $req->query;
+        $n = count($views);
+        $i = 0;
+        while ($i < $n) {
+            $ctl = $views[$i];
+            // maso, 1394: بررسی متد لایه کنترل
+            if (isset($ctl['http-method'])) {
+                $methods = $ctl['http-method'];
+                if ((! is_array($methods) &&
+                         $ctl['http-method'] !== $req->method) ||
+                         (is_array($methods) &&
+                         ! in_array($req->method, $methods))) {
+                    $i ++;
+                    continue;
                 }
-                if (preg_match($ctl['regex'], $to_match, $match)) {
-                    if (! isset($ctl['sub'])) {
-                        return self::send($req, $ctl, $match);
-                    } else {
-                        // Go in the subtree
-                        $views = $ctl['sub'];
-                        $i = 0;
-                        $n = count($views);
-                        $to_match = substr($to_match, strlen($match[0]));
-                        continue;
-                    }
-                }
-                $i ++;
             }
-        } catch (Pluf_HTTP_Error404 $e) {
-            // echo $e;
-            // Need to add a 404 error handler
-            // something like Pluf::f('404_handler', 'class::method')
+            if (preg_match($ctl['regex'], $to_match, $match)) {
+                if (! isset($ctl['sub'])) {
+                    return self::send($req, $ctl, $match);
+                } else {
+                    // Go in the subtree
+                    $views = $ctl['sub'];
+                    $i = 0;
+                    $n = count($views);
+                    $to_match = substr($to_match, strlen($match[0]));
+                    continue;
+                }
+            }
+            $i ++;
         }
+        
+        // XXX: maso, 1395: این قسمت از کد رو نمی‌دونم چی کار داره می‌کنه
         if ($firstpass and substr($req->query, - 1) != '/') {
             $req->query .= '/';
             $res = self::match($req, false);
@@ -172,6 +169,7 @@ class Pluf_Dispatcher
                 return new Pluf_HTTP_Response_Redirect($url, 301);
             }
         }
+        // نمایش مناسبی یافت نشده است
         throw new Pluf_HTTP_Error404();
     }
 
@@ -208,9 +206,9 @@ class Pluf_Dispatcher
          * 
          * پیش شرط‌ها در خود کنترل باید تعیین شده باشد.
          */
-                isset($m->{$ctl['method'] . '_precond'}) ||
-                // روش اصلی
-                isset($ctl['precond'])) {
+                isset($m->{$ctl['method'] . '_precond'}) || 
+        // روش اصلی
+        isset($ctl['precond'])) {
             // Here we have preconditions to respects. If the "answer"
             // is true, then ok go ahead, if not then it a response so
             // return it or an exception so let it go.

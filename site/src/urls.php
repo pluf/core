@@ -21,10 +21,17 @@ return array (
 				'base' => $base,
 				'sub' => include 'SaaS/urls.php' 
 		),
-		array ( // SaaSNewspaper : online applications
+		// SaaSNewspaper : online applications
+		array ( 
 				'regex' => '#^/api/newspaper#',
 				'base' => $base,
 				'sub' => include 'SaaSNewspaper/urls.php' 
+		),
+		// SaaSBank
+		array ( 
+				'regex' => '#^/api/bank#',
+				'base' => $base,
+				'sub' => include 'SaaSBank/urls.php' 
 		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',

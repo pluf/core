@@ -25,7 +25,8 @@ $cfg['installed_apps'] = array(
         'SaaS',
 		'SaaSNewspaper',
 		'SaaSCMS',
-		'Wiki'
+		'Wiki',
+		'SaaSBank'
 );
 
 /*

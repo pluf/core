@@ -17,10 +17,10 @@ class SaaSBank_Views_Engine {
 		// XXX: maso, 1395: 
 		$items = SaaSBank_Service::engines();
 		$page =  array(
-				'items' => $items->getArrayCopy(),
-				'counts' => $items->count(),
+				'items' => $items,
+				'counts' => count($items),
 				'current_page' => 0,
-				'items_per_page' => $items->count(),
+				'items_per_page' => count($items),
 				'page_number' => 1
 		);
         return new Pluf_HTTP_Response_Json($page);
