@@ -5,17 +5,36 @@ return array(
         array(
                 'regex' => '#^/$#',
                 'model' => 'SaaSBank_Views_Main',
-                'method' => 'modeul'
+                'method' => 'modeul',
+                'http-method' => array(
+                        'GET'
+                )
         ),
-        
+        // متورهای پرداخت
         array(
                 'regex' => '#^/engine/find$#',
                 'model' => 'SaaSBank_Views_Engine',
-                'method' => 'find'
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
         ),
         array(
                 'regex' => '#^/engine/(?P<type>.+)$#',
                 'model' => 'SaaSBank_Views_Engine',
-                'method' => 'get'
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        
+        // پشتوانه‌ها
+        array(
+                'regex' => '#^/backend/find$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
         )
 );

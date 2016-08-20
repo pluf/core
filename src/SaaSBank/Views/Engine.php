@@ -1,5 +1,5 @@
 <?php
-Pluf::loadFunction('SaaSBank_Shortcuts_GetEnginer404');
+Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
 
 /**
  *
@@ -43,6 +43,6 @@ class SaaSBank_Views_Engine
     public function get ($request, $match)
     {
         return new Pluf_HTTP_Response_Json(
-                SaaSBank_Shortcuts_GetEnginer404($match['type']));
+                SaaSBank_Shortcuts_GetEngineOr404($match['type']));
     }
 }

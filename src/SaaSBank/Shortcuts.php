@@ -24,7 +24,7 @@ function SaaSBank_Shortcuts_receiptFactory ($object)
  * @throws SaaSBank_Exception_EngineNotFound
  * @return unknown
  */
-function SaaSBank_Shortcuts_GetEnginer404 ($type)
+function SaaSBank_Shortcuts_GetEngineOr404 ($type)
 {
     $items = SaaSBank_Service::engines();
     foreach ($items as $item) {
