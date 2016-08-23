@@ -1,24 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-{cfg 'general_domain', '', false, 'cfg_'} 
-
+{cfg 'general_domain', '', false, 'cfg_'}
+{cfg 'general_protocol', 'http', false, 'cfg_'}
 <url>
-	<loc>{$cfg_general_domain}</loc>
+	<loc>{$cfg_general_protocol}://{$cfg_general_domain}</loc>
 	<lastmod>{$tenant->modif_dtime}</lastmod>
 	<changefreq>weekly</changefreq>
 	<priority>0.6</priority>
 </url>
 {if $tenant->domain}
 <url>
-	<loc>{$tenant->domain}</loc>
+	<loc>{$cfg_general_protocol}://{$tenant->domain}</loc>
 	<lastmod>{$tenant->modif_dtime}</lastmod>
 	<changefreq>weekly</changefreq>
 	<priority>0.6</priority>
 </url>
 {/if}
 <url>
-	<loc>{$tenant->subdomain}.{$cfg_general_domain}/</loc>
+	<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/</loc>
 	<lastmod>{$tenant->modif_dtime}</lastmod>
 	<changefreq>weekly</changefreq>
 	<priority>0.6</priority>
@@ -26,14 +24,14 @@
 {foreach $spaList as $spa}
 	{if $tenant->domain}
 		<url>
-			<loc>{$tenant->domain}/{$spa->name}</loc>
+			<loc>{$cfg_general_protocol}://{$tenant->domain}/{$spa->name}</loc>
 			<lastmod>{$spa->modif_dtime}</lastmod>
 			<changefreq>weekly</changefreq>
 			<priority>0.5</priority>
 		</url>
 	{/if}
 	<url>
-		<loc>{$tenant->subdomain}.{$cfg_general_domain}/{$spa->name}@/}</loc>
+		<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/{$spa->name}@/}</loc>
 		<lastmod>{$spa->modif_dtime}</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.5</priority>
