@@ -36,5 +36,22 @@ return array(
                 'http-method' => array(
                         'GET'
                 )
-        )
+        ),
+        array(
+                'regex' => '#^/backend/new$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'createParameter',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/backend/new$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        
 );
