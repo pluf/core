@@ -15,14 +15,12 @@ class SaaS_Middleware_TenantFromConfig
             return false;
         }
         
-        try{
             $appName = Pluf::f('saas_tenant_default');
             $app = SaaS_Application::bySubDomain($appName);
-            $request->tenant = $app;
-            $request->application = $app;
-        } catch(Exception $ex){
-            // Add log
-        }
+            if($app){
+                $request->tenant = $app;
+                $request->application = $app;
+            }
         return false;
     }
 }

@@ -39,18 +39,17 @@ try {
 	echo ("Update SPAs........................................ok\n");
 	
 	debug ( '# Default tenant' );
-	$emain = SaaS_SPA::getByName ( 'donate-main' );
 	
 	$tenant = new SaaS_Application ();
 	$tenant->title = 'Default Tenant';
 	$tenant->description = 'Auto generated tenant';
 	$tenant->subdomain = Pluf::f ( 'saas_tenant_default', 'main' );
 	$tenant->domain = Pluf::f ( 'general_domain', 'donate.com' );
-	$tenant->spa = $emain;
+// 	$tenant->spa = $emain;
 	$tenant->create ();
 	
 	Pluf_RowPermission::add ( $user, $tenant, 'SaaS.software-owner' );
-	Pluf_RowPermission::add ( $tenant, $emain, 'SaaS.spa-anonymous-access' );
+// 	Pluf_RowPermission::add ( $tenant, $emain, 'SaaS.spa-anonymous-access' );
 } catch ( Exception $e ) {
 	var_export ( $e );
 }
