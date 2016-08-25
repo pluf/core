@@ -8,7 +8,7 @@ Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
  */
 class SaaSBank_Views_Backend
 {
-
+    // XXX: maso, 1395: add security
     /**
      * فهرست تمام پشتوانه‌ها رو تعیین می‌کنه.
      *
@@ -90,7 +90,10 @@ class SaaSBank_Views_Backend
      * @param unknown $match            
      */
     public function get ($request, $match)
-    {}
+    {
+        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        return new Pluf_HTTP_Response_Json($backend);
+    }
 
     /**
      *
@@ -98,7 +101,11 @@ class SaaSBank_Views_Backend
      * @param unknown $match            
      */
     public function delete ($request, $match)
-    {}
+    {
+        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        $backend->delete();
+        return new Pluf_HTTP_Response_Json($backend);
+    }
 
     /**
      *
@@ -106,5 +113,13 @@ class SaaSBank_Views_Backend
      * @param unknown $match            
      */
     public function update ($request, $match)
-    {}
+    {
+        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        $params = array(
+                'backend' => $backend
+        );
+        $form = new SaaSBank_Form_BackendUpdate($request->REQUEST, $params);
+        $backend = $form->update();
+        return new Pluf_HTTP_Response_Json($backend);
+    }
 }

@@ -53,5 +53,29 @@ return array(
                         'POST'
                 )
         ),
+        array(
+                'regex' => '#^/backend/(?P<id>\d+)$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/backend/(?P<id>\d+)$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/backend/(?P<id>\d+)$#',
+                'model' => 'SaaSBank_Views_Backend',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
         
 );

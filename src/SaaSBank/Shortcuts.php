@@ -34,3 +34,18 @@ function SaaSBank_Shortcuts_GetEngineOr404 ($type)
     }
     throw new SaaSBank_Exception_EngineNotFound();
 }
+
+/**
+ * 
+ * @param unknown $id
+ * @throws Pluf_HTTP_Error404
+ * @return SaaSBank_Backend
+ */
+function SaaSBank_Shortcuts_GetBankOr404 ($id)
+{
+    $item = new SaaSBank_Backend($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404("Backend not found (" . $id . ")");
+}

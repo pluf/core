@@ -1,4 +1,5 @@
 <?php
+Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
 
 class SaaSBank_Backend extends Pluf_Model
 {
@@ -141,5 +142,14 @@ class SaaSBank_Backend extends Pluf_Model
         }
         $this->_cache['getSelect'] = implode(', ', $select);
         return $this->_cache['getSelect'];
+    }
+
+    /**
+     * 
+     * @return unknown
+     */
+    public function get_engine ()
+    {
+        return SaaSBank_Shortcuts_GetEngineOr404($this->engine);
     }
 }
