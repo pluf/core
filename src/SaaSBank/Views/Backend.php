@@ -63,12 +63,26 @@ class SaaSBank_Views_Backend
     }
 
     /**
+     * یک نمونه جدید از متور پرداخت ایجاد می‌کند.
      *
      * @param unknown $request            
      * @param unknown $match            
      */
     public function create ($request, $match)
-    {}
+    {
+        $type = 'not set';
+        if (array_key_exists('type', $request->REQUEST)) {
+            $type = $request->REQUEST['type'];
+        }
+        $engine = SaaSBank_Shortcuts_GetEngineOr404($type);
+        $params = array(
+                'tenant' => $request->tenant,
+                'engine' => $engine
+        );
+        $form = new SaaSBank_Form_BackendNew($request->REQUEST, $params);
+        $backend = $form->save();
+        return new Pluf_HTTP_Response_Json($backend);
+    }
 
     /**
      *
