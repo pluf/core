@@ -1,3 +1,7 @@
 .project
 .buildpath
 .settings
+
+
+# Examples
+/site/tenant

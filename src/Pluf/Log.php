@@ -1,7 +1,7 @@
 <?php
 
 /**
- * High performance logging infrastructure.
+ * سیستم لوگ با کارایی بالا
  *
  * Logging while keeping a high performance in production is hard, it
  * is even harder if we want to track the point in the code where the

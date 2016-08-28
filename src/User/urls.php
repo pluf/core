@@ -29,9 +29,6 @@ return array(
         'regex' => '#^/account$#',
         'model' => 'User_Views_User',
         'method' => 'account',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        ),
         'http-method' => 'GET'
     ),
     array( // اطلاعات کاربر را به روز می‌کند
