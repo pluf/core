@@ -24,6 +24,7 @@ class SaaSDM_Account extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Boolean',
 						'blank' => false,
 				),
+		        // TODO: Hadi, 1395-06-02: باید ارتباط با Pluf_User نیز به عنوان کلید خارجی اضافه شود
 				// relations
 				'tenant' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
