@@ -54,6 +54,37 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
     public function create ()
     {
         // XXX: maso, 1395: ایجاد یک پرداخت
+        $MerchantID = 'test'; // Required
+        $Amount = 1000; // Amount will be based on Toman - Required
+        $Description = 'توضیحات تراکنش تستی'; // Required
+        $Email = 'UserEmail@Mail.Com'; // Optional
+        $Mobile = '09123456789'; // Optional
+        $CallbackURL = 'http://www.yoursoteaddress.ir/verify.php'; // Required
+        
+        $client = new SoapClient(
+                'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl', 
+                array(
+                        'encoding' => 'UTF-8','verifypeer' => false, 'verifyhost' => false,
+                ));
+        
+        $result = $client->PaymentRequest(
+                [
+                        'MerchantID' => $MerchantID,
+                        'Amount' => $Amount,
+                        'Description' => $Description,
+                        'Email' => $Email,
+                        'Mobile' => $Mobile,
+                        'CallbackURL' => $CallbackURL
+                ]);
+        
+        // Redirect to URL You can do it also by creating a form
+        if ($result->Status == 100) {
+            Header(
+                    'Location: https://sandbox.zarinpal.com/pg/StartPay/' .
+                             $result->Authority);
+        } else {
+            echo 'ERR: ' . $result->Status;
+        }
     }
 
     /**

@@ -78,4 +78,40 @@ return array(
                 )
         ),
         
+        /*
+         * Receipt
+         */
+        array(
+                'regex' => '#^/receipt/find$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/new$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/(?P<secureId>.+)$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/(?P<secureId>.+)$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
+        
 );
