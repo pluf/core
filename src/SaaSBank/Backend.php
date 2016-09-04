@@ -4,6 +4,10 @@ Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
 class SaaSBank_Backend extends Pluf_Model
 {
 
+    public $data = array();
+
+    public $touched = false;
+
     /**
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
@@ -83,6 +87,7 @@ class SaaSBank_Backend extends Pluf_Model
      */
     function preSave ($create = false)
     {
+        $this->meta = serialize($this->data);
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
@@ -90,40 +95,66 @@ class SaaSBank_Backend extends Pluf_Model
     }
 
     /**
-     * یک مقدار جدید در داده‌ها ایجاد می‌کند
+     * داده‌های ذخیره شده را بازیابی می‌کند
      *
-     * مقدار جدید با کلید $key و مقدار $value ایجاد می‌شود.
-     * کلید یک مقدار رشته است که باید به صورت کیتا تعیین شود.
-     *
-     * @param String $key            
-     * @param Object $value            
+     * تمام داده‌هایی که با کلید payMeta ذخیره شده را بازیابی می‌کند.
      */
-    public function putMeta ($key, $value)
+    function restore ()
     {
-        // TODO: maso, 1395: قراردادن یک مقدار در داده‌ها
-        return $this;
+        $this->data = unserialize($this->meta);
     }
 
     /**
+     * تمام داده‌های موجود در نشت را پاک می‌کند.
      *
-     * @param unknown $key            
+     * تمام داده‌های ذخیره شده در نشست را پاک می‌کند.
      */
-    public function getMeta ($key)
+    function clear ()
     {
-        // TODO: maso, 1395: گرفتن یک مقدار از داده‌ها
+        $this->data = array();
+        $this->touched = true;
     }
 
     /**
-     * کلید تعیین شده را از متا حذف می‌کند
+     * تعیین یک داده در نشست
      *
-     * این تابع در صورتی که متا داده وجود داشته باشد آن را از مدل داده‌ای حذف
-     * می‌کند.
+     * با استفاده از این فراخوانی می‌توان یک داده با کلید جدید در نشست ایجاد
+     * کرد. این کلید برای دستیابی‌های
+     * بعد مورد استفاده قرار خواهد گرفت.
      *
-     * @param unknown $key            
+     * @param
+     *            کلید داده
+     * @param
+     *            داده مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
+     *            حذف است.
      */
-    public function removeMeta ($key)
+    function setMeta ($key, $value = null)
     {
-        // TODO: maso, 1395: کلید تعیین شده از داده‌های متا حذف می‌شود.
+        if (is_null($value)) {
+            unset($this->data[$key]);
+        } else {
+            $this->data[$key] = $value;
+        }
+        $this->touched = true;
+    }
+    
+    /**
+     * داده معادل با کلید تعیین شده را برمی‌گرداند
+     *
+     * در صورتی که داده تعیین نشده بود مقدار پیش فرض تعیین شده به عنوان نتیجه
+     * این فراخوانی
+     * برگردانده خواهد شد.
+     */
+    function getMeta ($key = null, $default = '')
+    {
+        if (is_null($key)) {
+            return parent::getData();
+        }
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        } else {
+            return $default;
+        }
     }
 
     private function getGlobalSelect ()
@@ -145,7 +176,7 @@ class SaaSBank_Backend extends Pluf_Model
     }
 
     /**
-     * 
+     *
      * @return unknown
      */
     public function get_engine ()

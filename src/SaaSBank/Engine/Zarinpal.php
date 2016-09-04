@@ -8,6 +8,10 @@
 class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
 {
 
+    const MerchantID = 'MerchantID';
+
+    var $client = false;
+
     /*
      *
      */
@@ -49,48 +53,88 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         );
     }
 
-    /**
+    /*
      */
-    public function create ()
+    public function create ($receipt)
     {
-        // XXX: maso, 1395: ایجاد یک پرداخت
-        $MerchantID = 'test'; // Required
-        $Amount = 1000; // Amount will be based on Toman - Required
-        $Description = 'توضیحات تراکنش تستی'; // Required
-        $Email = 'UserEmail@Mail.Com'; // Optional
-        $Mobile = '09123456789'; // Optional
-        $CallbackURL = 'http://www.yoursoteaddress.ir/verify.php'; // Required
+        $backend = $receipt->get_backend();
+        $MerchantID = $backend->get(SaaSBank_Engine_Zarinpal::MerchantID);
+        $Authority = $receipt->getMeta('Authority', null);
+        // Check
+        Pluf_Assert::assertNull($Authority, 'Receipt is created before');
+        Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
+        Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
         
-        $client = new SoapClient(
-                'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl', 
-                array(
-                        'encoding' => 'UTF-8','verifypeer' => false, 'verifyhost' => false,
-                ));
+        if (Pluf::f('SaaSBank_Debug', false)) {
+            $receipt->putMeta('Authority', 'back engine is in debug mode');
+            return;
+        }
         
+        // maso, 1395: ایجاد یک پرداخت
+        $client = $this->getClient();
         $result = $client->PaymentRequest(
                 [
                         'MerchantID' => $MerchantID,
-                        'Amount' => $Amount,
-                        'Description' => $Description,
-                        'Email' => $Email,
-                        'Mobile' => $Mobile,
-                        'CallbackURL' => $CallbackURL
+                        'Amount' => $receipt->amount,
+                        'Description' => $receipt->description,
+                        'Email' => $receipt->email,
+                        'Mobile' => $receipt->phone,
+                        'CallbackURL' => $receipt->callbackURL
                 ]);
         
         // Redirect to URL You can do it also by creating a form
-        if ($result->Status == 100) {
-            Header(
-                    'Location: https://sandbox.zarinpal.com/pg/StartPay/' .
-                             $result->Authority);
-        } else {
-            echo 'ERR: ' . $result->Status;
+        if ($result->Status != 100) {
+            throw new SaaSBank_Exception_Engine('fail to create payment');
         }
+        $receipt->putMeta('Authority', $result->Authority);
     }
 
     /**
      */
-    public function update ()
+    public function update ($receipt)
     {
-        // XXX: maso, 1395: ایجاد یک پرداخت
+        $backend = $receipt->get_backend();
+        $MerchantID = $backend->get(SaaSBank_Engine_Zarinpal::MerchantID);
+        $Authority = $receipt->getMeta('Authority', null);
+        // Check
+        Pluf_Assert::assertNotNull($Authority, 'Receipt is created before');
+        Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
+        Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
+        
+        if (Pluf::f('SaaSBank_Debug', false)) {
+            $receipt->payRef = 'back engine is in debug mode';
+            return;
+        }
+        
+        // maso, 1395: تایید یک پرداخت
+        // $wsdlCheck = 'Location: https://sandbox.zarinpal.com/pg/StartPay/'
+        // .$result->Authority
+        $result = $client->PaymentVerification(
+                [
+                        'MerchantID' => $MerchantID,
+                        'Authority' => $Authority,
+                        'Amount' => $receipt->amount
+                ]);
+        if ($result->Status == 100) {
+            throw new SaaSBank_Exception_Engine('fail to check payment');
+        }
+            $receipt->payRef = $result->RefID;
+    }
+
+    private function getClient ()
+    {
+        if ($this->client) {
+            return $this->client;
+        }
+        $wsdl = 'https://sandbox.zarinpal.com/pg/services/WebGate/wsdl';
+        $this->client = new SoapClient($wsdl, 
+                array(
+                        'encoding' => 'UTF-8',
+                        'soap_version' => SOAP_1_1,
+                        'trace' => 0,
+                        'exceptions' => 1,
+                        'connection_timeout' => 180
+                ));
+        return $this->client;
     }
 }

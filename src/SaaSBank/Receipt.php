@@ -13,131 +13,209 @@
  * @author maso
  *
  */
-class SaaSBank_Receipt extends Pluf_Model {
-	
-	/**
-	 * @brief مدل داده‌ای را بارگذاری می‌کند.
-	 *
-	 * تمام فیلدهای مورد نیاز برای این مدل داده‌ای در این متد تعیین شده و به
-	 * صورت کامل ساختار دهی می‌شود.
-	 *
-	 * @see Pluf_Model::init()
-	 */
-	function init() {
-		$this->_a ['table'] = 'saasbank_receipt';
-		$this->_a ['model'] = 'SaaSBank_Receipt';
-		$this->_model = 'SaaSBank_Receipt';
-		$this->_a ['cols'] = array (
+class SaaSBank_Receipt extends Pluf_Model
+{
+
+    public $data = array();
+    public $touched = false;
+    
+    /**
+     * @brief مدل داده‌ای را بارگذاری می‌کند.
+     *
+     * تمام فیلدهای مورد نیاز برای این مدل داده‌ای در این متد تعیین شده و به
+     * صورت کامل ساختار دهی می‌شود.
+     *
+     * @see Pluf_Model::init()
+     */
+    function init ()
+    {
+        $this->_a['table'] = 'saasbank_receipt';
+        $this->_a['model'] = 'SaaSBank_Receipt';
+        $this->_model = 'SaaSBank_Receipt';
+        $this->_a['cols'] = array (
 				/*
 				 * داده‌های عمومی برای یک پرداخت
 				 */
-				'id' => array (
-						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => true,
-				),
-				'secure_id' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => false,
-						'size' => 64,
-				),
-				'amount' => array (
-						'type' => 'Pluf_DB_Field_Integer',
-						'blank' => false,
-						'unique' => false,
-				),
-				'title' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => false,
-						'size' => 50,
-				),
-				'description' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 200,
-				),
-				'email' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 100,
-				),
-				'paied' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 200,
-				),
-
-				'payRef' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => true,
-						'size' => 200,
-				),
-				'backend' => array(
-						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaSBank_Backend',
-						'blank' => false,
-						'relate_name' => 'backend'
-				),
+				'id' => array(
+                        'type' => 'Pluf_DB_Field_Sequence',
+                        'blank' => true
+                ),
+                'secure_id' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 64
+                ),
+                'amount' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'unique' => false
+                ),
+                'title' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50
+                ),
+                'description' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                'email' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 100
+                ),
+                'phone' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 100
+                ),
+                'callbackURL' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                
+                'payRef' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                'payMeta' => array(
+                        'type' => 'Pluf_DB_Field_Text',
+                        'blank' => false
+                ),
+                'backend' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaSBank_Backend',
+                        'blank' => false,
+                        'relate_name' => 'backend'
+                ),
 				/*
 				 * مالک این پرداخت را تعیین می‌کند. این مالک می‌تواند هر موجودیتی در
 				 * سیستم باشد.
 				 */
 				'tenant' => array(
-						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaS_Application',
-						'blank' => false,
-						'relate_name' => 'tenant'
-				),
-				'owner_id' => array (
-						'type' => 'Pluf_DB_Field_Integer',
-						'blank' => false,
-						'verbose' => 'owner ID' 
-				),
-				'owner_class' => array (
-						'type' => 'Pluf_DB_Field_Varchar',
-						'blank' => false,
-						'size' => 50,
-						'verbose' => 'owner class',
-						'help_text' => 'For example Pluf_User or Pluf_Group.' 
-				),
-				
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'relate_name' => 'tenant'
+                ),
+                'owner_id' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'verbose' => 'owner ID'
+                ),
+                'owner_class' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50
+                ),
+                
+                'creation_dtime' => array(
+                        'type' => 'Pluf_DB_Field_Datetime',
+                        'blank' => true,
+                        'verbose' => 'creation date'
+                ),
+                'modif_dtime' => array(
+                        'type' => 'Pluf_DB_Field_Datetime',
+                        'blank' => true,
+                        'verbose' => 'modification date'
+                )
+        );
+        $this->_a['views'] = array();
+    }
 
-				
-				'creation_dtime' => array (
-						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true,
-						'verbose' => 'creation date' 
-				),
-				'modif_dtime' => array (
-						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true,
-						'verbose' => 'modification date' 
-				) 
-		);
-		$this->_a ['views'] = array ();
-	}
-	
-	/**
-	 * پیش ذخیره را انجام می‌دهد
-	 *
-	 * در این فرآیند نیازهای ابتدایی سیستم به آن اضافه می‌شود. این نیازها مقادیری هستند که
-	 * در زمان ایجاد باید تعیین شوند. از این جمله می‌توان به کاربر و تاریخ اشاره کرد.
-	 *
-	 * @param $create حالت
-	 *        	ساخت یا به روز رسانی را تعیین می‌کند
-	 */
-	function preSave($create = false) {
-		if ($this->id == '') {
-			$this->creation_dtime = gmdate ( 'Y-m-d H:i:s' );
-		}
-		$this->modif_dtime = gmdate ( 'Y-m-d H:i:s' );
-	}
-	
-	/**
-	 * حالت آپارتمان ایجاد شده را به روز می‌کند
-	 *
-	 * @see Pluf_Model::postSave()
-	 */
-	function postSave($create = false) {
-		//
-	}
+    /**
+     * پیش ذخیره را انجام می‌دهد
+     *
+     * در این فرآیند نیازهای ابتدایی سیستم به آن اضافه می‌شود. این نیازها
+     * مقادیری هستند که
+     * در زمان ایجاد باید تعیین شوند. از این جمله می‌توان به کاربر و تاریخ اشاره
+     * کرد.
+     *
+     * @param $create حالت
+     *            ساخت یا به روز رسانی را تعیین می‌کند
+     */
+    function preSave ($create = false)
+    {
+        $this->payMeta = serialize($this->data);
+        if ($this->id == '') {
+            $this->creation_dtime = gmdate('Y-m-d H:i:s');
+        }
+        $this->modif_dtime = gmdate('Y-m-d H:i:s');
+    }
+
+    /**
+     * حالت آپارتمان ایجاد شده را به روز می‌کند
+     *
+     * @see Pluf_Model::postSave()
+     */
+    function postSave ($create = false)
+    {
+        //
+    }
+
+    /**
+     * داده‌های ذخیره شده را بازیابی می‌کند
+     *
+     * تمام داده‌هایی که با کلید payMeta ذخیره شده را بازیابی می‌کند.
+     */
+    function restore ()
+    {
+        $this->data = unserialize($this->payMeta);
+    }
+
+    /**
+     * تمام داده‌های موجود در نشت را پاک می‌کند.
+     *
+     * تمام داده‌های ذخیره شده در نشست را پاک می‌کند.
+     */
+    function clear ()
+    {
+        $this->data = array();
+        $this->touched = true;
+    }
+
+    /**
+     * تعیین یک داده در نشست
+     *
+     * با استفاده از این فراخوانی می‌توان یک داده با کلید جدید در نشست ایجاد
+     * کرد. این کلید برای دستیابی‌های
+     * بعد مورد استفاده قرار خواهد گرفت.
+     *
+     * @param
+     *            کلید داده
+     * @param
+     *            داده مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
+     *            حذف است.
+     */
+    function setMeta ($key, $value = null)
+    {
+        if (is_null($value)) {
+            unset($this->data[$key]);
+        } else {
+            $this->data[$key] = $value;
+        }
+        $this->touched = true;
+    }
+
+    /**
+     * داده معادل با کلید تعیین شده را برمی‌گرداند
+     *
+     * در صورتی که داده تعیین نشده بود مقدار پیش فرض تعیین شده به عنوان نتیجه
+     * این فراخوانی
+     * برگردانده خواهد شد.
+     */
+    function getMeta ($key = null, $default = '')
+    {
+        if (is_null($key)) {
+            return parent::getData();
+        }
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        } else {
+            return $default;
+        }
+    }
 }
