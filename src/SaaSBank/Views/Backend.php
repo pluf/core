@@ -38,7 +38,7 @@ class SaaSBank_Views_Backend
         $pag->setFromRequest($request);
         if (! Pluf::f('saas_bank_centeral', true)) {
             // XXX: maso, 1395: این بخش باید تست بشه
-            $pag->forced_where = new Pluf_SQL('tenant=%s' . $false, 
+            $pag->forced_where = new Pluf_SQL('tenant=%s', 
                     array(
                             'tenant',
                             $request->tenant->id

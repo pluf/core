@@ -36,8 +36,8 @@ function SaaSBank_Shortcuts_GetEngineOr404 ($type)
 }
 
 /**
- * 
- * @param unknown $id
+ *
+ * @param unknown $id            
  * @throws Pluf_HTTP_Error404
  * @return SaaSBank_Backend
  */
@@ -48,4 +48,19 @@ function SaaSBank_Shortcuts_GetBankOr404 ($id)
         return $item;
     }
     throw new Pluf_HTTP_Error404("Backend not found (" . $id . ")");
+}
+
+/**
+ *
+ * @param unknown $id            
+ * @throws Pluf_HTTP_Error404
+ * @return SaaSBank_Receipt
+ */
+function SaaSBank_Shortcuts_GetReceiptOr404 ($id)
+{
+    $item = new SaaSBank_Receipt($id);
+    if ((int) $id > 0 && $item->id == $id) {
+        return $item;
+    }
+    throw new Pluf_HTTP_Error404("Receipt not found (" . $id . ")");
 }

@@ -13,12 +13,31 @@
 class Pluf_Assert
 {
 
+    public static function assertNull ($value, $message)
+    {
+        if (! is_null($value)) {
+            // TODO: maso, 1395:
+        }
+    }
+
     public static function assertNotNull ($value, $message)
-    {}
+    {
+        if (is_null($value)) {
+            // TODO: maso, 1395:
+        }
+    }
 
     public static function assertTrue ($value, $message)
-    {}
+    {
+        if (! $value) {
+            // TODO: maso, 1395:
+        }
+    }
 
     public static function assertFalse ($value, $message)
-    {}
+    {
+        if ($value) {
+            // TODO: maso, 1395:
+        }
+    }
 }

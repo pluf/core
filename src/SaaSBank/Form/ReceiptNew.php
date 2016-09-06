@@ -56,6 +56,11 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
                         'required' => true,
                         'label' => 'callbackURL'
                 ));
+        $this->fields['backend'] = new Pluf_Form_Field_Integer(
+                array(
+                        'required' => true,
+                        'label' => 'backend'
+                ));
     }
 
     function clean_backend ()
@@ -66,7 +71,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
             throw new Pluf_Exception('backend not found');
         }
         // XXX: maso, 1395: گرفتن پشتوانه
-        return $backend;
+        return $backend->id;
     }
 
     /**
@@ -86,7 +91,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
         $receipt = new SaaSBank_Receipt();
         $receipt->setFromFormData($this->cleaned_data);
         $receipt->tenant = $this->tenant;
-        $receipt->secure_id = getSecureKey;
+        $receipt->secure_id = $this->getSecureKey();
         // موجودیت قرار گیرد.
         if ($commit) {
             if (! $receipt->create()) {
@@ -96,7 +101,12 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
         return $receipt;
     }
 
-    function getSecureKey ()
+    /**
+     * یک کد جدید برای موجودیت ایجاد می‌کند.
+     *
+     * @return unknown
+     */
+    private function getSecureKey ()
     {
         $recipt = new SaaSBank_Receipt();
         while (1) {

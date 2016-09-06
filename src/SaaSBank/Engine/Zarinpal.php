@@ -65,8 +65,8 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
         Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
         
-        if (Pluf::f('SaaSBank_Debug', false)) {
-            $receipt->putMeta('Authority', 'back engine is in debug mode');
+        if (Pluf::f('saas_bank_debug', false)) {
+            $receipt->setMeta('Authority', 'back engine is in debug mode');
             return;
         }
         
@@ -101,7 +101,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
         Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
         
-        if (Pluf::f('SaaSBank_Debug', false)) {
+        if (Pluf::f('saas_bank_debug', false)) {
             $receipt->payRef = 'back engine is in debug mode';
             return;
         }
@@ -109,6 +109,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         // maso, 1395: تایید یک پرداخت
         // $wsdlCheck = 'Location: https://sandbox.zarinpal.com/pg/StartPay/'
         // .$result->Authority
+        $client = $this->getClient();
         $result = $client->PaymentVerification(
                 [
                         'MerchantID' => $MerchantID,

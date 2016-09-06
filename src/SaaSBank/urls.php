@@ -98,7 +98,7 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/receipt/(?P<secureId>.+)$#',
+                'regex' => '#^/receipt/(?P<id>\d+)$#',
                 'model' => 'SaaSBank_Views_Receipt',
                 'method' => 'get',
                 'http-method' => array(
@@ -106,12 +106,35 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/receipt/(?P<secureId>.+)$#',
+                'regex' => '#^/receipt/(?P<secure_id>.+)$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'getBySecureId',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/(?P<id>\d+)$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/(?P<secure_id>.+)$#',
+                'model' => 'SaaSBank_Views_Receipt',
+                'method' => 'updateBySecureId',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/receipt/(?P<id>.+)$#',
                 'model' => 'SaaSBank_Views_Receipt',
                 'method' => 'delete',
                 'http-method' => array(
                         'DELETE'
                 )
-        ),
-        
+        )
 );
