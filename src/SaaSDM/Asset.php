@@ -33,17 +33,17 @@ class SaaSDM_Asset extends Pluf_Model {
 				'download' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				'driver_type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				'driver_id' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
@@ -62,22 +62,22 @@ class SaaSDM_Asset extends Pluf_Model {
 				'type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				'content_name' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 2500
+						'size' => 2500 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				'mime_type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250
+						'size' => 250 
 				),
 				// relations
 				'tenant' => array (
@@ -85,9 +85,9 @@ class SaaSDM_Asset extends Pluf_Model {
 						'model' => 'SaaS_Application',
 						'blank' => false,
 						'relate_name' => 'tenant' 
-				)			
-				
-		);
+				) 
+		)
+		;
 		
 		$this->_a ['idx'] = array (
 				'page_class_idx' => array (
@@ -121,5 +121,14 @@ class SaaSDM_Asset extends Pluf_Model {
 	 */
 	function postSave($create = false) {
 		//
+	}
+	/**
+	 * \brief عملیاتی که قبل از پاک شدن است انجام می‌شود
+	 *
+	 * عملیاتی که قبل از پاک شدن است انجام می‌شود
+	 *  در این متد فایل مربوط به است حذف می شود. این عملیات قابل بازگشت نیست
+	 */
+	function preDelete() {
+		unlink ( $this->path . '/' . $this->id );
 	}
 }

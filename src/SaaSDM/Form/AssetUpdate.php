@@ -118,7 +118,8 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
             $myFile = $this->data['file'];
             $this->asset->file_name = $myFile['name'];
             $fileInfo = SaaS_FileUtil::getMimeType($this->asset->file_name);
-            $this->asset->type = $fileInfo[0];
+            $this->asset->mime_type = $fileInfo[0];
+            
             // $this->content->file_name = $this->cleaned_data['file'];
             // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
             // $this->content->mime_type = $fileInfo[0];

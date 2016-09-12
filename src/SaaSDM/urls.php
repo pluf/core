@@ -48,10 +48,10 @@ return array (
 				'http-method' => 'POST' 
 		),
 		array ( // Link urls
-				'regex' => '#^/link/new$#',
+				'regex' => '#^/(?P<asset_id>\d+)/link$#',
 				'model' => 'SaaSDM_Views_Link',
 				'method' => 'create',
-				'http-method' => 'POST' 
+				'http-method' => 'GET' 
 		)
 		// 'precond' => array (
 		// 'Pluf_Precondition::loginRequired',
@@ -61,7 +61,7 @@ return array (
 		array ( // Link urls
 				'regex' => '#^/link/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Link',
-				'method' => 'link',
+				'method' => 'get',
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
@@ -91,12 +91,12 @@ return array (
 		array ( // Plan urls
 				'regex' => '#^/plan/new$#',
 				'model' => 'SaaSDM_Views_Plan',
-				'method' => 'newplan',
+				'method' => 'create',
 				'http-method' => 'POST',
-				'precond' => array (
-						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
-				) 
+// 				'precond' => array (
+// 						'Pluf_Precondition::loginRequired',
+// 						'SaaS_Precondition::tenantMember' 
+// 				) 
 		),
 		array ( // Plan urls
 				'regex' => '#^/plan/find$#',
@@ -139,18 +139,9 @@ return array (
 // 						'SaaS_Precondition::tenantMember' 
 // 				) 
 		),
+
 		array ( // Download urls
-				'regex' => '#^/download/find$#',
-				'model' => 'SaaSDM_Views_PlanTemplate',
-				'method' => 'findplantemplate',
-				'http-method' => 'POST',
-				'precond' => array (
-						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
-				) 
-		),
-		array ( // Download urls
-				'regex' => '#^/download/(secure_id:.*)$#',
+				'regex' => '#^/download/(?P<secure_link>.+)$#',
 				'model' => 'SaaSDM_Views_Link',
 				'method' => 'download',
 				'http-method' => 'GET',

@@ -93,11 +93,12 @@ class SaaSDM_Views_Asset {
 		// دسترسی
 		// SaaSCMS_Precondition::userCanDeleteContent($request, $content);
 		// اجرا
+		$asset_copy = SaaSDM_Shortcuts_GetAssetOr404 ( $asset->id);
+		$asset_copy->path = "";
+		
 		$asset->delete ();
 		
-		// TODO: فایل مربوط به است باید حذف شود
-		
-		return new Pluf_HTTP_Response_Json ( $asset );
+		return new Pluf_HTTP_Response_Json ( $asset_copy );
 	}
 	
 	// public static function download($request, $match)
