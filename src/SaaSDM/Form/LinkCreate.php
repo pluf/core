@@ -11,11 +11,15 @@ class SaaSDM_Form_LinkCreate extends Pluf_Form
 {
 
 	public $tenant = null;
+	public $asset = null;
+	
 	//     public $user = null;
 
 	public function initFields ($extra = array())
 	{
 		$this->tenant = $extra['tenant'];
+		$this->asset = $extra['asset'];
+		
 		//         $this->user = $extra['user'];
 
 		$this->fields['secure_link'] = new Pluf_Form_Field_Varchar(
@@ -41,13 +45,7 @@ class SaaSDM_Form_LinkCreate extends Pluf_Form
 						'required' => false,
 						'label' => 'Path',
 						'help_text' => 'Path of asset'
-				));
-		$this->fields['asset'] = new Pluf_Form_Field_Integer(
-				array(
-						'required' => false,
-						'label' => 'related asset',
-						'help_text' => 'asset'
-				));		
+				));	
 	}
 
 	function save ($commit = true)
@@ -60,6 +58,7 @@ class SaaSDM_Form_LinkCreate extends Pluf_Form
 		$link->secure_link = chunk_split(substr(md5(time().rand(10000,99999)), 0, 20), 6, '');
 		$link->expiry = date('Y-m-d H:i:s' , strtotime(' +1 day'));
 		$link->setFromFormData($this->cleaned_data);
+		$link->asset = $this->asset;
 		//         $asset->user = $this->user;
 		$link->tenant = $this->tenant;
 		if ($commit) {

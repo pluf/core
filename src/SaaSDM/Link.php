@@ -87,4 +87,10 @@ class SaaSDM_Link extends Pluf_Model {
 	function postSave($create = false) {
 		//
 	}
+	
+	public static function getLinkBySecureId($secure_link){
+		
+		$sql = new Pluf_SQL('secure_link=%s', $secure_link);
+		return Pluf::factory('SaaSDM_Link')->getOne($sql->gen());
+	}
 }
