@@ -25,9 +25,22 @@ class SaaSBank_Service
      * 'amount' => 1000, // مقدار پرداخت به ریال
      * 'title' => 'payment title',
      * 'description' => 'description',
-     * 'email' => 'user@email.address'
+     * 'email' => 'user@email.address',
+     * 'phone' => '0917222222',
+     * 'callbackURL' => 'http://.....',
+     * 'backend' => 2
      * );
      * </code></pre>
+     *
+     * <ul>
+     * <li>*amount: مقدار بر اساس ریال</li>
+     * <li>*title: عنوان پرداخت</li>
+     * <li>*description: توضیحات</li>
+     * <li>email: رایانامه مشتری</li>
+     * <li>phone: شماره تماس مشتری</li>
+     * <li>callbackURL: آدرسی که بعد از تکمیل باید فراخوانی شود</li>
+     * <li>*backend: درگاه پرداخت مورد نظر</li>
+     * </ul>
      *
      * در نهایت باید موجودیتی تعیین بشه که این پرداخت رو می‌خواهیم براش ایجاد
      * کنیم.
@@ -37,12 +50,12 @@ class SaaSBank_Service
      * @param Pluf_Model $owner            
      * @return SaaSBank_Receipt
      */
-    public static function create ($request, $receiptParam, $owner)
+    public static function create ($request, $param, $owner)
     {
         $extra = array(
                 'tenant' => $request->tenant
         );
-        $form = new SaaSBank_Form_ReceiptNew($receiptParam, $extra);
+        $form = new SaaSBank_Form_ReceiptNew($param, $extra);
         $receipt = $form->save(false);
         $backend = $receipt->get_backend();
         $engine = $backend->get_engine();
