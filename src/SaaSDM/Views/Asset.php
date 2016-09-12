@@ -7,6 +7,16 @@ class SaaSDM_Views_Asset {
 				// 'user' => $request->user,
 				'tenant' => $request->tenant 
 		);
+		
+		if (! isset ( $request->REQUEST ['name'] ) || strlen ( $request->REQUEST ['name'] ) == 0) {
+			if (isset ( $request->FILES ['file'] )) {
+				$file = $request->FILES ['file'];
+				$request->REQUEST ['name'] = basename ( $file['name'] );
+			}else{
+				$request->REQUEST ['name'] = "noname".rand(0, 9999);
+			}
+		}
+		
 		// Create asset and get its ID
 		$form = new SaaSDM_Form_AssetCreate ( $request->REQUEST, $extra );
 		$asset = $form->save ();
@@ -18,6 +28,7 @@ class SaaSDM_Views_Asset {
 			$asset = $form->update ();
 		} catch ( Pluf_Exception $e ) {
 			$asset->delete ();
+			throw $e;
 		}
 		
 		return new Pluf_HTTP_Response_Json ( $asset );
@@ -38,7 +49,6 @@ class SaaSDM_Views_Asset {
 				'driver_id' 
 		);
 		$list_display = array ();
-
 		
 		$search_fields = array (
 				'name',
@@ -93,7 +103,7 @@ class SaaSDM_Views_Asset {
 		// دسترسی
 		// SaaSCMS_Precondition::userCanDeleteContent($request, $content);
 		// اجرا
-		$asset_copy = SaaSDM_Shortcuts_GetAssetOr404 ( $asset->id);
+		$asset_copy = SaaSDM_Shortcuts_GetAssetOr404 ( $asset->id );
 		$asset_copy->path = "";
 		
 		$asset->delete ();

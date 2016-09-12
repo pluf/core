@@ -86,8 +86,7 @@ class SaaSDM_Asset extends Pluf_Model {
 						'blank' => false,
 						'relate_name' => 'tenant' 
 				) 
-		)
-		;
+		);
 		
 		$this->_a ['idx'] = array (
 				'page_class_idx' => array (
@@ -126,9 +125,11 @@ class SaaSDM_Asset extends Pluf_Model {
 	 * \brief عملیاتی که قبل از پاک شدن است انجام می‌شود
 	 *
 	 * عملیاتی که قبل از پاک شدن است انجام می‌شود
-	 *  در این متد فایل مربوط به است حذف می شود. این عملیات قابل بازگشت نیست
+	 * در این متد فایل مربوط به است حذف می شود. این عملیات قابل بازگشت نیست
 	 */
 	function preDelete() {
-		unlink ( $this->path . '/' . $this->id );
+		if (file_exists ( $this->path . '/' . $this->id )) {
+			unlink ( $this->path . '/' . $this->id );
+		}
 	}
 }

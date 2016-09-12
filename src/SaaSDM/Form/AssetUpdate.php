@@ -115,14 +115,9 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
         
         if (array_key_exists('file', $this->cleaned_data)) {
             // Extract information of file
-            $myFile = $this->data['file'];
-            $this->asset->file_name = $myFile['name'];
-            $fileInfo = SaaS_FileUtil::getMimeType($this->asset->file_name);
+            $myFile = $this->cleaned_data['file'];
+            $fileInfo = SaaS_FileUtil::getMimeType($this->asset->name);
             $this->asset->mime_type = $fileInfo[0];
-            
-            // $this->content->file_name = $this->cleaned_data['file'];
-            // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
-            // $this->content->mime_type = $fileInfo[0];
             $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }
         
@@ -130,5 +125,12 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
             $this->asset->update();
         }
         return $this->asset;
+    }
+    
+    function clean_name(){
+    	$fileName = $this->cleaned_data['name'];
+    	if(!$fileName)
+    		return $this->data['file']['name'];
+    		return $fileName;
     }
 }
