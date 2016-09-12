@@ -91,12 +91,12 @@ return array (
 		array ( // Plan urls
 				'regex' => '#^/plan/new$#',
 				'model' => 'SaaSDM_Views_Plan',
-				'method' => 'newplan',
+				'method' => 'create',
 				'http-method' => 'POST',
-				'precond' => array (
-						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
-				) 
+// 				'precond' => array (
+// 						'Pluf_Precondition::loginRequired',
+// 						'SaaS_Precondition::tenantMember' 
+// 				) 
 		),
 		array ( // Plan urls
 				'regex' => '#^/plan/find$#',

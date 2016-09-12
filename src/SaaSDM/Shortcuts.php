@@ -40,4 +40,12 @@ function SaaSDM_Shortcuts_GetPlanOr404($id){
 
 }
 
+function SaaSDM_Shortcuts_GetAccountOr404($id){
+	$item = new SaaSDM_Account($id);
+	if ((int) $id > 0 && $item->id == $id) {
+		return $item;
+	}
+	throw new SaaSDM_Exception_ObjectNotFound(
+			"SaaSDM account not found (plan id:" . $id . ")");
 
+}

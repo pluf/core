@@ -97,7 +97,6 @@ class SaaSDM_Views_Asset {
 		$asset_copy->path = "";
 		
 		$asset->delete ();
-
 		
 		return new Pluf_HTTP_Response_Json ( $asset_copy );
 	}
