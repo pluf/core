@@ -17,8 +17,9 @@ class SaaSBank_Receipt extends Pluf_Model
 {
 
     public $data = array();
+
     public $touched = false;
-    
+
     /**
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
@@ -77,6 +78,11 @@ class SaaSBank_Receipt extends Pluf_Model
                 ),
                 
                 'payRef' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                'callURL' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 200
@@ -217,5 +223,18 @@ class SaaSBank_Receipt extends Pluf_Model
         } else {
             return $default;
         }
+    }
+
+    /**
+     * آیا پرداخت انجام شده یا نه
+     *
+     * در صورتی که پرداخت انجام شده باشد برای آن لینک مرجع وجود دارد. این
+     * فراخوانی بررسی می‌کند که آیا شمار مرجع وچود دارد یا نه.
+     *
+     * @return boolean
+     */
+    function isPayed ()
+    {
+        return ! is_null($this->payRef);
     }
 }

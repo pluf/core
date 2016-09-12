@@ -50,16 +50,7 @@ class SaaSBank_Views_Receipt
      */
     public function create ($request, $match)
     {
-        $extra = array(
-                'tenant' => $request->tenant
-        );
-        $form = new SaaSBank_Form_ReceiptNew(array_merge($request->REQUEST), 
-                $extra);
-        $receipt = $form->save(false);
-        $backend = $receipt->get_backend();
-        $engine = $backend->get_engine();
-        $engine->create($receipt);
-        $receipt->create();
+        $receipt = SaaSBank_Service::create($request, $request->REQUEST);
         return new Pluf_HTTP_Response_Json($receipt);
     }
 
@@ -98,12 +89,7 @@ class SaaSBank_Views_Receipt
     public function update ($request, $match)
     {
         $receipt = SaaSBank_Shortcuts_GetReceiptOr404($match['id']);
-        $backend = $receipt->get_backend();
-        $engine = $backend->get_engine();
-        if ($engine->update($receipt)) {
-            $receipt->update();
-        }
-        return new Pluf_HTTP_Response_Json($receipt);
+        return new Pluf_HTTP_Response_Json(SaaSBank_Service::update($receipt));
     }
 
     /**
