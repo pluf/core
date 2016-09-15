@@ -50,7 +50,7 @@ class SaaSBank_Service
      * @param Pluf_Model $owner            
      * @return SaaSBank_Receipt
      */
-    public static function create ($request, $param, $owner)
+    public static function create ($request, $param, $owner = null)
     {
         $extra = array(
                 'tenant' => $request->tenant

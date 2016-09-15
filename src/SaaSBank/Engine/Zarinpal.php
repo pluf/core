@@ -67,6 +67,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         
         if (Pluf::f('saas_bank_debug', false)) {
             $receipt->setMeta('Authority', 'back engine is in debug mode');
+            $receipt->callURL = 'https://www.zarinpal.com/pg/StartPay/example';
             return;
         }
         
@@ -87,6 +88,8 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
             throw new SaaSBank_Exception_Engine('fail to create payment');
         }
         $receipt->putMeta('Authority', $result->Authority);
+        $receipt->callUrl = 'https://www.zarinpal.com/pg/StartPay/' .
+                 $result->Authority;
     }
 
     /**
@@ -103,7 +106,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         
         if (Pluf::f('saas_bank_debug', false)) {
             $receipt->payRef = 'back engine is in debug mode';
-            return;
+            return true;
         }
         
         // maso, 1395: تایید یک پرداخت
@@ -119,7 +122,8 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         if ($result->Status == 100) {
             throw new SaaSBank_Exception_Engine('fail to check payment');
         }
-            $receipt->payRef = $result->RefID;
+        $receipt->payRef = $result->RefID;
+        return true;
     }
 
     private function getClient ()

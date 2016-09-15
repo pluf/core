@@ -71,6 +71,7 @@ class SaaSBank_Receipt extends Pluf_Model
                         'blank' => true,
                         'size' => 100
                 ),
+                // مسیر را تعیین می‌کند که بعد از تکمیل باید فراخوانی شود
                 'callbackURL' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
@@ -82,6 +83,7 @@ class SaaSBank_Receipt extends Pluf_Model
                         'blank' => true,
                         'size' => 200
                 ),
+                // مسیری رو تعیین می‌کنه که برای تکمیل خرید باید دنبال کنیم
                 'callURL' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
@@ -159,7 +161,12 @@ class SaaSBank_Receipt extends Pluf_Model
      */
     function postSave ($create = false)
     {
-        //
+        if (! is_null($this->callbackURL) &&
+                 strpos($this->callbackURL, '{secure_id}')) {
+            $this->callbackURL = str_replace('{secure_id}', $this->secure_id, 
+                    $this->callbackURL);
+            $this->update();
+        }
     }
 
     /**
