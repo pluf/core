@@ -34,6 +34,7 @@ class SaaSBank_Views_Backend
      */
     public function find ($request, $match)
     {
+        throw new Exception();
         $pag = new Pluf_Paginator(new SaaSBank_Backend());
         $pag->configure(array(), 
                 array( // search

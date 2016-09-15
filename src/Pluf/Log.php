@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -26,19 +27,18 @@
  * مثلا خط و فایلی که این لوگ رو تولید کرده.
  * استاندارد php یه سری کد برای assert معرفی کرده که خیلی این کار رو با
  * کارایی خوب انجام می ده.
- * 
+ *
  * نکته: اینجوری نیست که لوگ فقط یک رشته باشه بلکه بعضی مواقع نیاز هست
  * که یک موجودیت رو توی لوگ بیاریم. اینکه این لوگ دقیقا چطور توی خروجی
  * نوشته می شه به نویسنده لوگ بستگی داره. برای نمونه ممکن هست این لوگ‌ها به
  * صورت json نوشته بشن.
- * 
+ *
  * The removal of constraints on the log message simplify the log
  * system as you can push into it categories or extra informations.
  *
  * In the log stack, each log message is microtimed together with the
  * log level as integer. You can convert the integer to string at
  * write time.
- *
  */
 class Pluf_Log
 {
@@ -100,7 +100,7 @@ class Pluf_Log
      *
      * By default, logging is not enabled.
      */
-    public static $level = 10;
+    public static $level = null;
 
     /**
      * Current message in the assert log.
@@ -114,14 +114,19 @@ class Pluf_Log
 
     /**
      * اطلاعات را به پشته لوگ اضافه می کند
-     * 
+     *
      * در صورتی که نیاز باشد تمام اطلاعات جمع شده را در خروجی می‌نویسد.
      *
-     * @param $level سطی که می‌خواهیم لوگ در آن قرار گیرد
-     * @param $message پیام لوگ
+     * @param $level سطی
+     *            که می‌خواهیم لوگ در آن قرار گیرد
+     * @param $message پیام
+     *            لوگ
      */
     private static function _log ($level, $message)
     {
+        if (! isset(self::$level)) {
+            self::$level = Pluf::f('log_level', 10);
+        }
         if (self::$level <= $level and self::$level != 10) {
             self::$stack[] = array(
                     microtime(true),
@@ -265,10 +270,11 @@ class Pluf_Log
     public static function flush ()
     {
         $writer = Pluf::f('log_handler', 'Pluf_Log_File');
-        call_user_func(array(
-                $writer,
-                'write'
-        ), self::$stack);
+        call_user_func(
+                array(
+                        $writer,
+                        'write'
+                ), self::$stack);
         self::$stack = array();
     }
 
@@ -384,6 +390,9 @@ class Pluf_Log
  */
 function Pluf_Log_assert ($file, $line, $code)
 {
+    if (! isset(Pluf_Log::$level)) {
+        Pluf_Log::$level = Pluf::f('log_level', 10);
+    }
     if (Pluf_Log::$level <= Pluf_Log::$assert_level and Pluf_Log::$level != 10) {
         Pluf_Log::$stack[] = array(
                 microtime(true),

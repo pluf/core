@@ -7,7 +7,7 @@ $cfg = array();
  * ----------------------------------------------------------------------------
  */
 $cfg['general_domain'] = 'localhost';
-$cfg['general_from_email'] = 'info@localhost';
+$cfg['general_from_email'] = 'info@dpq.co.ir';
 $cfg['general_admin_email'] = array(
         'info@localhost'
 );
@@ -23,10 +23,10 @@ $cfg['installed_apps'] = array(
         'Pluf',
         'User',
         'SaaS',
-		'SaaSNewspaper',
-		'SaaSCMS',
-		'Wiki',
-		'SaaSBank'
+        'SaaSNewspaper',
+        'SaaSCMS',
+        'Wiki',
+        'SaaSBank'
 );
 
 /*
@@ -78,8 +78,8 @@ $cfg['secret_key'] = 'WMaTo4uv3uFl6MIl0Dm3Ek';
  * یک با یک کاربر دارد. این مدل داده‌ای به صورت خودکار در سطح سکو مدیریت خواهد
  * شد.
  */
-$cfg ['pluf_custom_group'] = 'Pluf_Group';
-$cfg [ 'pluf_custom_user'] = 'Pluf_User';
+$cfg['pluf_custom_group'] = 'Pluf_Group';
+$cfg['pluf_custom_user'] = 'Pluf_User';
 
 /*
  * زمانی که یک کاربر ایجاد می‌شود حالت آن را به صورت پیش فرض به حالت فعال تبدیل
@@ -97,6 +97,18 @@ $cfg['auth_backends'] = array(
 );
 
 $cfg['pluf_use_rowpermission'] = true;
+
+/*
+ * ----------------------------------------------------------------------------
+ * Logger section
+ * ----------------------------------------------------------------------------
+ */
+
+$cfg['log_delayed'] = true;
+$cfg['log_handler'] = 'Pluf_Log_File';
+$cfg['log_level'] = Pluf_Log::ERROR;
+
+$cfg['pluf_log_file'] = SRC_BASE . '/var/logs/pluf.log';
 
 /*
  * ----------------------------------------------------------------------------
@@ -140,6 +152,7 @@ $cfg['db_table_prefix'] = '';
  * انتخاب شود. بسته به اینکه روش انتخاب شده چیست تنظیم‌های آن نیز متفاوت می‌شود.
  * روش‌های مورد حمایت عبارتند از:
  *
+ * - mail
  * - sendmail
  * - smtp
  *
@@ -177,7 +190,7 @@ $cfg['mail_persist'] = TRUE;
  * نمونه الگوها در این مسیر سر هم شده و نمایش اصلی ایجاد می‌شود. در این مسیر
  * باید امکان نوشتن فراهم باشد در غیر این صورت اجرا با خطا روبرو خواهد شد.
  */
-$cfg['tmp_folder'] =  SRC_BASE .'/var/tmp';
+$cfg['tmp_folder'] = SRC_BASE . '/var/tmp';
 
 /*
  * در تمام مسیرهایی که در زیر تعیین می‌شود، الگوهای مناسب قرار گرفته شده و بر
@@ -188,7 +201,7 @@ $cfg['tmp_folder'] =  SRC_BASE .'/var/tmp';
  * این صورت مسیرهای بعدی دنبال می‌شود.
  */
 $cfg['template_folders'] = array(
-        SRC_BASE. '/src/templates',
+        SRC_BASE . '/src/templates',
         PLUF_BASE . '/SaaS/templates'
 );
 
@@ -238,7 +251,7 @@ $cfg['wiki_repositories'] = array(
  * SaaS
  * ----------------------------------------------------------------------------
  */
-$cfg['saas_mimetypes_db'] = SRC_BASE.'/etc/mime.types';
+$cfg['saas_mimetypes_db'] = SRC_BASE . '/etc/mime.types';
 /*
  * فعال بودن لایه رایگان در سیستم را تعیین می‌کند. در صورتی که این مدل تجاری
  * فعال
@@ -261,9 +274,10 @@ $cfg['saas_freemium_full'] = 5;
  * کاربران قرار دهد.
  */
 $cfg['saas_spa_repository'] = array(
-		SRC_BASE.'/spa'
-		// TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
-);
+        SRC_BASE . '/spa'
+)
+// TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
+;
 $cfg['saas_spa_package'] = "/spa.json";
 $cfg['saas_spa_view'] = '/main.html';
 $cfg['saas_spa_default'] = 'test';
@@ -271,32 +285,30 @@ $cfg['saas_spa_default'] = 'test';
 $cfg['saas_tenant_default'] = 'main';
 $cfg['saas_tenant_match'] = array();
 
-
 /*
  * ----------------------------------------------------------------------------
  * SaaS Bank
  * ----------------------------------------------------------------------------
  */
 /*
- * در مدل مرکزی، پشتوانه‌های پرداخت توسط مدیریت کل سامانه ایجاد و مدیریت می‌شود در
- * حالی که در مدل غیر متمرکز هر ملک سامانه‌های پرداخت خود را به صورت مستقل مدیریت
+ * در مدل مرکزی، پشتوانه‌های پرداخت توسط مدیریت کل سامانه ایجاد و مدیریت می‌شود
+ * در
+ * حالی که در مدل غیر متمرکز هر ملک سامانه‌های پرداخت خود را به صورت مستقل
+ * مدیریت
  * می‌کند.
- * 
- * به صورت پیش فرض مدیریت پرداخت‌ها به صورت مرکزی کنترل می‌شود مگر اینکه تنظیم‌های
+ *
+ * به صورت پیش فرض مدیریت پرداخت‌ها به صورت مرکزی کنترل می‌شود مگر اینکه
+ * تنظیم‌های
  * سیستم روش غیر متمرکز را تعیین کند.
  */
 $cfg['saas_bank_centeral'] = true;
 
 /*
- * در فرآیند توسعه نیاز هست که فرآنید ایجاد یک پرداخت و مدیرت آن به صورت افلاین 
+ * در فرآیند توسعه نیاز هست که فرآنید ایجاد یک پرداخت و مدیرت آن به صورت افلاین
  * انجام شود. با این تنظیم‌متورهای پروداخت به صورت پیش فرض به این کار می‌پردازند
- * و داده‌های فرضی ایجاد می‌کنند. 
+ * و داده‌های فرضی ایجاد می‌کنند.
  */
 $cfg['saas_bank_debug'] = true;
-
-
-
-
 
 return $cfg;
 

@@ -1,13 +1,32 @@
 <?php
 
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * نگاشت تقاضا به لایه نمایش
- * 
- * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های لایه
- * نمایش نگاشت داده می‌شود.
- * 
- * @author maso
  *
+ * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های
+ * لایه
+ * نمایش نگاشت داده می‌شود.
+ *
+ * @author maso
+ *        
  */
 class Pluf_Dispatcher
 {
@@ -69,12 +88,27 @@ class Pluf_Dispatcher
                         $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             }
         } catch (Exception $e) {
-            $response = new Pluf_HTTP_Response_ServerError($e);
-            $response->render(
-                    $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
+            $response = new Pluf_HTTP_Response_ServerError($e);
+            $response->render(
+                    $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+            try { // 1- Add to log
+                if (! ($e instanceof Pluf_Exception)) {
+                    Pluf_Log::fatal(
+                            array(
+                                    'query' => $query,
+                                    'error' => $e
+                            ));
+                }
+            } catch (Exception $e) {}
+            try { // 2- send email
+                $from =  Pluf::f('general_from_email', 'info@dpq.co.ir');
+                $email = new Pluf_Mail($from, $from, 'fatal error in system');
+                $email->addTextMessage('unsupported error in system.');
+                $email->sendMail();
+            } catch (Exception $e) {}
         }
         /**
          * [signal]
@@ -133,10 +167,8 @@ class Pluf_Dispatcher
             // maso, 1394: بررسی متد لایه کنترل
             if (isset($ctl['http-method'])) {
                 $methods = $ctl['http-method'];
-                if ((! is_array($methods) &&
-                         $ctl['http-method'] !== $req->method) ||
-                         (is_array($methods) &&
-                         ! in_array($req->method, $methods))) {
+                if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array(
+                        $methods) && ! in_array($req->method, $methods))) {
                     $i ++;
                     continue;
                 }
