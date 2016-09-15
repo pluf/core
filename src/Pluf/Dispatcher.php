@@ -1,13 +1,32 @@
 <?php
 
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * نگاشت تقاضا به لایه نمایش
- * 
- * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های لایه
- * نمایش نگاشت داده می‌شود.
- * 
- * @author maso
  *
+ * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های
+ * لایه
+ * نمایش نگاشت داده می‌شود.
+ *
+ * @author maso
+ *        
  */
 class Pluf_Dispatcher
 {
@@ -69,12 +88,27 @@ class Pluf_Dispatcher
                         $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             }
         } catch (Exception $e) {
-            $response = new Pluf_HTTP_Response_ServerError($e);
-            $response->render(
-                    $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
+            $response = new Pluf_HTTP_Response_ServerError($e);
+            $response->render(
+                    $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+            try { // 1- Add to log
+                if (! ($e instanceof Pluf_Exception)) {
+                    Pluf_Log::fatal(
+                            array(
+                                    'query' => $query,
+                                    'error' => $e
+                            ));
+                }
+            } catch (Exception $e) {}
+            try { // 2- send email
+                $from =  Pluf::f('general_from_email', 'info@dpq.co.ir');
+                $email = new Pluf_Mail($from, $from, 'fatal error in system');
+                $email->addTextMessage('unsupported error in system.');
+                $email->sendMail();
+            } catch (Exception $e) {}
         }
         /**
          * [signal]
@@ -123,43 +157,38 @@ class Pluf_Dispatcher
      */
     public static function match ($req, $firstpass = true)
     {
-        try {
-            $views = $GLOBALS['_PX_views'];
-            $to_match = $req->query;
-            $n = count($views);
-            $i = 0;
-            while ($i < $n) {
-                $ctl = $views[$i];
-                // maso, 1394: بررسی متد لایه کنترل
-                if (isset($ctl['http-method'])) {
-                    $methods = $ctl['http-method'];
-                    if ((! is_array($methods) &&
-                             $ctl['http-method'] !== $req->method) || (is_array(
-                                    $methods) &&
-                             ! in_array($req->method, $methods))) {
-                        $i ++;
-                        continue;
-                    }
+        // پیدا کردن و اجرای نمایش مناسب
+        $views = $GLOBALS['_PX_views'];
+        $to_match = $req->query;
+        $n = count($views);
+        $i = 0;
+        while ($i < $n) {
+            $ctl = $views[$i];
+            // maso, 1394: بررسی متد لایه کنترل
+            if (isset($ctl['http-method'])) {
+                $methods = $ctl['http-method'];
+                if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array(
+                        $methods) && ! in_array($req->method, $methods))) {
+                    $i ++;
+                    continue;
                 }
-                if (preg_match($ctl['regex'], $to_match, $match)) {
-                    if (! isset($ctl['sub'])) {
-                        return self::send($req, $ctl, $match);
-                    } else {
-                        // Go in the subtree
-                        $views = $ctl['sub'];
-                        $i = 0;
-                        $n = count($views);
-                        $to_match = substr($to_match, strlen($match[0]));
-                        continue;
-                    }
-                }
-                $i ++;
             }
-        } catch (Pluf_HTTP_Error404 $e) {
-            // echo $e;
-            // Need to add a 404 error handler
-            // something like Pluf::f('404_handler', 'class::method')
+            if (preg_match($ctl['regex'], $to_match, $match)) {
+                if (! isset($ctl['sub'])) {
+                    return self::send($req, $ctl, $match);
+                } else {
+                    // Go in the subtree
+                    $views = $ctl['sub'];
+                    $i = 0;
+                    $n = count($views);
+                    $to_match = substr($to_match, strlen($match[0]));
+                    continue;
+                }
+            }
+            $i ++;
         }
+        
+        // XXX: maso, 1395: این قسمت از کد رو نمی‌دونم چی کار داره می‌کنه
         if ($firstpass and substr($req->query, - 1) != '/') {
             $req->query .= '/';
             $res = self::match($req, false);
@@ -172,6 +201,7 @@ class Pluf_Dispatcher
                 return new Pluf_HTTP_Response_Redirect($url, 301);
             }
         }
+        // نمایش مناسبی یافت نشده است
         throw new Pluf_HTTP_Error404();
     }
 
@@ -208,9 +238,9 @@ class Pluf_Dispatcher
          * 
          * پیش شرط‌ها در خود کنترل باید تعیین شده باشد.
          */
-                isset($m->{$ctl['method'] . '_precond'}) ||
-                // روش اصلی
-                isset($ctl['precond'])) {
+                isset($m->{$ctl['method'] . '_precond'}) || 
+        // روش اصلی
+        isset($ctl['precond'])) {
             // Here we have preconditions to respects. If the "answer"
             // is true, then ok go ahead, if not then it a response so
             // return it or an exception so let it go.

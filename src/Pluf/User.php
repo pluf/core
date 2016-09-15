@@ -114,7 +114,7 @@ class Pluf_User extends Pluf_Model
                 'timezone' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'default' => 'Europe/Berlin',
+                        'default' => date_default_timezone_get(),
                         'size' => 45,
                         'verbose' => __('time zone'),
                         'help_text' => __(

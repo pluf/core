@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Memcached based cache.
- *
+ * کش مبتنی بر حافظه را ایجاد می‌کند
+ * 
  * A special 'cache_memcached_keyprefix' can be set to use one
  * memcached for different applications and avoid conflict.
  *

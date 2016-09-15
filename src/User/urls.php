@@ -29,9 +29,6 @@ return array(
         'regex' => '#^/account$#',
         'model' => 'User_Views_User',
         'method' => 'account',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        ),
         'http-method' => 'GET'
     ),
     array( // اطلاعات کاربر را به روز می‌کند
@@ -57,6 +54,12 @@ return array(
     ),
     array( // ثبت یک کاربر جدید
         'regex' => '#^/signup$#',
+        'model' => 'User_Views_User',
+        'method' => 'signup',
+        'http-method' => 'POST'
+    ),
+    array( // ثبت یک کاربر جدید
+        'regex' => '#^/new$#',
         'model' => 'User_Views_User',
         'method' => 'signup',
         'http-method' => 'POST'

@@ -106,12 +106,15 @@ class Pluf_Mail
         $this->message->_build_params['head_charset'] = $encoding;
         $this->message->_build_params['ignore-iconv'] = true;
         
+        
+        $this->message->setContentType('text/html; charset=UTF-8');
         $this->to_address = $dest;
         $this->headers = array(
                 'From' => $src,
                 'To' => $dest,
                 'Date' => date(DATE_RFC2822),
-                'Subject' => $subject
+                'Subject' => $subject,
+                'Content-Type'  => 'text/html; charset=UTF-8'
         );
     }
 

@@ -3,6 +3,7 @@
 /**
  * Sort of Active Record Class
  *
+ * @author maso<mostafa.barmshory@dpq.co.ir>
  * @date 1394 روش کدگزاری JSON به کلاس اضافه شده است تا به سادگی بتوان به عنوان نتیجه از یک مدل
  * استفاده شود.
  */
@@ -80,8 +81,9 @@ class Pluf_Model implements JsonSerializable
 
     /**
      * ساختار داده‌ای را ایجاد می‌کند.
-     * 
-     * این فراخوانی تمام ساختارهای داده‌ای اصلی را ایجاد می‌کند. تمام زیر کلاس‌ها
+     *
+     * این فراخوانی تمام ساختارهای داده‌ای اصلی را ایجاد می‌کند. تمام زیر
+     * کلاس‌ها
      * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
      */
     function init ()
@@ -90,8 +92,8 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * فهرست متدها را بر اساس رابطه‌هایی که در سیستم تعریف شده است را تعیین می‌کند.
-     * 
+     * فهرست متدها را بر اساس رابطه‌هایی که در سیستم تعریف شده است را تعیین
+     * می‌کند.
      */
     function _init ()
     {
@@ -972,15 +974,27 @@ class Pluf_Model implements JsonSerializable
     {}
 
     /**
-     * Hook run just before saving a model in the database.
+     * دستگیره‌ای که درست قبل از ذخیره شدن در پایگاه داده اجرا می‌شود.
      *
-     * Just overwrite it into your model to perform custom actions.
+     * در صورتی که نیاز به انجام پردازش‌هایی قبل از ذخیره شدن مدل داده‌ای دارید،
+     * این فراخوانی
+     * را بازنویسی کنید.
      *
      * @param
      *            bool Create.
      */
     function preSave ($create = false)
-    {}
+    {
+        // TODO: maso, 1395: بررسی داده‌های پیش فرض و به روز رسانی آنها
+        //
+        // برخی داده‌ها در تمام مدلهای داده‌ای به صورت تکراری استفاده می‌شود.
+        // بهتر است که
+        // وجود این داده‌ها بررسی شود و در صورت وجود همین جا به روز رسانی انجام
+        // شود.
+        //
+        // - creation_dtime
+        // - modif_dtime
+    }
 
     /**
      * فراخوانی پس از ذخیره شدن
@@ -1000,7 +1014,7 @@ class Pluf_Model implements JsonSerializable
 
     /**
      * مقادیر مدل را بر اساس یک فرم تعیین می‌کند
-     * 
+     *
      * این مقادیر به صورت یک آرایه به عنوان ورودی دریافت شده و بر اساس
      * آن داده‌های مورد نیاز مدل تعیین می‌شود.
      */
@@ -1130,8 +1144,32 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
+     * مدل داده‌ای را تعیین می‌کند
+     *
+     * هر مدل داده‌ای یک نام دارد.
+     *
+     * این فراخوانی نام مدل داده‌ای را تعیین می‌کند که معادل با نام کلاس است.
+     *
+     * @return string
+     */
+    public function getClass ()
+    {
+        return $this->_a['model'];
+    }
+
+    /**
+     * شناسه را تعیین می‌کند.
+     *
+     * @return شناسه
+     */
+    public function getId ()
+    {
+        return $this->id;
+    }
+
+    /**
      * (non-PHPdoc)
-     * 
+     *
      * @see JsonSerializable::jsonSerialize()
      */
     public function jsonSerialize ()

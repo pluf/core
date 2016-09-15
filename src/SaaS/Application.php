@@ -85,17 +85,14 @@ class SaaS_Application extends Pluf_Model
             'background' => array(
                 'type' => 'Pluf_DB_Field_File',
                 'blank' => true,
-                'verbose' => __('background image')
             ),
             'setting' => array(
                 'type' => 'Pluf_DB_Field_Text',
                 'blank' => true,
-                'verbose' => __('settings of tenant (accessible by tenant owner)')
             ),
             'config' => array(
                 'type' => 'Pluf_DB_Field_Text',
                 'blank' => true,
-                'verbose' => __('configuration of tenant (accessible by admin of platform)')
             ),
             'creation_dtime' => array(
                 'type' => 'Pluf_DB_Field_Datetime',
@@ -109,7 +106,6 @@ class SaaS_Application extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Foreignkey',
                 'model' => 'SaaS_SPA',
                 'blank' => true,
-                'verbose' => __('Default SAP for this application')
             )
         );
         $this->_a['views'] = array(
@@ -438,6 +434,7 @@ class SaaS_Application extends Pluf_Model
     public static function byDomain($domain)
     {
         $sql = new Pluf_SQL('domain=%s', $domain);
-        return Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        $result = Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        return $result;
     }
 }
