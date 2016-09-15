@@ -67,9 +67,13 @@ class SaaSDM_Views_Link {
 		$link->download ++;
 		$link->update();
 		// XXX: DO download
-		$response =  new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $asset->mime_type);
+		$httpRange = isset($request->SERVER['HTTP_RANGE']) ? $request->SERVER['HTTP_RANGE'] : null;
+		$response =  new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type);
 		// TODO: do buz.
-		// $response->getSize();
+		$size = $response->computeSize();
+		
+		
+		
 		return $response;
 	}
 }

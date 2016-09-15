@@ -25,44 +25,7 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
                         'label' => 'Name',
                         'help_text' => 'Name of asset'
                 ));
-        
-        $this->fields['path'] = new Pluf_Form_Field_Varchar(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['size'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['download'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['driver_type'] = new Pluf_Form_Field_Varchar(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['driver_id'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
         $this->fields['parent'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
-        		));
-        $this->fields['type'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
         				'label' => 'Path',
@@ -79,13 +42,7 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         				'required' => false,
         				'label' => 'Path',
         				'help_text' => 'Path of asset'
-        		));
-        $this->fields['tenant'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'tenant',
-        				'help_text' => 'Related Tenant of asset'
-        		));        
+        		));      
     }
 
     function save ($commit = true)
@@ -95,6 +52,9 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         }
         // Create the asset
         $asset = new SaaSDM_Asset();
+        $asset->driver_type = 'local';
+        $asset->type = 'file';
+        $asset->driver_id = '0';
         $asset->setFromFormData($this->cleaned_data);
         $asset->path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/dm';
         if(!is_dir($asset->path)) {
@@ -109,4 +69,5 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         }
         return $asset;
     }
+    
 }
