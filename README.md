@@ -28,3 +28,8 @@
 - Security layer
 - Plug and play
 
+# حق نشر
+
+این بسته توسط شرکت دانش پژوهان ققنوس توسعه یافته است:
+
+[Phoinex Scholars Co.](http://dpq.co.ir)

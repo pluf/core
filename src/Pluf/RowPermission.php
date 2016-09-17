@@ -1,13 +1,31 @@
 <?php
+
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
  * ساختار داده‌ای گواهی‌ها
- * 
+ *
  * با استفاده از این ساختار داده‌ای تعیین می‌شود که کاربران چه گواهی‌هایی
  * در سیستم دارند.
- * 
- * 
- * @author maso <mostafa.barmshory@dpq.co.ir>
  *
+ *
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *        
  */
 class Pluf_RowPermission extends Pluf_Model
 {
@@ -59,6 +77,13 @@ class Pluf_RowPermission extends Pluf_Model
                         'default' => false,
                         'verbose' => __('do not have the permission')
                 ),
+                /*
+                 * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
+                 */
+                'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false
+                ),
                 'permission' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'Pluf_Permission',
@@ -90,11 +115,11 @@ class Pluf_RowPermission extends Pluf_Model
 
     /**
      * یک گواهی را به سیستم اضافه می‌کند.
-     * 
-     * @param Pluf_Model $owner
-     * @param Pluf_Model $object
-     * @param string $perm
-     * @param bool $negative
+     *
+     * @param Pluf_Model $owner            
+     * @param Pluf_Model $object            
+     * @param string $perm            
+     * @param bool $negative            
      * @throws Exception
      */
     public static function add ($owner, $object, $perm, $negative = false)
@@ -122,10 +147,10 @@ class Pluf_RowPermission extends Pluf_Model
 
     /**
      * یک گواهی را از سیستم حذف می‌کند.
-     * 
-     * @param unknown $owner
-     * @param unknown $object
-     * @param unknown $perm
+     *
+     * @param unknown $owner            
+     * @param unknown $object            
+     * @param unknown $perm            
      * @throws Exception
      */
     public static function remove ($owner, $object, $perm)
@@ -148,9 +173,10 @@ class Pluf_RowPermission extends Pluf_Model
                         $object->_a['model'],
                         $perm->id
                 ));
-        $perms = $growp->getList(array(
-                'filter' => $sql->gen()
-        ));
+        $perms = $growp->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
         foreach ($perms as $p) {
             $p->delete();
         }
