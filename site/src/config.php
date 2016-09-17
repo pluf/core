@@ -59,6 +59,9 @@ $cfg['migrate_allow_web'] = true;
  */
 $cfg['upload_path'] = SRC_BASE . '/tenant';
 
+$cfg['time_zone'] = 'Europe/Berlin';
+$cfg['encoding'] = 'UTF-8';
+
 /*
  * ----------------------------------------------------------------------------
  * Security section
