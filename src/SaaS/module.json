@@ -9,39 +9,19 @@
 	],
 	"permisson": [
 		{
-			"name": "Software membership",
-			"code_name": "software-member",
-			"description": "Permission given to software members."
-		},
-		{
-			"name": "Software ownership",
-			"code_name": "software-owner",
+			"name": "ownership",
+			"code_name": "owner",
 			"description": "Permission given to software owners."
 		},
 		{
-			"name": "Software authorized users",
-			"code_name": "software-authorized-user",
-			"description": "Permission given to users allowed to access a software."
+			"name": "membership",
+			"code_name": "member",
+			"description": "Permission given to software members."
 		},
 		{
-			"name": "SPA anonymous users",
-			"code_name": "spa-anonymous-access",
-			"description": "Permission given to application"
-		},
-		{
-			"name": "SPA authorized users",
-			"code_name": "spa-authorized-access",
-			"description": "Permission given to application"
-		},
-		{
-			"name": "SPA member users",
-			"code_name": "spa-member-access",
-			"description": "Permission given to application"
-		},
-		{
-			"name": "SPA owner users",
-			"code_name": "spa-owner-access",
-			"description": "Permission given to application"
+			"name": "authorized users",
+			"code_name": "authorized",
+			"description": "Permission given to users allowed to access a tenant."
 		}
 	]
 }

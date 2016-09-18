@@ -369,71 +369,91 @@ class Pluf_User extends Pluf_Model
      *            bool Force the reload of the list of permissions (false)
      * @return array List of permissions
      */
-    function getAllPermissions ($force = false)
+    function getAllPermissions ($force = false, $tenant = 0)
     {
         if ($force == false and ! is_null($this->_cache_perms)) {
             return $this->_cache_perms;
         }
         $this->_cache_perms = array();
+        if ($this->isAnonymous()) {
+            return $this->_cache_perms;
+        }
+        // load user permissions
         $perms = (array) $this->get_permissions_list();
+        
+        // XXX:maso, group in tenant
+        // Load groups
         $groups = $this->get_groups_list();
         $ids = array();
         foreach ($groups as $group) {
             $ids[] = $group->id;
         }
+        // load groups permisson
         if (count($ids) > 0) {
-            $gperm = new Pluf_Permission();
-            $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) .
-                     '_id';
-            $perms = array_merge($perms, 
-                    (array) $gperm->getList(
-                            array(
-                                    'filter' => $f_name . ' IN (' .
-                                             join(', ', $ids) . ')',
-                                            'view' => 'join_group'
-                            )));
+            $this->loadGroupPermissions($ids, $tenant);
         }
-        foreach ($perms as $perm) {
-            if (! in_array($perm->application . '.' . $perm->code_name, 
-                    $this->_cache_perms)) {
-                $this->_cache_perms[] = $perm->application . '.' .
-                         $perm->code_name;
-            }
-        }
+        // load row permission
         if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
-            $growp = new Pluf_RowPermission();
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s', 
-                    array(
-                            $this->id,
-                            'Pluf_User'
-                    ));
-            if (count($ids) > 0) {
-                $sql2 = new Pluf_SQL(
-                        'owner_id IN (' . join(', ', $ids) .
-                                 ') AND owner_class=%s', 
-                                array(
-                                        Pluf::f('pluf_custom_group', 
-                                                'Pluf_Group')
-                                ));
-                $sql->SOr($sql2);
-            }
-            $perms = $growp->getList(
-                    array(
-                            'filter' => $sql->gen(),
-                            'view' => 'join_permission'
-                    ));
-            foreach ($perms as $perm) {
-                $perm_string = $perm->application . '.' . $perm->code_name . '#' .
-                         $perm->model_class . '(' . $perm->model_id . ')';
-                if ($perm->negative) {
-                    $perm_string = '!' . $perm_string;
-                }
-                if (! in_array($perm_string, $this->_cache_perms)) {
-                    $this->_cache_perms[] = $perm_string;
-                }
-            }
+            $this->loadRowPermissions($ids, $tenant);
         }
         return $this->_cache_perms;
+    }
+
+    /*
+     * فهرست گروه‌ها را لود می‌کند.
+     */
+    private function loadGroupPermissions ($ids, $tenant)
+    {
+        $gperm = new Pluf_Permission();
+        $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) . '_id';
+        $perms = array_merge($perms, 
+                (array) $gperm->getList(
+                        array(
+                                'filter' => $f_name . ' IN (' . join(', ', $ids) .
+                                         ')',
+                                        'view' => 'join_group'
+                        )));
+        foreach ($perms as $perm) {
+            $tos = $perm->toString();
+            if (! in_array($tos, $this->_cache_perms)) {
+                $this->_cache_perms[] = $tos;
+            }
+        }
+    }
+
+    /*
+     * تمام گواهی‌هایی که با جدول مشخص شده است را لود می‌کند.
+     */
+    private function loadRowPermissions ($ids, $tenant)
+    {
+        $growp = new Pluf_RowPermission();
+        $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s AND tenant=%s', 
+                array(
+                        $this->id,
+                        'Pluf_User',
+                        $tenant
+                ));
+        if (count($ids) > 0) {
+            $sql2 = new Pluf_SQL(
+                    'owner_id IN (%s) AND owner_class=%s AND tenant=%s', 
+                    array(
+                            join(', ', $ids),
+                            Pluf::f('pluf_custom_group', 'Pluf_Group'),
+                            $tenant
+                    ));
+            $sql->SOr($sql2);
+        }
+        $perms = $growp->getList(
+                array(
+                        'filter' => $sql->gen(),
+                        'view' => 'join_permission'
+                ));
+        foreach ($perms as $perm) {
+            $perm_string = $perm->toString();
+            if (! in_array($perm_string, $this->_cache_perms)) {
+                $this->_cache_perms[] = $perm_string;
+            }
+        }
     }
 
     /**

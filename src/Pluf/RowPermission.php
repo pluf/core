@@ -32,6 +32,13 @@ class Pluf_RowPermission extends Pluf_Model
 
     public $_model = 'Pluf_RowPermission';
 
+    /**
+     * مدل رشته‌ای این گواهی را تعیین می‌کند
+     *
+     * @var unknown
+     */
+    private $_cache_to_string;
+
     function init ()
     {
         $this->_a['table'] = 'rowpermissions';
@@ -94,7 +101,7 @@ class Pluf_RowPermission extends Pluf_Model
         $this->_a['idx'] = array(
                 'permission_combo_idx' => array(
                         'type' => 'unique',
-                        'col' => 'model_id, model_class, owner_id, owner_class, permission'
+                        'col' => 'model_id, model_class, owner_id, owner_class, permission, tenant'
                 )
         );
         $t_perm = $this->_con->pfx . 'permissions';
@@ -181,5 +188,36 @@ class Pluf_RowPermission extends Pluf_Model
             $p->delete();
         }
         return true;
+    }
+
+    /**
+     * این مجوز را به رشته تبدیل می‌کند
+     */
+    public function toString ()
+    {
+        if (isset($this->_cache_to_string)) {
+            return $this->_cache_to_string;
+        }
+        $application = null;
+        $code_name = null;
+        if (isset($this->application)) {
+            $application = $this->application;
+            $code_name = $this->code_name;
+        } else {
+            $perm = $this->get_permission();
+            $application = $perm->application;
+            $code_name = $perm->code_name;
+        }
+        // create string
+        if (isset($this->model_class)) {
+            $this->_cache_to_string = sprintf('%s.%s#%s(%s)', $application, 
+                    $code_name, $this->model_class, $this->model_id);
+        } else {
+            $this->_cache_to_string = sprintf('%s.%s', $application, $code_name);
+        }
+        if ($this->negative) {
+            $this->_cache_to_string = '!' . $this->_cache_to_string;
+        }
+        return $this->_cache_to_string;
     }
 }

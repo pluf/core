@@ -28,6 +28,7 @@ class Pluf_Permission extends Pluf_Model
 {
 
     public $_model = 'Pluf_Permission';
+    private $_cache_to_string;
 
     function init ()
     {
@@ -128,6 +129,16 @@ class Pluf_Permission extends Pluf_Model
             return false;
         }
         return $perms[0];
+    }
+
+    public function toString ()
+    {
+        if (isset($this->_cache_to_string)) {
+            return $this->_cache_to_string;
+        }
+        $this->_cache_to_string = sprintf('%s.%s', $this->application, 
+                $this->code_name);
+        return $this->_cache_to_string;
     }
 }
 

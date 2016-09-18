@@ -18,6 +18,17 @@ return array(
             'GET'
         )
     ),
+        
+    
+    array( // ورود کاربر به سیستم است
+        'regex' => '#^/role/find$#',
+        'model' => 'User_Views_Permission',
+        'method' => 'find',
+        'http-method' => 'GET'
+    ),
+        
+        
+        
     /**
      * مدیریت داده‌های شخصی
      *
