@@ -31,7 +31,7 @@ class SaaS_Views_ApplicationMember
     public function find ($request, $match)
     {
         // (owner|member|authorize)
-        $permStr = $this->toPermission($match[1]);
+        $permStr = $this->toPermission($match['role']);
         return $this->listUsers($request, $permStr);
     }
 
@@ -137,14 +137,6 @@ class SaaS_Views_ApplicationMember
     private function toPermission ($perm)
     {
         // (owner|member|authorize) : permission
-        switch ($perm) {
-            case 'owner':
-                return 'SaaS.software-owner';
-            case 'member':
-                return 'SaaS.software-member';
-            case 'authorize':
-                return 'SaaS.software-authorized-user';
-        }
-        throw new Pluf_Exception('no permission found for ' . $perm);
+        return 'SaaS.'.$perm;
     }
 }
