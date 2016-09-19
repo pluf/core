@@ -58,7 +58,7 @@ class User_Form_User extends Pluf_Form
         
         $this->fields['email'] = new Pluf_Form_Field_Email(
                 array(
-                        'required' => false,
+                        'required' => !Pluf::f('user_signup_active', false),
                         'label' => __('Email address'),
                         'initial' => $this->user_data->email
                 ));
