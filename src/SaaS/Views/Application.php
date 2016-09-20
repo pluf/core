@@ -120,8 +120,8 @@ class SaaS_Views_Application
      */
     public static function get ($request, $match)
     {
-        $app = SaaS_Shortcuts_GetApplicationOr404($match[$id]);
-        // TODO: check permission
+        $app = SaaS_Shortcuts_GetApplicationOr404($match['id']);
+        // check permission
         SaaS_Precondition::userCanAccessApplication($request, $app);
         return new Pluf_HTTP_Response_Json($app);
     }

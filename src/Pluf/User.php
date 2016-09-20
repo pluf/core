@@ -505,13 +505,13 @@ class Pluf_User extends Pluf_Model
      *            Object Object for row level permission (null)
      * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
      */
-    function hasPerm ($perm, $obj = null)
+    function hasPerm ($perm, $obj = null, $tenantId = 0)
     {
         if (! $this->active)
             return false;
         if ($this->administrator)
             return true;
-        $perms = $this->getAllPermissions();
+        $perms = $this->getAllPermissions(false, $tenantId);
         if (! is_null($obj)) {
             $perm_row = $perm . '#' . $obj->_a['model'] . '(' . $obj->id . ')';
             if (in_array('!' . $perm_row, $perms))

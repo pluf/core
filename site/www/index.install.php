@@ -48,7 +48,7 @@ try {
 // 	$tenant->spa = $emain;
 	$tenant->create ();
 	
-	Pluf_RowPermission::add ( $user, $tenant, 'SaaS.software-owner' );
+	Pluf_RowPermission::add ( $user, $tenant, 'SaaS.owner' );
 // 	Pluf_RowPermission::add ( $tenant, $emain, 'SaaS.spa-anonymous-access' );
 } catch ( Exception $e ) {
 	var_export ( $e );

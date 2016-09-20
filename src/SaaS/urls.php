@@ -58,7 +58,7 @@ return array(
         )
     ),
     array( // دریافت اطلاعات یک ملک
-        'regex' => '#^/tenant/(\d+)$#',
+        'regex' => '#^/tenant/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'get',
         'http-method' => array(
@@ -67,7 +67,7 @@ return array(
         'precond' => array()
     ),
     array( // به روزرسانی اطلاعات یک ملک
-        'regex' => '#^/tenant/(\d+)$#',
+        'regex' => '#^/tenant/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'update',
         'http-method' => array(
@@ -78,7 +78,7 @@ return array(
         )
     ),
     array( // حذف یک ملک
-        'regex' => '#^/tenant/(\d+)$#',
+        'regex' => '#^/tenant/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_Application',
         'method' => 'delete',
         'http-method' => array(
@@ -109,7 +109,7 @@ return array(
      * *****************************************************************
      */
     array(
-        'regex' => '#^/spa/(\d+)$#',
+        'regex' => '#^/spa/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'get',
         'http-method' => 'GET'
@@ -142,7 +142,7 @@ return array(
         )
     ),
     array(
-        'regex' => '#^/spa/(\d+)$#',
+        'regex' => '#^/spa/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'delete',
         'http-method' => 'DELETE',
@@ -151,7 +151,7 @@ return array(
         )
     ),
     array(
-        'regex' => '#^/spa/(\d+)/refresh$#',
+        'regex' => '#^/spa/(?P<id>\d+)/refresh$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'refresh',
         'http-method' => 'POST',
@@ -160,13 +160,13 @@ return array(
         )
     ),
     array(
-        'regex' => '#^/spa/(\d+)/package$#',
+        'regex' => '#^/spa/(?P<id>\d+)/package$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'package',
         'http-method' => 'GET'
     ),
     array(
-        'regex' => '#^/spa/(\d+)/appcache$#',
+        'regex' => '#^/spa/(?P<id>\d+)/appcache$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'appcache',
         'http-method' => 'GET'
@@ -206,7 +206,7 @@ return array(
         )
     ),
     array( //
-        'regex' => '#^/(owner|member|authorize)/(\d+)$#',
+        'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_ApplicationMember',
         'method' => 'memberAdd',
         'http-method' => array(
@@ -217,7 +217,7 @@ return array(
         )
     ),
     array( //
-        'regex' => '#^/(owner|member|authorize)/(\d+)$#',
+        'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
         'model' => 'SaaS_Views_ApplicationMember',
         'method' => 'memberRemove',
         'http-method' => array(

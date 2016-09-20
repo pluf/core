@@ -28,13 +28,11 @@ class SaaS_Configuration extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
-                'application' => array(
+                'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'SaaS_Application',
                         'blank' => false,
-                        'relate_name' => 'configuration',
-                        'verbose' => __('application'),
-                        'help_text' => __('Related application.')
+                        'relate_name' => 'tenant'
                 ),
                 'key' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -50,6 +48,10 @@ class SaaS_Configuration extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false
                 ),
+                
+                /*
+                 * اینها ممکن هست که در آینده حذف بشن
+                 */
                 'owner_write' => array( // owner can write
                         'type' => 'Pluf_DB_Field_Boolean',
                         'blank' => false
@@ -104,7 +106,15 @@ class SaaS_Configuration extends Pluf_Model
         $this->_a['idx'] = array(
                 'key_idx' => array(
                         'type' => 'unique',
-                        'col' => 'key'
+                        'col' => 'tenant, key'
+                ),
+                'search_type' => array(
+                        'type' => 'normal',
+                        'col' => 'tenant, key, type'
+                ),
+                'list_type' => array(
+                        'type' => 'normal',
+                        'col' => 'tenant, type'
                 )
         );
         $this->_a['views'] = array(
