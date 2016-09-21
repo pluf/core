@@ -23,7 +23,7 @@ $cfg['installed_apps'] = array(
         'Pluf',
         'User',
         'Group',
-//         'Role',
+        'Role',
         'SaaS',
         'SaaSNewspaper',
         'SaaSCMS',

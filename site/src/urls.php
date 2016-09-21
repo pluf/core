@@ -12,6 +12,11 @@ return array (
 				'sub' => include 'Group/urls.php' 
 		),
 		array (
+				'regex' => '#^/api/role#',
+				'base' => $base,
+				'sub' => include 'Role/urls.php' 
+		),
+		array (
 				'regex' => '#^/api/wiki#',
 				'base' => $base,
 				'sub' => include 'Wiki/urls.php' 
