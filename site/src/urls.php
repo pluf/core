@@ -7,6 +7,11 @@ return array (
 				'sub' => include 'User/urls.php' 
 		),
 		array (
+				'regex' => '#^/api/group#',
+				'base' => $base,
+				'sub' => include 'Group/urls.php' 
+		),
+		array (
 				'regex' => '#^/api/wiki#',
 				'base' => $base,
 				'sub' => include 'Wiki/urls.php' 

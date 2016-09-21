@@ -22,6 +22,8 @@ $cfg['general_admin_email'] = array(
 $cfg['installed_apps'] = array(
         'Pluf',
         'User',
+        'Group',
+//         'Role',
         'SaaS',
         'SaaSNewspaper',
         'SaaSCMS',
@@ -278,9 +280,9 @@ $cfg['saas_freemium_full'] = 5;
  */
 $cfg['saas_spa_repository'] = array(
         SRC_BASE . '/spa'
-)
+);
 // TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
-;
+
 $cfg['saas_spa_package'] = "/spa.json";
 $cfg['saas_spa_view'] = '/main.html';
 $cfg['saas_spa_default'] = 'test';

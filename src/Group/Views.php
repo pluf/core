@@ -8,7 +8,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
  * @author maso
  *        
  */
-class Group_Views_Group extends Pluf_Views
+class Group_Views extends Pluf_Views
 {
 
     /**
