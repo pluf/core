@@ -1,98 +1,117 @@
 <?php
 return array(
-    /*
-     * کاربردهای عمومی
-     */
-    array( // ورود کاربر به سیستم است
-        'regex' => '#^/login$#',
-        'model' => 'User_Views_Authentication',
-        'method' => 'login',
-        'http-method' => 'POST'
-    ),
-    array( // خروج کاربران از سیستم
-        'regex' => '#^/logout$#',
-        'model' => 'User_Views_Authentication',
-        'method' => 'logout',
-        'http-method' => array(
-            'POST',
-            'GET'
-        )
-    ),
-        
-    
-    array( // ورود کاربر به سیستم است
-        'regex' => '#^/role/find$#',
-        'model' => 'User_Views_Permission',
-        'method' => 'find',
-        'http-method' => 'GET'
-    ),
-        
-        
-        
-    /**
-     * مدیریت داده‌های شخصی
-     *
-     * دسته‌ای از فراخوانی‌ها برای مدیریت داده‌های کاربر جاری در نظر گرفته
-     * شده است. این فراخوانی‌ها
-     * برای کاربران نهایی بسیار پرکاربرد هستند.
-     */
-    array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
-        'regex' => '#^/account$#',
-        'model' => 'User_Views_User',
-        'method' => 'account',
-        'http-method' => 'GET'
-    ),
-    array( // اطلاعات کاربر را به روز می‌کند
-        'regex' => '#^/account$#',
-        'model' => 'User_Views_User',
-        'method' => 'update',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // ورود کاربر به سیستم است
+                'regex' => '#^/login$#',
+                'model' => 'User_Views_Authentication',
+                'method' => 'login',
+                'http-method' => 'POST'
         ),
-        'http-method' => 'POST'
-    ),
-    array( // اطلاعات کاربر را به روز می‌کند
-        'regex' => '#^/account/change_user_email/(.+)$#',
-        'model' => 'User_Views_User',
-        'method' => 'changeEmail',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // خروج کاربران از سیستم
+                'regex' => '#^/logout$#',
+                'model' => 'User_Views_Authentication',
+                'method' => 'logout',
+                'http-method' => array(
+                        'POST',
+                        'GET'
+                )
         ),
-        'http-method' => array(
-            'POST',
-            'GET'
-        )
-    ),
-    array( // ثبت یک کاربر جدید
-        'regex' => '#^/signup$#',
-        'model' => 'User_Views_User',
-        'method' => 'signup',
-        'http-method' => 'POST'
-    ),
-    array( // ثبت یک کاربر جدید
-        'regex' => '#^/new$#',
-        'model' => 'User_Views_User',
-        'method' => 'signup',
-        'http-method' => 'POST'
-    ),
-    array( // دریافت پروفایل کاربر
-        'regex' => '#^/profile$#',
-        'model' => 'User_Views_Profile',
-        'method' => 'get',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // اطلاعات کاربر را به روز می‌کند
+                'regex' => '#^/account/change_user_email/(.+)$#',
+                'model' => 'User_Views_User',
+                'method' => 'changeEmail',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => array(
+                        'POST',
+                        'GET'
+                )
         ),
-        'http-method' => 'GET'
-    ),
-    array( // به روز رسانی پروفایل کاربری
-        'regex' => '#^/profile$#',
-        'model' => 'User_Views_Profile',
-        'method' => 'update',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // ثبت یک کاربر جدید
+                'regex' => '#^/new$#',
+                'model' => 'User_Views_User',
+                'method' => 'signup',
+                'http-method' => 'POST'
         ),
-        'http-method' => 'POST'
-    ),
+        
+        /*
+         * 
+         */
+        array( 
+                'regex' => '#^/role/find$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array( 
+                'regex' => '#^/role/new$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'find',
+                'http-method' => 'POST'
+        ),
+        array( 
+                'regex' => '#^/role/(?P<id>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array( 
+                'regex' => '#^/role/(?P<id>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'POST',
+                'http-method' => 'update'
+        ),
+        array( 
+                'regex' => '#^/role/(?P<id>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'delete',
+                'http-method' => 'DELETE'
+        ),
+        
+        /**
+         * مدیریت داده‌های شخصی
+         *
+         * دسته‌ای از فراخوانی‌ها برای مدیریت داده‌های کاربر جاری در نظر گرفته
+         * شده است. این فراخوانی‌ها
+         * برای کاربران نهایی بسیار پرکاربرد هستند.
+         */
+        array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
+                'regex' => '#^/account$#',
+                'model' => 'User_Views_Account',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array( // اطلاعات کاربر را به روز می‌کند
+                'regex' => '#^/account$#',
+                'model' => 'User_Views_Account',
+                'method' => 'update',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
+        ),
+        
+        /*
+         * پروفایل کاربر
+         */
+        array( // دریافت پروفایل کاربر
+                'regex' => '#^/profile$#',
+                'model' => 'User_Views_Profile',
+                'method' => 'get',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'GET'
+        ),
+        array( // به روز رسانی پروفایل کاربری
+                'regex' => '#^/profile$#',
+                'model' => 'User_Views_Profile',
+                'method' => 'update',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
+        ),
     /*
      * مدیریت سیستم
      * 
@@ -100,48 +119,48 @@ return array(
      * می‌تواند از این فراخوانی‌ها استفاده کند و داده‌های کاربران را دستکاری کند.
      */
     array( // فهرست کاربران
-        'regex' => '#^/list$#',
-        'model' => 'User_Views_UserAdmin',
-        'method' => 'users',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+                'regex' => '#^/find$#',
+                'model' => 'User_Views_UserAdmin',
+                'method' => 'users',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'GET'
         ),
-        'http-method' => 'GET'
-    ),
-    array( // گرفتن اطلاعات کاربر
-        'regex' => '#^/(\d+)$#',
-        'model' => 'User_Views_UserAdmin',
-        'method' => 'getUser',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // گرفتن اطلاعات کاربر
+                'regex' => '#^/(\d+)$#',
+                'model' => 'User_Views_UserAdmin',
+                'method' => 'getUser',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'GET'
         ),
-        'http-method' => 'GET'
-    ),
-    array( // به روز کردن اطلاعات کاربر
-        'regex' => '#^/(\d+)$#',
-        'model' => 'User_Views_UserAdmin',
-        'method' => 'updateUser',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // به روز کردن اطلاعات کاربر
+                'regex' => '#^/(\d+)$#',
+                'model' => 'User_Views_UserAdmin',
+                'method' => 'updateUser',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
         ),
-        'http-method' => 'POST'
-    ),
-    array( // گرفتن پروفایل کاربر
-        'regex' => '#^/(\d+)/profile$#',
-        'model' => 'User_Views_ProfileAdmin',
-        'method' => 'getProfile',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
+        array( // گرفتن پروفایل کاربر
+                'regex' => '#^/(\d+)/profile$#',
+                'model' => 'User_Views_ProfileAdmin',
+                'method' => 'getProfile',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'GET'
         ),
-        'http-method' => 'GET'
-    ),
-    array( // به روز کردن پروفایل کاربر
-        'regex' => '#^/(\d+)/profile$#',
-        'model' => 'User_Views_ProfileAdmin',
-        'method' => 'updateProfile',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        ),
-        'http-method' => 'POST'
-    )
+        array( // به روز کردن پروفایل کاربر
+                'regex' => '#^/(\d+)/profile$#',
+                'model' => 'User_Views_ProfileAdmin',
+                'method' => 'updateProfile',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
+        )
 );
