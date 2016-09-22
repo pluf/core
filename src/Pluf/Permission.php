@@ -28,6 +28,7 @@ class Pluf_Permission extends Pluf_Model
 {
 
     public $_model = 'Pluf_Permission';
+
     private $_cache_to_string;
 
     function init ()
@@ -83,6 +84,14 @@ class Pluf_Permission extends Pluf_Model
                 'application_idx' => array(
                         'type' => 'normal',
                         'col' => 'application'
+                ),
+                'perme_idx' => array(
+                        'col' => 'application, code_name',
+                        'type' => 'unique', // normal, unique, fulltext, spatial
+                        'index_type' => '', // hash, btree
+                        'index_option' => '',
+                        'algorithm_option' => '',
+                        'lock_option' => ''
                 )
         );
         $hay = array(

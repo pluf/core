@@ -129,7 +129,7 @@ class Pluf_RowPermission extends Pluf_Model
      * @param bool $negative            
      * @throws Exception
      */
-    public static function add ($owner, $object, $perm, $negative = false, $tenant)
+    public static function add ($owner, $object, $perm, $negative = false, $tenant = 0)
     {
         if (! is_object($perm)) {
             // Find matching permission
