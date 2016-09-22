@@ -107,7 +107,6 @@ return array(
                 'http-method' => 'POST'
         ),
         
-        
         array( // گرفتن پروفایل کاربر
                 'regex' => '#^/(?P<userId>\d+)/profile$#',
                 'model' => 'User_Views_Profile',
@@ -193,4 +192,39 @@ return array(
                 'method' => 'delete',
                 'http-method' => 'DELETE'
         ),
+        
+
+        /*
+         * Message
+         */
+        array(
+                'regex' => '#^/(?P<userId>\d+)/message/new$#',
+                'model' => 'User_Views_Message',
+                'method' => 'find',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/message/find$#',
+                'model' => 'User_Views_Message',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
+                'model' => 'User_Views_Message',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
+                'model' => 'User_Views_Message',
+                'method' => 'POST',
+                'http-method' => 'update'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
+                'model' => 'User_Views_Message',
+                'method' => 'delete',
+                'http-method' => 'DELETE'
+        )
 );
