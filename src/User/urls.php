@@ -27,73 +27,6 @@ return array(
                         'GET'
                 )
         ),
-        array( // ثبت یک کاربر جدید
-                'regex' => '#^/new$#',
-                'model' => 'User_Views_User',
-                'method' => 'signup',
-                'http-method' => 'POST'
-        ),
-        
-        /*
-         * 
-         */
-        array( 
-                'regex' => '#^/role/find$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'find',
-                'http-method' => 'GET'
-        ),
-        array( 
-                'regex' => '#^/role/new$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'find',
-                'http-method' => 'POST'
-        ),
-        array( 
-                'regex' => '#^/role/(?P<id>\d+)$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'get',
-                'http-method' => 'GET'
-        ),
-        array( 
-                'regex' => '#^/role/(?P<id>\d+)$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'POST',
-                'http-method' => 'update'
-        ),
-        array( 
-                'regex' => '#^/role/(?P<id>\d+)$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'delete',
-                'http-method' => 'DELETE'
-        ),
-        
-        /**
-         * مدیریت داده‌های شخصی
-         *
-         * دسته‌ای از فراخوانی‌ها برای مدیریت داده‌های کاربر جاری در نظر گرفته
-         * شده است. این فراخوانی‌ها
-         * برای کاربران نهایی بسیار پرکاربرد هستند.
-         */
-        array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
-                'regex' => '#^/account$#',
-                'model' => 'User_Views_Account',
-                'method' => 'get',
-                'http-method' => 'GET'
-        ),
-        array( // اطلاعات کاربر را به روز می‌کند
-                'regex' => '#^/account$#',
-                'model' => 'User_Views_Account',
-                'method' => 'update',
-                'precond' => array(
-                        'Pluf_Precondition::loginRequired'
-                ),
-                'http-method' => 'POST'
-        ),
-        
-        /*
-         * پروفایل کاربر
-         */
         array( // دریافت پروفایل کاربر
                 'regex' => '#^/profile$#',
                 'model' => 'User_Views_Profile',
@@ -112,55 +45,152 @@ return array(
                 ),
                 'http-method' => 'POST'
         ),
-    /*
-     * مدیریت سیستم
-     * 
-     * این دسته از فراخوانی‌ها برای مدیریت کاربران و پروفایل‌های آنها در نظر گرفته شده است. تنها کاربر ریشه است که
-     * می‌تواند از این فراخوانی‌ها استفاده کند و داده‌های کاربران را دستکاری کند.
-     */
-    array( // فهرست کاربران
+        array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
+                'regex' => '#^/account$#',
+                'model' => 'User_Views_Account',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array( // اطلاعات کاربر را به روز می‌کند
+                'regex' => '#^/account$#',
+                'model' => 'User_Views_Account',
+                'method' => 'update',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
+        ),
+        
+        /*
+         * مدیریت سیستم
+         */
+        array( // ثبت یک کاربر جدید
+                'regex' => '#^/new$#',
+                'model' => 'User_Views_User',
+                'method' => 'signup',
+                'http-method' => 'POST'
+        ),
+        array( // فهرست کاربران
                 'regex' => '#^/find$#',
-                'model' => 'User_Views_UserAdmin',
-                'method' => 'users',
+                'model' => 'User_Views_User',
+                'method' => 'find',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
                 'http-method' => 'GET'
         ),
         array( // گرفتن اطلاعات کاربر
-                'regex' => '#^/(\d+)$#',
-                'model' => 'User_Views_UserAdmin',
-                'method' => 'getUser',
+                'regex' => '#^/(?P<userId>\d+)$#',
+                'model' => 'User_Views_User',
+                'method' => 'get',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
                 'http-method' => 'GET'
         ),
         array( // به روز کردن اطلاعات کاربر
-                'regex' => '#^/(\d+)$#',
-                'model' => 'User_Views_UserAdmin',
-                'method' => 'updateUser',
+                'regex' => '#^/(?P<userId>\d+)$#',
+                'model' => 'User_Views_User',
+                'method' => 'update',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
                 'http-method' => 'POST'
         ),
+        array( // به روز کردن اطلاعات کاربر
+                'regex' => '#^/(?P<userId>\d+)$#',
+                'model' => 'User_Views_User',
+                'method' => 'delete',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
+                'http-method' => 'POST'
+        ),
+        
+        
         array( // گرفتن پروفایل کاربر
-                'regex' => '#^/(\d+)/profile$#',
-                'model' => 'User_Views_ProfileAdmin',
-                'method' => 'getProfile',
+                'regex' => '#^/(?P<userId>\d+)/profile$#',
+                'model' => 'User_Views_Profile',
+                'method' => 'get',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
                 'http-method' => 'GET'
         ),
         array( // به روز کردن پروفایل کاربر
-                'regex' => '#^/(\d+)/profile$#',
-                'model' => 'User_Views_ProfileAdmin',
-                'method' => 'updateProfile',
+                'regex' => '#^/(?P<userId>\d+)/profile$#',
+                'model' => 'User_Views_Profile',
+                'method' => 'update',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
                 'http-method' => 'POST'
-        )
+        ),
+
+        /*
+         * Groups
+         */
+        array(
+                'regex' => '#^/(?P<userId>\d+)/group/new$#',
+                'model' => 'User_Views_Group',
+                'method' => 'create',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/group/find$#',
+                'model' => 'User_Views_Group',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/group/(?P<groupId>\d+)$#',
+                'model' => 'User_Views_Group',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/group/(?P<groupId>\d+)$#',
+                'model' => 'User_Views_Group',
+                'method' => 'update',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/group/(?P<groupId>\d+)$#',
+                'model' => 'User_Views_Group',
+                'method' => 'delete',
+                'http-method' => 'DELETE'
+        ),
+        /*
+         * Role
+         */
+        array(
+                'regex' => '#^/(?P<userId>\d+)/role/new$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'find',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/role/find$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'find',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'get',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'POST',
+                'http-method' => 'update'
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
+                'model' => 'User_Views_Permission',
+                'method' => 'delete',
+                'http-method' => 'DELETE'
+        ),
 );

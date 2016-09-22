@@ -94,7 +94,7 @@ return array(
                 )
         ),
         /*
-         * Group
+         * Users
          */
         array(
                 'regex' => '#^/(?P<groupId>\d+)/user/find$#',

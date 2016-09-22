@@ -48,4 +48,34 @@ class User_Views_Permission
         }
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function create ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function get ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function delete ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
 }

@@ -133,4 +133,14 @@ class User_Views_User
         // Return response
         return User_Shortcuts_UserJsonResponse($cuser);
     }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function delete ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
 }

@@ -13,15 +13,6 @@ class User_Views_Profile
 {
 
     /**
-     * پیش نیازهای دسترسی به پرفایل کاربران
-     *
-     * @var unknown
-     */
-    public $get_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
-
-    /**
      * پروفایل کاربری را در اختیار قرار می‌دهد
      *
      * @param unknown_type $request            
@@ -42,15 +33,6 @@ class User_Views_Profile
         }
         return new Pluf_HTTP_Response_Json($profile);
     }
-
-    /**
-     * پیش نیازهای دسترسی به پرفایل کاربران
-     *
-     * @var unknown
-     */
-    public $update_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
 
     /**
      *
