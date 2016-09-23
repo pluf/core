@@ -1,4 +1,21 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 return array(
         array( // ورود کاربر به سیستم است
                 'regex' => '#^/login$#',
@@ -15,22 +32,22 @@ return array(
                         'GET'
                 )
         ),
-        array( // اطلاعات کاربر را به روز می‌کند
-                'regex' => '#^/account/change_user_email/(.+)$#',
-                'model' => 'User_Views_User',
-                'method' => 'changeEmail',
-                'precond' => array(
-                        'Pluf_Precondition::loginRequired'
-                ),
-                'http-method' => array(
-                        'POST',
-                        'GET'
-                )
-        ),
+//         array( // اطلاعات کاربر را به روز می‌کند
+//                 'regex' => '#^/account/verify/(?P<type>.+)$#',
+//                 'model' => 'User_Views_User',
+//                 'method' => 'changeEmail',
+//                 'precond' => array(
+//                         'Pluf_Precondition::loginRequired'
+//                 ),
+//                 'http-method' => array(
+//                         'POST',
+//                         'GET'
+//                 )
+//         ),
         array( // دریافت پروفایل کاربر
                 'regex' => '#^/profile$#',
-                'model' => 'User_Views_Profile',
-                'method' => 'get',
+                'model' => 'User_Views',
+                'method' => 'profile',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
@@ -38,8 +55,8 @@ return array(
         ),
         array( // به روز رسانی پروفایل کاربری
                 'regex' => '#^/profile$#',
-                'model' => 'User_Views_Profile',
-                'method' => 'update',
+                'model' => 'User_Views',
+                'method' => 'updateProfile',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
@@ -47,14 +64,14 @@ return array(
         ),
         array( // اطلاعات کاربری را در اختیار شما قرار می‌دهد
                 'regex' => '#^/account$#',
-                'model' => 'User_Views_Account',
-                'method' => 'get',
+                'model' => 'User_Views',
+                'method' => 'account',
                 'http-method' => 'GET'
         ),
         array( // اطلاعات کاربر را به روز می‌کند
                 'regex' => '#^/account$#',
-                'model' => 'User_Views_Account',
-                'method' => 'update',
+                'model' => 'User_Views',
+                'method' => 'updateAccount',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 ),
@@ -67,7 +84,7 @@ return array(
         array( // ثبت یک کاربر جدید
                 'regex' => '#^/new$#',
                 'model' => 'User_Views_User',
-                'method' => 'signup',
+                'method' => 'create',
                 'http-method' => 'POST'
         ),
         array( // فهرست کاربران
@@ -106,7 +123,9 @@ return array(
                 ),
                 'http-method' => 'POST'
         ),
-        
+        /*
+         * Profile
+         */
         array( // گرفتن پروفایل کاربر
                 'regex' => '#^/(?P<userId>\d+)/profile$#',
                 'model' => 'User_Views_Profile',

@@ -82,9 +82,12 @@ class Tenant_Views extends Pluf_Views
         $model = Pluf::factory('SaaS_Application');
         $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
                 array());
-        return new Pluf_HTTP_Response_Json($form->save());
+        $model = $form->save();
+        Pluf_RowPermission::add($request->user, $model, 'SaaS.owner', 
+                $model->id);
+        return new Pluf_HTTP_Response_Json($model);
     }
-    
+
     /**
      *
      * @param unknown_type $request            
@@ -120,6 +123,10 @@ class Tenant_Views extends Pluf_Views
         $model2 = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
                 $match['id']);
         $model2->delete();
+        // XXX: maso, 1395: delete permisions
+        // XXX: maso, 1395: delete files
+        // XXX: maso, 1395: delete Settings, configs
+        // XXX: maso, 1395: emite signal
         return new Pluf_HTTP_Response_Json($model);
     }
 }
