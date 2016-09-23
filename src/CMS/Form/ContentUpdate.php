@@ -8,7 +8,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaSCMS_Form_ContentUpdate extends Pluf_Form
+class CMS_Form_ContentUpdate extends Pluf_Form
 {
     
     // public $user = null;

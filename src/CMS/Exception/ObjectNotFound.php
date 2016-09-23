@@ -6,7 +6,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaSCMS_Exception_ObjectNotFound extends Pluf_Exception
+class CMS_Exception_ObjectNotFound extends Pluf_Exception
 {
 
     /**

@@ -1,0 +1,9 @@
+{
+	"name": "CMS",
+	"version": "0.2.0",
+	"title": "Content Management System",
+	"model": [
+		"CMS_Content"
+	],
+	"permisson": []
+}

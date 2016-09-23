@@ -21,6 +21,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'Tenant/urls.php' 
 		),
+		array ( // CMS : Content Management System
+				'regex' => '#^/api/cms#',
+				'base' => $base,
+				'sub' => include 'CMS/urls.php' 
+		),
         
         
         
@@ -35,11 +40,6 @@ return array (
         
         
         
-		array ( // SaaSCMS : Content Management System
-				'regex' => '#^/api/saascms#',
-				'base' => $base,
-				'sub' => include 'SaaSCMS/urls.php' 
-		),
 		array (
 				'regex' => '#^/api/saas#',
 				'base' => $base,

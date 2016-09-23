@@ -7,7 +7,7 @@
  * امکان تعریف منابع برای یک نرم‌افزار کاربردی را فراهم می‌کند.
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
- * @deprecated به جای این کلاس از SaaSCMS_CMS‌ برای نگهداری منابع استفاده کنید. این کلاس در
+ * @deprecated به جای این کلاس از CMS_CMS‌ برای نگهداری منابع استفاده کنید. این کلاس در
  *            نسخه‌های بعد حذف خواهد شد.
  */
 class SaaS_Resource extends Pluf_Model

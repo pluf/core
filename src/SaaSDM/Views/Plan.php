@@ -58,7 +58,7 @@ class SaaSDM_Views_Plan {
 		// تعیین داده‌ها
 		$plan = SaaSDM_Shortcuts_GetPlanOr404( $match ["id"] );
 		// حق دسترسی
-		// SaaSCMS_Precondition::userCanAccessContent($request, $content);
+		// CMS_Precondition::userCanAccessContent($request, $content);
 		// اجرای درخواست
 		return new Pluf_HTTP_Response_Json ( $plan );
 	}
@@ -66,7 +66,7 @@ class SaaSDM_Views_Plan {
 		// تعیین داده‌ها
 		$plan = SaaSDM_Shortcuts_GetPlanOr404 ( $match ["id"] );
 		// حق دسترسی
-		// SaaSCMS_Precondition::userCanUpdateContent($request, $content);
+		// CMS_Precondition::userCanUpdateContent($request, $content);
 		// اجرای درخواست
 		$extra = array (
 				// 'user' => $request->user,
@@ -82,7 +82,7 @@ class SaaSDM_Views_Plan {
 		// تعیین داده‌ها
 		$plan = SaaSDM_Shortcuts_GetPlanOr404 ( $match ["id"] );
 		// دسترسی
-		// SaaSCMS_Precondition::userCanDeleteContent($request, $content);
+		// CMS_Precondition::userCanDeleteContent($request, $content);
 		// اجرا
 		$plan->delete ();
 		
@@ -95,7 +95,7 @@ class SaaSDM_Views_Plan {
 	// {
 	// // GET data
 	// $app = $request->tenant;
-	// $content = SaaSCMS_Shortcuts_GetContentOr404($match[1]);
+	// $content = CMS_Shortcuts_GetContentOr404($match[1]);
 	// // Check permission
 	// // SaaS_Precondition::userCanAccessApplication($request, $app);
 	// // SaaS_Precondition::userCanAccessResource($request, $content);
@@ -110,7 +110,7 @@ class SaaSDM_Views_Plan {
 // 	public static function updateFile($request, $match) {
 // 		// GET data
 // 		$app = $request->tenant;
-// 		$asset = SaaSCMS_Shortcuts_GetAssetOr404 ( $match ["id"] );
+// 		$asset = CMS_Shortcuts_GetAssetOr404 ( $match ["id"] );
 // 		// Check permission
 // 		// SaaS_Precondition::userCanAccessApplication($request, $app);
 // 		// SaaS_Precondition::userCanAccessResource($request, $content);
@@ -121,7 +121,7 @@ class SaaSDM_Views_Plan {
 // 					'asset' => $asset,
 // 					'tenant' => $request->tenant 
 // 			);
-// 			$form = new SaaSCMS_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+// 			$form = new CMS_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 // 			$asset = $form->update ();
 // 			// return new Pluf_HTTP_Response_Json($content);
 // 		} else {
