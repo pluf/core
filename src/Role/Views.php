@@ -106,6 +106,9 @@ class Role_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $model2 = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $model->delete();
+        return new Pluf_HTTP_Response_Json($model2);
     }
 }

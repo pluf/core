@@ -17,10 +17,24 @@ return array (
 				'sub' => include 'Role/urls.php' 
 		),
 		array (
+				'regex' => '#^/api/tenant#',
+				'base' => $base,
+				'sub' => include 'Tenant/urls.php' 
+		),
+        
+        
+        
+        
+		array (
 				'regex' => '#^/api/wiki#',
 				'base' => $base,
 				'sub' => include 'Wiki/urls.php' 
 		),
+        
+        
+        
+        
+        
 		array ( // SaaSCMS : Content Management System
 				'regex' => '#^/api/saascms#',
 				'base' => $base,

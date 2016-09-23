@@ -26,63 +26,31 @@ class SaaS_Configuration extends Pluf_Model
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
-                        'blank' => true
+                        'blank' => true,
+                        'editable' => false
                 ),
                 'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'SaaS_Application',
                         'blank' => false,
-                        'relate_name' => 'tenant'
+                        'relate_name' => 'tenant',
+                        'editable' => false
+                ),
+                'type' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'editable' => false
                 ),
                 'key' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
-                        'size' => 250
+                        'size' => 250,
+                        'editable' => false
                 ),
                 'value' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 250
-                ),
-                'type' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false
-                ),
-                
-                /*
-                 * اینها ممکن هست که در آینده حذف بشن
-                 */
-                'owner_write' => array( // owner can write
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'owner_read' => array( // owner can read
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'member_write' => array( // member can write
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'member_read' => array( // member can read
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'authorized_write' => array( // authorized can write
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'authorized_read' => array( // authorized can read
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'other_write' => array( // other can write
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
-                ),
-                'other_read' => array( // other can read
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'blank' => false
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -106,20 +74,12 @@ class SaaS_Configuration extends Pluf_Model
         $this->_a['idx'] = array(
                 'key_idx' => array(
                         'type' => 'unique',
-                        'col' => 'tenant, key'
-                ),
-                'search_type' => array(
-                        'type' => 'normal',
-                        'col' => 'tenant, key, type'
-                ),
-                'list_type' => array(
-                        'type' => 'normal',
-                        'col' => 'tenant, type'
+                        'col' => 'tenant, type, key'
                 )
         );
         $this->_a['views'] = array(
                 'list' => array(
-                        'select' => 'id, saas_configuration.key, type,description, creation_dtime, modif_dtime'
+                        'select' => 'id, saas_configuration.key, description, creation_dtime, modif_dtime'
                 )
         );
     }

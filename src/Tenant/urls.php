@@ -1,6 +1,13 @@
 <?php
 return array(
         array(
+                'regex' => '#^$#',
+                'model' => 'Tenant_Views',
+                'method' => 'current',
+                'http-method' => 'GET',
+                'precond' => array()
+        ),
+        array(
                 'regex' => '#^/find$#',
                 'model' => 'Tenant_Views',
                 'method' => 'find',
@@ -23,6 +30,9 @@ return array(
                 'model' => 'Tenant_Views',
                 'method' => 'get',
                 'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
         array(
                 'regex' => '#^/(?P<id>.+)$#',
@@ -41,5 +51,5 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
                 )
-        ),
+        )
 );

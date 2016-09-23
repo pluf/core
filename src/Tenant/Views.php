@@ -16,9 +16,60 @@ class Tenant_Views extends Pluf_Views
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
+    public function current ($request, $match)
+    {
+        return new Pluf_HTTP_Response_Json($request->tenant);
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
     public function find ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        // maso, 1394: گرفتن فهرست مناسبی از نرم افزارها
+        $pag = new Pluf_Paginator(new SaaS_Application());
+        if (! $request->user->administrator) {
+            $pag->model_view = 'user_model_permission';
+            $pag->forced_where = new Pluf_SQL(
+                    'model_class=%s AND owner_class=%s AND owner_id=%s', 
+                    array(
+                            'SaaS_Application',
+                            'Pluf_User',
+                            $request->user->id
+                    ));
+        }
+        $list_display = array(
+                'id' => __('tenant id'),
+                'title' => __('title'),
+                'validate' => __('validate'),
+                'domain' => __('domain'),
+                'subdomain' => __('subdomain'),
+                'creation_dtime' => __('creation date')
+        );
+        $search_fields = array(
+                'title',
+                'description',
+                'domain',
+                'subdomain'
+        );
+        $sort_fields = array(
+                'id',
+                'title',
+                'domain',
+                'subdomain',
+                'creation_dtime'
+        );
+        $pag->configure($list_display, $search_fields, $sort_fields);
+        $pag->action = array();
+        $pag->no_results_text = __('no tenant is found');
+        $pag->sort_order = array(
+                'creation_dtime',
+                'DESC'
+        );
+        $pag->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
     /**
@@ -28,7 +79,23 @@ class Tenant_Views extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $model = Pluf::factory('SaaS_Application');
+        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
+                array());
+        return new Pluf_HTTP_Response_Json($form->save());
+    }
+    
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function update ($request, $match)
+    {
+        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
+        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
+                array());
+        return new Pluf_HTTP_Response_Json($form->save());
     }
 
     /**
@@ -38,9 +105,10 @@ class Tenant_Views extends Pluf_Views
      */
     public function get ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
+        return new Pluf_HTTP_Response_Json($model);
     }
-    
+
     /**
      *
      * @param unknown_type $request            
@@ -48,6 +116,10 @@ class Tenant_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
+        $model2 = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
+                $match['id']);
+        $model2->delete();
+        return new Pluf_HTTP_Response_Json($model);
     }
 }
