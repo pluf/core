@@ -55,5 +55,14 @@ return array(
                 'method' => 'find',
                 'http-method' => 'GET',
                 'precond' => array()
+        ),
+        array(
+                'regex' => '#^/(?P<id>\d+)/user/new$#',
+                'model' => 'Role_Views_User',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'precond' => array(
+                        // Owner required
+                )
         )
 );

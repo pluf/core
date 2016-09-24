@@ -35,9 +35,7 @@ class Role_Views_User extends Pluf_Views
     public function find ($request, $match)
     {
         $per = new Pluf_Permission($match['id']);
-        // XXX: maso, 1395: این فراخوانی رو برای تست نوشتم. خیلی تغییر نیاز داره
         $pag = new Pluf_Paginator(new Pluf_User());
-        
         $sql = new Pluf_SQL('tenant=%s AND permission=%s AND owner_class=%s', 
                 array(
                         $request->tenant->id,
@@ -55,8 +53,7 @@ class Role_Views_User extends Pluf_Views
         $pag->configure(array(), 
                 array( // search
                         'id'
-                ), 
-                array( // sort
+                ), array( // sort
                         'id'
                 ));
         $pag->action = array();
@@ -75,10 +72,20 @@ class Role_Views_User extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        $model = new Pluf_Permission();
-        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
-                array());
-        return new Pluf_HTTP_Response_Json($form->save());
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', 
+                $match['id']);
+        if (array_key_exists('id', $request->REQUEST)) {
+            $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', 
+                    $request->REQUEST['id']);
+        } elseif (array_key_exists('login', $request->REQUEST)) {
+            $user = new Pluf_User($request->REQUEST['id']);
+            if (! isset($user) || $user->isAnonymous()) {
+                throw new Pluf_HTTP_Error404(__('User not found'));
+            }
+        }
+        $row = Pluf_RowPermission::add($user, null, $perm, false, 
+                $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($row);
     }
 
     /**
@@ -88,10 +95,7 @@ class Role_Views_User extends Pluf_Views
      */
     public function update ($request, $match)
     {
-        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
-        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
-                array());
-        return new Pluf_HTTP_Response_Json($form->save());
+        throw new Pluf_Exception('Not implemented');
     }
 
     /**
@@ -101,8 +105,7 @@ class Role_Views_User extends Pluf_Views
      */
     public function get ($request, $match)
     {
-        return new Pluf_HTTP_Response_Json(
-                Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']));
+        throw new Pluf_Exception('Not implemented');
     }
 
     /**

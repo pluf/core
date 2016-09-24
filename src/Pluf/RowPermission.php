@@ -129,7 +129,8 @@ class Pluf_RowPermission extends Pluf_Model
      * @param bool $negative            
      * @throws Exception
      */
-    public static function add ($owner, $object, $perm, $negative = false, $tenant = 0)
+    public static function add ($owner, $object, $perm, $negative = false, 
+            $tenant = 0)
     {
         if (! is_object($perm)) {
             // Find matching permission
@@ -140,17 +141,19 @@ class Pluf_RowPermission extends Pluf_Model
             }
             $perm = $found;
         }
-        Pluf_RowPermission::remove($owner, $object, $perm);
+        Pluf_RowPermission::remove($owner, $object, $perm, $tenant);
         $nperm = new Pluf_RowPermission();
         $nperm->owner_id = $owner->id;
         $nperm->owner_class = $owner->_a['model'];
-        $nperm->model_id = $object->id;
-        $nperm->model_class = $object->_a['model'];
+        if (isset($model) && $model->isAnonymous()) {
+            $nperm->model_id = $object->id;
+            $nperm->model_class = $object->_a['model'];
+        }
         $nperm->permission = $perm;
         $nperm->negative = $negative;
         $nperm->tenant = $tenant;
         $nperm->create();
-        return true;
+        return $nperm;
     }
 
     /**
@@ -161,7 +164,7 @@ class Pluf_RowPermission extends Pluf_Model
      * @param unknown $perm            
      * @throws Exception
      */
-    public static function remove ($owner, $object, $perm)
+    public static function remove ($owner, $object, $perm, $tenant = 0)
     {
         if (! is_object($perm)) {
             $found = Pluf_Permission::getFromString($perm);
@@ -172,15 +175,27 @@ class Pluf_RowPermission extends Pluf_Model
             $perm = $found;
         }
         $growp = new Pluf_RowPermission();
-        $sql = new Pluf_SQL(
-                'owner_id=%s AND owner_class=%s AND model_id=%s AND model_class=%s AND permission=%s', 
-                array(
-                        $owner->id,
-                        $owner->_a['model'],
-                        $object->id,
-                        $object->_a['model'],
-                        $perm->id
-                ));
+        if (isset($model) && ! $model->isAnonymous()) {
+            $sql = new Pluf_SQL(
+                    'owner_id=%s AND owner_class=%s AND model_id=%s AND model_class=%s AND permission=%s AND tenant=%s', 
+                    array(
+                            $owner->id,
+                            $owner->_a['model'],
+                            $object->id,
+                            $object->_a['model'],
+                            $perm->id,
+                            $tenant
+                    ));
+        } else {
+            $sql = new Pluf_SQL(
+                    'owner_id=%s AND owner_class=%s AND permission=%s AND tenant=%s', 
+                    array(
+                            $owner->id,
+                            $owner->_a['model'],
+                            $perm->id,
+                            $tenant
+                    ));
+        }
         $perms = $growp->getList(
                 array(
                         'filter' => $sql->gen()
