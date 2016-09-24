@@ -32,18 +32,18 @@ return array(
                         'GET'
                 )
         ),
-//         array( // اطلاعات کاربر را به روز می‌کند
-//                 'regex' => '#^/account/verify/(?P<type>.+)$#',
-//                 'model' => 'User_Views_User',
-//                 'method' => 'changeEmail',
-//                 'precond' => array(
-//                         'Pluf_Precondition::loginRequired'
-//                 ),
-//                 'http-method' => array(
-//                         'POST',
-//                         'GET'
-//                 )
-//         ),
+        // array( // اطلاعات کاربر را به روز می‌کند
+        // 'regex' => '#^/account/verify/(?P<type>.+)$#',
+        // 'model' => 'User_Views_User',
+        // 'method' => 'changeEmail',
+        // 'precond' => array(
+        // 'Pluf_Precondition::loginRequired'
+        // ),
+        // 'http-method' => array(
+        // 'POST',
+        // 'GET'
+        // )
+        // ),
         array( // دریافت پروفایل کاربر
                 'regex' => '#^/profile$#',
                 'model' => 'User_Views',
@@ -245,5 +245,33 @@ return array(
                 'model' => 'User_Views_Message',
                 'method' => 'delete',
                 'http-method' => 'DELETE'
+        ),
+        /*
+         * avatar
+         */
+        array(
+                'regex' => '#^/(?P<userId>\d+)/avatar$#',
+                'model' => 'User_Views_Avatar',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'precond' => array()
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/avatar$#',
+                'model' => 'User_Views_Avatar',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/(?P<userId>\d+)/avatar$#',
+                'model' => 'User_Views_Avatar',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         )
 );

@@ -95,6 +95,8 @@ $cfg['pluf_custom_user'] = 'Pluf_User';
  * می‌کند.
  */
 $cfg['user_signup_active'] = true;
+$cfg['user_avatar_default'] = SRC_BASE . '/var/avatar.svg';
+$cfg['user_avatra_max_size'] = 2097152;
 
 /*
  * روش‌های متفاوتی برای تعیین احراز اصالت وجود دارد. در اینجا تعیین می‌شود که
