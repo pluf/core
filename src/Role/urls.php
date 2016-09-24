@@ -44,5 +44,16 @@ return array(
                 'precond' => array(
                         'Pluf_Precondition::adminRequired'
                 )
+        ),
+        
+        /*
+         * 
+         */
+        array(
+                'regex' => '#^/(?P<id>\d+)/user/find$#',
+                'model' => 'Role_Views_User',
+                'method' => 'find',
+                'http-method' => 'GET',
+                'precond' => array()
         )
 );
