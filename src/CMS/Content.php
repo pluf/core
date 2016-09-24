@@ -184,6 +184,17 @@ class CMS_Content extends Pluf_Model
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
+        // File path
+        $path = $this->getAbsloutPath();
+        // file size
+        if (file_exists($path)) {
+            $this->file_size = filesize($path);
+        } else {
+            $this->file_size = 0;
+        }
+        // mime type (based on file name)
+        $fileInfo = SaaS_FileUtil::getMimeType($this->file_name);
+        $this->mime_type = $fileInfo[0];
     }
 
     /**
@@ -194,5 +205,15 @@ class CMS_Content extends Pluf_Model
     function postSave ($create = false)
     {
         //
+    }
+
+    /**
+     * مسیر کامل محتوی را تعیین می‌کند.
+     *
+     * @return string
+     */
+    public function getAbsloutPath ()
+    {
+        return $this->file_path . '/' . $this->id;
     }
 }

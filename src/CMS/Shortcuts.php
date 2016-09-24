@@ -45,3 +45,37 @@ function CMS_Shortcuts_GetPageOr404 ($id)
     throw new CMS_Exception_ObjectNotFound(
             "CMS page not found (Page id:" . $id . ")");
 }
+
+/**
+ * یک نام جدید را بررسی می‌کند.
+ * 
+ * نام یک محتوی باید در یک ملک به صورت انحصاری تعیین شود. بنابر این روال
+ * بررسی می‌کند که آیا محتویی هم نام با نام در نظر گرفته شده در ملک وجود دارد
+ * یا نه.
+ * 
+ * این فراخوانی در فرم‌ها کاربرد دارد.
+ * 
+ * @param unknown $name
+ * @param unknown $tenant
+ * @throws Pluf_Exception
+ * @return unknown
+ */
+function CMS_Shortcuts_CleanName ($name, $tenant)
+{
+    if ($name === 'new' || $name === 'find') {
+        throw new Pluf_Exception(__('content name must not be new, find'));
+    }
+    $q = new Pluf_SQL('tenant=%s and name=%s', 
+            array(
+                    $tenant->id,
+                    $name
+            ));
+    $items = Pluf::factory('CMS_Content')->getList(
+            array(
+                    'filter' => $q->gen()
+            ));
+    if (! isset($items) || $items->count() == 0) {
+        return $name;
+    }
+    throw new Pluf_Exception(__('content with the same name exist'));
+}

@@ -12,27 +12,22 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
 {
 
     public $tenant = null;
-    // public $user = null;
+
+    public $user = null;
+
     public function initFields ($extra = array())
     {
         $this->tenant = $extra['tenant'];
-        $extra['model'] = Pluf::factory('CMS_Content');
+        $this->tenant = $extra['user'];
         parent::initFields($extra);
     }
 
     public function clean_name ()
     {
         $name = $this->cleaned_data['name'];
-        $q = new Pluf_SQL('tenant=%s and name=%s', 
-                array(
-                        $this->tenant->id,
-                        $name
-                ));
-        $items = Pluf::factory('CMS_Content')->getOne($q->gen());
-        if (! isset($items) || $items->count() == 0) {
-            return $name;
-        }
-        throw new Pluf_Exception(__('content with the same name exist'));
+        if (empty($name))
+            return null;
+        return CMS_Shortcuts_CleanName($name, $this->tenant);
     }
 
     function save ($commit = true)

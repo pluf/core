@@ -65,7 +65,7 @@ class Pluf_Form_Model extends Pluf_Form
     }
 
     /**
-     * Save the model in the database.
+     * Saves or updates the model in the database.
      *
      * @param
      *            bool Commit in the database or not. If not, the object

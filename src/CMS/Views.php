@@ -8,20 +8,20 @@ class CMS_Views
     {
         // initial content data
         $extra = array(
-                // 'user' => $request->user,
-                'tenant' => $request->tenant
+                'user' => $request->user,
+                'tenant' => $request->tenant,
+                'model' => new CMS_Content()
         );
         // Create content and get its ID
         $form = new CMS_Form_ContentCreate($request->REQUEST, $extra);
-        $content = $form->save();
         
         // Upload content file and extract information about it (by updating
         // content)
-        $extra['content'] = $content;
+        $extra['model'] = $form->save();
         $form = new CMS_Form_ContentUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         try {
-            $content = $form->update();
+            $content = $form->save();
         } catch (Pluf_Exception $e) {
             $content->delete();
         }
@@ -78,7 +78,8 @@ class CMS_Views
             $content = CMS_Shortcuts_GetContentOr404($match['id']);
             // XXX: maso, 1395: محتوی در ملک باشد
         } else {
-            $content = CMS_Shortcuts_GetNamedContentOr404($request->tenant, $match['name']);
+            $content = CMS_Shortcuts_GetNamedContentOr404($request->tenant, 
+                    $match['name']);
         }
         // حق دسترسی
         // CMS_Precondition::userCanAccessContent($request, $content);
@@ -89,25 +90,27 @@ class CMS_Views
     public static function update ($request, $match)
     {
         // تعیین داده‌ها
-        $content = CMS_Shortcuts_GetContentOr404($match[1]);
+        $content = CMS_Shortcuts_GetContentOr404($match['id']);
         // حق دسترسی
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
         $extra = array(
                 // 'user' => $request->user,
-                'content' => $content,
+                'model' => $content,
                 'tenant' => $request->tenant
         );
+        // 'tenant' => $request->tenant
+        
         $form = new CMS_Form_ContentUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
-        $content = $form->update();
+        $content = $form->save();
         return new Pluf_HTTP_Response_Json($content);
     }
 
     public static function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $content = CMS_Shortcuts_GetContentOr404($match[1]);
+        $content = CMS_Shortcuts_GetContentOr404($match['id']);
         // دسترسی
         // CMS_Precondition::userCanDeleteContent($request, $content);
         // اجرا
@@ -123,7 +126,7 @@ class CMS_Views
     {
         // GET data
         $app = $request->tenant;
-        $content = CMS_Shortcuts_GetContentOr404($match[1]);
+        $content = CMS_Shortcuts_GetContentOr404($match['id']);
         // Check permission
         // SaaS_Precondition::userCanAccessApplication($request, $app);
         // SaaS_Precondition::userCanAccessResource($request, $content);
@@ -131,10 +134,10 @@ class CMS_Views
         // Do
         $content->downloads += 1;
         $content->update();
-        $response = new Pluf_HTTP_Response_File(
-                $content->file_path . '/' . $content->id, $content->mime_type);
-        $response->headers['Content-Disposition'] = 'attachment; filename="' .
-                 $content->file_name . '"';
+        $response = new Pluf_HTTP_Response_File($content->getAbsloutPath(), 
+                $content->mime_type);
+        $response->headers['Content-Disposition'] = sprintf(
+                'attachment; filename="%s"', $content->file_name);
         return $response;
     }
 
@@ -148,25 +151,25 @@ class CMS_Views
         // SaaS_Precondition::userCanAccessResource($request, $content);
         
         if (array_key_exists('file', $request->FILES)) {
-            $extra = array(
-                    // 'user' => $request->user,
-                    'content' => $content,
-                    'tenant' => $request->tenant
-            );
-            $form = new CMS_Form_ContentUpdate(
-                    array_merge($request->REQUEST, $request->FILES), $extra);
-            $content = $form->update();
-            // return new Pluf_HTTP_Response_Json($content);
+            // $extra = array(
+            // // 'user' => $request->user,
+            // 'content' => $content,
+            // 'tenant' => $request->tenant
+            // );
+            // $form = new CMS_Form_ContentUpdate(
+            // array_merge($request->REQUEST, $request->FILES), $extra);
+            // $content = $form->update();
+            // // return new Pluf_HTTP_Response_Json($content);
+            return CMS_Views::update($request, $match);
         } else {
-            
             // Do
-            $myfile = fopen($content->file_path . '/' . $content->id, "w") or
+            $myfile = fopen($content->getAbsloutPath(), "w") or
                      die("Unable to open file!");
             $entityBody = file_get_contents('php://input', 'r');
             fwrite($myfile, $entityBody);
             fclose($myfile);
-            $content->file_size = filesize(
-                    $content->file_path . '/' . $content->id);
+            // $content->file_size = filesize(
+            // $content->file_path . '/' . $content->id);
             $content->update();
         }
         return new Pluf_HTTP_Response_Json($content);
