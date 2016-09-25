@@ -72,8 +72,7 @@ class Role_Views_User extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', 
-                $match['id']);
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         if (array_key_exists('id', $request->REQUEST)) {
             $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', 
                     $request->REQUEST['id']);
@@ -85,7 +84,7 @@ class Role_Views_User extends Pluf_Views
         }
         $row = Pluf_RowPermission::add($user, null, $perm, false, 
                 $request->tenant->id);
-        return new Pluf_HTTP_Response_Json($row);
+        return new Pluf_HTTP_Response_Json($user);
     }
 
     /**
@@ -95,7 +94,7 @@ class Role_Views_User extends Pluf_Views
      */
     public function update ($request, $match)
     {
-        throw new Pluf_Exception('Not implemented');
+        throw new Pluf_Exception('Not supported');
     }
 
     /**
@@ -105,7 +104,7 @@ class Role_Views_User extends Pluf_Views
      */
     public function get ($request, $match)
     {
-        throw new Pluf_Exception('Not implemented');
+        throw new Pluf_Exception('Not supported');
     }
 
     /**
@@ -115,9 +114,9 @@ class Role_Views_User extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
-        $model2 = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
-        $model->delete();
-        return new Pluf_HTTP_Response_Json($model2);
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($owner);
     }
 }

@@ -47,7 +47,7 @@ return array(
         ),
         
         /*
-         * 
+         * Users
          */
         array(
                 'regex' => '#^/(?P<id>\d+)/user/find$#',
@@ -61,8 +61,35 @@ return array(
                 'model' => 'Role_Views_User',
                 'method' => 'create',
                 'http-method' => 'POST',
-                'precond' => array(
-                        // Owner required
-                )
+                'precond' => array()
+                // Owner required
+                
+        ),
+        array(
+                'regex' => '#^/(?P<id>\d+)/user/(?P<userId>)$#',
+                'model' => 'Role_Views_User',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'precond' => array()
+                // Owner required
+                
+        ),
+        array(
+                'regex' => '#^/(?P<id>\d+)/user/(?P<userId>)$#',
+                'model' => 'Role_Views_User',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array()
+                // Owner required
+                
+        ),
+        array(
+                'regex' => '#^/(?P<id>\d+)/user/(?P<userId>)$#',
+                'model' => 'Role_Views_User',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array()
+                // Owner required
+                
         )
 );
