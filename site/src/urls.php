@@ -26,12 +26,8 @@ return array (
 				'base' => $base,
 				'sub' => include 'CMS/urls.php' 
 		),
-        
-        
-        
-        
 		array (
-				'regex' => '#^/api/wiki#',
+				'regex' => '#^/api/book#',
 				'base' => $base,
 				'sub' => include 'Wiki/urls.php' 
 		),
