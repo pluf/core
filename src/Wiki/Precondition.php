@@ -33,22 +33,22 @@ class Wiki_Precondition
         return true;
     }
 
-    public static function userCanCreatePage ($request)
+    public static function userCanCreatePage ($request, $book = null)
     {
         return true;
     }
 
-    public static function userCanAccessPage ($request, $page)
+    public static function userCanAccessPage ($request, $page, $book = null)
     {
         return true;
     }
 
-    public static function userCanUpdatePage ($request, $page)
+    public static function userCanUpdatePage ($request, $page, $book = null)
     {
         return true;
     }
 
-    public static function userCanDeletePage ($request, $page)
+    public static function userCanDeletePage ($request, $page, $book = null)
     {
         return true;
     }

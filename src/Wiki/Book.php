@@ -24,7 +24,9 @@ class Wiki_Book extends Pluf_Model
                 // شناسه‌ها
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
-                        'blank' => true
+                        'blank' => false,
+                        'editable' => false,
+                        'readable' => true
                 ),
                 // فیلدها
                 'state' => array(

@@ -85,7 +85,7 @@ class Wiki_Views_Book
     public function get ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
         // بررسی حق دسترسی
         Wiki_Precondition::userCanAccessBook($request, $book);
         // اجرای درخواست
@@ -102,7 +102,7 @@ class Wiki_Views_Book
     public function update ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
         // حق دسترسی
         Wiki_Precondition::userCanUpdateBook($request, $book);
         // اجرای درخواست
@@ -129,7 +129,7 @@ class Wiki_Views_Book
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match[1]);
+        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
         // بررسی حق دسترسی
         Wiki_Precondition::userCanDeleteBook($request, $book);
         // اجرای درخواست
