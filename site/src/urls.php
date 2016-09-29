@@ -31,6 +31,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'Wiki/urls.php' 
 		),
+		array (
+				'regex' => '#^/api/spa#',
+				'base' => $base,
+				'sub' => include 'Spa/urls.php' 
+		),
         
         
         

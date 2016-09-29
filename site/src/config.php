@@ -284,9 +284,8 @@ $cfg['saas_freemium_full'] = 5;
  * مخزن‌ها فهرست شده تا سیستم در صورت نیاز آنها را بازیابی و در اختیار
  * کاربران قرار دهد.
  */
-$cfg['saas_spa_repository'] = array(
-        SRC_BASE . '/spa'
-);
+$cfg['saas_spa_repository'] = SRC_BASE . '/spa';
+
 // TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
 
 $cfg['saas_spa_package'] = "/spa.json";
