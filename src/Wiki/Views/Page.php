@@ -1,7 +1,5 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('Wiki_Shortcuts_GetPageOr404');
-Pluf::loadFunction('Wiki_Shortcuts_GetPageListCount');
 
 /**
  * @ingroup views
@@ -23,8 +21,8 @@ class Wiki_Views_Page
     public function create ($request, $match)
     {
         // تعیین دسترسی
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
-        Wiki_Precondition::userCanCreatePage($request, $books);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        Wiki_Precondition::userCanCreatePage($request, $book);
         // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
@@ -51,8 +49,8 @@ class Wiki_Views_Page
     public function get ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Wiki_Shortcuts_GetPageOr404($match['pageId']);
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // حق دسترسی
         Wiki_Precondition::userCanAccessPage($request, $page, $book);
         // اجرای درخواست
@@ -68,8 +66,8 @@ class Wiki_Views_Page
     public function update ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Wiki_Shortcuts_GetPageOr404($match['pageId']);
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // حق دسترسی
         Wiki_Precondition::userCanUpdatePage($request, $page, $book);
         // اجرای درخواست
@@ -93,8 +91,8 @@ class Wiki_Views_Page
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Wiki_Shortcuts_GetPageOr404($match['pageId']);
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // دسترسی
         Wiki_Precondition::userCanDeletePage($request, $page);
         // اجرا
@@ -112,7 +110,7 @@ class Wiki_Views_Page
      */
     public function find ($request, $match)
     {
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
         $pag = new Pluf_Paginator(new Wiki_Page());
         $sql = new Pluf_SQL('book=%s AND tenant=%s', 
@@ -141,7 +139,6 @@ class Wiki_Views_Page
                 'modif_dtime'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = Wiki_Shortcuts_GetPageListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }

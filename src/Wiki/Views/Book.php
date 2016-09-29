@@ -1,8 +1,5 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
-Pluf::loadFunction('User_Shortcuts_RemoveSecureData');
-Pluf::loadFunction('Wiki_Shortcuts_GetBookOr404');
-Pluf::loadFunction('Wiki_Shortcuts_GetBookListCount');
 
 /**
  * لایه نمایش کتاب‌ها را ایجاد می‌کند.
@@ -47,7 +44,6 @@ class Wiki_Views_Book
                 'modif_dtime'
         );
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = Wiki_Shortcuts_GetBookListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
@@ -85,7 +81,7 @@ class Wiki_Views_Book
     public function get ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // بررسی حق دسترسی
         Wiki_Precondition::userCanAccessBook($request, $book);
         // اجرای درخواست
@@ -102,7 +98,7 @@ class Wiki_Views_Book
     public function update ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // حق دسترسی
         Wiki_Precondition::userCanUpdateBook($request, $book);
         // اجرای درخواست
@@ -129,11 +125,11 @@ class Wiki_Views_Book
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Wiki_Shortcuts_GetBookOr404($match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         // بررسی حق دسترسی
         Wiki_Precondition::userCanDeleteBook($request, $book);
         // اجرای درخواست
-        $book2 = Wiki_Shortcuts_GetBookOr404($match[1]);
+        $book2 = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
         $book2->delete();
         return new Pluf_HTTP_Response_Json($book);
     }
