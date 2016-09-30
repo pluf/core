@@ -24,28 +24,43 @@ Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 /**
  *
  * @author maso<mostafa.barmshory@dpq.co.ir>
+ * @author hadi<mohammad.hadi.mansouri@dpq.co.ir>
  * @since 0.1.0
  */
 class User_Views
 {
 
     /**
+     * Retruns account information of current user
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function account ($request, $match)
+    public static function getAccount($request, $match)
     {
         return User_Shortcuts_UserJsonResponse($request->user);
     }
 
     /**
+     * Updates account information of current user
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function updateAccount ($request, $match)
+    public static function updateAccount($request, $match)
     {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     * Delete account of current user.
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public static function deleteAccount($request, $match)
+    {
+        // TODO: Hadi: What to do for other information related to current user?
         throw new Pluf_Exception_NotImplemented();
     }
 
@@ -54,7 +69,7 @@ class User_Views
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function profile ($request, $match)
+    public static function getProfile($request, $match)
     {
         throw new Pluf_Exception_NotImplemented();
     }
@@ -66,8 +81,41 @@ class User_Views
      * @param unknown $match            
      * @return unknown
      */
-    public function updateProfile ($request, $match)
+    public static function updateProfile($request, $match)
     {
+        throw new Pluf_Exception_NotImplemented();
+    }
+    
+    /**
+     * Returns avatar image of current user
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @throws Pluf_Exception_NotImplemented
+     */
+    public static function getAvatar($request, $match){
+        throw new Pluf_Exception_NotImplemented();
+    }
+    
+    /**
+     * Updates avatar image of current user
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @throws Pluf_Exception_NotImplemented
+     */
+    public static function updateAvatar($request, $match){
+        throw new Pluf_Exception_NotImplemented();
+    }
+    
+    /**
+     * Deletes avatar image of current user
+     * 
+     * @param unknown $request
+     * @param unknown $match
+     * @throws Pluf_Exception_NotImplemented
+     */
+    public static function deleteAvatar($request, $match){
         throw new Pluf_Exception_NotImplemented();
     }
 }

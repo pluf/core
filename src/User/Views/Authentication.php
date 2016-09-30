@@ -2,40 +2,33 @@
 Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
- * لایه نمایش احراز اصالت را ایجاد می‌کند
- *
- * @date 1394 یک پیاده سازی اولیه از این کلاس ارائه شده است که در آن دو واسط
- * RESR برای ورود و خروج در نظر گرفته شده است.
+ * Provide authentication functionality for users.
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
+ * @author hadi<mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
 class User_Views_Authentication
 {
 
     /**
-     * نمایش ورود کاربران به سیستم را ایجاد می‌کند
-     *
-     * مبنای پیاده سازی این نمایش ورود فراخوانی REST است از این رو با فراخوانی
-     * این نمایش
-     * یک JSON به عنوان نتیجه برگردانده می‌شود.
+     * Logs in user.
+     * As a result, returns information of loged in user as JSON information (if login was successful).
      */
-    public function login ($request, $match)
+    public static function login($request, $match)
     {
         if (! $request->user->isAnonymous()) {
             return User_Shortcuts_UserJsonResponse($request->user);
         }
         
-        $backends = Pluf::f('auth_backends', 
-                array(
-                        'Pluf_Auth_ModelBackend'
-                ));
+        $backends = Pluf::f('auth_backends', array(
+            'Pluf_Auth_ModelBackend'
+        ));
         foreach ($backends as $backend) {
-            $user = call_user_func(
-                    array(
-                            $backend,
-                            'authenticate'
-                    ), $request->POST);
+            $user = call_user_func(array(
+                $backend,
+                'authenticate'
+            ), $request->POST);
             if ($user !== false) {
                 break;
             }
@@ -55,9 +48,9 @@ class User_Views_Authentication
     }
 
     /**
-     * کاربر را از سیستم خارج می‌کند.
+     * Logs out user.
      */
-    function logout ($request, $match)
+    public static function logout($request, $match)
     {
         $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
         $request->user = new $user_model();

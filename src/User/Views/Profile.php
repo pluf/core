@@ -4,21 +4,24 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 
 /**
- * لایه نمایش مدیریت کاربران را به صورت پیش فرض ایجاد می‌کند
+ * Manage profile information of users.
  *
  * @author maso
+ * @author hadi
  *        
  */
 class User_Views_Profile
 {
 
     /**
-     * پروفایل کاربری را در اختیار قرار می‌دهد
+     * Returns profile information of specified user.
+     * Data model of profile can be different in each system. Also loading information of user is lazy,
+     * so profile is not loaded until a request occure.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function get ($request, $match)
+    public static function get($request, $match)
     {
         $profile_model = Pluf::f('user_profile_class', false);
         if ($profile_model === false) {
@@ -35,13 +38,14 @@ class User_Views_Profile
     }
 
     /**
+     * Update profile of specified user.
      *
      * @param unknown $request            
      * @param unknown $match            
      * @throws Pluf_Exception
      * @return Pluf_HTTP_Response_Json
      */
-    public function update ($request, $match)
+    public static function update($request, $match)
     {
         $profile_model = Pluf::f('user_profile_class', false);
         if ($profile_model === false) {
@@ -59,10 +63,9 @@ class User_Views_Profile
         if ($profile_form === false) {
             throw new Pluf_Exception(__('Profile form is not configured.'));
         }
-        $form = new $profile_form(array_merge($request->POST, $request->FILES), 
-                array(
-                        'user_profile' => $profile
-                ));
+        $form = new $profile_form(array_merge($request->POST, $request->FILES), array(
+            'user_profile' => $profile
+        ));
         $profile = $form->update();
         return new Pluf_HTTP_Response_Json($profile);
     }
