@@ -1179,10 +1179,11 @@ class Pluf_Model implements JsonSerializable
             /*
              * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
              */
-            if (array_key_exists('readable', $this->_a['cols'][$col]) &&
+            if (! array_key_exists($col, $this->_a['cols']) || array_key_exists(
+                    'readable', $this->_a['cols'][$col]) &&
                      ! $this->_a['cols'][$col]['readable'])
                 continue;
-            /*
+                /*
              * پارامترهای بی محتوی سریال نمی‌شونن
              */
             if ($val)

@@ -12,12 +12,16 @@ class Wiki_Form_PageCreate extends Pluf_Form
 {
 
     public $user = null;
+
     public $tenant = null;
+
+    public $book = null;
 
     public function initFields ($extra = array())
     {
         $this->user = $extra['user'];
         $this->tenant = $extra['tenant'];
+        $this->book = $extra['book'];
         $initial = __('empty page');
         $initname = (! empty($extra['name'])) ? $extra['name'] : __('page name');
         $this->fields['title'] = new Pluf_Form_Field_Varchar(
@@ -108,6 +112,7 @@ class Wiki_Form_PageCreate extends Pluf_Form
         $page->setFromFormData($this->cleaned_data);
         $page->submitter = $this->user;
         $page->tenant = $this->tenant;
+        $page->book = $this->book;
         if ($commit) {
             $page->create();
         }
