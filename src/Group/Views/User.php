@@ -48,6 +48,8 @@ class Group_Views_User extends Pluf_Views
     }
 
     /**
+     * Deletes a user from a group.
+     * Id of deleted user should be specified in the match.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            

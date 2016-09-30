@@ -9,7 +9,7 @@ return array(
         'method' => 'create',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::adminRequired'
         )
     ),
     array(

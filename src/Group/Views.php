@@ -46,6 +46,17 @@ class Group_Views extends Pluf_Views
     }
     
     /**
+     * Updates information of a group.
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public static function update ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+    
+    /**
      * Deletes a group.
      *
      * @param unknown_type $request            

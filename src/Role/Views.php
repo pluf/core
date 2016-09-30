@@ -20,22 +20,35 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 
 /**
- * لایه نمایش مدیریت گروه‌ها را به صورت پیش فرض ایجاد می‌کند
+ * Manages roles
  *
  * @author maso
  *        
  */
 class Role_Views extends Pluf_Views
 {
+    /**
+     * Creates new role.
+     *
+     * @param unknown_type $request
+     * @param unknown_type $match
+     */
+    public static function create ($request, $match)
+    {
+        $model = new Pluf_Permission();
+        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST,
+            array());
+        return new Pluf_HTTP_Response_Json($form->save());
+    }
 
     /**
+     * Returns list of roles with specified conditions.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function find ($request, $match)
+    public static function find ($request, $match)
     {
-        
         // XXX: maso, 1395: این فراخوانی رو برای تست نوشتم. خیلی تغییر نیاز داره
         $pag = new Pluf_Paginator(new Pluf_Permission());
         $pag->configure(array(), 
@@ -63,24 +76,24 @@ class Role_Views extends Pluf_Views
     }
 
     /**
+     * Returns information of a role.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param unknown_type $request
+     * @param unknown_type $match
      */
-    public function create ($request, $match)
+    public function get ($request, $match)
     {
-        $model = new Pluf_Permission();
-        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
-                array());
-        return new Pluf_HTTP_Response_Json($form->save());
+        return new Pluf_HTTP_Response_Json(
+            Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']));
     }
-
+    
     /**
+     * Updates information of a role.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function update ($request, $match)
+    public static function update ($request, $match)
     {
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
@@ -89,17 +102,7 @@ class Role_Views extends Pluf_Views
     }
 
     /**
-     *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
-     */
-    public function get ($request, $match)
-    {
-        return new Pluf_HTTP_Response_Json(
-                Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']));
-    }
-
-    /**
+     * Deletes a role.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
