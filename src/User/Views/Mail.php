@@ -10,7 +10,7 @@ Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class User_Views_Authentication
+class User_Views_Mail
 {
 
     /**
