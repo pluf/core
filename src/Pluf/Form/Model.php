@@ -84,6 +84,6 @@ class Pluf_Form_Model extends Pluf_Form
             return $this->model;
         }
         throw new Pluf_Exception_Form(
-                __('Cannot save the model from an invalid form.'));
+                __('Cannot save the model from an invalid form.'), $this);
     }
 }
