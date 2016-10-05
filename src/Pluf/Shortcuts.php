@@ -118,6 +118,26 @@ function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
     return new Pluf_Form_Model($data, $extra, $label_suffix);
 }
 
+/**
+ * Get a given form from a model to update.
+ *
+ * @param
+ *            Object The model.
+ * @param
+ *            array Data to bound the form (null)
+ * @param
+ *            array Extra parameters (array())
+ * @param
+ *            string Label suffix (null)
+ * @return Object Form to update for this model.
+ */
+function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null, $extra = array(),
+    $label_suffix = null)
+{
+    $extra['model'] = $model;
+    return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
+}
+
 function Pluf_Shortcuts_LoadModels ($moduleJson)
 {
     $db = Pluf::db();

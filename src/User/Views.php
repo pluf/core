@@ -19,6 +19,7 @@
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('Pluf_Shortcuts_GetFormForUpdateModel');
 Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
@@ -49,7 +50,9 @@ class User_Views
      */
     public static function updateAccount($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->user->id);
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
+        return User_Shortcuts_UserJsonResponse($form->save());
     }
 
     /**
@@ -60,8 +63,10 @@ class User_Views
      */
     public static function deleteAccount($request, $match)
     {
-        // TODO: Hadi: What to do for other information related to current user?
-        throw new Pluf_Exception_NotImplemented();
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->user->id);
+        $request->user->delete();
+        return new Pluf_HTTP_Response_Json($user);
+        
     }
 
     /**
