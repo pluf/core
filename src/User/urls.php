@@ -27,7 +27,7 @@ return array(
         'http-method' => 'GET'
     ),
     array( // Update information of current user
-        'regex' => '#^/$#',
+        'regex' => '#^$#',
         'model' => 'User_Views',
         'method' => 'updateAccount',
         'precond' => array(
@@ -36,7 +36,7 @@ return array(
         'http-method' => 'POST'
     ),
     array( // Delete current user
-        'regex' => '#^/$#',
+        'regex' => '#^$#',
         'model' => 'User_Views',
         'method' => 'deleteAccount',
         'precond' => array(

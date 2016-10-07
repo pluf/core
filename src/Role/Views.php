@@ -36,7 +36,7 @@ class Role_Views extends Pluf_Views
     public static function create ($request, $match)
     {
         $model = new Pluf_Permission();
-        $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST,
+        $form = Pluf_Shortcuts_GetFormForFModel($model, $request->REQUEST,
             array());
         return new Pluf_HTTP_Response_Json($form->save());
     }
@@ -51,22 +51,30 @@ class Role_Views extends Pluf_Views
     {
         // XXX: maso, 1395: این فراخوانی رو برای تست نوشتم. خیلی تغییر نیاز داره
         $pag = new Pluf_Paginator(new Pluf_Permission());
-        $pag->configure(array(), 
-                array( // search
-                        'name',
-                        'application',
-                        'code_name',
-                        'description'
-                ), 
-                array( // sort
-                        'id',
-                        'name',
-                        'application',
-                        'code_name',
-                        'version'
-                ));
+        $pag->list_filters = array(
+            'id',
+            'name',
+            'version',
+            'code_name',
+            'application'
+        );
+        $search_fields = array(
+            'name',
+            'version',
+            'code_name',
+            'description',
+            'application'
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'version',
+            'code_name',
+            'application'
+        );
+        $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->action = array();
-        $pag->items_per_page = 20;
+        $pag->items_per_page = 50;
         $pag->sort_order = array(
                 'version',
                 'DESC'
