@@ -5,12 +5,12 @@ return array (
 				'regex' => '#^/new$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'create',
-				'http-method' => 'POST' 
+				'http-method' => 'POST',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
 		),
-		// 'precond' => array (
-		// //'Pluf_Precondition::loginRequired',
-		// //'SaaS_Precondition::tenantMember'
-		// )
 		array (
 				'regex' => '#^/find$#',
 				'model' => 'SaaSDM_Views_Asset',
@@ -52,12 +52,11 @@ return array (
 				'model' => 'SaaSDM_Views_Link',
 				'method' => 'create',
 				'http-method' => 'GET' 
-		)
+		),
 		// 'precond' => array (
 		// 'Pluf_Precondition::loginRequired',
 		// 'SaaS_Precondition::tenantMember'
 		// )
-		,
 		array ( // Link urls
 				'regex' => '#^/link/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Link',
@@ -93,10 +92,10 @@ return array (
 				'model' => 'SaaSDM_Views_Plan',
 				'method' => 'create',
 				'http-method' => 'POST',
-// 				'precond' => array (
-// 						'Pluf_Precondition::loginRequired',
-// 						'SaaS_Precondition::tenantMember' 
-// 				) 
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				)
 		),
 		array ( // Plan urls
 				'regex' => '#^/plan/find$#',
@@ -113,56 +112,54 @@ return array (
 				'model' => 'SaaSDM_Views_PlanTemplate',
 				'method' => 'get',
 				'http-method' => 'GET',
-// 				'precond' => array (
-// 						'Pluf_Precondition::loginRequired',
-// 						'SaaS_Precondition::tenantMember' 
-// 				) 
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
 		),
 		array ( // PlanTemplate urls
 				'regex' => '#^/plantemplate/new$#',
 				'model' => 'SaaSDM_Views_PlanTemplate',
 				'method' => 'create',
-				'http-method' => 'POST' 
-		)
-		// 'precond' => array (
-		// 'Pluf_Precondition::loginRequired',
-		// 'SaaS_Precondition::tenantMember'
-		// )
-		,
+				'http-method' => 'POST',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
+		),
 		array ( // PlanTemplate urls
 				'regex' => '#^/plantemplate/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_PlanTemplate',
 				'method' => 'update',
 				'http-method' => 'POST',
-// 				'precond' => array (
-// 						'Pluf_Precondition::loginRequired',
-// 						'SaaS_Precondition::tenantMember' 
-// 				) 
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				)
 		),
-
 		array ( // Download urls
 				'regex' => '#^/download/(?P<secure_link>.+)$#',
 				'model' => 'SaaSDM_Views_Link',
 				'method' => 'download',
-				'http-method' => 'GET',
-// 				'precond' => array (
-// 						'Pluf_Precondition::loginRequired',
-// 						'SaaS_Precondition::tenantMember' 
-// 				) 
+				'http-method' => 'GET' 
 		),
+		// 'precond' => array (
+		// 'Pluf_Precondition::loginRequired',
+		// 'SaaS_Precondition::tenantMember'
+		// )
 		array (
 				'regex' => '#^/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'delete',
 				'http-method' => 'DELETE' 
 		) 
-)
+);
 // 'precond' => array (
 // //'Pluf_Precondition::loginRequired',
 // //'SaaS_Precondition::tenantMember'
 // )
 
-;
+
 // 'precond' => array (
 // //'Pluf_Precondition::loginRequired',
 // //'SaaS_Precondition::tenantMember'
