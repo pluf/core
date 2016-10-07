@@ -8,7 +8,8 @@ class SaaSDM_Views_Plan {
 				'tenant' => $request->tenant 
 		);
 		// Create plan and get its ID
-		$form = new SaaSDM_Form_PlanCreate ( $request->REQUEST, $extra );
+		$extra['user'] = $request->user;   // added to keep user data
+		$form = new SaaSDM_Form_PlanCreate ( $request->REQUEST, $extra );		
 		$plan = $form->save ();
 				
 		return new Pluf_HTTP_Response_Json ( $plan );
