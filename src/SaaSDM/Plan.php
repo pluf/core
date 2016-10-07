@@ -54,11 +54,11 @@ class SaaSDM_Plan extends Pluf_Model {
 						'blank' => false,
 						'relate_name' => 'tenant' 
 				),
-				'account' => array (
+				'user' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaS_Account',
+						'model' => 'Pluf_User',
 						'blank' => false,
-						'relate_name' => 'account'
+						'relate_name' => 'user'
 				)
 		);
 	}
