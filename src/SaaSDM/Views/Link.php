@@ -76,6 +76,10 @@ class SaaSDM_Views_Link
         
         $asset = $link->get_asset();
         
+        $user = $link->get_user();
+        
+        //$user = $link->get_user();
+        
         // update download
         $link->download ++;
         $link->update();
@@ -86,6 +90,7 @@ class SaaSDM_Views_Link
         $size = $response->computeSize();
         
         // TODO: mahdi: extract plan id and put in parenthesis below
+      	
         $plan = SaaSDM_Shortcuts_GetPlanOr404("1");
         if ($plan->remain_volume > $size && $plan->remain_count > 0) {
             $plan->remain_volume -= $size;
