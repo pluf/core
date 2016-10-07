@@ -21,7 +21,7 @@ return array(
      * Current User
      */
     array( // Get information of current user
-        'regex' => '#^/$#',
+        'regex' => '#^$#',
         'model' => 'User_Views',
         'method' => 'getAccount',
         'http-method' => 'GET'
