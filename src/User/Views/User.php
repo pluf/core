@@ -87,16 +87,10 @@ class User_Views_User
      */
     public static function update($request, $match)
     {
-        // initial page data
-        $extra = array(
-            'user' => $request->user
-        );
-        $form = new User_Form_Account(array_merge($request->POST, $request->FILES), $extra);
-        $cuser = $form->update();
-        $request->user->setMessage(sprintf(__('Account data has been updated.'), (string) $cuser));
-        
-        // Return response
-        return User_Shortcuts_UserJsonResponse($cuser);
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
+        $request->user->setMessage(sprintf(__('Account data has been updated.'), (string) $model));
+        return User_Shortcuts_UserJsonResponse($form->save());
     }
 
     /**
@@ -131,6 +125,12 @@ class User_Views_User
             'last_name',
             'email'
         );
+        $list_display = array(
+            'login' => __('login'),
+            'first_name' => __('first name'),
+            'last_name' => __('last name'),
+            'email' => __('email')
+        );
         $sort_fields = array(
             'id',
             'login',
@@ -141,8 +141,20 @@ class User_Views_User
         );
         $pag->model_view = 'secure';
         $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->items_per_page = $this->getListCount($request);
+        $pag->items_per_page = User_Views_User::getListCount($request);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
+    }
+
+    static function getListCount($request)
+    {
+        $count = 50;
+        if (array_key_exists('_px_ps', $request->GET)) {
+            $count = $request->GET['_px_ps'];
+            if ($count == 0 || $count > 50) {
+                $count = 50;
+            }
+        }
+        return $count;
     }
 }
