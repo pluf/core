@@ -51,7 +51,13 @@ class SaaSDM_Link extends Pluf_Model {
 						'model' => 'SaaSDM_Asset',
 						'blank' => false,
 						'relate_name' => 'asset' 
-				) 
+				),
+				'user' => array (
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'Pluf_User',
+						'blank' => false,
+						'relate_name' => 'user'
+				)				
 		);
 		
 		$this->_a ['idx'] = array (

@@ -5,7 +5,6 @@
   "model": [
 		"SaaSDM_Asset",
 		"SaaSDM_Link",
-		"SaaSDM_Account",
 		"SaaSDM_Plan",
 		"SaaSDM_PlanTemplate"
 	],

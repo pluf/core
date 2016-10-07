@@ -17,7 +17,7 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
     public function initFields ($extra = array())
     {
         $this->tenant = $extra['tenant'];
-//         $this->user = $extra['user'];
+        $this->user = $extra['user'];
 
         $this->fields[ 'tempalteID' ] = new Pluf_Form_Field_Varchar(
         		array(
@@ -45,6 +45,7 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $plan->remain_volume = $plantemplate->max_volume;
         $plan->active = false;
         //TODO: add relation to BANK payments
+        $plan->user = $this->user; 
         //TODO: add relation to accont and user
  
         
