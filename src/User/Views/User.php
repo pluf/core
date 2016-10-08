@@ -75,7 +75,7 @@ class User_Views_User
      */
     public static function get($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        return User_Shortcuts_UserJsonResponse($match['userId']);
     }
 
     /**
@@ -101,7 +101,12 @@ class User_Views_User
      */
     public static function delete($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        // XXX: hadi, 1395-07-17: permission should be consider here
+        // temporary I constrain this operation only for admin.
+        Pluf_Precondition::adminRequired($request);
+        $usr = new Pluf_User($match['userId']);
+        $usr->delete();
+        return new Pluf_HTTP_Response_Json($usr);
     }
 
     /**

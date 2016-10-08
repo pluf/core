@@ -124,7 +124,8 @@ class Pluf_User extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Boolean',
                 'default' => false,
                 'blank' => true,
-                'verbose' => __('administrator')
+                'verbose' => __('administrator'),
+                'editable' => false
             ),
             'staff' => array(
                 'type' => 'Pluf_DB_Field_Boolean',

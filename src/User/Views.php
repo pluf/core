@@ -66,7 +66,6 @@ class User_Views
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->user->id);
         $request->user->delete();
         return new Pluf_HTTP_Response_Json($user);
-        
     }
 
     /**
