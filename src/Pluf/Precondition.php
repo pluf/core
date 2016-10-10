@@ -22,7 +22,7 @@ class Pluf_Precondition
     static public function loginRequired ($request)
     {
         if (! isset($request->user) or $request->user->isAnonymous()) {
-            throw new Pluf_Exception("Login required", 4001, null, 400, '', 
+            throw new Pluf_Exception_Unauthorized('Login required', null, '', 
                     'login is required, or cocki is not enabled');
         }
         if (! $request->user->active) {
@@ -90,8 +90,8 @@ class Pluf_Precondition
         if ($request->user->hasPerm($permission)) {
             return true;
         }
-        throw new Pluf_Exception('you do not have permission', 4005, null, 400, '', 
-                'you do not have permission');
+        throw new Pluf_Exception('you do not have permission', 4005, null, 400, 
+                '', 'you do not have permission');
     }
 
     /**
