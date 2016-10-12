@@ -68,9 +68,6 @@ class SaaSDM_Views_Link {
 		
 		$user = $link->get_user ();
 		
-		// update download
-		$link->download ++;
-		$link->update ();
 		// Do Download
 		$httpRange = isset ( $request->SERVER ['HTTP_RANGE'] ) ? $request->SERVER ['HTTP_RANGE'] : null;
 		$response = new Pluf_HTTP_Response_ResumableFile ( $asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type );
@@ -82,16 +79,18 @@ class SaaSDM_Views_Link {
 				$user->id 
 		) );
 		$planList->forced_where = $sql;
-		// TODO: mahdi: add checking active
 		foreach ( $planList->render_array() as $plan ) {
 			$plan = SaaSDM_Shortcuts_GetPlanOr404 ( $plan );
-			if ($plan->remain_volume > $size && $plan->remain_count > 0) {
+			if ($plan->remain_volume > $size && $plan->remain_count > 0 && $plan->active == 1) {
 				$plan->remain_volume -= $size;
 				$plan->remain_count --;
 				$plan->update ();
+				// update download
+				$link->download ++;
+				$link->update ();
 				return $response;
 			}	
 		}
-		throw new SaaSDM_Exception_ObjectNotFound ( "SaaSDM plan does not have enough priviledges. (plan id:" . $plan->id . ")" );
+		throw new SaaSDM_Exception_ObjectNotFound ( "SaaSDM plan does not have enough priviledges, or there's no appropriate plan (last checked plan id:" . $plan->id . ")" );
 	}
 }
