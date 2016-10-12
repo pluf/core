@@ -22,7 +22,7 @@ function CMS_Shortcuts_GetNamedContentOr404 ($tenant, $name)
             array(
                     'filter' => $q->gen()
             ));
-    if (isset($item) && ! $item->count() == 1) {
+    if (isset($item) && $item->count() == 1) {
         return $item[0];
     }
     if ($item->count() > 1) {
@@ -48,15 +48,15 @@ function CMS_Shortcuts_GetPageOr404 ($id)
 
 /**
  * یک نام جدید را بررسی می‌کند.
- * 
+ *
  * نام یک محتوی باید در یک ملک به صورت انحصاری تعیین شود. بنابر این روال
  * بررسی می‌کند که آیا محتویی هم نام با نام در نظر گرفته شده در ملک وجود دارد
  * یا نه.
- * 
+ *
  * این فراخوانی در فرم‌ها کاربرد دارد.
- * 
- * @param unknown $name
- * @param unknown $tenant
+ *
+ * @param unknown $name            
+ * @param unknown $tenant            
  * @throws Pluf_Exception
  * @return unknown
  */
@@ -77,5 +77,6 @@ function CMS_Shortcuts_CleanName ($name, $tenant)
     if (! isset($items) || $items->count() == 0) {
         return $name;
     }
-    throw new Pluf_Exception(__('content with the same name exist'));
+    throw new Pluf_Exception(
+            sprintf(__('content with the same name exist (name: %s'), $name));
 }
