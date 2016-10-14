@@ -2,6 +2,7 @@
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('User_Shortcuts_UpdateProfile');
 
 /**
  * Manage profile information of users.
@@ -47,26 +48,30 @@ class User_Views_Profile
      */
     public static function update($request, $match)
     {
-        $profile_model = Pluf::f('user_profile_class', false);
-        if ($profile_model === false) {
-            throw new Pluf_Exception(__('Profile model is not configured.'));
-        }
-        try {
-            $profile = $request->user->getProfile();
-        } catch (Pluf_Exception_DoesNotExist $ex) {
-            $profile = new $profile_model();
-            $profile->user = $request->user;
-            $profile->create();
-        }
+        // $profile_model = Pluf::f('user_profile_class', false);
+        // if ($profile_model === false) {
+        // throw new Pluf_Exception(__('Profile model is not configured.'));
+        // }
+        // try {
+        // $profile = $request->user->getProfile();
+        // } catch (Pluf_Exception_DoesNotExist $ex) {
+        // $profile = new $profile_model();
+        // $profile->user = $request->user;
+        // $profile->create();
+        // }
         
-        $profile_form = Pluf::f('user_profile_form', false);
-        if ($profile_form === false) {
-            throw new Pluf_Exception(__('Profile form is not configured.'));
-        }
-        $form = new $profile_form(array_merge($request->POST, $request->FILES), array(
-            'user_profile' => $profile
-        ));
-        $profile = $form->update();
-        return new Pluf_HTTP_Response_Json($profile);
+        // $profile_form = Pluf::f('user_profile_form', false);
+        // if ($profile_form === false) {
+        // throw new Pluf_Exception(__('Profile form is not configured.'));
+        // }
+        // $form = new $profile_form(array_merge($request->POST, $request->FILES), array(
+        // 'user_profile' => $profile
+        // ));
+        // $profile = $form->update();
+        // return new Pluf_HTTP_Response_Json($profile);
+        // TODO: Hadi, 1395-07-23: should consider security permissions
+        $currentUser = $request->user;
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        return User_Shortcuts_UpdateProfile($user, $request->REQUEST);
     }
 }
