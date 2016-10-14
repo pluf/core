@@ -35,10 +35,10 @@ class SaaSDM_Views_Asset {
 	}
 	public static function find($request, $match) {
 		$asset = new Pluf_Paginator ( new SaaSDM_Asset () );
-		// $sql = new Pluf_SQL('tenant=%s', array(
-		// $request->tenant->id
-		// ));
-		// $asset->forced_where = $sql;
+		$sql = new Pluf_SQL ( 'tenant=%s', array (
+				$request->tenant->id 
+		) );
+		$asset->forced_where = $sql;
 		$asset->list_filters = array (
 				'id',
 				'name',
@@ -48,7 +48,14 @@ class SaaSDM_Views_Asset {
 				'driver_type',
 				'driver_id' 
 		);
-		$list_display = array ();
+		$list_display = array (
+				'name',
+				'path',
+				'size',
+				'download',
+				'driver_type',
+				'driver_id'
+		);
 		
 		$search_fields = array (
 				'name',
@@ -111,22 +118,6 @@ class SaaSDM_Views_Asset {
 		return new Pluf_HTTP_Response_Json ( $asset_copy );
 	}
 	
-	// public static function download($request, $match)
-	// {
-	// // GET data
-	// $app = $request->tenant;
-	// $content = CMS_Shortcuts_GetContentOr404($match[1]);
-	// // Check permission
-	// // SaaS_Precondition::userCanAccessApplication($request, $app);
-	// // SaaS_Precondition::userCanAccessResource($request, $content);
-	
-	// // Do
-	// $content->downloads += 1;
-	// $content->update();
-	// $response = new Pluf_HTTP_Response_File($content->file_path . '/' . $content->id, $content->mime_type);
-	// $response->headers['Content-Disposition'] = 'attachment; filename="' . $content->file_name . '"';
-	// return $response;
-	// }
 	public static function updateFile($request, $match) {
 		// GET data
 		$app = $request->tenant;
