@@ -100,7 +100,7 @@ class Pluf_Permission extends Pluf_Model
         );
         sort($hay);
         $t_asso = $this->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
-        $t_perm = $this->_con->pfx . 'permissions';
+        $t_perm = $this->_con->pfx . $this->_a['table'];
         $this->_a['views'] = array(
                 'join_group' => array(
                         'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_perm .

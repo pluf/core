@@ -9,7 +9,8 @@ return array(
         'method' => 'create',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::adminRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     array(
@@ -30,7 +31,8 @@ return array(
         'method' => 'update',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     array(
@@ -39,7 +41,8 @@ return array(
         'method' => 'delete',
         'http-method' => 'DELETE',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     /*
@@ -51,7 +54,8 @@ return array(
         'method' => 'add',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     array(
@@ -72,7 +76,8 @@ return array(
         'method' => 'delete',
         'http-method' => 'DELETE',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     /*
@@ -84,7 +89,8 @@ return array(
         'method' => 'add',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired'
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantOwner'
         )
     ),
     array(

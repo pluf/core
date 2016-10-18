@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -19,54 +20,65 @@
 
 /**
  * مدل داده‌ای یک گروه را ایجاد می‌کند.
- * 
- * @author maso<mostafa.barmshory@dpq.co.ir>
  *
+ * @author maso<mostafa.barmshory@dpq.co.ir>
+ *        
  */
 class Pluf_Group extends Pluf_Model
 {
 
     public $_model = 'Pluf_Group';
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = __('group');
         $this->_a['table'] = 'groups';
         $this->_a['model'] = 'Pluf_Group';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        'blank' => true
-                ),
-                'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true
-                ),
-                'name' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 50,
-                        'verbose' => __('name')
-                ),
-                'description' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 250,
-                        'verbose' => __('description')
-                ),
-                /*
-                 * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
-                 */
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false
-                ),
-                'permissions' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'blank' => true,
-                        'model' => 'Pluf_Permission'
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                'blank' => true,
+                'readable' => true,
+                'editable' => false
+            ),
+            'version' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => true,
+                'readable' => true,
+                'editable' => false
+            ),
+            'name' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 50,
+                'verbose' => __('name'),
+                'readable' => true,
+                'editable' => true
+            ),
+            'description' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 250,
+                'verbose' => __('description'),
+                'readable' => true,
+                'editable' => true
+            ),
+            /*
+             * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
+             */
+            'tenant' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false,
+                'readable' => false,
+                'editable' => false
+            ),
+            'permissions' => array(
+                'type' => 'Pluf_DB_Field_Manytomany',
+                'blank' => true,
+                'model' => 'Pluf_Permission',
+                'readable' => true
+            )
         );
         if (Pluf::f('pluf_custom_group', false))
             $this->extended_init();
@@ -75,12 +87,12 @@ class Pluf_Group extends Pluf_Model
     /**
      * Hook for extended class
      */
-    function extended_init ()
+    function extended_init()
     {
         return;
     }
 
-    function __toString ()
+    function __toString()
     {
         return $this->name;
     }
@@ -90,17 +102,15 @@ class Pluf_Group extends Pluf_Model
      *
      * تمام دسترسی‌هایی که به این گروه داده شده است از سیستم حذف می‌شود.
      */
-    function preDelete ()
+    function preDelete()
     {
         if (Pluf::f('pluf_use_rowpermission', false)) {
             $_rpt = Pluf::factory('Pluf_RowPermission')->getSqlTable();
-            $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', 
-                    array(
-                            $this->_a['model'],
-                            $this->_data['id']
-                    ));
-            $this->_con->execute(
-                    'DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
+            $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', array(
+                $this->_a['model'],
+                $this->_data['id']
+            ));
+            $this->_con->execute('DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
         }
     }
 }

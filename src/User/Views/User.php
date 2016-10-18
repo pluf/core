@@ -75,7 +75,8 @@ class User_Views_User
      */
     public static function get($request, $match)
     {
-        return User_Shortcuts_UserJsonResponse($match['userId']);
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        return User_Shortcuts_UserJsonResponse($user);
     }
 
     /**

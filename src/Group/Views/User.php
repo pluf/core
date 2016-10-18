@@ -21,7 +21,17 @@ class Group_Views_User extends Pluf_Views
      */
     public static function add($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->REQUEST['user']);
+        $group->setAssoc($user);
+        return new Pluf_HTTP_Response_Json(array(
+            'group_id' => $group->id,
+            'group_name' => $group->name,
+            'user_id' => $user->id,
+            'user_login' => $user->login,
+            'user_first_name' => $user->first_name,
+            'user_last_name' => $user->last_name
+        ));
     }
 
     /**
@@ -33,7 +43,41 @@ class Group_Views_User extends Pluf_Views
      */
     public static function find($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $pag = new Pluf_Paginator(new Pluf_User());
+        $pag->items_per_page = Group_Views::getListCount($request);
+        $sql = new Pluf_SQL('pluf_group_id=%s', array(
+            $match['groupId']
+        ));
+        $pag->forced_where = $sql;
+        $pag->list_filters = array(
+            'administrator',
+            'staff',
+            'active'
+        );
+        $search_fields = array(
+            'login',
+            'first_name',
+            'last_name',
+            'email'
+        );
+        $list_display = array(
+            'login' => __('login'),
+            'first_name' => __('first name'),
+            'last_name' => __('last name'),
+            'email' => __('email')
+        );
+        $sort_fields = array(
+            'id',
+            'login',
+            'first_name',
+            'last_name',
+            'date_joined',
+            'last_login'
+        );
+        $pag->model_view = 'join_group';
+        $pag->configure($list_display, $search_fields, $sort_fields);
+        $pag->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
     /**
@@ -44,7 +88,20 @@ class Group_Views_User extends Pluf_Views
      */
     public static function get($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
+        $userModel = new Pluf_User();
+        $param = array(
+            'view' => 'join_group',
+            'filter' => array(
+                'id=' . $match['userId'],
+                'pluf_group_id=' . $group->id
+            )
+        );
+        $users = $userModel->getList($param);
+        if($users->count() == 0){
+            throw new Pluf_Exception_DoesNotExist('Group has not such user');
+        }
+        return new Pluf_HTTP_Response_Json($users);
     }
 
     /**
@@ -56,6 +113,16 @@ class Group_Views_User extends Pluf_Views
      */
     public static function delete($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        $group->delAssoc($user);
+        return new Pluf_HTTP_Response_Json(array(
+            'group_id' => $group->id,
+            'group_name' => $group->name,
+            'user_id' => $user->id,
+            'user_login' => $user->login,
+            'user_first_name' => $user->first_name,
+            'user_last_name' => $user->last_name
+        ));
     }
 }

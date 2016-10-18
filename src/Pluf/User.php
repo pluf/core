@@ -176,6 +176,13 @@ class Pluf_User extends Pluf_Model
                 'type' => 'unique'
             )
         );
+        $hay = array(
+            strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')),
+            strtolower($this->_a['model'])
+        );
+        sort($hay);
+        $t_asso = $this->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
+        $t_user = $this->_con->pfx . $this->_a['table'];        
         $this->_a['views'] = array(
             'all' => array(
                 'select' => $this->getSelect()
@@ -186,6 +193,9 @@ class Pluf_User extends Pluf_Model
             'user_permission' => array(
                 'select' => $this->getSecureSelect(),
                 'join' => 'LEFT JOIN rowpermissions ON users.id=rowpermissions.owner_id'
+            ),
+            'join_group' => array(
+                'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_user . '.id=pluf_user_id'
             )
         );
         if (Pluf::f('pluf_custom_user', false))
