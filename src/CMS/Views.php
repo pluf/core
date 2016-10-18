@@ -23,9 +23,10 @@ class CMS_Views
         try {
             $content = $form->save();
         } catch (Pluf_Exception $e) {
+            $content = $extra['model'];
             $content->delete();
+            throw $e;
         }
-        
         return new Pluf_HTTP_Response_Json($content);
     }
 

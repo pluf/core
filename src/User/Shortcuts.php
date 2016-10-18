@@ -6,7 +6,7 @@
  * @param unknown $object
  * @return Pluf_User
  */
-function User_Shortcuts_UserDateFactory ($object)
+function User_Shortcuts_UserDateFactory($object)
 {
     $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
     // $group_model = Pluf::f ( 'pluf_custom_group', 'Pluf_Group' );
@@ -20,7 +20,7 @@ function User_Shortcuts_UserDateFactory ($object)
  * @param unknown $object            
  * @return unknown
  */
-function User_Shortcuts_UserProfileDateFactory ($object)
+function User_Shortcuts_UserProfileDateFactory($object)
 {
     $user_model = Pluf::f('user_profile_class', 'User_Profile');
     if ($object == null || ! isset($object))
@@ -34,7 +34,7 @@ function User_Shortcuts_UserProfileDateFactory ($object)
  * @param unknown $object            
  * @return unknown
  */
-function User_Shortcuts_UserJsonResponse ($user)
+function User_Shortcuts_UserJsonResponse($user)
 {
     $user->password = null;
     return new Pluf_HTTP_Response_Json($user);
@@ -45,7 +45,7 @@ function User_Shortcuts_UserJsonResponse ($user)
  *
  * @param unknown $user            
  */
-function User_Shortcuts_RemoveSecureData (&$user)
+function User_Shortcuts_RemoveSecureData(&$user)
 {
     $user->email = null;
     $user->password = null;
@@ -79,7 +79,7 @@ function User_Shortcuts_RemoveSecureData (&$user)
  * @param unknown $action            
  * @param string $decres            
  */
-function User_Shortcuts_UpdateLeveFor ($user, $action, $decrease = true)
+function User_Shortcuts_UpdateLeveFor($user, $action, $decrease = true)
 {
     try {
         $values = Pluf::f('user_profile_level_values', array());
@@ -102,4 +102,108 @@ function User_Shortcuts_UpdateLeveFor ($user, $action, $decrease = true)
         // $profile->user = $request->user;
         // $profile->create();
     }
+}
+
+/**
+ * Updates or creates profile for given user by using given data.
+ *
+ * @param unknown $user            
+ * @param array $data            
+ * @throws Pluf_Exception
+ * @return unknown
+ */
+function User_Shortcuts_UpdateProfile($user, $data = array())
+{
+    $profileModel = Pluf::f('user_profile_class', false);
+    if ($profileModel === false) {
+        throw new Pluf_Exception(__('Profile model is not configured.'));
+    }
+    $profile = Pluf::factory($profileModel)->getOne('user=' . $user->getId());
+    if ($profile == null) {
+        $profile = Pluf::factory($profileModel);
+        $profile->__set('user', $user);
+        $profile->create();
+    }
+    $form = Pluf_Shortcuts_GetFormForModel($profile, $data, array());
+    $sf = $form->save();
+    return User_Shortcuts_UserJsonResponse($sf);
+}
+
+/**
+ * Returns information of profile of given user
+ *
+ * @param unknown $user            
+ * @throws Pluf_Exception
+ * @return Pluf_HTTP_Response_Json
+ */
+function User_Shortcuts_GetProfile($user)
+{
+    // TODO: hadi, 1395: use appropriate setting name
+    $profileModel = Pluf::f('user_profile_class', false);
+    if ($profileModel === false) {
+        throw new Pluf_Exception(__('Profile model is not configured.'));
+    }
+    $profile = Pluf::factory($profileModel)->getOne('user=' . $user->getId());
+    if ($profile == null) {
+        // throw new Pluf_Exception('User has no profile yet!');
+        return new Pluf_HTTP_Response_Json(Pluf::factory($profileModel));
+    }
+    // TODO: hadi, 1395: we should hide secure information of profile.
+    return new Pluf_HTTP_Response_Json($profile);
+}
+
+/**
+ * Deletes avatar of given user.
+ *
+ * @param unknown $user            
+ * @return Pluf_HTTP_Response_Json
+ */
+function User_Shortcuts_DeleteAvatar($user)
+{
+    $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $user->id);
+    if ($avatar) {
+        $avatar->delete();
+    }
+    return new Pluf_HTTP_Response_Json($avatar);
+}
+
+/**
+ * Returns avatar of given user if is existed.
+ *
+ * @param unknown $user            
+ */
+function User_Shortcuts_GetAvatar($user)
+{
+    // get avatar
+    $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $user->id);
+    if ($avatar) {
+        return new Pluf_HTTP_Response_File($avatar->getAbsloutPath(), $avatar->mimeType);
+    }
+    // default avatar
+    $file = Pluf::f('user_avatar_default');
+    return new Pluf_HTTP_Response_File($file, SaaS_FileUtil::getMimeType($file));
+}
+
+/**
+ * Sets (updates or creates) avatar for given user
+ * @param unknown $user
+ * @param array $data
+ * @return Pluf_HTTP_Response_Json
+ */
+function User_Shortcuts_UpdateAvatar($user, $data = array())
+{
+    $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $user->id);
+    if ($avatar) {
+        $form = new User_Form_Avatar($data, array(
+            'model' => $avatar,
+            'user' => $user
+        ));
+    } else {
+        $form = new User_Form_Avatar($data, array(
+            'model' => new User_Avatar(),
+            'user' => $user
+        ));
+    }
+    $model = $form->save();
+    return new Pluf_HTTP_Response_Json($model);
 }

@@ -12,13 +12,12 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
 {
 
     public $tenant = null;
-
     public $user = null;
 
     public function initFields ($extra = array())
     {
         $this->tenant = $extra['tenant'];
-        $this->tenant = $extra['user'];
+        $this->user = $extra['user'];
         parent::initFields($extra);
     }
 
@@ -47,7 +46,7 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
                         'An error occured when creating the upload path. Please try to send the file again.');
             }
         }
-        // $content->user = $this->user;
+        $content->submitter = $this->user;
         $content->tenant = $this->tenant;
         if ($commit) {
             $content->create();

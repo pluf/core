@@ -46,7 +46,8 @@ class User_Profile extends Pluf_Model
             'access_count' => array(
                 'type' => 'Pluf_DB_Field_Integer',
                 'blank' => false,
-                'unique' => false
+                'unique' => false,
+                'editable' => false
             ),
             'validate' => array(
                 'type' => 'Pluf_DB_Field_Boolean',
@@ -57,7 +58,7 @@ class User_Profile extends Pluf_Model
             ),
             'title' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
+                'blank' => true,
                 'size' => 50
             ),
             'state' => array(

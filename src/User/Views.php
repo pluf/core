@@ -21,6 +21,9 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForUpdateModel');
 Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
+Pluf::loadFunction('User_Shortcuts_GetAvatar');
+Pluf::loadFunction('User_Shortcuts_DeleteAvatar');
+Pluf::loadFunction('User_Shortcuts_UpdateAvatar');
 
 /**
  *
@@ -69,13 +72,15 @@ class User_Views
     }
 
     /**
+     * Returns profile of current user.
+     * If current user has no profile yet, returns structure of the profile.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
     public static function getProfile($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        return User_Shortcuts_GetProfile($request->user);
     }
 
     /**
@@ -87,39 +92,42 @@ class User_Views
      */
     public static function updateProfile($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        return User_Shortcuts_UpdateProfile($request->user, $request->REQUEST);
     }
-    
+
     /**
      * Returns avatar image of current user
-     * 
-     * @param unknown $request
-     * @param unknown $match
+     *
+     * @param unknown $request            
+     * @param unknown $match            
      * @throws Pluf_Exception_NotImplemented
      */
-    public static function getAvatar($request, $match){
-        throw new Pluf_Exception_NotImplemented();
+    public static function getAvatar($request, $match)
+    {
+        return User_Shortcuts_GetAvatar($request->user);
     }
-    
+
     /**
      * Updates avatar image of current user
-     * 
-     * @param unknown $request
-     * @param unknown $match
+     *
+     * @param unknown $request            
+     * @param unknown $match            
      * @throws Pluf_Exception_NotImplemented
      */
-    public static function updateAvatar($request, $match){
-        throw new Pluf_Exception_NotImplemented();
+    public static function updateAvatar($request, $match)
+    {
+        return User_Shortcuts_UpdateAvatar($request->user, array_merge($request->REQUEST, $request->FILES));
     }
-    
+
     /**
      * Deletes avatar image of current user
-     * 
-     * @param unknown $request
-     * @param unknown $match
+     *
+     * @param unknown $request            
+     * @param unknown $match            
      * @throws Pluf_Exception_NotImplemented
      */
-    public static function deleteAvatar($request, $match){
-        throw new Pluf_Exception_NotImplemented();
+    public static function deleteAvatar($request, $match)
+    {
+        return User_Shortcuts_DeleteAvatar($request->user);
     }
 }

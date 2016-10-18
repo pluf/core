@@ -1,6 +1,9 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
+Pluf::loadFunction('User_Shortcuts_GetAvatar');
+Pluf::loadFunction('User_Shortcuts_DeleteAvatar');
+Pluf::loadFunction('User_Shortcuts_UpdateAvatar');
 
 /**
  * Manage avatar image of user
@@ -20,14 +23,8 @@ class User_Views_Avatar extends Pluf_Views
      */
     public static function get($request, $match)
     {
-        // get avatar
-        $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $request->user->id);
-        if ($avatar) {
-            return new Pluf_HTTP_Response_File($avatar->getAbsloutPath(), $avatar->mimeType);
-        }
-        // default avatar
-        $file = Pluf::f('user_avatar_default');
-        return new Pluf_HTTP_Response_File($file, SaaS_FileUtil::getMimeType($file));
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        return User_Shortcuts_GetAvatar($user);
     }
 
     /**
@@ -38,20 +35,11 @@ class User_Views_Avatar extends Pluf_Views
      */
     public static function update($request, $match)
     {
-        $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $request->user->id);
-        if ($avatar) {
-            $form = new User_Form_Avatar(array_merge($request->REQUEST, $request->FILES), array(
-                'model' => $avatar,
-                'user' => $request->user
-            ));
-        } else {
-            $form = new User_Form_Avatar(array_merge($request->REQUEST, $request->FILES), array(
-                'model' => new User_Avatar(),
-                'user' => $request->user
-            ));
-        }
-        $model = $form->save();
-        return new Pluf_HTTP_Response_Json($model);
+        if ($request->user->getId() != $match['userId']) {
+            throw new Pluf_Exception_PermissionDenied();
+        }        
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        return User_Shortcuts_UpdateAvatar($user, array_merge($request->REQUEST, $request->FILES));
     }
 
     /**
@@ -63,10 +51,10 @@ class User_Views_Avatar extends Pluf_Views
      */
     public static function delete($request, $match)
     {
-        $avatar = Pluf::factory('User_Avatar')->getOne('user=' . $request->user->id);
-        if ($avatar) {
-            $avatar->delete();
+        if ($request->user->getId() != $match['userId']) {
+            return new Pluf_Exception_PermissionDenied();
         }
-        return new Pluf_HTTP_Response_Json($avatar);
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        return User_Shortcuts_DeleteAvatar($user);
     }
 }
