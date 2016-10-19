@@ -86,8 +86,9 @@ class Group_Views extends Pluf_Views
     {
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['id']);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
+        $model = $form->save();
         $request->user->setMessage(sprintf(__('Group data has been updated.'), (string) $model));
-        return new Pluf_HTTP_Response_Json($form->save());
+        return new Pluf_HTTP_Response_Json($model);
     }
 
     /**

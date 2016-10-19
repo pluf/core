@@ -80,6 +80,29 @@ class Pluf_Group extends Pluf_Model
                 'readable' => true
             )
         );
+        $group_table = $this->_con->pfx . $this->_a['table'];
+        $group_model = Pluf::f('pluf_custom_group', 'Pluf_Group');
+        if (Pluf::f('pluf_use_rowpermission', false)) {
+            $this->_a['views'] = array(
+                'group_permission' => array(
+                    'join' => 'LEFT JOIN rowpermissions ON ' . 
+                    'rowpermissions.owner_id=' . $group_table . '.id AND rowpermissions.owner_class="' . $group_model . '"'
+                )
+            );
+        } else {
+            $hay = array(
+                strtolower($group_model),
+                strtolower($this->_a['model'])
+            );
+            sort($hay);
+            $asso_table = $this->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
+            $this->_a['views'] = array(
+                'group_permission' => array(
+                    'join' => 'LEFT JOIN ' . $asso_table . ' ON ' 
+                    . $group_table . '.id='.strtolower($group_model).'_id'
+                )
+            );
+        }
         if (Pluf::f('pluf_custom_group', false))
             $this->extended_init();
     }

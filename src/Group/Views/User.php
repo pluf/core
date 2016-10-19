@@ -22,7 +22,17 @@ class Group_Views_User extends Pluf_Views
     public static function add($request, $match)
     {
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
-        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->REQUEST['user']);
+        if (array_key_exists('user', $request->REQUEST)) {
+            $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->REQUEST['user']);
+        } elseif (array_key_exists('login', $request->REQUEST)) {
+            $user = new Pluf_User();
+            $user = $user->getOne(array(
+                'filter' => 'login="' . $request->REQUEST['login'].'"'
+            ));
+            if (! isset($user) || $user->isAnonymous()) {
+                throw new Pluf_HTTP_Error404(__('User not found'));
+            }
+        }
         $group->setAssoc($user);
         return new Pluf_HTTP_Response_Json(array(
             'group_id' => $group->id,
@@ -74,7 +84,7 @@ class Group_Views_User extends Pluf_Views
             'date_joined',
             'last_login'
         );
-        $pag->model_view = 'join_group';
+        $pag->model_view = 'user_group';
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
@@ -91,7 +101,7 @@ class Group_Views_User extends Pluf_Views
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
         $userModel = new Pluf_User();
         $param = array(
-            'view' => 'join_group',
+            'view' => 'user_group',
             'filter' => array(
                 'id=' . $match['userId'],
                 'pluf_group_id=' . $group->id

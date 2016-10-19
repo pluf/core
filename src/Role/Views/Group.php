@@ -29,7 +29,8 @@ class Role_Views_Group extends Pluf_Views
 {
 
     /**
-     * Add new group to a role. In other word, grant a role to a group.
+     * Add new group to a role.
+     * In other word, grant a role to a group.
      * Id of added group should be specified in request.
      *
      * @param unknown_type $request            
@@ -37,7 +38,10 @@ class Role_Views_Group extends Pluf_Views
      */
     public static function add($request, $match)
     {
-        throw new Pluf_Exception('Not supported');
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $request->REQUEST['group']);
+        $row = Pluf_RowPermission::add($group, null, $perm, false, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($row);
     }
 
     /**
@@ -49,7 +53,43 @@ class Role_Views_Group extends Pluf_Views
      */
     public static function find($request, $match)
     {
-        throw new Pluf_Exception('Not supported');
+        $perm = new Pluf_Permission($match['id']);
+        $grModel = new Pluf_Group();
+        $pag = new Pluf_Paginator($grModel);
+        $pag->items_per_page = Role_Views::getListCount($request);
+        $perm_id_col = Pluf::f('pluf_use_rowpermission', false) ? 'permission' : 'pluf_permission_id';
+        $sql = new Pluf_SQL($grModel->_a['table'].'.tenant=%s AND '.$perm_id_col.'=%s', array(
+            $request->tenant->id,
+            $perm->id
+        ));
+        $pag->forced_where = $sql;
+        $pag->list_filters = array(
+            'tenant',
+            'version',
+            'name',
+            'description'
+        );
+        $pag->sort_order = array(
+            'id',
+            'ASC'
+        );
+        $search_fields = array(
+            'name',
+            'description'
+        );
+        $list_display = array(
+            'name' => __('name'),
+            'description' => __('description')
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'description'
+        );
+        $pag->model_view = 'group_permission';
+        $pag->configure($list_display, $search_fields, $sort_fields);
+        $pag->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
     /**
@@ -60,13 +100,28 @@ class Role_Views_Group extends Pluf_Views
      */
     public static function get($request, $match)
     {
-        throw new Pluf_Exception('Not supported');
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $groupModel = new Pluf_Group();
+        $perm_id_col = Pluf::f('pluf_use_rowpermission', false) ? 'permission' : 'pluf_permission_id';
+        $param = array(
+            'view' => 'group_permission',
+            'filter' => array(
+                $groupModel->_a['table'].'.id=' . $match['groupId'],
+                $groupModel->_a['table'].'.tenant=' . $request->tenant->id,
+                $perm_id_col. '=' . $perm->id
+            )
+        );
+        $groups = $groupModel->getList($param);
+        if($groups->count() == 0){
+            throw new Pluf_Exception_DoesNotExist('Group has not such role');
+        }
+        return new Pluf_HTTP_Response_Json($groups);
     }
 
     /**
      * Deletes a group from a role.
-     * Id of deleted group should be specified in the match.
-     * 
+     * Id of deleted group should be specify in the match.
+     *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
@@ -74,7 +129,7 @@ class Role_Views_Group extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
-        Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
-        return new Pluf_HTTP_Response_Json($owner);
+        $row = Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($row);
     }
 }

@@ -30,7 +30,8 @@ class Role_Views_User extends Pluf_Views
 {
 
     /**
-     * Add new user to a role. In other word, grant a role to a user.
+     * Add new user to a role.
+     * In other word, grant a role to a user.
      * Id of added user should be specified in request.
      *
      * @param unknown_type $request            
@@ -39,16 +40,19 @@ class Role_Views_User extends Pluf_Views
     public static function add($request, $match)
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
-        if (array_key_exists('id', $request->REQUEST)) {
-            $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->REQUEST['id']);
+        if (array_key_exists('user', $request->REQUEST)) {
+            $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->REQUEST['user']);
         } elseif (array_key_exists('login', $request->REQUEST)) {
-            $user = new Pluf_User($request->REQUEST['id']);
+            $user = new Pluf_User();
+            $user = $user->getOne(array(
+                'filter' => 'login="' . $request->REQUEST['login'].'"'
+            ));
             if (! isset($user) || $user->isAnonymous()) {
                 throw new Pluf_HTTP_Error404(__('User not found'));
             }
         }
         $row = Pluf_RowPermission::add($user, null, $perm, false, $request->tenant->id);
-        return new Pluf_HTTP_Response_Json($user);
+        return new Pluf_HTTP_Response_Json($row);
     }
 
     /**
@@ -60,31 +64,51 @@ class Role_Views_User extends Pluf_Views
      */
     public static function find($request, $match)
     {
-        $per = new Pluf_Permission($match['id']);
+        $perm = new Pluf_Permission($match['id']);
         $pag = new Pluf_Paginator(new Pluf_User());
+        $pag->items_per_page = Role_Views::getListCount($request);
         $sql = new Pluf_SQL('tenant=%s AND permission=%s AND owner_class=%s', array(
             $request->tenant->id,
-            $per->id,
+            $perm->id,
             // XXX: maso, 1395: user type is getting from config
             'Pluf_User'
         ));
         $pag->forced_where = $sql;
-        $pag->model_view = 'user_permission';
         $pag->list_filters = array(
             'administrator',
             'staff',
-            'active'
+            'active',
+            'login',
+            'first_name',
+            'last_name',
+            'email'
         );
-        $pag->configure(array(), array( // search
-            'id'
-        ), array( // sort
-            'id'
-        ));
-        $pag->action = array();
         $pag->sort_order = array(
             'id',
-            'DESC'
+            'ASC'
         );
+        $search_fields = array(
+            'login',
+            'first_name',
+            'last_name',
+            'email'
+        );
+        $list_display = array(
+            'login' => __('login'),
+            'first_name' => __('first name'),
+            'last_name' => __('last name'),
+            'email' => __('email')
+        );
+        $sort_fields = array(
+            'id',
+            'login',
+            'first_name',
+            'last_name',
+            'date_joined',
+            'last_login'
+        );
+        $pag->model_view = 'user_permission';
+        $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
@@ -97,13 +121,26 @@ class Role_Views_User extends Pluf_Views
      */
     public static function get($request, $match)
     {
-        throw new Pluf_Exception('Not supported');
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
+        $userModel = new Pluf_User();
+        $param = array(
+            'view' => 'user_permission',
+            'filter' => array(
+                $userModel->_a['table'].'.id=' . $match['userId'],
+                'permission=' . $perm->id
+            )
+        );
+        $users = $userModel->getList($param);
+        if($users->count() == 0){
+            throw new Pluf_Exception_DoesNotExist('User has not such role');
+        }
+        return new Pluf_HTTP_Response_Json($users);
     }
 
     /**
      * Deletes a user from a role.
      * Id of deleted user should be specified in the match.
-     * 
+     *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
@@ -111,7 +148,7 @@ class Role_Views_User extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
-        return new Pluf_HTTP_Response_Json($owner);
+        $row = Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($row);
     }
 }

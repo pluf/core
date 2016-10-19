@@ -62,14 +62,14 @@ return array(
         'precond' => array()
     ),
     array(
-        'regex' => '#^/(?P<id>\d+)/user/(?P<userId>)$#',
+        'regex' => '#^/(?P<id>\d+)/user/(?P<userId>\d+)$#',
         'model' => 'Role_Views_User',
         'method' => 'get',
         'http-method' => 'GET',
         'precond' => array()
     ),
     array(
-        'regex' => '#^/(?P<id>\d+)/user/(?P<userId>)$#',
+        'regex' => '#^/(?P<id>\d+)/user/(?P<userId>\d+)$#',
         'model' => 'Role_Views_User',
         'method' => 'delete',
         'http-method' => 'DELETE',
@@ -97,14 +97,14 @@ return array(
         'precond' => array()
     ),
     array(
-        'regex' => '#^/(?P<id>\d+)/group/(?P<groupId>)$#',
+        'regex' => '#^/(?P<id>\d+)/group/(?P<groupId>\d+)$#',
         'model' => 'Role_Views_Group',
         'method' => 'get',
         'http-method' => 'GET',
         'precond' => array()
     ),
     array(
-        'regex' => '#^/(?P<id>\d+)/group/(?P<groupId>)$#',
+        'regex' => '#^/(?P<id>\d+)/group/(?P<groupId>\d+)$#',
         'model' => 'Role_Views_Group',
         'method' => 'delete',
         'http-method' => 'DELETE',

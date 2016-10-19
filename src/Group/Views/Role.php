@@ -23,14 +23,9 @@ class Group_Views_Role extends Pluf_Views
     {
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
         $permission = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['role']);
-        $group->setAssoc($permission);
-        return new Pluf_HTTP_Response_Json(array(
-            'group_id' => $group->id,
-            'group_name' => $group->name,
-            'permission_id' => $permission->id,
-            'permission_name' => $permission->name,
-            'permission_code_name' => $permission->code_name
-        ));
+        $row = Pluf_RowPermission::add($group, 'Pluf_Group', $permission, false, $request->tenant->id);
+        // $group->setAssoc($permission);
+        return new Pluf_HTTP_Response_Json($row);
     }
 
     /**
@@ -99,7 +94,7 @@ class Group_Views_Role extends Pluf_Views
             )
         );
         $roles = $roleModel->getList($param);
-        if($roles->count() == 0){
+        if ($roles->count() == 0) {
             throw new Pluf_Exception_DoesNotExist('Group has not such role');
         }
         return new Pluf_HTTP_Response_Json($roles);
@@ -115,13 +110,8 @@ class Group_Views_Role extends Pluf_Views
     {
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
         $permission = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
-        $group->delAssoc($permission);
-        return new Pluf_HTTP_Response_Json(array(
-            'group_id' => $group->id,
-            'group_name' => $group->name,
-            'permission' => $permission->id,
-            'permission_name' => $permission->name,
-            'permission_code_name' => $permission->code_name
-        ));
+        $row = Pluf_RowPermission::remove($group, 'Pluf_Group', $permission, $request->tenant->id);
+        // $group->delAssoc($permission);
+        return new Pluf_HTTP_Response_Json($row);
     }
 }
