@@ -211,7 +211,7 @@ class SaaS_Views extends Pluf_Views
         if ($p['permanently'])
             $object->delete();
         else {
-            $object->delete = true;
+            $object->deleted = true;
             $object->update();
         }
         if (! $request->user->isAnonymous()) {
