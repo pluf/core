@@ -115,7 +115,7 @@ class Pluf_Permission extends Pluf_Model
             'join_group' => array(
                 'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_perm . '.id=pluf_permission_id'
             )
-        );
+        );        
     }
 
     function __toString()

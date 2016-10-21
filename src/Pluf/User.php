@@ -182,7 +182,7 @@ class Pluf_User extends Pluf_Model
         );
         sort($hay);
         $t_asso = $this->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
-        $t_user = $this->_con->pfx . $this->_a['table'];        
+        $t_user = $this->_con->pfx . $this->_a['table'];
         $this->_a['views'] = array(
             'all' => array(
                 'select' => $this->getSelect()
@@ -418,6 +418,34 @@ class Pluf_User extends Pluf_Model
             $this->loadRowPermissions($ids, $tenant);
         }
         return $this->_cache_perms;
+    }
+
+    /**
+     * فهرستی از شی داده شده را برمی‌گرداند که این کاربر دسترسی تعیین شده را روی آن‌ها دارد.
+     * به عنوان مثال فراخوانی این متد به صورت getAllPermittedObject('App.manage', new Pluf_Group(), 1)
+     * فهرستی از Pluf_Group هایی را برمی‌گرداند که کاربر جاری روی ان‌ها دسترسی 'manage' رو در ملک با
+     * شناسه یک دارد.
+     *
+     * @param Pluf_Model $object
+     *            نمونه از شی مورد نظر
+     * @param string $permission
+     *            رشته حاوی code_name مربوط به گواهی مورد نظر
+     * @param int $tenant
+     *            شناسه ملک مورد نظر
+     */
+    function getAllPermittedObject($permission, $object, $tenant = 0)
+    {
+        $permPattern = $permission . '#' . $object->_a['model'];
+        $permList = $this->getAllPermissions(false, $tenant);
+        $result = array();
+        foreach ($permList as $rowPerm) {
+            try {
+                preg_match('/^(?P<perm>' . $permPattern . ')\((?P<id>\d+)\)/', $rowPerm, $m);
+                $obj = new $object->_a['model']($m['id']);
+                array_push($result, $obj);
+            } catch (Exception $e) {}
+        }
+        return $result;
     }
 
     /*

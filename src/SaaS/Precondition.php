@@ -93,7 +93,7 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.owner', $request->tenant)) {
+        if ($request->user->hasPerm('SaaS.owner', null, $request->tenant->id)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
@@ -118,8 +118,8 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.owner', $request->application) || $request->user->hasPerm(
-                'SaaS.member', $request->application)) {
+        if ($request->user->hasPerm('SaaS.owner', null, $request->tenant->id) ||
+            $request->user->hasPerm('SaaS.member', null, $request->tenant->id)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
@@ -144,9 +144,9 @@ class SaaS_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('SaaS.owner', $request->application) ||
-                 $request->user->hasPerm('SaaS.member', $request->application) || $request->user->hasPerm(
-                        'SaaS.authorized', $request->application)) {
+        if ($request->user->hasPerm('SaaS.owner', null, $request->tenant->id) ||
+                 $request->user->hasPerm('SaaS.member', null, $request->tenant->id) || 
+                    $request->user->hasPerm('SaaS.authorized', null, $request->tenant->id)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
