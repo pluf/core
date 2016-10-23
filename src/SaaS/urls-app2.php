@@ -1,6 +1,12 @@
 <?php
 return array(
     
+    // Url for sitemap
+    array(
+        'regex' => '#^/sitemap.xml$#',
+        'model' => 'SaaS_Views_Application',
+        'method' => 'getSiteMap'
+    ),
     // url format for SPA:  spa@tanant
     array( // SPA main page
         'regex' => '#^/([^/]*)' . Pluf::f('saas_tenant_url_prefix', '@') . '[^/]*$#',

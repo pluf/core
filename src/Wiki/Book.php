@@ -24,7 +24,9 @@ class Wiki_Book extends Pluf_Model
                 // شناسه‌ها
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
-                        'blank' => true
+                        'blank' => false,
+                        'editable' => false,
+                        'readable' => true
                 ),
                 // فیلدها
                 'state' => array(
@@ -83,20 +85,6 @@ class Wiki_Book extends Pluf_Model
                         'verbose' => __('submitter'),
                         'relate_name' => 'submitted_wikipages'
                 ),
-                'label' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'model' => 'KM_Label',
-                        'blank' => true,
-                        'verbose' => __('labels'),
-                        'help_text' => __('lables')
-                ),
-                'category' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'model' => 'KM_Category',
-                        'blank' => true,
-                        'verbose' => __('categories'),
-                        'help_text' => __('categories')
-                ),
                 'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'SaaS_Application',
@@ -104,7 +92,7 @@ class Wiki_Book extends Pluf_Model
                         'relate_name' => 'tenant',
                         'verbose' => __('tenant'),
                         'help_text' => __('Related tenant.')
-                ),
+                )
         );
     }
 

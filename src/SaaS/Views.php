@@ -16,212 +16,209 @@ Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 class SaaS_Views extends Pluf_Views
 {
 
-    public function appcache ($request, $match)
+    /**
+     * جستجوی مدل داده‌ای
+     *
+     * توی بسیاری از لایه‌های نمایش لازم هست که همه موجودیت‌ها به شکل ساده جسجو
+     * بشن این فراخوانی برای این نوع جستجوها در نظر گرفته شده.
+     *
+     * @param unknown $request
+     * @param unknown $match
+     * @return Pluf_HTTP_Response_Json
+     */
+    public static function findObject ($request, $match, $p)
     {
-        $params = array();
-        return Pluf_Shortcuts_RenderToResponse('saas.appcache', $params, 
-                $request);
-    }
-
-    /**
-     * @breif برگه اصلی هر نرم‌افزار
-     *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
-     */
-    public function index ($request, $match)
-    {
-        $params = array();
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('index.html', $params, $request);
-    }
-
-    /**
-     * برگه‌هایی که همه به آن دسترسی دارند
-     *
-     * /page/{name}
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    public function page ($request, $match)
-    {
-        $params = array();
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('/page/' . $match[1] . '.html', 
-                $params, $request);
-    }
-
-    /**
-     * پیش شرط‌های دسترسی
-     *
-     * @var unknown
-     */
-    public $application_precond = array(
-            'SaaS_Precondition::baseAccess'
-    );
-
-    /**
-     * @breif برگه اصلی هر نرم‌افزار
-     *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
-     */
-    public function application ($request, $match)
-    {
-        $params = array();
-        $params['application'] = $request->application;
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('application/index.html', 
-                $params, $request);
-    }
-
-    /**
-     * پیش شرط‌های دسترسی
-     *
-     * @var unknown
-     */
-    public $applicationPage_precond = array(
-            'SaaS_Precondition::baseAccess'
-    );
-
-    /**
-     * برگه‌هایی که همه به آن دسترسی دارند
-     *
-     * این برگه‌ها به صورت زیر آدرس دهی می‌شوند:
-     *
-     * /{application id}/{name}
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    public function applicationPage ($request, $match)
-    {
-        $params = array();
-        $params['application'] = $request->application;
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse('application/' . $match[2], 
-                $params, $request);
-    }
-
-    /**
-     * پیش شرط‌های اعضا
-     *
-     * @var unknown
-     */
-    public $member_precond = array(
-            'SaaS_Precondition::applicationMemberOrOwner'
-    );
-
-    /**
-     * برگه‌هایی که اعضا به آن دسترسی دارند
-     *
-     * این برگه‌ها به صورت زیر آدرس دهی می‌شوند:
-     *
-     * /{application id}/member/{name}
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    public function member ($request, $match)
-    {
-        $params = array();
-        $params['application'] = $request->application;
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        return Pluf_Shortcuts_RenderToResponse(
-                'application/member/' . $match[2], $params, $request);
-    }
-
-    /**
-     * پیش شرط‌های دسترسی
-     *
-     * @var unknown
-     */
-    public $owner_precond = array(
-            'SaaS_Precondition::applicationOwner'
-    );
-
-    /**
-     * برگه‌هایی که اعضا به آن دسترسی دارند
-     *
-     * این برگه‌ها به صورت زیر آدرس دهی می‌شوند:
-     *
-     * /{application id}/owner/{name}
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    public function owner ($request, $match)
-    {
-        $params = array();
-        $params['application'] = $request->application;
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        if (array_key_exists(2, $match)) {
-            return Pluf_Shortcuts_RenderToResponse(
-                    'application/owner/' . $match[2] . '.html', $params, 
-                    $request);
+        if (! isset($p['model'])) {
+            throw new Pluf_Exception(
+                    'The model class was not provided in the parameters.');
         }
-        return Pluf_Shortcuts_RenderToResponse('application/owner/index.html', 
-                $params, $request);
+        $default = array(
+                'listFilters' => array(),
+                'listDisplay' => array(),
+                'searchFields' => array(),
+                'sortFields' => array()
+        );
+        $p = array_merge($default, $p);
+        $sql = new Pluf_SQL('tenant=%s',
+                array(
+                        $request->tenant->id
+                ));
+        if (isset($p['sql'])) {
+            $sql = $sql->SAnd($p['sql']);
+        }
+        // Create page
+        $page = new Pluf_Paginator(new $p['model']());
+        $page->forced_where = $sql;
+        $page->list_filters = $p['listFilters'];
+        $page->configure($p['listDisplay'], $p['searchFields'],
+                $p['sortFields']);
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
     }
 
     /**
-     * پیش شرط‌های دسترسی
+     * یک موجودیت جدید در ملک ایجاد می‌کند.
      *
-     * @var unknown
-     */
-    public $admin_precond = array(
-            'Pluf_Precondition::adminRequired'
-    );
-
-    /**
-     * نرم افزارهای مدیریت را تعیین می‌کند
      *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
+     * فرض شده که مدل در ساختار داده‌ای خود یک فیلد برای شناسه ملک در نظر گرفته
+     * است.
+     *
+     * برای اینکه این فراخوانی پویا باشه و بتونیم برای کاربردهای متفاوت استفاده
+     * کنیم، پارامترهای اضافه زیر رو در نظر گرفتیم
+     *
+     * 'model' - نام مدل داده‌ای که یک پارامتر مورد نیاز است
+     *
+     * 'extra_form' - Array of key/values to be added to the
+     * form generation (array())
+     *
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public function admin ($request, $match)
+    public function createObject ($request, $match, $p)
     {
-        $params = array();
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        if (array_key_exists(1, $match)) {
-            return Pluf_Shortcuts_RenderToResponse('admin/' . $match[1], 
-                    $params, $request);
+        $default = array(
+                'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        if (! isset($p['model'])) {
+            throw new Pluf_Exception(
+                    'The model class was not provided in the parameters.');
         }
-        return Pluf_Shortcuts_RenderToResponse('admin/index.html', $params, 
-                $request);
+        // Set the default
+        $model = $p['model'];
+        $object = new $model();
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+                $p['extra_form']);
+        $object = $form->save(false);
+        $object->tenant = $request->tenant;
+        $object->create();
+        if (! $request->user->isAnonymous()) {
+            $request->user->setMessage(
+                    sprintf(__('The %s was created successfully.'), 
+                            $object->_a['verbose']));
+        }
+        return new Pluf_HTTP_Response_Json($object);
     }
 
     /**
-     * پیش شرط‌های دسترسی
+     * یک موجودیت رو میگیره
      *
-     * @var unknown
+     * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
+     *
+     * 'model' - Class name string, required.
+     *
+     * در پارامترهای مسیر هم باید پارامترهای زیر باشد
+     *
+     * 'modelIdd' - Id of of the current model to update
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public $user_precond = array(
-            'Pluf_Precondition::loginRequired'
-    );
+    public function getObject ($request, $match, $p)
+    {
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        // Set the default
+        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
+                $match['modelId']);
+        return new Pluf_HTTP_Response_Json($object);
+    }
 
     /**
-     * نرم افزارهای مدیریت را تعیین می‌کند
+     * یک موجودیت رو به روز می‌کنه
      *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
+     * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
+     *
+     * 'model' - Class name string, required.
+     *
+     * در پارامترهای مسیر هم باید پارامترهای زیر باشد
+     *
+     * 'modelIdd' - Id of of the current model to update
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public function user ($request, $match)
+    public function updateObject ($request, $match, $p)
     {
-        $params = array();
-        // TODO: maso, 1394: اضافه کردن تنظیم‌های
-        if (array_key_exists(1, $match)) {
-            return Pluf_Shortcuts_RenderToResponse('user/' . $match[1], $params, 
-                    $request);
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
         }
-        return Pluf_Shortcuts_RenderToResponse('user/index.html', $params, 
-                $request);
+        // Set the default
+        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
+                $match['modelId']);
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+                $p['extra_form']);
+        $object = $form->save();
+        if (! $request->user->isAnonymous()) {
+            $request->user->setMessage(
+                    sprintf(__('The %s was created successfully.'), 
+                            $object->_a['verbose']));
+        }
+        return new Pluf_HTTP_Response_Json($object);
+    }
+
+    /**
+     * یک موجودیت را از سیستم حذف می‌کند
+     *
+     * حداقل پارامتر مورد نیاز برای این کار
+     *
+     * 'model' - Class name string, required.
+     *
+     * پارامتر زیر هم باید درمسیر تعیین شود.
+     *
+     * 'modelId' - شناسه موجودید
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     */
+    public function deleteObject ($request, $match, $p)
+    {
+        $default = array(
+                'permanently' => false
+        );
+        $p = array_merge($default, $p);
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        // Set the default
+        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
+                $match['modelId']);
+        if ($p['permanently'])
+            $object->delete();
+        else {
+            $object->deleted = true;
+            $object->update();
+        }
+        if (! $request->user->isAnonymous()) {
+            $request->user->setMessage(
+                    sprintf(__('The %s was deleted successfully.'), 
+                            $object->_a['verbose']));
+        }
+        return new Pluf_HTTP_Response_Json($object);
     }
 }

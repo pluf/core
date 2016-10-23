@@ -1,0 +1,14 @@
+SaaSShop_Product
+- content
+- existed_count
+
+- brand
+- model
+- properties
+- similars
+- category or label دسته‌ها در جاهای مختلف تا ۳ سطح بود
+
+SaaSShop_Order
+- deliver_type: نحوه ارسال به مشتری شامل: پستی، ارسال اکسپرس، تحویل حضوری
+- post_price
+- payment_type

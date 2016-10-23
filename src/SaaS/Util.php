@@ -21,11 +21,11 @@ class SaaS_Util
         return $sysConfig;
     }
 
-    public static function initConfiguration ($app)
+    public static function initConfiguration ($tenant)
     {
         // System configuration
         $sysConfig = new SaaS_Configuration();
-        $sysConfig->application = $app;
+        $sysConfig->tenant = $tenant;
         $sysConfig->key = 'system';
         $sysConfig->type = SaaS_ConfigurationType::SYSTEM;
         $sysConfig->setData("level", 0);
@@ -41,7 +41,7 @@ class SaaS_Util
         
         // Theme configuration
         $themeConfig = new SaaS_Configuration();
-        $themeConfig->application = $app;
+        $themeConfig->tenant = $tenant;
         $themeConfig->key = 'theme';
         $themeConfig->type = SaaS_ConfigurationType::GENERAL;
         $themeConfig->setData("id", "g1");

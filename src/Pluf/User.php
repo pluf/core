@@ -1,10 +1,30 @@
 <?php
 
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /**
  * مدل داده‌ای کاربر
- * 
- * این مدل داده‌ای، یک مدل داده‌ای کلی است و همواره به صورت پیش فرض استفاده می‌شود.
- * در صورت تمایل می‌توان از ساختارهای داده‌ای دیگر به عنوان مدل داده‌ای برای کاربران
+ *
+ * این مدل داده‌ای، یک مدل داده‌ای کلی است و همواره به صورت پیش فرض استفاده
+ * می‌شود.
+ * در صورت تمایل می‌توان از ساختارهای داده‌ای دیگر به عنوان مدل داده‌ای برای
+ * کاربران
  * استفاده کرد.
  */
 class Pluf_User extends Pluf_Model
@@ -22,134 +42,161 @@ class Pluf_User extends Pluf_Model
      */
     public $_cache_perms = null;
 
-    function init ()
+    function init()
     {
         $langs = Pluf::f('languages', array(
-                'en'
+            'en'
         ));
         $this->_a['verbose'] = __('user');
         $this->_a['table'] = 'users';
         $this->_a['model'] = 'Pluf_User';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true
-                ),
-                'login' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'unique' => true,
-                        'size' => 50,
-                        'verbose' => __('login')
-                ),
-                'first_name' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
-                        'size' => 100,
-                        'verbose' => __('first name')
-                ),
-                'last_name' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 100,
-                        'verbose' => __('last name')
-                ),
-                'email' => array(
-                        'type' => 'Pluf_DB_Field_Email',
-                        'blank' => false,
-                        'verbose' => __('email')
-                ),
-                'password' => array(
-                        'type' => 'Pluf_DB_Field_Password',
-                        'blank' => false,
-                        'verbose' => __('password'),
-                        'size' => 150,
-                        'help_text' => __('Format: [algo]:[salt]:[hash]'),
-                        'secure' => true
-                ),
-                'groups' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'blank' => true,
-                        'model' => Pluf::f('pluf_custom_group', 'Pluf_Group'),
-                        'relate_name' => 'users'
-                ),
-                'permissions' => array(
-                        'type' => 'Pluf_DB_Field_Manytomany',
-                        'blank' => true,
-                        'model' => 'Pluf_Permission'
-                ),
-                'administrator' => array(
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'default' => false,
-                        'blank' => true,
-                        'verbose' => __('administrator')
-                ),
-                'staff' => array(
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'default' => false,
-                        'blank' => true,
-                        'verbose' => __('staff')
-                ),
-                'active' => array(
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'default' => true,
-                        'blank' => true,
-                        'verbose' => __('active')
-                ),
-                'language' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
-                        'default' => $langs[0],
-                        'size' => 5,
-                        'verbose' => __('language'),
-                        'help_text' => __(
-                                'Prefered language of the user for the interface. Use the 2 or 5 letter code like "fr", "en", "fr_QC" or "en_US".')
-                ),
-                'timezone' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
-                        'default' => 'Europe/Berlin',
-                        'size' => 45,
-                        'verbose' => __('time zone'),
-                        'help_text' => __(
-                                'Time zone of the user to display the time in local time.')
-                ),
-                'date_joined' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('date joined'),
-                        'editable' => false
-                ),
-                'last_login' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('last login'),
-                        'editable' => false
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                // It is automatically added.
+                'blank' => true,
+                'editable' => false,
+                'readable' => true
+            ),
+            'version' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => true,
+                'editable' => false,
+                'readable' => false
+            ),
+            'login' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'unique' => true,
+                'size' => 50,
+                'verbose' => __('login'),
+                'editable' => false,
+                'readable' => true
+            ),
+            'first_name' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
+                'size' => 100,
+                'verbose' => __('first name'),
+                'editable' => true,
+                'readable' => true
+            ),
+            'last_name' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 100,
+                'verbose' => __('last name'),
+                'editable' => true,
+                'readable' => true
+            ),
+            'email' => array(
+                'type' => 'Pluf_DB_Field_Email',
+                'blank' => false,
+                'verbose' => __('email'),
+                // @note: hadi, 1395-07-14: change email is done by another process.
+                'editable' => false,
+                'readable' => true
+            ),
+            'password' => array(
+                'type' => 'Pluf_DB_Field_Password',
+                'blank' => false,
+                'verbose' => __('password'),
+                'size' => 150,
+                'help_text' => __('Format: [algo]:[salt]:[hash]'),
+                'secure' => true,
+                // @note: hadi, 1395-07-14: change password is done by another process.
+                'editable' => false,
+                'readable' => false
+            ),
+            'groups' => array(
+                'type' => 'Pluf_DB_Field_Manytomany',
+                'blank' => true,
+                'model' => Pluf::f('pluf_custom_group', 'Pluf_Group'),
+                'relate_name' => 'users'
+            ),
+            'permissions' => array(
+                'type' => 'Pluf_DB_Field_Manytomany',
+                'blank' => true,
+                'model' => 'Pluf_Permission'
+            ),
+            'administrator' => array(
+                'type' => 'Pluf_DB_Field_Boolean',
+                'default' => false,
+                'blank' => true,
+                'verbose' => __('administrator'),
+                'editable' => false
+            ),
+            'staff' => array(
+                'type' => 'Pluf_DB_Field_Boolean',
+                'default' => false,
+                'blank' => true,
+                'verbose' => __('staff'),
+                'editable' => false
+            ),
+            'active' => array(
+                'type' => 'Pluf_DB_Field_Boolean',
+                'default' => true,
+                'blank' => true,
+                'verbose' => __('active'),
+                'editable' => false
+            ),
+            'language' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
+                'default' => $langs[0],
+                'size' => 5,
+                'verbose' => __('language'),
+                'help_text' => __('Prefered language of the user for the interface. Use the 2 or 5 letter code like "fr", "en", "fr_QC" or "en_US".')
+            ),
+            'timezone' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
+                'default' => date_default_timezone_get(),
+                'size' => 45,
+                'verbose' => __('time zone'),
+                'help_text' => __('Time zone of the user to display the time in local time.')
+            ),
+            'date_joined' => array(
+                'type' => 'Pluf_DB_Field_Datetime',
+                'blank' => true,
+                'verbose' => __('date joined'),
+                'editable' => false
+            ),
+            'last_login' => array(
+                'type' => 'Pluf_DB_Field_Datetime',
+                'blank' => true,
+                'verbose' => __('last login'),
+                'editable' => false
+            )
         );
         $this->_a['idx'] = array(
-                'login_idx' => array(
-                        'col' => 'login',
-                        'type' => 'unique'
-                )
+            'login_idx' => array(
+                'col' => 'login',
+                'type' => 'unique'
+            )
         );
+        $hay = array(
+            strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')),
+            strtolower($this->_a['model'])
+        );
+        sort($hay);
+        $t_asso = $this->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
+        $t_user = $this->_con->pfx . $this->_a['table'];
         $this->_a['views'] = array(
-                'all' => array(
-                        'select' => $this->getSelect()
-                ),
-                'secure' => array(
-                        'select' => $this->getSecureSelect()
-                ),
-                'user_permission' => array(
-                        'select' => $this->getSecureSelect(),
-                        'join' => 'LEFT JOIN rowpermissions ON users.id=rowpermissions.owner_id'
-                )
+            'all' => array(
+                'select' => $this->getSelect()
+            ),
+            'secure' => array(
+                'select' => $this->getSecureSelect()
+            ),
+            'user_permission' => array(
+                'select' => $this->getSecureSelect(),
+                'join' => 'LEFT JOIN rowpermissions ON users.id=rowpermissions.owner_id'
+            ),
+            'user_group' => array(
+                'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_user . '.id=pluf_user_id'
+            )
         );
         if (Pluf::f('pluf_custom_user', false))
             $this->extended_init();
@@ -158,17 +205,15 @@ class Pluf_User extends Pluf_Model
     /**
      * تمام داده‌های امنیتی را از فهرست انتخاب حذف می‌کند.
      */
-    function getSecureSelect ()
+    function getSecureSelect()
     {
         if (isset($this->_cache['getSecureSelect']))
             return $this->_cache['getSecureSelect'];
         $select = array();
         $table = $this->getSqlTable();
         foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany' && ! (array_key_exists(
-                    'secure', $val) && $val['secure'] == true)) {
-                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
-                         $this->_con->qn($col);
+            if ($val['type'] != 'Pluf_DB_Field_Manytomany' && ! (array_key_exists('secure', $val) && $val['secure'] == true)) {
+                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' . $this->_con->qn($col);
             }
         }
         $this->_cache['getSecureSelect'] = implode(', ', $select);
@@ -178,7 +223,7 @@ class Pluf_User extends Pluf_Model
     /**
      * Hook for extended class
      */
-    function extended_init ()
+    function extended_init()
     {
         return;
     }
@@ -188,7 +233,7 @@ class Pluf_User extends Pluf_Model
      *
      * این کلاس یک نمایش رشته‌ای از کاربر ایجاد می‌کند.
      */
-    function __toString ()
+    function __toString()
     {
         $repr = $this->last_name;
         if (strlen($this->first_name) > 0) {
@@ -203,7 +248,7 @@ class Pluf_User extends Pluf_Model
      * پیش از این که کاربر حذف شود یک سیگنال به کل سیستم ارسال شده و حذف کاربر
      * گزارش می‌شود.
      */
-    function preDelete ()
+    function preDelete()
     {
         /**
          * [signal]
@@ -224,19 +269,17 @@ class Pluf_User extends Pluf_Model
          * array('user' => $user)
          */
         $params = array(
-                'user' => $this
+            'user' => $this
         );
         Pluf_Signal::send('Pluf_User::preDelete', 'Pluf_User', $params);
         
         if (Pluf::f('pluf_use_rowpermission', false)) {
             $_rpt = Pluf::factory('Pluf_RowPermission')->getSqlTable();
-            $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', 
-                    array(
-                            $this->_a['model'],
-                            $this->_data['id']
-                    ));
-            $this->_con->execute(
-                    'DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
+            $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', array(
+                $this->_a['model'],
+                $this->_data['id']
+            ));
+            $this->_con->execute('DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
         }
     }
 
@@ -251,7 +294,7 @@ class Pluf_User extends Pluf_Model
      *            string New password
      * @return bool Success
      */
-    function setPassword ($password)
+    function setPassword($password)
     {
         $salt = Pluf_Utils::getRandomString(5);
         $this->password = 'sha1:' . $salt . ':' . sha1($salt . $password);
@@ -269,7 +312,7 @@ class Pluf_User extends Pluf_Model
      *            string گذرواژه
      * @return bool مقدار درستی در صورت موفقیت
      */
-    function checkPassword ($password)
+    function checkPassword($password)
     {
         if ($this->password == '') {
             return false;
@@ -291,13 +334,12 @@ class Pluf_User extends Pluf_Model
      *            string Password
      * @return mixed False or matching user
      */
-    function checkCreditentials ($login, $password)
+    function checkCreditentials($login, $password)
     {
         $where = 'login = ' . $this->_toDb($login, 'login');
-        $users = $this->getList(
-                array(
-                        'filter' => $where
-                ));
+        $users = $this->getList(array(
+            'filter' => $where
+        ));
         if ($users === false or count($users) !== 1) {
             return false;
         }
@@ -313,13 +355,12 @@ class Pluf_User extends Pluf_Model
      * @param unknown $login            
      * @return boolean|ArrayObject
      */
-    function getUser ($login)
+    function getUser($login)
     {
         $where = 'login = ' . $this->_toDb($login, 'login');
-        $users = $this->getList(
-                array(
-                        'filter' => $where
-                ));
+        $users = $this->getList(array(
+            'filter' => $where
+        ));
         if ($users === false or count($users) !== 1) {
             return false;
         }
@@ -329,7 +370,7 @@ class Pluf_User extends Pluf_Model
     /**
      * Set the last_login and date_joined before creating.
      */
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         if (! ($this->id > 0)) {
             $this->last_login = gmdate('Y-m-d H:i:s');
@@ -349,71 +390,112 @@ class Pluf_User extends Pluf_Model
      *            bool Force the reload of the list of permissions (false)
      * @return array List of permissions
      */
-    function getAllPermissions ($force = false)
+    function getAllPermissions($force = false, $tenant = 0)
     {
         if ($force == false and ! is_null($this->_cache_perms)) {
             return $this->_cache_perms;
         }
         $this->_cache_perms = array();
+        if ($this->isAnonymous()) {
+            return $this->_cache_perms;
+        }
+        // load user permissions
         $perms = (array) $this->get_permissions_list();
+        
+        // XXX:maso, group in tenant
+        // Load groups
         $groups = $this->get_groups_list();
         $ids = array();
         foreach ($groups as $group) {
             $ids[] = $group->id;
         }
+        // load groups permisson
         if (count($ids) > 0) {
-            $gperm = new Pluf_Permission();
-            $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) .
-                     '_id';
-            $perms = array_merge($perms, 
-                    (array) $gperm->getList(
-                            array(
-                                    'filter' => $f_name . ' IN (' .
-                                             join(', ', $ids) . ')',
-                                            'view' => 'join_group'
-                            )));
+            $this->loadGroupPermissions($ids, $tenant);
         }
-        foreach ($perms as $perm) {
-            if (! in_array($perm->application . '.' . $perm->code_name, 
-                    $this->_cache_perms)) {
-                $this->_cache_perms[] = $perm->application . '.' .
-                         $perm->code_name;
-            }
-        }
+        // load row permission
         if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
-            $growp = new Pluf_RowPermission();
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s', 
-                    array(
-                            $this->id,
-                            'Pluf_User'
-                    ));
-            if (count($ids) > 0) {
-                $sql2 = new Pluf_SQL(
-                        'owner_id IN (' . join(', ', $ids) .
-                                 ') AND owner_class=%s', 
-                                array(
-                                        Pluf::f('pluf_custom_group', 
-                                                'Pluf_Group')
-                                ));
-                $sql->SOr($sql2);
-            }
-            $perms = $growp->getList(
-                    array(
-                            'filter' => $sql->gen(),
-                            'view' => 'join_permission'
-                    ));
-            foreach ($perms as $perm) {
-                $perm_string = $perm->application . '.' . $perm->code_name . '#' .
-                         $perm->model_class . '(' . $perm->model_id . ')';
-                if ($perm->negative) {
-                    $perm_string = '!' . $perm_string;
-                }
-                if (! in_array($perm_string, $this->_cache_perms)) {
-                    $this->_cache_perms[] = $perm_string;
-                }
-            }
+            $this->loadRowPermissions($ids, $tenant);
         }
         return $this->_cache_perms;
+    }
+
+    /**
+     * فهرستی از شی داده شده را برمی‌گرداند که این کاربر دسترسی تعیین شده را روی آن‌ها دارد.
+     * به عنوان مثال فراخوانی این متد به صورت getAllPermittedObject('App.manage', new Pluf_Group(), 1)
+     * فهرستی از Pluf_Group هایی را برمی‌گرداند که کاربر جاری روی ان‌ها دسترسی 'manage' رو در ملک با
+     * شناسه یک دارد.
+     *
+     * @param Pluf_Model $object
+     *            نمونه از شی مورد نظر
+     * @param string $permission
+     *            رشته حاوی code_name مربوط به گواهی مورد نظر
+     * @param int $tenant
+     *            شناسه ملک مورد نظر
+     */
+    function getAllPermittedObject($permission, $object, $tenant = 0)
+    {
+        $permPattern = $permission . '#' . $object->_a['model'];
+        $permList = $this->getAllPermissions(false, $tenant);
+        $result = array();
+        foreach ($permList as $rowPerm) {
+            try {
+                preg_match('/^(?P<perm>' . $permPattern . ')\((?P<id>\d+)\)/', $rowPerm, $m);
+                $obj = new $object->_a['model']($m['id']);
+                array_push($result, $obj);
+            } catch (Exception $e) {}
+        }
+        return $result;
+    }
+
+    /*
+     * فهرست گروه‌ها را لود می‌کند.
+     */
+    private function loadGroupPermissions($ids, $tenant)
+    {
+        $gperm = new Pluf_Permission();
+        $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) . '_id';
+        $perms = array_merge($perms, (array) $gperm->getList(array(
+            'filter' => $f_name . ' IN (' . join(', ', $ids) . ')',
+            'view' => 'join_group'
+        )));
+        foreach ($perms as $perm) {
+            $tos = $perm->toString();
+            if (! in_array($tos, $this->_cache_perms)) {
+                $this->_cache_perms[] = $tos;
+            }
+        }
+    }
+
+    /*
+     * تمام گواهی‌هایی که با جدول مشخص شده است را لود می‌کند.
+     */
+    private function loadRowPermissions($ids, $tenant)
+    {
+        $growp = new Pluf_RowPermission();
+        $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s AND tenant=%s', array(
+            $this->id,
+            'Pluf_User',
+            $tenant
+        ));
+        if (count($ids) > 0) {
+            $sql2 = new Pluf_SQL('owner_id IN (%s) AND owner_class=%s AND tenant=%s', array(
+                join(', ', $ids),
+                Pluf::f('pluf_custom_group', 'Pluf_Group'),
+                $tenant
+            ));
+            $sql->SOr($sql2);
+        }
+        $perms = $growp->getList(array(
+            'filter' => $sql->gen(),
+            'view' => 'join_permission'
+        ));
+        foreach ($perms as $perm) {
+            $perm_string = $perm->toString();
+            if (! in_array($perm_string, $this->_cache_perms)) {
+                $this->_cache_perms[] = $perm_string;
+            }
+        }
     }
 
     /**
@@ -425,7 +507,7 @@ class Pluf_User extends Pluf_Model
      *
      * @param unknown $object            
      */
-    public function getPermissions ($object)
+    public function getPermissions($object)
     {
         // Group permissions
         // $groups = $this->get_groups_list();
@@ -465,13 +547,13 @@ class Pluf_User extends Pluf_Model
      *            Object Object for row level permission (null)
      * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
      */
-    function hasPerm ($perm, $obj = null)
+    function hasPerm($perm, $obj = null, $tenantId = 0)
     {
         if (! $this->active)
             return false;
         if ($this->administrator)
             return true;
-        $perms = $this->getAllPermissions();
+        $perms = $this->getAllPermissions(false, $tenantId);
         if (! is_null($obj)) {
             $perm_row = $perm . '#' . $obj->_a['model'] . '(' . $obj->id . ')';
             if (in_array('!' . $perm_row, $perms))
@@ -489,7 +571,7 @@ class Pluf_User extends Pluf_Model
      *
      * @return bool درستی اگر یکی از مجوزها وجود داشته باشد.
      */
-    function hasAppPerms ($app)
+    function hasAppPerms($app)
     {
         if ($this->administrator)
             return true;
@@ -511,11 +593,10 @@ class Pluf_User extends Pluf_Model
      *            string Message
      * @return bool Success
      */
-    function setMessage ($message)
+    function setMessage($message)
     {
         if ($this->isAnonymous()) {
-            throw new Pluf_Exception_DoesNotExist(
-                    __("User not exist, while you are trying to add message?!"));
+            throw new Pluf_Exception_DoesNotExist(__("User not exist, while you are trying to add message?!"));
         }
         $m = new Pluf_Message();
         $m->user = $this;
@@ -535,11 +616,10 @@ class Pluf_User extends Pluf_Model
      *
      * @return ArrayObject
      */
-    function getAndDeleteMessages ()
+    function getAndDeleteMessages()
     {
         if ($this->isAnonymous()) {
-            throw new Pluf_Exception_DoesNotExist(
-                    __("User not exist, while you are trying to get messages?!"));
+            throw new Pluf_Exception_DoesNotExist(__("User not exist, while you are trying to get messages?!"));
         }
         $messages = array();
         $ms = $this->get_pluf_message_list();
@@ -560,26 +640,21 @@ class Pluf_User extends Pluf_Model
      *
      * @return Pluf_Model User profile
      */
-    function getProfile ()
+    function getProfile()
     {
         $pclass = Pluf::f('user_profile_class', false);
         if (false == $pclass) {
-            throw new Pluf_Exception_SettingError(
-                    __('"user_profile_class" setting not defined.'));
+            throw new Pluf_Exception_SettingError(__('"user_profile_class" setting not defined.'));
         }
         $db = $this->getDbConnection();
-        $sql = new Pluf_SQL(sprintf('%s=%%s', $db->qn('user')), 
-                array(
-                        $this->id
-                ));
-        $users = Pluf::factory($pclass)->getList(
-                array(
-                        'filter' => $sql->gen()
-                ));
+        $sql = new Pluf_SQL(sprintf('%s=%%s', $db->qn('user')), array(
+            $this->id
+        ));
+        $users = Pluf::factory($pclass)->getList(array(
+            'filter' => $sql->gen()
+        ));
         if ($users->count() != 1) {
-            throw new Pluf_Exception_DoesNotExist(
-                    sprintf(__('No profiles available for user: %s'), 
-                            (string) $this));
+            throw new Pluf_Exception_DoesNotExist(sprintf(__('No profiles available for user: %s'), (string) $this));
         }
         return $users[0];
     }

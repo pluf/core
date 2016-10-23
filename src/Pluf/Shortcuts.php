@@ -1,4 +1,21 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Shortcut methods to perform some operations.
@@ -99,6 +116,26 @@ function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
 {
     $extra['model'] = $model;
     return new Pluf_Form_Model($data, $extra, $label_suffix);
+}
+
+/**
+ * Get a given form from a model to update.
+ *
+ * @param
+ *            Object The model.
+ * @param
+ *            array Data to bound the form (null)
+ * @param
+ *            array Extra parameters (array())
+ * @param
+ *            string Label suffix (null)
+ * @return Object Form to update for this model.
+ */
+function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null, $extra = array(),
+    $label_suffix = null)
+{
+    $extra['model'] = $model;
+    return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
 }
 
 function Pluf_Shortcuts_LoadModels ($moduleJson)
