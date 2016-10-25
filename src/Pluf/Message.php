@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -38,6 +39,13 @@ class Pluf_Message extends Pluf_Model
                 ),
                 'message' => array(
                         'type' => 'Pluf_DB_Field_Text',
+                        'blank' => false
+                ),
+            /*
+             * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
+             */
+            'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false
                 )
         );
