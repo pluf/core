@@ -7,15 +7,15 @@ return array(
         'model' => 'SaaS_Views_Application',
         'method' => 'getSiteMap'
     ),
-    // url format for SPA:  spa@tanant
+    // url format for SPA:  /spa
     array( // SPA main page
-        'regex' => '#^/([^/]*)' . Pluf::f('saas_tenant_url_prefix', '@') . '[^/]*$#',
+        'regex' => '#^/(?P<spa>[^/]+)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'loadSpaByName'
     ),
-    // url format for SPA resources:    spa@tenant/path/to/resource
+    // url format for SPA resources:    /spa/path/to/resource
     array( // SPA resource
-        'regex' => '#^/([^/]*)' . Pluf::f('saas_tenant_url_prefix', '@') . '[^/]*/(.*)$#',
+        'regex' => '#^/(?P<spa>[^/]+)/(?P<resource>.*)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'getResource'
     ),
@@ -26,7 +26,7 @@ return array(
         'method' => 'loadDefaultSpa'
     ),
     array( // Default SPA resource
-        'regex' => '#^/(.*)$#',
+        'regex' => '#^/(?P<resource>.*)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'getResourceOfDefault'
     )

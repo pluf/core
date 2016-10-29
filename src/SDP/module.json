@@ -1,0 +1,10 @@
+{
+  "name": "SDP",
+  "version": "1",
+  "title": "Sell Digital Products System",
+  "model": [
+		"SDP_Asset",
+		"SDP_Link"
+	],
+	"permisson": []
+}

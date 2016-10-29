@@ -158,7 +158,7 @@ class SaaS_Views_SPA
     public static function loadSpaByName($request, $match)
     {
         $tenant = $request->tenant;
-        $spaName = $match[1];
+        $spaName = $match['spa'];
         if ($spaName) {
             $spa = SaaS_SPA::getSpaByName($spaName);
         } else {
@@ -190,18 +190,17 @@ class SaaS_Views_SPA
     {
         // Load data
         $tenant = $request->tenant;
-        if ($match[1]) {
-            $spa = SaaS_SPA::getSpaByName($match[1]);
+        if ($match['spa']) {
+            $spa = SaaS_SPA::getSpaByName($match['spa']);
         } else {
             $spa = $tenant->get_spa();
         }
         
         // TODO: Check access
-        
-        $resPath = $spa->getResourcePath($match[2]);
+        $resPath = $spa->getResourcePath($match['resource']);
         if (! $resPath) {
             // Try to load resource form assets directory of platform
-            $resPath = SaaS_SPA::getAssetsPath($match[2]);
+            $resPath = SaaS_SPA::getAssetsPath($match['resource']);
         }
         return new Pluf_HTTP_Response_File($resPath, SaaS_FileUtil::getMimeType($resPath));
     }
@@ -215,10 +214,10 @@ class SaaS_Views_SPA
         // TODO: Check access
         
         // Load resource form local resources of spa
-        $res = $spa->getResourcePath($match[1]);
+        $res = $spa->getResourcePath($match['resource']);
         if (! $res) {
             // Try to load resource form assets directory of platform
-            $res = SaaS_SPA::getAssetsPath($match[1]);
+            $res = SaaS_SPA::getAssetsPath($match['resource']);
         }
         return new Pluf_HTTP_Response_File($res, SaaS_FileUtil::getMimeType($res));
     }
@@ -234,104 +233,5 @@ class SaaS_Views_SPA
         $mainPage = $spa->getMainPagePath();
         
         return new Pluf_HTTP_Response_File($mainPage, SaaS_FileUtil::getMimeType($mainPage));
-    }
-
-    /**
-     * ********************************Deprecated********************************************
-     */
-    public function tenantSpaById($request, $match)
-    {
-        // TODO: maso, 1394: Redirect if there is domain
-        $spaId = $match[1];
-        $tenantId = $match[2];
-        if ($tenantId) {
-            $tenant = SaaS_Shortcuts_GetApplicationOr404($tenantId);
-        } else {
-            $tenant = $request->tenant;
-        }
-        if ($spaId) {
-            $spa = SaaS_Shortcuts_GetSPAOr404($spaId);
-        } else {
-            if ($tenant->spa != 0)
-                $spa = $tenant->get_spa();
-            else {
-                $spa = SaaS_SPA::getSpaByName(Pluf::f('saas_spa_default', 'main'));
-            }
-        }
-        return $this->loadSpa($request, $tenant, $spa);
-        // $app = $request->tenant;
-        // $spa = new SaaS_SPA($match[1]);
-        
-        // // Check access
-        // SaaS_Precondition::userCanAccessApplication($request, $app);
-        // SaaS_Precondition::userCanAccessSpa($request, $spa);
-        
-        // // نمایش اصلی
-        // return $this->loadSpa($request, $app, $spa);
-    }
-
-    public function main($request, $match)
-    {
-        $app = $request->tenant;
-        if ($app->spa != 0)
-            $spa = $app->get_spa();
-        else {
-            $spa = SaaS_SPA::getSpaByName(Pluf::f('saas_spa_default', 'main'));
-            return $this->loadSpa($request, $app, $spa);
-        }
-        
-        // Check access
-        SaaS_Precondition::userCanAccessApplication($request, $app);
-        SaaS_Precondition::userCanAccessSpa($request, $spa);
-        
-        return $this->loadSpa($request, $app, $spa);
-    }
-
-    public function spa($request, $match)
-    {
-        $app = $request->tenant;
-        $spa = SaaS_SPA::getSpaByName($match[1]);
-        
-        // Check access
-        SaaS_Precondition::userCanAccessApplication($request, $app);
-        SaaS_Precondition::userCanAccessSpa($request, $spa);
-        
-        // نمایش اصلی
-        return $this->loadSpa($request, $app, $spa);
-    }
-
-    public function source($request, $match)
-    {
-        $spa = new SaaS_SPA();
-        $spa = $spa->getOne(array(
-            'filter' => "name='" . $match[1] . "'"
-        ));
-        $repo = Pluf::f('saas_spa_repository');
-        
-        // TODO: Check access (No Tentant)
-        // SaaS_Precondition::userCanAccessSpa($request, $spa);
-        
-        // Do
-        return $this->loadSource($request, $spa, $match[2]);
-    }
-
-    public function assets($request, $match)
-    {
-        // Load data
-        // Check access
-        // DO
-        return SaaS_Views_SPA::loadAssets($request, $match[1]);
-    }
-
-    function loadSource($request, $spa, $name)
-    {
-        $p = $spa->getSourcePath($name);
-        return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
-    }
-
-    protected static function loadAssets($request, $name)
-    {
-        $p = SaaS_SPA::getAssetsPath($name);
-        return new Pluf_HTTP_Response_File($p, SaaS_FileUtil::getMimeType($p));
     }
 }
