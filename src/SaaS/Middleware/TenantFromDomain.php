@@ -23,7 +23,7 @@ class SaaS_Middleware_TenantFromDomain
                 $request->application = $app;
             }
         } catch (Exception $e) {
-            echo $e->getMessage();
+//             echo $e->getMessage();
         }
         return false;
     }
