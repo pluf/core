@@ -16,8 +16,9 @@ class User_Views_Permission
      */
     public function find ($request, $match)
     {
-        // XXX: maso, 1395: این فراخوانی رو برای تست نوشتم. خیلی تغییر نیاز داره
-        $pag = new Pluf_Paginator(new Pluf_RowPermission());
+        // XXX: maso, 1395: check user access.
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        $pag = new Pluf_Paginator(new Pluf_Permission());
         $pag->configure(array(), 
                 array( // search
                         'name',
@@ -30,22 +31,19 @@ class User_Views_Permission
                         'version'
                 ));
         $pag->action = array();
-        $pag->items_per_page = 20;
         $pag->sort_order = array(
                 'version',
                 'DESC'
         );
         $pag->setFromRequest($request);
-        $pag->model_view = 'join_permission';
-        if (! $request->user->administrator) {
-            $pag->forced_where = $sql = new Pluf_SQL(
-                    'owner_id=%s AND owner_class=%s AND tenant=%s', 
-                    array(
-                            $request->user->id,
-                            $request->user->_a['model'],
-                            $request->tenant->id
-                    ));
-        }
+        $pag->model_view = 'join_row_permission';
+        $pag->forced_where = new Pluf_SQL(
+                'rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s AND tenant=%s', 
+                array(
+                        $model->id,
+                        $model->_a['model'],
+                        $request->tenant->id
+                ));
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
@@ -56,7 +54,11 @@ class User_Views_Permission
      */
     public function create ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        // XXX: maso, 1395: check user access.
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['id']);
+        Pluf_RowPermission::add($user, null, $perm, false, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($user);
     }
 
     /**
@@ -66,7 +68,8 @@ class User_Views_Permission
      */
     public function get ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
+        return new Pluf_HTTP_Response_Json($perm);
     }
 
     /**
@@ -76,6 +79,10 @@ class User_Views_Permission
      */
     public function delete ($request, $match)
     {
-        throw new Pluf_Exception_NotImplemented();
+        // XXX: maso, 1395: check user access.
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
+        Pluf_RowPermission::remove($user, null, $perm, $request->tenant->id);
+        return new Pluf_HTTP_Response_Json($user);
     }
 }

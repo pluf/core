@@ -281,7 +281,7 @@ return array(
     array(
         'regex' => '#^/(?P<userId>\d+)/role/new$#',
         'model' => 'User_Views_Permission',
-        'method' => 'find',
+        'method' => 'create',
         'http-method' => 'POST'
     ),
     array(
