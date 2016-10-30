@@ -11,12 +11,6 @@ return array (
 				'relate_to' => array (
 						'SaaS_Application' 
 				) 
-		),
-		'SDP_Plan' => array (
-				'relate_to' => array (
-						'Pluf_User',
-						'SaaS_Application'
-				) 
-		) 
+		)
 )
 ;

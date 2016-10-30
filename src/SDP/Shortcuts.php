@@ -20,20 +20,6 @@ function SDP_Shortcuts_GetAssetOr404($id) {
 	}
 	throw new SDP_Exception_ObjectNotFound ( "SDP asset not found (asset id:" . $id . ")" );
 }
-function SDP_Shortcuts_GetPlanTemplateOr404($id) {
-	$item = new SDP_PlanTemplate ( $id );
-	if (( int ) $id > 0 && $item->id == $id) {
-		return $item;
-	}
-	throw new SDP_Exception_ObjectNotFound ( "SDP plan template not found (plan template id:" . $id . ")" );
-}
-function SDP_Shortcuts_GetPlanOr404($id) {
-	$item = new SDP_Plan ( $id );
-	if (( int ) $id > 0 && $item->id == $id) {
-		return $item;
-	}
-	throw new SDP_Exception_ObjectNotFound ( "SDP plan not found (plan id:" . $id . ")" );
-}
 function SDP_Shortcuts_GetAccountOr404($id) {
 	$item = new SDP_Account ( $id );
 	if (( int ) $id > 0 && $item->id == $id) {

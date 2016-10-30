@@ -1,6 +1,6 @@
 <?php
-Pluf::loadFunction ( 'SaaSDM_Shortcuts_GetAssetOr404' );
-class SaaSDM_Views_Asset {
+Pluf::loadFunction ( 'SDP_Shortcuts_GetAssetOr404' );
+class SDP_Views_Asset {
 	public static function create($request, $match) {
 		// initial asset data
 		$extra = array (
@@ -18,12 +18,12 @@ class SaaSDM_Views_Asset {
 		}
 		
 		// Create asset and get its ID
-		$form = new SaaSDM_Form_AssetCreate ( $request->REQUEST, $extra );
+		$form = new SDP_Form_AssetCreate ( $request->REQUEST, $extra );
 		$asset = $form->save ();
 		
 		// Upload asset file and extract information about it (by updating asset)
 		$extra ['asset'] = $asset;
-		$form = new SaaSDM_Form_AssetUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+		$form = new SDP_Form_AssetUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 		try {
 			$asset = $form->update ();
 		} catch ( Pluf_Exception $e ) {
@@ -34,7 +34,7 @@ class SaaSDM_Views_Asset {
 		return new Pluf_HTTP_Response_Json ( $asset );
 	}
 	public static function find($request, $match) {
-		$asset = new Pluf_Paginator ( new SaaSDM_Asset () );
+		$asset = new Pluf_Paginator ( new SDP_Asset () );
 		$sql = new Pluf_SQL ( 'tenant=%s', array (
 				$request->tenant->id 
 		) );
@@ -82,7 +82,7 @@ class SaaSDM_Views_Asset {
 	}
 	public static function get($request, $match) {
 		// تعیین داده‌ها
-		$asset = SaaSDM_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		$asset = SDP_Shortcuts_GetAssetOr404 ( $match ["id"] );
 		// حق دسترسی
 		// CMS_Precondition::userCanAccessContent($request, $content);
 		// اجرای درخواست
@@ -90,7 +90,7 @@ class SaaSDM_Views_Asset {
 	}
 	public static function update($request, $match) {
 		// تعیین داده‌ها
-		$asset = SaaSDM_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		$asset = SDP_Shortcuts_GetAssetOr404 ( $match ["id"] );
 		// حق دسترسی
 		// CMS_Precondition::userCanUpdateContent($request, $content);
 		// اجرای درخواست
@@ -100,17 +100,17 @@ class SaaSDM_Views_Asset {
 				'tenant' => $request->tenant 
 		);
 		
-		$form = new SaaSDM_Form_AssetUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+		$form = new SDP_Form_AssetUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 		$asset = $form->update ();
 		return new Pluf_HTTP_Response_Json ( $asset );
 	}
 	public static function delete($request, $match) {
 		// تعیین داده‌ها
-		$asset = SaaSDM_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		$asset = SDP_Shortcuts_GetAssetOr404 ( $match ["id"] );
 		// دسترسی
 		// CMS_Precondition::userCanDeleteContent($request, $content);
 		// اجرا
-		$asset_copy = SaaSDM_Shortcuts_GetAssetOr404 ( $asset->id );
+		$asset_copy = SDP_Shortcuts_GetAssetOr404 ( $asset->id );
 		$asset_copy->path = "";
 		
 		$asset->delete ();
@@ -121,7 +121,7 @@ class SaaSDM_Views_Asset {
 	public static function updateFile($request, $match) {
 		// GET data
 		$app = $request->tenant;
-		$asset = CMS_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		$asset = SDP_Shortcuts_GetAssetOr404 ( $match ["id"] );
 		// Check permission
 		// SaaS_Precondition::userCanAccessApplication($request, $app);
 		// SaaS_Precondition::userCanAccessResource($request, $content);
@@ -132,7 +132,7 @@ class SaaSDM_Views_Asset {
 					'asset' => $asset,
 					'tenant' => $request->tenant 
 			);
-			$form = new CMS_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+			$form = new SDP_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 			$asset = $form->update ();
 			// return new Pluf_HTTP_Response_Json($content);
 		} else {

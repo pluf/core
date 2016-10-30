@@ -79,6 +79,11 @@ class SDP_Asset extends Pluf_Model {
 						'blank' => false,
 						'size' => 250 
 				),
+				'price' => array (
+						'type' => 'Pluf_DB_Field_Integer',
+						'blank' => false,
+						'size' => 250
+				),				
 				// relations
 				'tenant' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',

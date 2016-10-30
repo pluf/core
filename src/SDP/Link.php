@@ -1,5 +1,5 @@
 <?php
-class SaaSDM_Link extends Pluf_Model {
+class SDP_Link extends Pluf_Model {
 	
 	/**
 	 * @brief مدل داده‌ای را بارگذاری می‌کند.

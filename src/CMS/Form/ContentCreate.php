@@ -18,7 +18,7 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
     {
         $this->tenant = $extra['tenant'];
         $this->user = $extra['user'];
-        parent::initFields($extra);
+        parent::initFields($extra);       
     }
 
     public function clean_name ()

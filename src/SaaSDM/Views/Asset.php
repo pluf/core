@@ -121,7 +121,7 @@ class SaaSDM_Views_Asset {
 	public static function updateFile($request, $match) {
 		// GET data
 		$app = $request->tenant;
-		$asset = CMS_Shortcuts_GetAssetOr404 ( $match ["id"] );
+		$asset = SaaSDM_Shortcuts_GetAssetOr404( $match ["id"] );
 		// Check permission
 		// SaaS_Precondition::userCanAccessApplication($request, $app);
 		// SaaS_Precondition::userCanAccessResource($request, $content);
@@ -132,7 +132,7 @@ class SaaSDM_Views_Asset {
 					'asset' => $asset,
 					'tenant' => $request->tenant 
 			);
-			$form = new CMS_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
+			$form = new SaaSDM_Form_ContentUpdate ( array_merge ( $request->REQUEST, $request->FILES ), $extra );
 			$asset = $form->update ();
 			// return new Pluf_HTTP_Response_Json($content);
 		} else {

@@ -12,6 +12,7 @@ class CMS_Views
                 'tenant' => $request->tenant,
                 'model' => new CMS_Content()
         );
+                   
         // Create content and get its ID
         $form = new CMS_Form_ContentCreate($request->REQUEST, $extra);
         
@@ -40,6 +41,7 @@ class CMS_Views
         $content->forced_where = $sql;
         $content->list_filters = array(
                 'id',
+        		'name',
                 'title',
                 'file_name',
                 'mime_type'
@@ -51,6 +53,7 @@ class CMS_Views
                 'description' => __('description')
         );
         $search_fields = array(
+        		'name',
                 'title',
                 'file_name',
                 'mime_type',
@@ -58,6 +61,7 @@ class CMS_Views
         );
         $sort_fields = array(
                 'id',
+        		'name',
                 'title',
                 'file_name',
                 'file_size',

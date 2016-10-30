@@ -8,7 +8,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaSDM_Form_AssetCreate extends Pluf_Form
+class SDP_Form_AssetCreate extends Pluf_Form
 {
 
     public $tenant = null;
@@ -21,7 +21,7 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
 
         $this->fields['name'] = new Pluf_Form_Field_Varchar(
                 array(
-                        'required' => false,
+                        'required' => true,
                         'label' => 'Name',
                         'help_text' => 'Name of asset'
                 ));
@@ -42,7 +42,12 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         				'required' => false,
         				'label' => 'Path',
         				'help_text' => 'Path of asset'
-        		));      
+        		));   
+        $this->fields['price'] = new Pluf_Form_Field_Integer(array(
+        		'required' => true,
+        		'label' => 'Price',
+        		'help_text' => 'Price of asset'
+        ));
     }
 
     function save ($commit = true)
@@ -51,12 +56,12 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
             throw new Pluf_Exception('cannot save the asset from an invalid form');
         }
         // Create the asset
-        $asset = new SaaSDM_Asset();
+        $asset = new SDP_Asset();
         $asset->driver_type = 'local';
         $asset->type = 'file';
         $asset->driver_id = '0';
         $asset->setFromFormData($this->cleaned_data);
-        $asset->path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/dm';
+        $asset->path = Pluf::f('upload_path') . '/' . $this->tenant->id . '/sdp';
         if(!is_dir($asset->path)) {
         	if (false == @mkdir($asset->path, 0777, true)) {
         		throw new Pluf_Form_Invalid('An error occured when creating the upload path. Please try to send the file again.');

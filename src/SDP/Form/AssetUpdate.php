@@ -8,7 +8,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaSDM_Form_AssetUpdate extends Pluf_Form
+class SDP_Form_AssetUpdate extends Pluf_Form
 {
     
     // public $user = null;
@@ -76,15 +76,19 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
         		'initial' => $this->asset->description,
         		'help_text' => 'description of Asset'
         ));
-        
-        
+                
         $this->fields['parent'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
             'label' => 'Parent',
             'initial' => $this->asset->parent,
             'help_text' => 'Parent of asset'
         ));
-        
+        $this->fields['price'] = new Pluf_Form_Field_Varchar(array(
+        		'required' => false,
+        		'label' => 'Price',
+        		'initial' => $this->asset->price,
+        		'help_text' => 'Price of asset'
+        ));        
         $this->fields['tenant'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
             'label' => 'Tenant',
@@ -97,7 +101,7 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
             'move_function_params' => array(
-                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/dm',
+                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/sdp',
                 'file_name' => $this->asset->id,
                 'upload_path_create' => true,
                 'upload_overwrite' => true
