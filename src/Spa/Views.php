@@ -69,7 +69,7 @@ class Spa_Views extends Pluf_Views
             $zip->extractTo($path);
             $zip->close();
         } else {
-            echo 'failed';
+//             echo 'failed';
         }
         unlink($path . '/spa.zip');
         

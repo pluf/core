@@ -34,7 +34,7 @@ class SaaS_Middleware_TenantFromRequestMatch
                     return false;
                 }
             } catch (Exception $e) {
-                echo $e->getMessage();
+//                 echo $e->getMessage();
             }
         }
         

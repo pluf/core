@@ -114,6 +114,9 @@ class Pluf_Permission extends Pluf_Model
         $this->_a['views'] = array(
             'join_group' => array(
                 'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_perm . '.id=pluf_permission_id'
+            ),
+            'join_row_permission' => array(
+                'join' => 'LEFT JOIN rowpermissions ON permissions.id=rowpermissions.permission'
             )
         );        
     }

@@ -7,28 +7,26 @@ return array(
         'model' => 'SaaS_Views_Application',
         'method' => 'getSiteMap'
     ),
-    // url format for SPA:  /spa
-    array( // SPA main page
-        'regex' => '#^/(?P<spa>[^/]+)$#',
+    // url format for SPA main page or a Resource-File of default spa
+    // main page of a spa:               /spa-name
+    // resource-file from default spa:   /resource-file
+    array(
+        'regex' => '#^/(?P<path>[^/]+)$#',
         'model' => 'SaaS_Views_SPA',
-        'method' => 'loadSpaByName'
+        'method' => 'loadSpaOrResource'
     ),
-    // url format for SPA resources:    /spa/path/to/resource
-    array( // SPA resource
+    // url format for SPA resources:    
+    // resource from default spa: /path/to/resource
+    // resource form specified spa: /spa-name/path/to/resource
+    array(
         'regex' => '#^/(?P<spa>[^/]+)/(?P<resource>.*)$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'getResource'
-    ),
-     
-    array( // Default SPA main page of Default Tenant
+    ),    
+    // main page of default SPA
+    array(
         'regex' => '#^/$#',
         'model' => 'SaaS_Views_SPA',
         'method' => 'loadDefaultSpa'
-    ),
-    array( // Default SPA resource
-        'regex' => '#^/(?P<resource>.*)$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'getResourceOfDefault'
     )
-)
-;
+);
