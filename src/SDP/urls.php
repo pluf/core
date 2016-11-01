@@ -2,7 +2,7 @@
 return array (
 		
 		array ( // Assets urls
-				'regex' => '#^/new$#',
+				'regex' => '#^/asset/new$#',
 				'model' => 'SDP_Views_Asset',
 				'method' => 'create',
 				'http-method' => 'POST',
@@ -12,25 +12,25 @@ return array (
 				) 
 		),
 		array (
-				'regex' => '#^/find$#',
+				'regex' => '#^/asset/find$#',
 				'model' => 'SDP_Views_Asset',
 				'method' => 'find',
 				'http-method' => 'GET' 
 		),
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)$#',
+				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SDP_Views_Asset',
 				'method' => 'get',
 				'http-method' => 'GET' 
 		),
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)/find$#',
+				'regex' => '#^/asset/(?P<id>\d+)/find$#',
 				'model' => 'SDP_Views_Asset',
 				'method' => 'findchild',
 				'http-method' => 'GET' 
 		),
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)$#',
+				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SDP_Views_Asset',
 				'method' => 'update',
 				'http-method' => 'POST' 

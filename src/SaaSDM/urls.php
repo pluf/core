@@ -2,7 +2,7 @@
 return array (
 		
 		array ( // Assets urls
-				'regex' => '#^/new$#',
+				'regex' => '#^/asset/new$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'create',
 				'http-method' => 'POST',
@@ -12,7 +12,7 @@ return array (
 				) 
 		),
 		array (
-				'regex' => '#^/find$#',
+				'regex' => '#^/asset/find$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'find',
 				'http-method' => 'GET' 
@@ -22,7 +22,7 @@ return array (
 		// //'SaaS_Precondition::tenantMember'
 		// )
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)$#',
+				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'get',
 				'http-method' => 'GET' 
@@ -32,7 +32,7 @@ return array (
 		// //'SaaS_Precondition::tenantMember'
 		// )
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)/find$#',
+				'regex' => '#^/asset/(?P<id>\d+)/find$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'findchild',
 				'http-method' => 'GET' 
@@ -42,7 +42,7 @@ return array (
 		// //'SaaS_Precondition::tenantMember'
 		// )
 		array ( // Asset urls
-				'regex' => '#^/(?P<id>\d+)$#',
+				'regex' => '#^/asset/(?P<id>\d+)$#',
 				'model' => 'SaaSDM_Views_Asset',
 				'method' => 'update',
 				'http-method' => 'POST' 
