@@ -162,6 +162,9 @@ class SaaS_Views extends Pluf_Views
             throw new Exception(
                     'The model class was not provided in the parameters.');
         }
+        if(! isset($p['extra_form'])){
+            $p['extra_form'] = array();
+        }
         // Set the default
         $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
                 $match['modelId']);
