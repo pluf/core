@@ -142,7 +142,9 @@ function Pluf_Shortcuts_LoadModels ($moduleJson)
 {
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
-
+    if(!isset($moduleJson['model'])){
+        return;
+    }
     $models = $moduleJson['model'];
     foreach ($models as $model) {
         $schema->model = new $model();
@@ -154,7 +156,9 @@ function Pluf_Shortcuts_LoadPermissions ($moduleJson)
 {
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
-    
+    if(!isset($moduleJson['permisson'])){
+        return;
+    }
     $permissons = $moduleJson['permisson'];
     foreach ($permissons as $permisson) {
         $p = new Pluf_Permission();
@@ -164,5 +168,20 @@ function Pluf_Shortcuts_LoadPermissions ($moduleJson)
         $p->application = $moduleJson['name'];
         $p->version = $moduleJson['version'];
         $p->create();
+    }
+}
+
+function Pluf_Shortcuts_Monitors ($moduleJson)
+{
+    $db = Pluf::db();
+    $schema = new Pluf_DB_Schema($db);
+    if(!isset($moduleJson['monitor'])){
+        return;
+    }
+    $monitors = $moduleJson['monitor'];
+    foreach ($monitors as $monitor) {
+        $model = new Pluf_Monitor();
+        $model->setFromFormData($monitor);
+        $model->create();
     }
 }

@@ -36,6 +36,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'Spa/urls.php' 
 		),
+		array (
+				'regex' => '#^/api/monitor#',
+				'base' => $base,
+				'sub' => include 'Monitor/urls.php' 
+		),
         
         
         

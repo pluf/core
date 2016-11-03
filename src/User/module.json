@@ -6,5 +6,11 @@
 		"User_Profile",
 		"User_Avatar"
 	],
-	"permisson": []
+	"monitor":[{
+		"code_name": "owner",
+		"application": "user",
+		"function": "User_Monitor::owner",
+		"title": "Owner ship",
+		"description": "Check if the curent user is an owner of the tenant."
+	}]
 }

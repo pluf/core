@@ -26,13 +26,15 @@ $cfg['installed_apps'] = array(
         'Role',
         'Tenant',
         'Spa',
+        'Monitor',
+
         'SaaS',
         'Setting',
         'Config',
         'CMS',
         'SaaSNewspaper',
         'Wiki',
-        'SaaSBank'
+        'SaaSBank',
 );
 
 /*

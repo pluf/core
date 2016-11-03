@@ -1,4 +1,7 @@
 <?php
+Pluf::loadFunction('Pluf_Shortcuts_LoadModels');
+Pluf::loadFunction('Pluf_Shortcuts_LoadPermissions');
+Pluf::loadFunction('Pluf_Shortcuts_Monitors');
 
 /**
  * A class to manage the migration of the code from one version to
@@ -24,7 +27,6 @@
  * $m = new Pluf_Migration();
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
- *
  */
 class Pluf_Migration
 {
@@ -172,6 +174,9 @@ class Pluf_Migration
      */
     public function installApp ($app, $uninstall = false)
     {
+        if (! $uninstall && $this->installAppFromConfig($app)) {
+            return;
+        }
         if ($uninstall) {
             $func = $app . '_Migrations_Install_teardown';
         } else {
@@ -228,6 +233,29 @@ class Pluf_Migration
     }
 
     /**
+     * نصب نرم افزار بر اساس تنظیم‌ها
+     *
+     * بر اساس تنظیم‌هایی که در نرم افزار وجود دارد آن را نصب می‌کند.
+     *
+     * @param unknown $app            
+     * @return boolean
+     */
+    public function installAppFromConfig ($app)
+    {
+        if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
+            return false;
+        }
+        $myfile = fopen($file, "r") or die("Unable to open module.json!");
+        $json = fread($myfile, filesize($file));
+        fclose($myfile);
+        $moduel = json_decode($json, true);
+        Pluf_Shortcuts_LoadModels($moduel);
+        Pluf_Shortcuts_LoadPermissions($moduel);
+        Pluf_Shortcuts_Monitors($moduel);
+        return true;
+    }
+
+    /**
      * Run the migrations.
      *
      * From an array of possible migrations, it will first get the
@@ -275,10 +303,11 @@ class Pluf_Migration
                         $name
                 );
             } else {
-                array_unshift($to_run, array(
-                        $order,
-                        $name
-                ));
+                array_unshift($to_run, 
+                        array(
+                                $order,
+                                $name
+                        ));
             }
         }
         asort($to_run);
@@ -322,9 +351,10 @@ class Pluf_Migration
     {
         $gschema = new Pluf_DB_SchemaInfo();
         $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array(
-                'filter' => $sql->gen()
-        ));
+        $appinfo = $gschema->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
         if ($appinfo->count() == 1) {
             $appinfo[0]->version = $version;
             $appinfo[0]->update();
@@ -348,9 +378,10 @@ class Pluf_Migration
     {
         $gschema = new Pluf_DB_SchemaInfo();
         $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array(
-                'filter' => $sql->gen()
-        ));
+        $appinfo = $gschema->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
         if ($appinfo->count() == 1) {
             $appinfo[0]->delete();
         }
