@@ -26,23 +26,22 @@ class Pluf_Monitor extends Pluf_Model
                         'editable' => false,
                         'readable' => true
                 ),
-                'application' => array(
+                'bean' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'size' => 150,
                         'blank' => false,
-                        'verbose' => __('application'),
-                        'help_text' => __(
-                                'The application using this permission.'),
+                        'verbose' => __('bean'),
+                        'help_text' => __('The bean using this monitor.'),
                         'editable' => false,
                         'readable' => true
                 ),
-                'code_name' => array(
+                'property' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 100,
-                        'verbose' => __('code name'),
+                        'verbose' => __('property name'),
                         'help_text' => __(
-                                'The code name must be unique for each application.'),
+                                'The property name must be unique for each application.'),
                         'editable' => false,
                         'readable' => true
                 ),
@@ -88,14 +87,14 @@ class Pluf_Monitor extends Pluf_Model
         $this->_a['idx'] = array(
                 'code_name_idx' => array(
                         'type' => 'normal',
-                        'col' => 'code_name'
+                        'col' => 'property'
                 ),
                 'application_idx' => array(
                         'type' => 'normal',
-                        'col' => 'application'
+                        'col' => 'bean'
                 ),
                 'monitor_idx' => array(
-                        'col' => 'application, code_name',
+                        'col' => 'bean, property',
                         'type' => 'unique', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',
