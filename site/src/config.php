@@ -27,6 +27,8 @@ $cfg['installed_apps'] = array(
         'Tenant',
         'Spa',
         'Monitor',
+        'SDP',
+        'SaaSDM',
 
         'SaaS',
         'Setting',
