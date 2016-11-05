@@ -7,10 +7,10 @@
 		"User_Avatar"
 	],
 	"monitor":[{
-		"code_name": "owner",
-		"application": "user",
-		"function": "User_Monitor::owner",
+		"bean": "user",
+		"property": "owner",
 		"title": "Owner ship",
-		"description": "Check if the curent user is an owner of the tenant."
+		"description": "Check if the curent user is an owner of the tenant.",
+		"function": "User_Monitor::owner"
 	}]
 }
