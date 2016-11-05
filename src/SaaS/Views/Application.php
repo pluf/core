@@ -75,7 +75,7 @@ class SaaS_Views_Application
         // TODO: روشی برای اضافه کردن لینک های خارجی هم باید ایجاد بشه
         // Add link to SPAs of tenant
         $spaList = SaaS_Views_Application::listAllSpa();
-        $tmpl = new Pluf_Template('/sitemap.template.xml');
+        $tmpl = new Pluf_Template('/sitemap.template');
         $context = new Pluf_Template_Context(
                 array(
                         'tenant' => $request->tenant,
