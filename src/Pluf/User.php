@@ -192,7 +192,7 @@ class Pluf_User extends Pluf_Model
             ),
             'user_permission' => array(
                 'select' => $this->getSecureSelect(),
-                'join' => 'LEFT JOIN rowpermissions ON users.id=rowpermissions.owner_id'
+                'join' => 'LEFT JOIN rowpermissions ON ' . $t_user . '.id=rowpermissions.owner_id'
             ),
             'user_group' => array(
                 'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_user . '.id=pluf_user_id'
