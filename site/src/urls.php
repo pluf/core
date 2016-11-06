@@ -41,6 +41,16 @@ return array (
 				'base' => $base,
 				'sub' => include 'Monitor/urls.php' 
 		),
+		array (
+				'regex' => '#^/api/dm#',
+				'base' => $base,
+				'sub' => include 'SaaSDM/urls.php' 
+		),
+		array (
+				'regex' => '#^/api/sdp#',
+				'base' => $base,
+				'sub' => include 'SDP/urls.php' 
+		),
         
         
         

@@ -1,8 +1,0 @@
-{extends 'todo/base.html'}
-
-{block body}
-<form method="POST" action="{url 'Todo_Views::deleteItem', array($item.id)}">
-<p>Are you sure you want to delete the todo item <em>{$item.item}</em>?</p>
-<input type="submit" value="Yes, delete it." />
-</form>
-{/block}

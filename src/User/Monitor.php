@@ -28,22 +28,41 @@ class User_Monitor
 {
 
     /**
-     * Retruns ownership
+     * Retruns permision status
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public static function owner ($request)
+    public static function permisson ($request, $match)
     {
-        if($request->user->isAnonymous()){
-            $value = 0;
-        } else {
-            $value = $request->user->hasPerm('SaaS#owner');
-        }
-        return array(
+        $result = array(
                 'interval' => 100000,
-                'type' => 'scaler',
-                'value' => $value
+                'type' => 'scaler'
         );
+        
+        // Check user
+        if ($request->user->isAnonymous()) {
+            $request['value'] = false;
+            return $result;
+        }
+        
+        // Get permission
+        $per = new Pluf_Permission();
+        $sql = new Pluf_SQL('code_name=%s', 
+                array(
+                        $match['property']
+                ));
+        $items = $per->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
+        if ($items->count() == 0) {
+            $request['value'] = false;
+            return $result;
+        }
+        
+        // Check permission
+        $result['value'] = $request->user->hasPerm($items[0]->toString());
+        return $result;
     }
 }

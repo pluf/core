@@ -110,11 +110,12 @@ class Pluf_Monitor extends Pluf_Model
      * @param unknown $params            
      * @return unknown
      */
-    function invoke ($request)
+    function invoke ($request, $match = array())
     {
         return call_user_func_array(explode('::', $this->function), 
                 array(
-                        $request
+                        $request,
+                        $match
                 ));
     }
 
