@@ -2,7 +2,6 @@
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('SaaS_Shortcuts_GetSPAOr404');
 Pluf::loadFunction('SaaS_Shortcuts_GetApplicationOr404');
-Pluf::loadFunction('SaaS_Migrations_Update_spa');
 
 /**
  * کار با برنامه‌های کاربردی برای نمایش
