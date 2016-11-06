@@ -91,6 +91,6 @@ class Monitor_Views
                 array(
                         'filter' => $sql->gen()
                 ));
-        return new Pluf_HTTP_Response_Json($model->invoke($request));
+        return new Pluf_HTTP_Response_Json($model->invoke($request, $match));
     }
 }
