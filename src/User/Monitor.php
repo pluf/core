@@ -48,9 +48,13 @@ class User_Monitor
         
         // Get permission
         $per = new Pluf_Permission();
+        $sql = new Pluf_SQL('code_name=%s', 
+                array(
+                        $match['property']
+                ));
         $items = $per->getList(
                 array(
-                        'filter' => 'code_name=' . $match['property']
+                        'filter' => $sql->gen()
                 ));
         if ($items->count() == 0) {
             $request['value'] = false;
@@ -58,7 +62,7 @@ class User_Monitor
         }
         
         // Check permission
-        $request['value'] = $request->user->hasPerm($items[0]->toString());
-        return $request;
+        $result['value'] = $request->user->hasPerm($items[0]->toString());
+        return $result;
     }
 }
