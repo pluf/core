@@ -24,28 +24,47 @@ class Pluf_Message extends Pluf_Model
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         // It is automatically added.
-                        'blank' => true
+                        'blank' => true,
+                        'editable' => false,
+                        'readable' => true
                 ),
                 'version' => array(
                         'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true
+                        'blank' => true,
+                        'editable' => false,
+                        'readable' => true
                 ),
                 'user' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => Pluf::f('pluf_custom_user', 'Pluf_User'),
                         'blank' => false,
-                        'verbose' => __('user')
+                        'verbose' => __('user'),
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'message' => array(
                         'type' => 'Pluf_DB_Field_Text',
-                        'blank' => false
+                        'blank' => false,
+                        'editable' => false,
+                        'readable' => true
                 ),
-            /*
-             * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
-             */
-            'tenant' => array(
+                'creation_dtime' => array(
+                        'type' => 'Pluf_DB_Field_Datetime',
+                        'blank' => true,
+                        'editable' => false,
+                        'readable' => true
+                ),
+                'tenant' => array(
                         'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false
+                        'blank' => false,
+                        'editable' => false,
+                        'readable' => false
+                )
+        );
+        $this->_a['idx'] = array(
+                'message_user_idx' => array(
+                        'type' => 'normal',
+                        'col' => 'tenant, user'
                 )
         );
     }
