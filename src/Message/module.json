@@ -1,5 +1,12 @@
 {
 	"name": "Message",
 	"version": "0.1.0",
-	"title": "System messaging service"
+	"title": "System messaging service",
+	"monitor":[{
+		"bean": "message",
+		"property": "count",
+		"title": "Number of messages",
+		"description": "Check how many messages exist in user box.",
+		"function": "Message_Monitor::count"
+	}]
 }
