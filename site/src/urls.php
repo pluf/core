@@ -51,6 +51,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'SDP/urls.php' 
 		),
+		array (
+				'regex' => '#^/api/message#',
+				'base' => $base,
+				'sub' => include 'Message/urls.php' 
+		),
         
         
         

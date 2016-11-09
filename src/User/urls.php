@@ -190,55 +190,7 @@ return array(
             'Pluf_Precondition::loginRequired'
         )
     ),
-    /*
-     * Message
-     */
-    array(
-        'regex' => '#^/(?P<userId>\d+)/message/new$#',
-        'model' => 'User_Views_Message',
-        'method' => 'create',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::adminRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/(?P<userId>\d+)/message/find$#',
-        'model' => 'User_Views_Message',
-        'method' => 'find',
-        'http-method' => 'GET',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
-        'model' => 'User_Views_Message',
-        'method' => 'get',
-        'http-method' => 'GET'
-    ),
-//     array(
-//         'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
-//         'model' => 'User_Views_Message',
-//         'method' => 'POST',
-//         'http-method' => 'update',
-//         'precond' => array(
-//             'Pluf_Precondition::adminRequired'
-//         )
-//     ),
-    array(
-        'regex' => '#^/(?P<userId>\d+)/message/(?P<messageId>\d+)$#',
-        'model' => 'User_Views_Message',
-        'method' => 'delete',
-        'http-method' => 'DELETE',
-        'precond' => array(
-            'Pluf_Precondition::loginRequired'
-        )
-    ),
-    
-    
     // XXX: Hadi, 1395-07-08: I believe that following RESTs are redundant.
-    
     /*
      * Groups
      */
