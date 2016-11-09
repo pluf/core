@@ -106,79 +106,9 @@ return array(
         /**
          * *****************************************************************
          * SPA :
-         * Sap is an application installed on a tenant.
+         * Moved into the Spa package
          * *****************************************************************
          */
-        array(
-                'regex' => '#^/spa/find$#',
-                'model' => 'SaaS_Views',
-                'method' => 'findObject',
-                'http-method' => 'GET',
-                'precond' => array(),
-                'params' => array(
-                        'model' => 'SaaS_SPA',
-                        'listFilters' => array(
-                                'id',
-                                'title',
-                                'symbol'
-                        ),
-                        'listDisplay' => array(
-                                'id' => 'spa id',
-                                'title' => 'title',
-                                'creation_dtime' => 'creation time'
-                        ),
-                        '$searchFields' => array(
-                                'name',
-                                'title',
-                                'description',
-                                'homepage'
-                        ),
-                        'sortFields' => array(
-                                'id',
-                                'name',
-                                'title',
-                                'homepage',
-                                'license',
-                                'version',
-                                'creation_dtime'
-                        ),
-                        'sortOrder' => array(
-                                'creation_dtime',
-                                'DESC'
-                        )
-                )
-        ),
-        array(
-                'regex' => '#^/spa/new$#',
-                'model' => 'SaaS_Views_SPA',
-                'method' => 'create',
-                'http-method' => 'POST',
-                'precond' => array()
-        ),
-        array(
-                'regex' => '#^/spa/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
-                'method' => 'getObject',
-                'http-method' => 'GET',
-                'precond' => array(),
-                'params' => array(
-                        'model' => 'SaaS_SPA'
-                )
-        ),
-        array(
-                'regex' => '#^/spa/(?P<id>\d+)$#',
-                'model' => 'SaaS_Views_SPA',
-                'method' => 'post',
-                'http-method' => 'POST',
-                'precond' => array()
-        ),
-        array(
-                'regex' => '#^/spa/(?P<id>\d+)$#',
-                'model' => 'SaaS_Views_SPA',
-                'method' => 'delete',
-                'http-method' => 'DELETE',
-                'precond' => array()
-        ),
         
         /**
          * *****************************************************************
