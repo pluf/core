@@ -12,7 +12,7 @@ return array(
     // resource-file from default spa:   /resource-file
     array(
         'regex' => '#^/(?P<path>[^/]+)$#',
-        'model' => 'SaaS_Views_SPA',
+        'model' => 'SaaS_Views_Run',
         'method' => 'loadSpaOrResource'
     ),
     // url format for SPA resources:    
@@ -20,13 +20,13 @@ return array(
     // resource form specified spa: /spa-name/path/to/resource
     array(
         'regex' => '#^/(?P<spa>[^/]+)/(?P<resource>.*)$#',
-        'model' => 'SaaS_Views_SPA',
+        'model' => 'SaaS_Views_Run',
         'method' => 'getResource'
     ),    
     // main page of default SPA
     array(
         'regex' => '#^/$#',
-        'model' => 'SaaS_Views_SPA',
+        'model' => 'SaaS_Views_Run',
         'method' => 'loadDefaultSpa'
     )
 );

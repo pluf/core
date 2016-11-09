@@ -40,6 +40,13 @@ class SaaS_SPA extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
                 ),
+                'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'relate_name' => 'tenant',
+                        'editable' => false
+                ),
                 'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
@@ -94,7 +101,7 @@ class SaaS_SPA extends Pluf_Model
         
         $this->_a['idx'] = array(
                 'spa_idx' => array(
-                        'col' => 'name, version',
+                        'col' => 'tenant, name, version',
                         'type' => 'unique', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',

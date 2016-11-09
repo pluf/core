@@ -1,439 +1,441 @@
 <?php
 return array(
-    
-    /**
-     * *****************************************************************
-     * Tenant (Current tenant)
-     * *****************************************************************
-     */
-    array( // دریافت اطلاعات ملک جاری
-        'regex' => '#^/tenant$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'getCurrent',
-        'http-method' => array(
-            'GET'
+        
+        /**
+         * *****************************************************************
+         * Tenant (Current tenant)
+         * *****************************************************************
+         */
+        array( // دریافت اطلاعات ملک جاری
+                'regex' => '#^/tenant$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'getCurrent',
+                'http-method' => array(
+                        'GET'
+                ),
+                'precond' => array()
         ),
-        'precond' => array()
-    ),
-    array( // به روزرسانی اطلاعات ملک جاری
-        'regex' => '#^/tenant$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'updateCurrent',
-        'http-method' => array(
-            'POST'
+        array( // به روزرسانی اطلاعات ملک جاری
+                'regex' => '#^/tenant$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'updateCurrent',
+                'http-method' => array(
+                        'POST'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired',
+                        'SaaS_Precondition::userCanUpdateTenant'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanUpdateTenant'
-        )
-    ),
-    array( // حذف ملک جاری
-        'regex' => '#^/tenant$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'deleteCurrent',
-        'http-method' => array(
-            'DELETE'
+        array( // حذف ملک جاری
+                'regex' => '#^/tenant$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'deleteCurrent',
+                'http-method' => array(
+                        'DELETE'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired',
+                        'SaaS_Precondition::userCanDeleteTenant'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanDeleteTenant'
-        )
-    ),
-    
-    /**
-     * *****************************************************************
-     * Tenant
-     * *****************************************************************
-     */
-    array( // ایجاد ملک جدید
-        'regex' => '#^/tenant/new$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'create',
-        'http-method' => array(
-            'POST'
+        
+        /**
+         * *****************************************************************
+         * Tenant
+         * *****************************************************************
+         */
+        array( // ایجاد ملک جدید
+                'regex' => '#^/tenant/new$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired',
+                        'SaaS_Precondition::userCanCreateTenant'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::userCanCreateTenant'
-        )
-    ),
-    array( // دریافت اطلاعات یک ملک
-        'regex' => '#^/tenant/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'get',
-        'http-method' => array(
-            'GET'
+        array( // دریافت اطلاعات یک ملک
+                'regex' => '#^/tenant/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                ),
+                'precond' => array()
         ),
-        'precond' => array()
-    ),
-    array( // به روزرسانی اطلاعات یک ملک
-        'regex' => '#^/tenant/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'update',
-        'http-method' => array(
-            'POST'
+        array( // به روزرسانی اطلاعات یک ملک
+                'regex' => '#^/tenant/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-        )
-    ),
-    array( // حذف یک ملک
-        'regex' => '#^/tenant/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'delete',
-        'http-method' => array(
-            'DELETE'
+        array( // حذف یک ملک
+                'regex' => '#^/tenant/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::loginRequired',
-        )
-    ),
-    /**
-     * *****************************************************************
-     * Tenants
-     * *****************************************************************
-     */
-    
-    array( // جستجو و فهرست کردن ملک‌ها
-        'regex' => '#^/tenant/find$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'tenants',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    
-    /**
-     * *****************************************************************
-     * SPA
-     * *****************************************************************
-     */
-    array(
-        'regex' => '#^/spa/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'get',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/find$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'find',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/new$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'create',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/refresh$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'refreshAll',
-        'http-method' => array(
-            'GET',
-            'POST'
+        /**
+         * *****************************************************************
+         * Tenants
+         * *****************************************************************
+         */
+        
+        array( // جستجو و فهرست کردن ملک‌ها
+                'regex' => '#^/tenant/find$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'tenants',
+                'http-method' => array(
+                        'GET'
+                )
         ),
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'delete',
-        'http-method' => 'DELETE',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(?P<id>\d+)/refresh$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'refresh',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/spa/(?P<id>\d+)/package$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'package',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/spa/(?P<id>\d+)/appcache$#',
-        'model' => 'SaaS_Views_SPA',
-        'method' => 'appcache',
-        'http-method' => 'GET'
-    ),
-    
-    
-    
-    
-    
-    
-    /**
-     * *****************************************************************
-     * Tenants
-     * *****************************************************************
-     */
-    
-    array( // فهرست
-        'regex' => '#^/users$#',
-        'model' => 'SaaS_Views_Application',
-        'method' => 'userApplications',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    
-    /**
-     * *****************************************************************
-     * Tenants (owner, member, authorized)
-     * *****************************************************************
-     */
-    array( // فهرستی از تمام اعضا
-        'regex' => '#^/(owner|member|authorize)/find$#',
-        'model' => 'SaaS_Views_ApplicationMember',
-        'method' => 'find',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    array( //
-        'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_ApplicationMember',
-        'method' => 'memberAdd',
-        'http-method' => array(
-            'POST'
+        
+        /**
+         * *****************************************************************
+         * SPA :
+         * Sap is an application installed on a tenant.
+         * *****************************************************************
+         */
+        array(
+                'regex' => '#^/spa/find$#',
+                'model' => 'SaaS_Views',
+                'method' => 'findObject',
+                'http-method' => 'GET',
+                'precond' => array(),
+                'params' => array(
+                        'model' => 'SaaS_SPA',
+                        'listFilters' => array(
+                                'id',
+                                'title',
+                                'symbol'
+                        ),
+                        'listDisplay' => array(
+                                'id' => 'spa id',
+                                'title' => 'title',
+                                'creation_dtime' => 'creation time'
+                        ),
+                        '$searchFields' => array(
+                                'name',
+                                'title',
+                                'description',
+                                'homepage'
+                        ),
+                        'sortFields' => array(
+                                'id',
+                                'name',
+                                'title',
+                                'homepage',
+                                'license',
+                                'version',
+                                'creation_dtime'
+                        ),
+                        'sortOrder' => array(
+                                'creation_dtime',
+                                'DESC'
+                        )
+                )
         ),
-        'precond' => array(
-            'SaaS_Precondition::applicationOwner'
-        )
-    ),
-    array( //
-        'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
-        'model' => 'SaaS_Views_ApplicationMember',
-        'method' => 'memberRemove',
-        'http-method' => array(
-            'DELETE'
+        array(
+                'regex' => '#^/spa/new$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'precond' => array()
         ),
-        'precond' => array(
-            'SaaS_Precondition::applicationOwner'
-        )
-    ),
-    
-    /**
-     * *****************************************************************
-     * Tenant (SPA)
-     * *****************************************************************
-     */
-    array(
-        'regex' => '#^/(\d+)/spa/default$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'getDefaultSpa',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/(\d+)/default$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'setDefaultSpa',
-        'http-method' => 'POST'
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'getById',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'update',
-        'http-method' => 'POST',
-        'precond' => array(
-            'SaaS_Precondition::applicationOwner'
-        )
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'removePermissions',
-        'http-method' => 'DELETE',
-        'precond' => array(
-            'SaaS_Precondition::applicationOwner'
-        )
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/(\d+)/detail$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'detail',
-        'http-method' => 'GET'
-    ),
-    array(
-        'regex' => '#^/(\d+)/spa/([^/]+)$#',
-        'model' => 'SaaS_Views_ApplicationSpa',
-        'method' => 'getByName',
-        'http-method' => 'GET'
-    ),
-    /**
-     * *****************************************************************
-     * Application resource
-     * *****************************************************************
-     */
-    array(
-        'regex' => '#^/resource/new$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'create',
-        'http-method' => array(
-            'POST'
+        array(
+                'regex' => '#^/spa/(?P<modelId>\d+)$#',
+                'model' => 'SaaS_Views',
+                'method' => 'getObject',
+                'http-method' => 'GET',
+                'precond' => array(),
+                'params' => array(
+                        'model' => 'SaaS_SPA'
+                )
         ),
-        'freemium' => array(
-            'level' => Pluf::f('saas_freemium_full', 5)
-        )
-    ),
-    array(
-        'regex' => '#^/resource/find$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'find',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    array(
-        'regex' => '#^/resource/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'get',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    array(
-        'regex' => '#^/resource/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'delete',
-        'http-method' => array(
-            'DELETE'
-        )
-    ),
-    array(
-        'regex' => '#^/resource/(\d+)$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'update',
-        'http-method' => array(
-            'POST'
-        )
-    ),
-    array(
-        'regex' => '#^/resource/(\d+)/download$#',
-        'model' => 'SaaS_Views_ApplicationResource',
-        'method' => 'download',
-        'http-method' => array(
-            'GET'
-        )
-    ),
-    
-    /**
-     * **************************************************************************
-     * Libs
-     * **************************************************************************
-     */
-    array(
-        'regex' => '#^/lib/new$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'create',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired',
-            'SaaS_Precondition::userCanCreateLib'
-        )
-    ),
-    array(
-        'regex' => '#^/lib/find$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'find',
-        'http-method' => 'GET',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired',
-            'SaaS_Precondition::userCanAccessLibs'
-        )
-    ),
-    array(
-        'regex' => '#^/lib/(\d+)/download$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'download',
-        'http-method' => 'GET',
-        'precond' => array()
-    ),
-    array(
-        'regex' => '#^/lib/(\d+)$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'get',
-        'http-method' => 'GET',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/lib/(\d+)$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'update',
-        'http-method' => 'POST',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    array(
-        'regex' => '#^/lib/(\d+)$#',
-        'model' => 'SaaS_Views_Lib',
-        'method' => 'delete',
-        'http-method' => 'DELETE',
-        'precond' => array(
-            'Pluf_Precondition::staffRequired'
-        )
-    ),
-    
-    /**
-     * *****************************************************************
-     * Tenant (Configuration)
-     * *****************************************************************
-     */
-    array( // فهرستی از تنظیم‌ها
-        'regex' => '#^/config/find$#',
-        'model' => 'SaaS_Views_Configuration',
-        'method' => 'configurations',
-        'http-method' => 'GET'
-    ),
-    array( // دسترسی به تنظیم‌ها با شناسه
-        'regex' => '#^/config/(\d+)$#',
-        'model' => 'SaaS_Views_Configuration',
-        'method' => 'get',
-        'http-method' => 'GET',
-        'saas' => array(
-            'match-application' => 1
+        array(
+                'regex' => '#^/spa/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'post',
+                'http-method' => 'POST',
+                'precond' => array()
         ),
-        'freemium' => array(
-            'level' => Pluf::f('saas_freemium_full', 5)
+        array(
+                'regex' => '#^/spa/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_SPA',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array()
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenants
+         * *****************************************************************
+         */
+        array( // فهرست
+                'regex' => '#^/users$#',
+                'model' => 'SaaS_Views_Application',
+                'method' => 'userApplications',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenants (owner, member, authorized)
+         * *****************************************************************
+         */
+        array( // فهرستی از تمام اعضا
+                'regex' => '#^/(owner|member|authorize)/find$#',
+                'model' => 'SaaS_Views_ApplicationMember',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array( //
+                'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_ApplicationMember',
+                'method' => 'memberAdd',
+                'http-method' => array(
+                        'POST'
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        array( //
+                'regex' => '#^/(owner|member|authorize)/(?P<id>\d+)$#',
+                'model' => 'SaaS_Views_ApplicationMember',
+                'method' => 'memberRemove',
+                'http-method' => array(
+                        'DELETE'
+                ),
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenant (SPA)
+         * *****************************************************************
+         */
+        array(
+                'regex' => '#^/(\d+)/spa/default$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getDefaultSpa',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/(\d+)/default$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'setDefaultSpa',
+                'http-method' => 'POST'
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getById',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'removePermissions',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'SaaS_Precondition::applicationOwner'
+                )
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/(\d+)/detail$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'detail',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(\d+)/spa/([^/]+)$#',
+                'model' => 'SaaS_Views_ApplicationSpa',
+                'method' => 'getByName',
+                'http-method' => 'GET'
+        ),
+        /**
+         * *****************************************************************
+         * Application resource
+         * *****************************************************************
+         */
+        array(
+                'regex' => '#^/resource/new$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'create',
+                'http-method' => array(
+                        'POST'
+                ),
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
+        ),
+        array(
+                'regex' => '#^/resource/find$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'find',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'get',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'delete',
+                'http-method' => array(
+                        'DELETE'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'update',
+                'http-method' => array(
+                        'POST'
+                )
+        ),
+        array(
+                'regex' => '#^/resource/(\d+)/download$#',
+                'model' => 'SaaS_Views_ApplicationResource',
+                'method' => 'download',
+                'http-method' => array(
+                        'GET'
+                )
+        ),
+        
+        /**
+         * **************************************************************************
+         * Libs
+         * **************************************************************************
+         */
+        array(
+                'regex' => '#^/lib/new$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                        'SaaS_Precondition::userCanCreateLib'
+                )
+        ),
+        array(
+                'regex' => '#^/lib/find$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'find',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired',
+                        'SaaS_Precondition::userCanAccessLibs'
+                )
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)/download$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'download',
+                'http-method' => 'GET',
+                'precond' => array()
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/lib/(\d+)$#',
+                'model' => 'SaaS_Views_Lib',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::staffRequired'
+                )
+        ),
+        
+        /**
+         * *****************************************************************
+         * Tenant (Configuration)
+         * *****************************************************************
+         */
+        array( // فهرستی از تنظیم‌ها
+                'regex' => '#^/config/find$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'configurations',
+                'http-method' => 'GET'
+        ),
+        array( // دسترسی به تنظیم‌ها با شناسه
+                'regex' => '#^/config/(\d+)$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'get',
+                'http-method' => 'GET',
+                'saas' => array(
+                        'match-application' => 1
+                ),
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
+        ),
+        array( // دسترسی به تنظیم‌ها با نام
+                'regex' => '#^/config/byName/(.+)$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'getByName',
+                'http-method' => 'GET'
+        ),
+        array( // ایجاد یک تنظیم جدید
+                'regex' => '#^/config/new$#',
+                'model' => 'SaaS_Views_Configuration',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'freemium' => array(
+                        'level' => Pluf::f('saas_freemium_full', 5)
+                )
         )
-    ),
-    array( // دسترسی به تنظیم‌ها با نام
-        'regex' => '#^/config/byName/(.+)$#',
-        'model' => 'SaaS_Views_Configuration',
-        'method' => 'getByName',
-        'http-method' => 'GET'
-    ),
-    array( // ایجاد یک تنظیم جدید
-        'regex' => '#^/config/new$#',
-        'model' => 'SaaS_Views_Configuration',
-        'method' => 'create',
-        'http-method' => 'POST',
-        'freemium' => array(
-            'level' => Pluf::f('saas_freemium_full', 5)
-        )
-    )
 );

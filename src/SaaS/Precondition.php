@@ -392,49 +392,4 @@ class SaaS_Precondition
     {
         return true;
     }
-
-    public static function userCanCreateLib ($request)
-    {
-        return true;
-    }
-
-    public static function userCanAccessLibs ($request)
-    {
-        return true;
-    }
-
-    public static function userCanAccessLib ($request, $lib)
-    {
-        return true;
-    }
-
-    public static function userCanUpdateLib ($request, $lib)
-    {
-        return true;
-    }
-
-    public static function userCanDeleteLib ($request, $lib)
-    {
-        return true;
-    }
-
-    public static function userCanCreateResource ($request)
-    {
-        return true;
-    }
-
-    public static function userCanAccessResource ($request, $app)
-    {
-        return true;
-    }
-
-    public static function userCanUpdateResource ($request, $app)
-    {
-        return true;
-    }
-
-    public static function userCanDeleteResource ($request, $app)
-    {
-        return true;
-    }
 }

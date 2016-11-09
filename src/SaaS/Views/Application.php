@@ -62,27 +62,6 @@ class SaaS_Views_Application
         return new Pluf_HTTP_Response_Json($removedTenant);
     }
 
-    private static function listAllSpa ()
-    {
-        // XXX: maso, 1395: صفحه بندی
-        // XXX: maso, 1398: بررسی دسترسی
-        $sp = new SaaS_SPA();
-        return $spaList = $sp->getList();
-    }
-
-    public static function getSiteMap ($request, $match)
-    {
-        // TODO: روشی برای اضافه کردن لینک های خارجی هم باید ایجاد بشه
-        // Add link to SPAs of tenant
-        $spaList = SaaS_Views_Application::listAllSpa();
-        $tmpl = new Pluf_Template('/sitemap.template');
-        $context = new Pluf_Template_Context(
-                array(
-                        'tenant' => $request->tenant,
-                        'spaList' => $spaList
-                ));
-        return new Pluf_HTTP_Response($tmpl->render($context));
-    }
     
     // ********************* Tenant ****************************
     

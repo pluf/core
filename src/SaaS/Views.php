@@ -52,6 +52,11 @@ class SaaS_Views extends Pluf_Views
         $page->list_filters = $p['listFilters'];
         $page->configure($p['listDisplay'], $p['searchFields'],
                 $p['sortFields']);
+        // XXX: maso, 1395: add sort order
+//         $page->sort_order = array(
+//             'creation_dtime',
+//             'DESC'
+//         );
         $page->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($page->render_object());
     }
