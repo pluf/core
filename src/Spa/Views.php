@@ -11,38 +11,6 @@ Pluf::loadFunction('Pluf_Form_Field_File_moveToUploadFolder');
  */
 class Spa_Views extends Pluf_Views
 {
-
-    /**
-     *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
-     */
-    public function find ($request, $match)
-    { // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
-        $pag = new Pluf_Paginator(new SaaS_SPA());
-        $pag->list_filters = array(
-                'id',
-                'title'
-        );
-        $list_display = array(
-                'title' => __('title'),
-                'summary' => __('summary')
-        );
-        $search_fields = array(
-                'title',
-                'summary'
-        );
-        $sort_fields = array(
-                'id',
-                'title',
-                'creation_date',
-                'modif_dtime'
-        );
-        $pag->configure($list_display, $search_fields, $sort_fields);
-        $pag->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($pag->render_object());
-    }
-
     /**
      * یک نر افزار را نصب می‌کند
      *
@@ -54,9 +22,10 @@ class Spa_Views extends Pluf_Views
      * @param unknown_type $match            
      */
     public function create ($request, $match)
-    {
+    { 
+        // XXX: maso, 1395: remove all data on exception
         // 1- upload & extract
-        $path = Pluf::f('saas_spa_repository') . '/tmp';
+        $path = Pluf::f('upload_path') . '/' . $request->tenant->id . '/spa/tmp' ;
         Pluf_Form_Field_File_moveToUploadFolder($request->FILES['file'], 
                 array(
                         'file_name' => 'spa.zip',
@@ -84,24 +53,14 @@ class Spa_Views extends Pluf_Views
         $spa = new SaaS_SPA();
         $spa->path = $path;
         $spa->setFromFormData($package);
+        $spa->tenant = $request->tenant;
         $spa->create();
         
-        $spa->path = Pluf::f('saas_spa_repository') . '/' . $spa->id;
+        $spa->path = Pluf::f('upload_path') . '/' . $request->tenant->id . '/spa/' . $spa->id;
         $spa->update();
         
         rename($path, $spa->path);
         
-        return new Pluf_HTTP_Response_Json($spa);
-    }
-
-    /**
-     *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
-     */
-    public function get ($request, $match)
-    {
-        $spa = Pluf_Shortcuts_GetObjectOr404('SaaS_SPA', $match['spaId']);
         return new Pluf_HTTP_Response_Json($spa);
     }
 

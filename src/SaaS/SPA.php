@@ -45,7 +45,8 @@ class SaaS_SPA extends Pluf_Model
                         'model' => 'SaaS_Application',
                         'blank' => false,
                         'relate_name' => 'tenant',
-                        'editable' => false
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -110,27 +111,27 @@ class SaaS_SPA extends Pluf_Model
                 )
         );
         
-        $this->_a['views'] = array(
-//                 'spa_application' => array(
-//                         'join' => 'LEFT JOIN ' . $this->_con->pfx .
-//                                  'rowpermissions ON saas_spa.id=' .
-//                                  $this->_con->pfx . 'rowpermissions.model_id',
-//                                 'select' => $this->getSelect() . ', permission',
-//                                 'props' => array(
-//                                         'permission' => 'permission'
-//                                 ),
-//                                 'group' => 'rowpermissions.model_id'
-//                 ),
-//                 'spa_application_permission' => array(
-//                         'join' => 'LEFT JOIN ' . $this->_con->pfx .
-//                          'rowpermissions ON saas_spa.id=' . $this->_con->pfx .
-//                          'rowpermissions.model_id',
-//                         'select' => $this->getSelect() . ', permission',
-//                         'props' => array(
-//                                 'permission' => 'permission'
-//                         )
-//                 )
-        );
+        $this->_a['views'] = array()
+        // 'spa_application' => array(
+        // 'join' => 'LEFT JOIN ' . $this->_con->pfx .
+        // 'rowpermissions ON saas_spa.id=' .
+        // $this->_con->pfx . 'rowpermissions.model_id',
+        // 'select' => $this->getSelect() . ', permission',
+        // 'props' => array(
+        // 'permission' => 'permission'
+        // ),
+        // 'group' => 'rowpermissions.model_id'
+        // ),
+        // 'spa_application_permission' => array(
+        // 'join' => 'LEFT JOIN ' . $this->_con->pfx .
+        // 'rowpermissions ON saas_spa.id=' . $this->_con->pfx .
+        // 'rowpermissions.model_id',
+        // 'select' => $this->getSelect() . ', permission',
+        // 'props' => array(
+        // 'permission' => 'permission'
+        // )
+        // )
+        ;
     }
 
     /**
@@ -157,7 +158,7 @@ class SaaS_SPA extends Pluf_Model
         // @unlink(Pluf::f('upload_issue_path').'/'.$this->attachment);
         // TODO: hadi, 1395: قبل از حذف spa فایل‌های مربوط به این spa حذف شود
         // TODO: maso, 1395: از signal-slot استفاده شود و یک signal ارسال شود تا
-    // سایرین که به
+        // سایرین که به
         // این spa وابسته هستند داده‌های مربوطه‌شان را حذف کنند.
     }
 
@@ -220,8 +221,8 @@ class SaaS_SPA extends Pluf_Model
 
     /**
      * مسیر فایل منبع از نرم افزار را تعیین می‌کند.
-     * 
-     * @param unknown $name
+     *
+     * @param unknown $name            
      * @return string
      */
     public function getResourcePath ($name)
