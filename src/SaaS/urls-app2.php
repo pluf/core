@@ -27,6 +27,6 @@ return array(
     array(
         'regex' => '#^/$#',
         'model' => 'SaaS_Views_Run',
-        'method' => 'loadDefaultSpa'
+        'method' => 'defaultSpa'
     )
 );

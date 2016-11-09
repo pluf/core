@@ -6,7 +6,7 @@
  * @author maso
  *
  */
-class Saas_View_Run {
+class SaaS_Views_Run {
 
     /**
      * **************************************************************************************
@@ -35,28 +35,20 @@ class Saas_View_Run {
             $spa = $tenant->get_spa();
             $resource = $path;
         }
-        return SaaS_Views_SPA::loadSpaResource($request, $tenant, $spa,
+        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $resource);
         // // TODO: Check access
         // SaaS_Precondition::userCanAccessApplication($request, $tenant);
         // // SaaS_Precondition::userCanAccessSpa($request, $spa);
     
         // // نمایش اصلی
-        // return SaaS_Views_SPA::loadSpa($request, $tenant, $spa);
+        // return SaaS_Views_Run::loadSpa($request, $tenant, $spa);
     }
     
-    public static function loadDefaultSpa ($request, $match)
+    public static function defaultSpa ($request, $match)
     {
         $tenant = $request->tenant;
-        return SaaS_Views_SPA::loadSpaResource($request, $tenant);
-        // $spa = $tenant->get_spa();
-    
-        // // TODO: Check access
-        // SaaS_Precondition::userCanAccessApplication($request, $tenant);
-        // // SaaS_Precondition::userCanAccessSpa($request, $spa);
-    
-        // // Load spa
-        // return SaaS_Views_SPA::loadSpa($request, $tenant, $spa);
+        return SaaS_Views_Run::loadSpaResource($request, $tenant);
     }
     
     public static function getResource ($request, $match)
@@ -71,7 +63,7 @@ class Saas_View_Run {
             $spa = $tenant->get_spa();
             $resourcePath = $match[0];
         }
-        return SaaS_Views_SPA::loadSpaResource($request, $tenant, $spa,
+        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $resourcePath);
         // // TODO: Check access
         // $resPath = $spa->getResourcePath($resourcePath);
@@ -89,7 +81,7 @@ class Saas_View_Run {
         $tenant = $request->tenant;
         $spa = $tenant->get_spa();
     
-        return SaaS_Views_SPA::loadSpaResource($request, $tenant, $spa,
+        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $match['resource']);
         // // TODO: Check access
         // // Load resource form local resources of spa
@@ -149,7 +141,7 @@ class Saas_View_Run {
         }
         // Resource
         if (! isset($resource)) {
-            return SaaS_Views_SPA::loadSpa($request, $tenant, $_spa);
+            return SaaS_Views_Run::loadSpa($request, $tenant, $_spa);
         }
         // TODO: Check access
         $resPath = $_spa->getResourcePath($resource);
