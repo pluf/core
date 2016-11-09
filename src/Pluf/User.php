@@ -593,13 +593,14 @@ class Pluf_User extends Pluf_Model
      *            string Message
      * @return bool Success
      */
-    function setMessage($message)
+    function setMessage($message, $tenant = 0)
     {
         if ($this->isAnonymous()) {
             throw new Pluf_Exception_DoesNotExist(__("User not exist, while you are trying to add message?!"));
         }
         $m = new Pluf_Message();
         $m->user = $this;
+        $m->tenant = $tenant;
         $m->message = $message;
         if (! $m->create()) {
             throw new Pluf_Exception(__("not possible to create a message"));
