@@ -30,16 +30,16 @@ return array(
         'http-method' => 'DELETE'
     ),
     array( // Asset urls
-        'regex' => '#^/asset/(?P<id>\d+)/find$#',
-        'model' => 'SDP_Views_Asset',
-        'method' => 'findchild',
-        'http-method' => 'GET'
-    ),
-    array( // Asset urls
         'regex' => '#^/asset/(?P<id>\d+)$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'update',
         'http-method' => 'POST'
+    ),
+    array( // Asset urls
+        'regex' => '#^/asset/(?P<id>\d+)/find$#',
+        'model' => 'SDP_Views_Asset',
+        'method' => 'findchild',
+        'http-method' => 'GET'
     ),
     // ************************************************************* Link
     array( // Link urls
