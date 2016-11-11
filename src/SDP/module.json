@@ -4,7 +4,8 @@
   "title": "Sell Digital Products System",
   "model": [
 		"SDP_Asset",
-		"SDP_Link"
+		"SDP_Link",
+		"SDP_AssetRelation"
 	],
 	"permisson": []
 }

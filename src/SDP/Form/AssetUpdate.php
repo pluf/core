@@ -29,54 +29,54 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             'help_text' => 'Name of Asset'
         ));
         $this->fields['path'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'Path of Asset',
-        		'initial' => $this->asset->path,
-        		'help_text' => 'Path of Asset'
+            'required' => false,
+            'label' => 'Path of Asset',
+            'initial' => $this->asset->path,
+            'help_text' => 'Path of Asset'
         ));
         $this->fields['size'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'Size of Asset',
-        		'initial' => $this->asset->size,
-        		'help_text' => 'Size of Asset'
+            'required' => false,
+            'label' => 'Size of Asset',
+            'initial' => $this->asset->size,
+            'help_text' => 'Size of Asset'
         ));
         $this->fields['download'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'download of Asset',
-        		'initial' => $this->asset->download,
-        		'help_text' => 'download of Asset'
+            'required' => false,
+            'label' => 'download of Asset',
+            'initial' => $this->asset->download,
+            'help_text' => 'download of Asset'
         ));
         $this->fields['driver_type'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'driver_type of Asset',
-        		'initial' => $this->asset->driver_type,
-        		'help_text' => 'driver_type of Asset'
+            'required' => false,
+            'label' => 'driver_type of Asset',
+            'initial' => $this->asset->driver_type,
+            'help_text' => 'driver_type of Asset'
         ));
         $this->fields['driver_id'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'driver_id of Asset',
-        		'initial' => $this->asset->driver_id,
-        		'help_text' => 'driver_id of Asset'
+            'required' => false,
+            'label' => 'driver_id of Asset',
+            'initial' => $this->asset->driver_id,
+            'help_text' => 'driver_id of Asset'
         ));
         $this->fields['type'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'type of Asset',
-        		'initial' => $this->asset->type,
-        		'help_text' => 'type of Asset'
+            'required' => false,
+            'label' => 'type of Asset',
+            'initial' => $this->asset->type,
+            'help_text' => 'type of Asset'
         ));
-        $this->fields['content_name'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'content_name of Asset',
-        		'initial' => $this->asset->content_name,
-        		'help_text' => 'content_name of Asset'
-        ));
+        // $this->fields['content_name'] = new Pluf_Form_Field_Varchar(array(
+        // 'required' => false,
+        // 'label' => 'content_name of Asset',
+        // 'initial' => $this->asset->content_name,
+        // 'help_text' => 'content_name of Asset'
+        // ));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'description of Asset',
-        		'initial' => $this->asset->description,
-        		'help_text' => 'description of Asset'
+            'required' => false,
+            'label' => 'description of Asset',
+            'initial' => $this->asset->description,
+            'help_text' => 'description of Asset'
         ));
-                
+        
         $this->fields['parent'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
             'label' => 'Parent',
@@ -84,19 +84,29 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             'help_text' => 'Parent of asset'
         ));
         $this->fields['price'] = new Pluf_Form_Field_Varchar(array(
-        		'required' => false,
-        		'label' => 'Price',
-        		'initial' => $this->asset->price,
-        		'help_text' => 'Price of asset'
-        ));        
+            'required' => false,
+            'label' => 'Price',
+            'initial' => $this->asset->price,
+            'help_text' => 'Price of asset'
+        ));
         $this->fields['tenant'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
             'label' => 'Tenant',
             'initial' => $this->asset->tenant,
             'help_text' => 'tenant that this asset belonged to'
         ));
-        
-       
+        $this->fields['content'] = new Pluf_Form_Field_Integer(array(
+            'required' => false,
+            'label' => 'content id of Asset',
+            'initial' => $this->asset->content,
+            'help_text' => 'content of Asset'
+        ));
+        $this->fields['thumbnail'] = new Pluf_Form_Field_Integer(array(
+            'required' => false,
+            'label' => 'thumbnail of Asset',
+            'initial' => $this->asset->thumbnail,
+            'help_text' => 'thumbnail of Asset'
+        ));
         $this->fields['file'] = new Pluf_Form_Field_File(array(
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
@@ -130,11 +140,13 @@ class SDP_Form_AssetUpdate extends Pluf_Form
         }
         return $this->asset;
     }
-    
-    function clean_name(){
-    	$fileName = $this->cleaned_data['name'];
-    	if(!$fileName)
-    		return $this->data['file']['name'];
-    		return $fileName;
+
+    function clean_name()
+    {
+        $fileName = $this->cleaned_data['name'];
+        if (! $fileName){
+            return array_key_exists('file', $this->data) ? $this->data['file']['name'] : $this->asset->name;
+        }
+        return $fileName;
     }
 }
