@@ -173,7 +173,7 @@ class SaaS_Views extends Pluf_Views
         // Set the default
         $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
                 $match['modelId']);
-        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, 
                 $p['extra_form']);
         $object = $form->save();
         if (! $request->user->isAnonymous()) {
@@ -216,17 +216,21 @@ class SaaS_Views extends Pluf_Views
         // Set the default
         $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
                 $match['modelId']);
-        if ($p['permanently'])
+        $objectCopy = Pluf_Shortcuts_GetObjectOr404($p['model'], 
+                $match['modelId']);
+        if ($p['permanently']){
             $object->delete();
-        else {
+        } else {
             $object->deleted = true;
             $object->update();
+            $objectCopy->deleted = true;
         }
+        $objectCopy->id = 0;
         if (! $request->user->isAnonymous()) {
             $request->user->setMessage(
                     sprintf(__('The %s was deleted successfully.'), 
                             $object->_a['verbose']));
         }
-        return new Pluf_HTTP_Response_Json($object);
+        return new Pluf_HTTP_Response_Json($objectCopy);
     }
 }
