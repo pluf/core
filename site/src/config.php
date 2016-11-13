@@ -30,10 +30,11 @@ $cfg['installed_apps'] = array(
         'SDP',
         'SaaSDM',
         'Message',
-
-        'SaaS',
         'Setting',
         'Config',
+        
+
+        'SaaS',
         'CMS',
         'SaaSNewspaper',
         'Wiki',

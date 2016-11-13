@@ -56,11 +56,15 @@ return array (
 				'base' => $base,
 				'sub' => include 'Message/urls.php' 
 		),
-        
 		array ( // Tenant configuration
 				'regex' => '#^/api/setting#',
 				'base' => $base,
 				'sub' => include 'Setting/urls.php' 
+		),
+		array ( // Tenant configuration
+				'regex' => '#^/api/config#',
+				'base' => $base,
+				'sub' => include 'Config/urls.php' 
 		),
         
         
