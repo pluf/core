@@ -21,20 +21,23 @@ class SaaS_Configuration extends Pluf_Model
     {
         $this->_a['table'] = 'saas_configuration';
         $this->_a['model'] = 'SaaS_Configuration';
+        $this->_a['verbose'] = 'Configuration';
         $this->_model = 'SaaS_Configuration';
         
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true,
-                        'editable' => false
+                        'editable' => false,
+                        'readable' => true
                 ),
                 'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
                         'model' => 'SaaS_Application',
                         'blank' => false,
                         'relate_name' => 'tenant',
-                        'editable' => false
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'type' => array(
                         'type' => 'Pluf_DB_Field_Integer',
@@ -45,30 +48,39 @@ class SaaS_Configuration extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 250,
-                        'editable' => false
+                        'editable' => false,
+                        'readable' => true
                 ),
                 'value' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 250
+                        'size' => 250,
+                        'editable' => true,
+                        'readable' => true
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 250
+                        'blank' => true,
+                        'size' => 250,
+                        'editable' => true,
+                        'readable' => true
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('creation date'),
-                        'help_text' => __('Creation date of the configuration.')
+                        'help_text' => __('Creation date of the configuration.'),
+                        'editable' => false,
+                        'readable' => true
                 ),
                 'modif_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'verbose' => __('modification date'),
                         'help_text' => __(
-                                'Modification date of the configuration.')
+                                'Modification date of the configuration.'),
+                        'editable' => false,
+                        'readable' => true
                 )
         );
         $this->_a['idx'] = array(
@@ -85,51 +97,6 @@ class SaaS_Configuration extends Pluf_Model
     }
 
     /**
-     * تعیین یک داده در تنظیم‌ها
-     *
-     * @param
-     *            کلید داده
-     * @param
-     *            داده مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
-     *            حذف است.
-     */
-    function setData ($key, $value = null)
-    {
-        if (is_null($value)) {
-            unset($this->data[$key]);
-        } else {
-            $this->data[$key] = $value;
-        }
-        $this->touched = true;
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see Pluf_Model::getData()
-     */
-    function getData ($key = null, $default = '')
-    {
-        if (is_null($key)) {
-            return parent::getData();
-        }
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
-        } else {
-            return $default;
-        }
-    }
-
-    /**
-     * تمام داده‌های موجود را پاک می‌کند.
-     */
-    function clear ()
-    {
-        $this->data = array();
-        $this->touched = true;
-    }
-
-    /**
      * \brief پیش ذخیره را انجام می‌دهد
      *
      * @param $create حالت
@@ -137,30 +104,10 @@ class SaaS_Configuration extends Pluf_Model
      */
     function preSave ($create = false)
     {
-        $this->value = serialize($this->data);
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
 
-    /**
-     * (non-PHPdoc)
-     *
-     * @see Pluf_Model::restore()
-     */
-    function restore ()
-    {
-        $this->data = unserialize($this->value);
-    }
-
-    /**
-     * Check if a user is anonymous.
-     *
-     * @return bool True if the user is anonymous.
-     */
-    function isStored ()
-    {
-        return (0 === (int) $this->id);
-    }
 }

@@ -88,12 +88,18 @@ class SaaS_Application extends Pluf_Model
                 'setting' => array(
                         'type' => 'Pluf_DB_Field_Text',
                         'blank' => true,
-                        'editable' => false
+                        'verbose' => 'Setting',
+                        'help_text' => 'Settings are editable by owner',
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'config' => array(
                         'type' => 'Pluf_DB_Field_Text',
                         'blank' => true,
-                        'editable' => false
+                        'verbose' => 'Configuration',
+                        'help_text' => 'Configuration used by system and administrator',
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
