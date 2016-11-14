@@ -44,6 +44,7 @@ class SaaSDM_Link extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaS_Application',
 						'blank' => false,
+						'readable' => false,
 						'relate_name' => 'tenant' 
 				),
 				'asset' => array (
@@ -56,6 +57,7 @@ class SaaSDM_Link extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'Pluf_User',
 						'blank' => false,
+						'readable' => false,
 						'relate_name' => 'user'
 				)				
 		);

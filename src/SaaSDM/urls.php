@@ -47,8 +47,18 @@ return array (
 				'method' => 'update',
 				'http-method' => 'POST' 
 		),
+		array (
+				'regex' => '#^/asset/(?P<id>\d+)$#',
+				'model' => 'SaaSDM_Views_Asset',
+				'method' => 'delete',
+				'http-method' => 'DELETE',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember'
+				)
+		),		
 		array ( // Link urls
-				'regex' => '#^/(?P<asset_id>\d+)/link$#',
+				'regex' => '#^/asset/(?P<asset_id>\d+)/link/new$#',
 				'model' => 'SaaSDM_Views_Link',
 				'method' => 'create',
 				'http-method' => 'GET' 
@@ -70,7 +80,7 @@ return array (
 		array ( // Link urls
 				'regex' => '#^/link/find$#',
 				'model' => 'SaaSDM_Views_Link',
-				'method' => 'findlink',
+				'method' => 'find',
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
@@ -95,12 +105,32 @@ return array (
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
 						'SaaS_Precondition::tenantMember' 
-				)
+				) 
 		),
 		array ( // Plan urls
 				'regex' => '#^/plan/find$#',
 				'model' => 'SaaSDM_Views_Plan',
-				'method' => 'findplan',
+				'method' => 'find',
+				'http-method' => 'GET',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
+		),
+		array ( // Plan urls
+				'regex' => '#^/plan/(?P<planId>\d+)/pay$#',
+				'model' => 'SaaSDM_Views_Plan',
+				'method' => 'payment',
+				'http-method' => 'POST',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember' 
+				) 
+		),
+		array ( // Plan urls
+				'regex' => '#^/plan/(?P<planId>\d+)/activate$#',
+				'model' => 'SaaSDM_Views_Plan',
+				'method' => 'activate',
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
@@ -135,7 +165,7 @@ return array (
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
 						'SaaS_Precondition::tenantMember' 
-				)
+				) 
 		),
 		array ( // Download urls
 				'regex' => '#^/download/(?P<secure_link>.+)$#',
@@ -147,17 +177,7 @@ return array (
 		// 'Pluf_Precondition::loginRequired',
 		// 'SaaS_Precondition::tenantMember'
 		// )
-		array (
-				'regex' => '#^/(?P<id>\d+)$#',
-				'model' => 'SaaSDM_Views_Asset',
-				'method' => 'delete',
-				'http-method' => 'DELETE' 
-		) 
 );
-// 'precond' => array (
-// //'Pluf_Precondition::loginRequired',
-// //'SaaS_Precondition::tenantMember'
-// )
 
 
 // 'precond' => array (

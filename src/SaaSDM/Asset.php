@@ -23,6 +23,7 @@ class SaaSDM_Asset extends Pluf_Model {
 				'path' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
+						'readable' => false,
 						'size' => 250 
 				),
 				'size' => array (
@@ -84,6 +85,7 @@ class SaaSDM_Asset extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaS_Application',
 						'blank' => false,
+						'readable' => false,
 						'relate_name' => 'tenant' 
 				) 
 		);

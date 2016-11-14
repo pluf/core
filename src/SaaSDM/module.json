@@ -8,5 +8,19 @@
 		"SaaSDM_Plan",
 		"SaaSDM_PlanTemplate"
 	],
-	"permisson": []
+	"permisson": [],
+
+	"monitor":[{
+		"bean": "saasdm",
+		"property": "assetsSize",
+		"title": "Assets Size",
+		"description": "Total volume of assets in this tenant",
+		"function": "SaaSDM_Monitor::assets_size"
+	},{
+		"bean": "saasdm",
+		"property": "member",
+		"title": "Owner ship",
+		"description": "Check if the curent user is a memeber of the tenant.",
+		"function": "SaaSDM_Monitor::link_counts"
+	}]
 }

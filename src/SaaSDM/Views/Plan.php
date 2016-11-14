@@ -8,14 +8,14 @@ class SaaSDM_Views_Plan {
 				'tenant' => $request->tenant 
 		);
 		// Create plan and get its ID
-		$extra['user'] = $request->user;   // added to keep user data
-		$form = new SaaSDM_Form_PlanCreate ( $request->REQUEST, $extra );		
+		$extra ['user'] = $request->user; // added to keep user data
+		$form = new SaaSDM_Form_PlanCreate ( $request->REQUEST, $extra );
 		$plan = $form->save ();
-				
+		
 		return new Pluf_HTTP_Response_Json ( $plan );
 	}
 	public static function find($request, $match) {
-		$plan = new Pluf_Paginator ( new SaaSDM_Asset () );
+		$plan = new Pluf_Paginator ( new SaaSDM_Plan() );
 		// $sql = new Pluf_SQL('tenant=%s', array(
 		// $request->tenant->id
 		// ));
@@ -30,7 +30,6 @@ class SaaSDM_Views_Plan {
 				'driver_id' 
 		);
 		$list_display = array ();
-
 		
 		$search_fields = array (
 				'name',
@@ -57,7 +56,7 @@ class SaaSDM_Views_Plan {
 	}
 	public static function get($request, $match) {
 		// تعیین داده‌ها
-		$plan = SaaSDM_Shortcuts_GetPlanOr404( $match ["id"] );
+		$plan = SaaSDM_Shortcuts_GetPlanOr404 ( $match ["id"] );
 		// حق دسترسی
 		// CMS_Precondition::userCanAccessContent($request, $content);
 		// اجرای درخواست
@@ -91,4 +90,49 @@ class SaaSDM_Views_Plan {
 		
 		return new Pluf_HTTP_Response_Json ( $plan );
 	}
+
+	/**
+	 * 
+	 * @param Pluf_HTTP_Request $request
+	 * @param array $match
+	 */
+	public static function payment($request, $match){
+		
+		$plan = SaaSDM_Shortcuts_GetPlanOr404($match['planId']);
+		$url = $request->REQUEST['callback'];
+		$user = $request->user;
+		$backend = $request->REQUEST['backend'];
+		
+
+		$payment = SaaSBank_Service::create ( $request, array (
+				'amount' => $plan->price, // مقدار پرداخت به ریال
+				'title' => 'خرید پلن  ' . $plan->id,
+				'description' => 'description',
+				'email' => $user->email,
+// 				'phone' => $user->phone,
+				'phone' => '',
+				'callbackURL' => $url,
+				'backend' => $backend 
+		),$plan );
+		
+		$plan->payment = $payment;
+		$plan->update();
+		return new Pluf_HTTP_Response_Json ( $payment );
+	}
+	/**
+	 * 
+	 * @param Pluf_HTTP_Request $request
+	 * @param array $match
+	 */
+	public static function activate($request, $match){
+		
+		$plan = SaaSDM_Shortcuts_GetPlanOr404($match['planId']);
+		
+		SaaSBank_Service::update($plan->get_payment());
+		
+		if ($plan->get_payment()->isPayed())
+			$plan->activate();
+		return new Pluf_HTTP_Response_Json ( $plan );
+	}
+	
 }

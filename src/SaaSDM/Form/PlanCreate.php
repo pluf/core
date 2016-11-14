@@ -43,7 +43,9 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $plan->remain_count = $plantemplate->max_count;
         $plan->remain_volume = $plantemplate->max_volume;
         $plan->active = false;
+        $plan->price = $plantemplate->price;
         //TODO: add relation to BANK payments
+        
         $plan->user = $this->user;
         
         $plan->setFromFormData($this->cleaned_data);

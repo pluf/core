@@ -42,7 +42,11 @@ class SaaSDM_Plan extends Pluf_Model {
 				'remain_volume' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-				),				
+				),
+				'price' => array(
+						'type' =>'Pluf_DB_Field_Integer',
+						'blank' => false,
+				),
 				'active' => array (
 						'type' => 'Pluf_DB_Field_Boolean',
 						'blank' => false,
@@ -52,13 +56,21 @@ class SaaSDM_Plan extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaS_Application',
 						'blank' => false,
+						'readable' => false,
 						'relate_name' => 'tenant' 
 				),
 				'user' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'Pluf_User',
 						'blank' => false,
+						'readable' => false,						
 						'relate_name' => 'user'
+				),
+				'payment' => array(
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'SaaSBank_Receipt',
+						'blank' => false,
+						'relate_name' => 'payment'
 				)
 		);
 	}
@@ -83,5 +95,15 @@ class SaaSDM_Plan extends Pluf_Model {
 	 */
 	function postSave($create = false) {
 		//
+	}
+	
+	function isActive ()
+	{
+		return $this->active;
+	}
+	
+	function activate(){
+		$this->active = true;
+		$this->update();
 	}
 }
