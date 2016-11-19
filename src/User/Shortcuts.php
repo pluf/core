@@ -16,6 +16,20 @@ function User_Shortcuts_UserDateFactory($object)
 }
 
 /**
+ * بررسی حالت پسورد جدید
+ * 
+ * @param String $pass
+ * @throws Pluf_Exception
+ * @return String
+ */
+function User_Shortcuts_CheckPassword($pass)
+{
+    if ($pass == null || ! isset($pass))
+        throw new Pluf_Exception("Pasword must not be null");
+    return $pass;
+}
+
+/**
  *
  * @param unknown $object            
  * @return unknown
@@ -31,6 +45,7 @@ function User_Shortcuts_UserProfileDateFactory($object)
 /**
  * داده‌های کاربر را با در نظر گرفتن امنیت ارسال می‌کند.
  *
+ * @deprecated این تابع حذف خواهد شد.
  * @param unknown $object            
  * @return unknown
  */
@@ -43,6 +58,7 @@ function User_Shortcuts_UserJsonResponse($user)
 /**
  * اطلاعات امنیتی کاربران را حذف می‌کند.
  *
+ * @deprecated این تابع حذف خواهد شد.
  * @param unknown $user            
  */
 function User_Shortcuts_RemoveSecureData(&$user)

@@ -43,8 +43,8 @@ class User_Views_Authentication
         $request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
         $user->last_login = gmdate('Y-m-d H:i:s');
         $user->update();
-        
-        return User_Shortcuts_UserJsonResponse($user);
+
+        return new Pluf_HTTP_Response_Json($user);
     }
 
     /**
