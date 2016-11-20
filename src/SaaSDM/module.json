@@ -13,8 +13,8 @@
 	"monitor":[{
 		"bean": "saasdm",
 		"property": "assetsSize",
-		"title": "Assets Size",
-		"description": "Total volume of assets in this tenant",
+		"title": "Assets Info",
+		"description": "Total volume and number of assets in this tenant",
 		"function": "SaaSDM_Monitor::assets_size"
 	},{
 		"bean": "saasdm",
