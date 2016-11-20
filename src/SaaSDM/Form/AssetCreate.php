@@ -28,20 +28,20 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         $this->fields['parent'] = new Pluf_Form_Field_Integer(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'Parent',
+        				'help_text' => 'Parent of asset'
         		));
         $this->fields['content_name'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'content',
+        				'help_text' => 'Content related to this asset'
         		));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => false,
-        				'label' => 'Path',
-        				'help_text' => 'Path of asset'
+        				'label' => 'description',
+        				'help_text' => 'description of asset'
         		));      
     }
 
@@ -60,6 +60,18 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
         if(!is_dir($asset->path)) {
         	if (false == @mkdir($asset->path, 0777, true)) {
         		throw new Pluf_Form_Invalid('An error occured when creating the upload path. Please try to send the file again.');
+        	}
+        }
+        // To find out whether a file or folder being created and to check that folder exist or Not
+        if (isset($_REQUEST['parent']) ){
+
+        	if (!SaaSDM_Shortcuts_GetAssetOr404($_REQUEST['parent'])){
+        		throw new Pluf_Form_Invalid('An error occured. The specified folder does not exist.');
+        	}else {
+        		$assetFolder = SaaSDM_Shortcuts_GetAssetOr404($_REQUEST['parent']);
+        		if ($assetFolder->type != 'folder'){
+        			throw new Pluf_Form_Invalid('An error occured. The specified folder does not exist.');
+        		}
         	}
         }
 //         $asset->user = $this->user;
