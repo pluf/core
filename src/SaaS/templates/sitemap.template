@@ -35,7 +35,7 @@
 		<priority>0.5</priority>
 	</url>{/if}
 	<url>
-		<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/{$spa->name}@/</loc>
+		<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/{$spa->name}/</loc>
 		<lastmod>{$spa->modif_dtime|date:'%Y-%m-%d'}</lastmod>
 		<changefreq>weekly</changefreq>
 		<priority>0.5</priority>

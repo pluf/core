@@ -4,7 +4,7 @@ return array(
     // Url for sitemap
     array(
         'regex' => '#^/sitemap.xml$#',
-        'model' => 'SaaS_Views_Application',
+        'model' => 'SaaS_Views_Run',
         'method' => 'getSiteMap'
     ),
     // url format for SPA main page or a Resource-File of default spa

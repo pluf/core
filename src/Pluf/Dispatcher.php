@@ -94,21 +94,21 @@ class Pluf_Dispatcher
             $response = new Pluf_HTTP_Response_ServerError($e);
             $response->render(
                     $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
-            try { // 1- Add to log
-                if (! ($e instanceof Pluf_Exception)) {
+            if (! ($e instanceof Pluf_Exception)) {
+                try { // 1- Add to log
                     Pluf_Log::fatal(
                             array(
                                     'query' => $query,
                                     'error' => $e
                             ));
-                }
-            } catch (Exception $e) {}
-            try { // 2- send email
-                $from =  Pluf::f('general_from_email', 'info@dpq.co.ir');
-                $email = new Pluf_Mail($from, $from, 'fatal error in system');
-                $email->addTextMessage('unsupported error in system.');
-                $email->sendMail();
-            } catch (Exception $e) {}
+                } catch (Exception $e) {}
+                try { // 2- send email
+                    $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
+                    $email = new Pluf_Mail($from, $from, 'fatal error in system');
+                    $email->addTextMessage('unsupported error in system:' . $e);
+                    $email->sendMail();
+                } catch (Exception $e) {}
+            }
         }
         /**
          * [signal]
