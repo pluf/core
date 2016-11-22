@@ -19,7 +19,7 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $this->tenant = $extra['tenant'];
 		$this->user = $extra['user'];
 
-        $this->fields[ 'tempalteID' ] = new Pluf_Form_Field_Varchar(
+        $this->fields[ 'templateId' ] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => true,
         				'label' => 'PlanTemplateID',
@@ -36,7 +36,7 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $plan = new SaaSDM_Plan();
         
         //Checking existnce of plan template
-        $plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404( $this->cleaned_data ['tempalteID']);
+        $plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404( $this->cleaned_data ['templateId']);
         $plan->period = $plantemplate->period;
         $plan->max_count = $plantemplate->max_count;
         $plan->max_volume = $plantemplate->max_volume;
