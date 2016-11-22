@@ -21,7 +21,7 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
 
         $this->fields['name'] = new Pluf_Form_Field_Varchar(
                 array(
-                        'required' => false,
+                        'required' => true,
                         'label' => 'Name',
                         'help_text' => 'Name of asset'
                 ));
