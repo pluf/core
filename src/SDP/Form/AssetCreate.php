@@ -39,7 +39,7 @@ class SDP_Form_AssetCreate extends Pluf_Form
             'help_text' => 'Description of asset'
         ));
         $this->fields['price'] = new Pluf_Form_Field_Integer(array(
-            'required' => true,
+            'required' => false,
             'label' => 'Price',
             'help_text' => 'Price of asset'
         ));

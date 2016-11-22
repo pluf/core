@@ -48,38 +48,51 @@ class SDP_Views_Asset
         $asset->list_filters = array(
             'id',
             'name',
-            'path',
             'size',
             'download',
             'driver_type',
-            'driver_id'
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
         );
         $list_display = array(
             'name',
-            'path',
+            'type',
             'size',
+            'price',
             'download',
             'driver_type',
-            'driver_id'
+            'driver_id',
+            'parent'
         );
         
         $search_fields = array(
             'name',
-            'path',
-            'size',
-            'download',
             'driver_type',
-            'driver_id'
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'description',
+            'mime_type'
         );
         $sort_fields = array(
             'id',
-            'title',
-            'file_name',
-            'file_size',
-            'mime_type',
-            'downloads',
+            'name',
+            'size',
+            'download',
+            'driver_type',
+            'driver_id',
             'creation_date',
-            'modif_dtime'
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
         );
         $asset->configure($list_display, $search_fields, $sort_fields);
         $asset->items_per_page = 10;
