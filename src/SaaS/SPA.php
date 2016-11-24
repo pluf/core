@@ -240,7 +240,7 @@ class SaaS_SPA extends Pluf_Model
      */
     public static function getSpaByName ($name, $tenant = null)
     {
-        $sql = new Pluf_SQL('name=%s AND tenant=%s', $name, $tenant->getId());
+        $sql = new Pluf_SQL('name=%s AND tenant=%s', array($name, $tenant->getId()));
         return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
     }
 }
