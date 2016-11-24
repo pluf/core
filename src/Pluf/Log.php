@@ -269,6 +269,9 @@ class Pluf_Log
      */
     public static function flush ()
     {
+        if(count(self::$stack) == 0){
+            return;
+        }
         $writer = Pluf::f('log_handler', 'Pluf_Log_File');
         call_user_func(
                 array(
