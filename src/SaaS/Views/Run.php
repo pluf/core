@@ -29,7 +29,7 @@ class SaaS_Views_Run {
         if (! isset($path)) {
             throw new Pluf_Exception('Name for spa or resource is null!');
         }
-        $spa = SaaS_SPA::getSpaByName($path);
+        $spa = SaaS_SPA::getSpaByName($path, $tenant);
         $resource = null;
         if (! isset($spa)) {
             $spa = $tenant->get_spa();
@@ -57,7 +57,7 @@ class SaaS_Views_Run {
         $resourcePath = $match['resource'];
         $tenant = $request->tenant;
         if ($match['spa']) {
-            $spa = SaaS_SPA::getSpaByName($match['spa']);
+            $spa = SaaS_SPA::getSpaByName($match['spa'], $tenant);
         }
         if (! isset($spa)) {
             $spa = $tenant->get_spa();

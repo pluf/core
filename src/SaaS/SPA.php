@@ -235,11 +235,12 @@ class SaaS_SPA extends Pluf_Model
      * فرض می‌شود که نام spa ها یکتاست. در غیر این صورت
      * اولین spa که نامش با نام تعیین شده یکی باشد برگردانده می‌شود
      *
-     * @param $name نام            
+     * @param string $name نام
+     * @param SaaS_Application $tenant            
      */
-    public static function getSpaByName ($name)
+    public static function getSpaByName ($name, $tenant = null)
     {
-        $sql = new Pluf_SQL('name=%s', $name);
+        $sql = new Pluf_SQL('name=%s AND tenant=%s', array($name, $tenant->getId()));
         return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
     }
 }
