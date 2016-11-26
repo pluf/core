@@ -13,30 +13,43 @@ class SDP_Link extends Pluf_Model {
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => false 
-				),
+						'blank' => false,
+						'editable' => false,
+						'readable' => true 
+				)
+				,
 				'secure_link' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 50 
+						'size' => 50,
+						'editable' => false,
+						'readable' => true
 				),
 				'expiry' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => false,
-						'size' => 50 
+						'size' => 50,
+						'editable' => false,
+						'readable' => true						
 				),
 				'download' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 50
-				),				
+						'size' => 50,
+						'editable' => false,
+						'readable' => true						
+				),
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => false,
+						'readable' => true						
 				),
 				'modif_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => false,
+						'readable' => true						
 				),
 				
 				// relations
@@ -44,20 +57,26 @@ class SDP_Link extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaS_Application',
 						'blank' => false,
+						'editable' => false,
+						'readable' => false,						
 						'relate_name' => 'tenant' 
 				),
 				'asset' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SDP_Asset',
 						'blank' => false,
+						'editable' => false,
+						'readable' => true,						
 						'relate_name' => 'asset' 
 				),
 				'user' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'Pluf_User',
 						'blank' => false,
-						'relate_name' => 'user'
-				)				
+						'editable' => false,
+						'readable' => true,						
+						'relate_name' => 'user' 
+				) 
 		);
 		
 		$this->_a ['idx'] = array (
@@ -93,10 +112,8 @@ class SDP_Link extends Pluf_Model {
 	function postSave($create = false) {
 		//
 	}
-	
-	public static function getLinkBySecureId($secure_link){
-		
-		$sql = new Pluf_SQL('secure_link=%s', $secure_link);
-		return Pluf::factory('SDP_Link')->getOne($sql->gen());
+	public static function getLinkBySecureId($secure_link) {
+		$sql = new Pluf_SQL ( 'secure_link=%s', $secure_link );
+		return Pluf::factory ( 'SDP_Link' )->getOne ( $sql->gen () );
 	}
 }
