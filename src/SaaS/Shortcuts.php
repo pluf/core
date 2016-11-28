@@ -109,18 +109,3 @@ function SaaS_Shortcuts_GetItemListCount($request)
     return $count;
 }
 
-/**
- * بر اساس تقاضا یک نتیجه مناسب برای جستجوی گوگل ایجاد می‌کند.
- * 
- * @param unknown $request
- * @param unknown $spa
- */
-function SaaS_Shortcuts_SeoResponse ($request, $spa)
-{
-	$context = new Pluf_Template_Context(array(
-			'tenant' => $request->tenant
-	));
-	$tmpl = new Pluf_Template('seo/tenant.html');
-	$html = $tmpl->render($context);
-	return new Pluf_HTTP_Response($tmpl->render($context));
-}

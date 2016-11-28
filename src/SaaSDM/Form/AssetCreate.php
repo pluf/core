@@ -65,6 +65,9 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
                 throw new Pluf_Form_Invalid('The specified folder does not exist.');
             }
         }
+        // Note: Mahdi, 1395-09: For folders there is no path attribute
+        if($_REQUEST['type'] == 'folder')
+        	$asset->path = '';
         // $asset->user = $this->user;
         $asset->tenant = $this->tenant;
         if ($commit) {

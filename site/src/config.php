@@ -55,7 +55,8 @@ $cfg['middleware_classes'] = array(
         // 'SaaS_Middleware_TenantFromDomain',
         // 'SaaS_Middleware_TenantFromRequestMatch',
         // 'SaaS_Middleware_TenantFromSession',
-        'SaaS_Middleware_TenantFromConfig'
+        'SaaS_Middleware_TenantFromConfig',
+        'Seo_Middleware_Spa'
 );
 
 /*
@@ -219,7 +220,8 @@ $cfg['tmp_folder'] = SRC_BASE . '/var/tmp';
  */
 $cfg['template_folders'] = array(
         SRC_BASE . '/src/templates',
-        PLUF_BASE . '/SaaS/templates'
+        PLUF_BASE . '/SaaS/templates',
+        PLUF_BASE . '/Seo/templates',
 );
 
 /*
