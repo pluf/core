@@ -13,30 +13,42 @@ class SaaSDM_Link extends Pluf_Model {
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => false 
+						'blank' => false,
+						'editable' => false,
+						'readable' => true
 				),
 				'secure_link' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 50 
+						'size' => 50,
+						'editable' => false,
+						'readable' => true
 				),
 				'expiry' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
 						'blank' => false,
-						'size' => 50 
+						'size' => 50,
+						'editable' => false,
+						'readable' => true
 				),
 				'download' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 50
+						'size' => 50,
+						'editable' => false,
+						'readable' => true
 				),				
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => true,
+						'readable' => true
 				),
 				'modif_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => true,
+						'readable' => true
 				),
 				
 				// relations
@@ -51,6 +63,8 @@ class SaaSDM_Link extends Pluf_Model {
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaSDM_Asset',
 						'blank' => false,
+						'editable' => false,
+						'readable' => true,
 						'relate_name' => 'asset' 
 				),
 				'user' => array (
@@ -58,6 +72,7 @@ class SaaSDM_Link extends Pluf_Model {
 						'model' => 'Pluf_User',
 						'blank' => false,
 						'readable' => false,
+						'editable' => false,
 						'relate_name' => 'user'
 				)				
 		);
