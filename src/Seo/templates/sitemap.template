@@ -1,8 +1,5 @@
-{assign $tag1='<?xml version="1.0" encoding="UTF-8"?>'}{$tag1|safe}
-<!-- generated-on="TODO: date" -->
-<!-- generator="Pluf SaaS SimteMap generator" -->
-<!-- generator-url="http://dpq.co.ir/" -->
-<!-- generator-version="0.1.0" -->
+{assign $tag1='<?xml version="1.0" encoding="UTF-8" ?>'}{$tag1|safe}
+{assign $tag2='<?xml-stylesheet href="http://localhost:8080/api/seo/xsl/sitemap.xsl" type="text/xsl" ?>'}{$tag2|safe}
 <urlset 
 	xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

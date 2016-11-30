@@ -4,8 +4,8 @@ return array(
     // Url for sitemap
     array(
         'regex' => '#^/sitemap.xml$#',
-        'model' => 'SaaS_Views_Run',
-        'method' => 'getSiteMap'
+        'model' => 'Seo_Views_Sitemap',
+        'method' => 'get'
     ),
     // url format for SPA main page or a Resource-File of default spa
     // main page of a spa:               /spa-name

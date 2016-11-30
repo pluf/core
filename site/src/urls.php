@@ -66,6 +66,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'Config/urls.php' 
 		),
+		array ( // Seo manager
+				'regex' => '#^/api/seo#',
+				'base' => $base,
+				'sub' => include 'Seo/urls.php' 
+		),
         
         
         
