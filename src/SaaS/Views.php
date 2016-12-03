@@ -85,7 +85,7 @@ class SaaS_Views extends Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public static function createObject ($request, $match, $p)
+    public function createObject ($request, $match, $p)
     {
         $default = array(
                 'extra_form' => array()
@@ -161,7 +161,7 @@ class SaaS_Views extends Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public static function updateObject ($request, $match, $p)
+    public function updateObject ($request, $match, $p)
     {
         if (! isset($p['model'])) {
             throw new Exception(
@@ -203,7 +203,7 @@ class SaaS_Views extends Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public static function deleteObject ($request, $match, $p)
+    public function deleteObject ($request, $match, $p)
     {
         $default = array(
                 'permanently' => false
