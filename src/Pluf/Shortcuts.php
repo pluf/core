@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -17,11 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Shortcut methods to perform some operations.
- *
- * Modelled on the django.shortcuts.
- */
+function Pluf_Shortcuts_GetRequestParamOr403 ($request, $id)
+{
+    if (array_key_exists($id, $request->REQUEST)) {
+        return $request->REQUEST[$id];
+    }
+    throw new Pluf_HTTP_Error403(sprintf("Parameter not found (name: %s).", $id));
+}
+
+function Pluf_Shortcuts_GetRequestParam ($request, $id)
+{
+    if (array_key_exists($id, $request->REQUEST)) {
+        return $request->REQUEST[$id];
+    }
+    return null;
+}
 
 /**
  * Get an object by id or raise a 404 error.
@@ -38,7 +49,8 @@ function Pluf_Shortcuts_GetObjectOr404 ($object, $id)
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404("Object not found (" . $object . "," . $id . ")");
+    throw new Pluf_HTTP_Error404(
+            "Object not found (" . $object . "," . $id . ")");
 }
 
 /**
@@ -62,9 +74,10 @@ function Pluf_Shortcuts_GetObjectOr404 ($object, $id)
 function Pluf_Shortcuts_GetOneOr404 ($object, $bsql, $psql)
 {
     $sql = new Pluf_SQL($bsql, $psql);
-    $item = Pluf::factory($object)->getOne(array(
-            'filter' => $sql->gen()
-    ));
+    $item = Pluf::factory($object)->getOne(
+            array(
+                    'filter' => $sql->gen()
+            ));
     if ($item != null) {
         return $item;
     }
@@ -131,8 +144,8 @@ function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
  *            string Label suffix (null)
  * @return Object Form to update for this model.
  */
-function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null, $extra = array(),
-    $label_suffix = null)
+function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null, 
+        $extra = array(), $label_suffix = null)
 {
     $extra['model'] = $model;
     return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
@@ -142,7 +155,7 @@ function Pluf_Shortcuts_LoadModels ($moduleJson)
 {
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
-    if(!isset($moduleJson['model'])){
+    if (! isset($moduleJson['model'])) {
         return;
     }
     $models = $moduleJson['model'];
@@ -156,7 +169,7 @@ function Pluf_Shortcuts_LoadPermissions ($moduleJson)
 {
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
-    if(!isset($moduleJson['permisson'])){
+    if (! isset($moduleJson['permisson'])) {
         return;
     }
     $permissons = $moduleJson['permisson'];
@@ -175,7 +188,7 @@ function Pluf_Shortcuts_Monitors ($moduleJson)
 {
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
-    if(!isset($moduleJson['monitor'])){
+    if (! isset($moduleJson['monitor'])) {
         return;
     }
     $monitors = $moduleJson['monitor'];
