@@ -56,7 +56,8 @@ $cfg['middleware_classes'] = array(
         // 'SaaS_Middleware_TenantFromRequestMatch',
         // 'SaaS_Middleware_TenantFromSession',
         'SaaS_Middleware_TenantFromConfig',
-        'Seo_Middleware_Spa'
+        'Seo_Middleware_Spa',
+        'Pluf_Middleware_Api'
 );
 
 /*

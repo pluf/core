@@ -4,6 +4,8 @@
  * میان افزار GoogleAnalytics را ایجادمی‌کند.
  * 
  *  این واسط کد دنبال کردن تحلیل‌های گوگل را به تمام سیستم اضافه می‌کند.
+ *  
+ *  @deprecated
  */
 class Pluf_Middleware_GoogleAnalytics
 {
