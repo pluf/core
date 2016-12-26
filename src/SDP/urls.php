@@ -75,6 +75,27 @@ return array(
         'method' => 'download',
         'http-method' => 'GET'
     ),
+	// ************************************************************* Payments
+		array ( // pay to get secure link for an asset which has price
+				'regex' => '#^/link/(?P<linkId>\d+)/pay$#',
+				'model' => 'SDP_Views_Link',
+				'method' => 'payment',
+				'http-method' => 'POST',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember'
+				)
+		),
+		array ( // Activate secure link that has been activated
+				'regex' => '#^/link/(?P<linkId>\d+)/activate$#',
+				'model' => 'SaaSDM_Views_Link',
+				'method' => 'activate',
+				'http-method' => 'GET',
+				'precond' => array (
+						'Pluf_Precondition::loginRequired',
+						'SaaS_Precondition::tenantMember'
+				)
+		),
     // ************************************************************* AssetRelation
     array(
         'regex' => '#^/assetrelation/find$#',
