@@ -51,6 +51,12 @@ class SDP_Link extends Pluf_Model {
 						'editable' => false,
 						'readable' => true						
 				),
+				'active' => array (
+						'type' => 'Pluf_DB_Field_Boolean',
+						'blank' => false,
+						'editable' => false,
+						'readable' => true
+				),
 				
 				// relations
 				'tenant' => array (
@@ -76,7 +82,15 @@ class SDP_Link extends Pluf_Model {
 						'editable' => false,
 						'readable' => true,						
 						'relate_name' => 'user' 
-				) 
+				),
+				'payment' => array(
+						'type' => 'Pluf_DB_Field_Foreignkey',
+						'model' => 'SaaSBank_Receipt',
+						'blank' => false,
+						'editable' => false,
+						'readable' => true,
+						'relate_name' => 'payment'
+				)
 		);
 		
 		$this->_a ['idx'] = array (
@@ -115,5 +129,14 @@ class SDP_Link extends Pluf_Model {
 	public static function getLinkBySecureId($secure_link) {
 		$sql = new Pluf_SQL ( 'secure_link=%s', $secure_link );
 		return Pluf::factory ( 'SDP_Link' )->getOne ( $sql->gen () );
+	}
+	function isActive ()
+	{
+		return $this->active;
+	}
+	
+	function activate(){
+		$this->active = true;
+		$this->update();
 	}
 }
