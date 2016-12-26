@@ -57,40 +57,75 @@ class SDP_Views_Link {
 		if ($link->tenant != $request->tenant->id) {
 			// Error 404
 		}
-		// Check link expiry
+		// Check that asset has price or not
+		if ($link->get_asset ()->price != null) {
+			if ($link->active != 1)
+				throw new SDP_Exception_ObjectNotFound("This link is not activated.");
+		}
 		
+		// Check link expiry
+			
 		if (date ( "Y-m-d H:i:s" ) > $link->expiry) {
 			// Error: Link Expiry
 			throw new SDP_Exception_ObjectNotFound ( "This link has been expired." );
 		}
-		
+			
 		$asset = $link->get_asset ();
-		
+			
 		$user = $link->get_user ();
-		
+			
 		// Do Download
 		$httpRange = isset ( $request->SERVER ['HTTP_RANGE'] ) ? $request->SERVER ['HTTP_RANGE'] : null;
 		$response = new Pluf_HTTP_Response_ResumableFile ( $asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type );
 		// TODO: do buz.
 		$size = $response->computeSize ();
+		$link->download ++;
+		$link->update ();
+		return $response;
+// 		throw new SDP_Exception_ObjectNotFound ( "SDP plan does not have enough priviledges." );
+	}
+	
+	/**
+	 *
+	 * @param Pluf_HTTP_Request $request        	
+	 * @param array $match        	
+	 */
+	public static function payment($request, $match) {
+		$link = SaaSDM_Shortcuts_GetLinkOr404 ( $match ['linkId'] );
 		
-		$planList = new Pluf_Paginator ( new SDP_Plan () );
-		$sql = new Pluf_SQL ( 'user=%s', array (
-				$user->id 
-		) );
-		$planList->forced_where = $sql;
-		foreach ( $planList->render_array() as $plan ) {
-			$plan = SDP_Shortcuts_GetPlanOr404 ( $plan );
-			if ($plan->remain_volume > $size && $plan->remain_count > 0 && $plan->active == 1) {
-				$plan->remain_volume -= $size;
-				$plan->remain_count --;
-				$plan->update ();
-				// update download
-				$link->download ++;
-				$link->update ();
-				return $response;
-			}	
-		}
-		throw new SDP_Exception_ObjectNotFound ( "SDP plan does not have enough priviledges, or there's no appropriate plan (last checked plan id:" . $plan->id . ")" );
+		$url = $request->REQUEST ['callback'];
+		$user = $request->user;
+		$backend = $request->REQUEST ['backend'];
+		$price = $link->get_asset()->price;
+		
+		$payment = SaaSBank_Service::create ( $request, array (
+				'amount' => $price, // مقدار پرداخت به ریال
+				'title' => 'خرید پلن  ' . $link->id,
+				'description' => 'description',
+				'email' => $user->email,
+				// 'phone' => $user->phone,
+				'phone' => '',
+				'callbackURL' => $url,
+				'backend' => $backend 
+		), $link );
+		
+		$link->payment = $payment;
+		$link->update ();
+		return new Pluf_HTTP_Response_Json ( $payment );
+	}
+	
+	/**
+	 *
+	 * @param Pluf_HTTP_Request $request
+	 * @param array $match
+	 */
+	public static function activate($request, $match) {
+		$link = SaaSDM_Shortcuts_GetLinkOr404 ( $match ['linkId'] );
+	
+		SaaSBank_Service::update ( $link->get_payment () );
+	
+		if ($link->get_payment ()->isPayed ())
+			$link->activate ();
+			return new Pluf_HTTP_Response_Json ( $link );
 	}
 }
