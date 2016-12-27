@@ -48,7 +48,7 @@ class SDP_Views_Link {
 				'asset' 
 		);
 		$links->configure ( array (), $search_fields, $sort_fields );
-		$links->items_per_page = 20;
+		$links->items_per_page = 30;
 		$links->setFromRequest ( $request );
 		return new Pluf_HTTP_Response_Json ( $links->render_object () );
 	}

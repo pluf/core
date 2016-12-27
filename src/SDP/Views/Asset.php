@@ -74,8 +74,6 @@ class SDP_Views_Asset
             'name',
             'driver_type',
             'driver_id',
-            'creation_dtime',
-            'modif_dtime',
             'type',
             'description',
             'mime_type'
@@ -95,7 +93,7 @@ class SDP_Views_Asset
             'parent'
         );
         $asset->configure($list_display, $search_fields, $sort_fields);
-        $asset->items_per_page = 10;
+        $asset->items_per_page = 30;
         $asset->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($asset->render_object());
     }
