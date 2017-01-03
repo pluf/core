@@ -9,6 +9,7 @@ class SDP_Link extends Pluf_Model {
 	function init() {
 		$this->_a ['table'] = 'sdp_link';
 		$this->_a ['model'] = 'SDP_Link';
+        $this->_a['verbose'] = 'SDP Link';
 		$this->_model = 'SDP_Link';
 		$this->_a ['cols'] = array (
 				'id' => array (

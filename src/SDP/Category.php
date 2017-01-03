@@ -1,6 +1,6 @@
 <?php
 
-class SDP_Asset extends Pluf_Model
+class SDP_Category extends Pluf_Model
 {
 
     /**
@@ -10,10 +10,10 @@ class SDP_Asset extends Pluf_Model
      */
     function init()
     {
-        $this->_a['table'] = 'sdp_asset';
-        $this->_a['model'] = 'SDP_Asset';
-        $this->_a['verbose'] = 'SDP Asset';
-        $this->_model = 'SDP_Asset';
+        $this->_a['table'] = 'sdp_category';
+        $this->_a['model'] = 'SDP_Category';
+        $this->_a['verbose'] = 'SDP Category';
+        $this->_model = 'SDP_Category';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -28,40 +28,6 @@ class SDP_Asset extends Pluf_Model
                 'editable' => true,
                 'readable' => true
             ),
-            'path' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => true,
-                'size' => 250,
-                'editable' => false,
-                'readable' => false
-            ),
-            'size' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'default' => 0,
-                'editable' => false,
-                'readable' => true
-            ),
-            'download' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'default' => 0,
-                'editable' => false,
-                'readable' => true
-            ),
-            'driver_type' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 250,
-                'editable' => false,
-                'readable' => false
-            ),
-            'driver_id' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'editable' => false,
-                'readable' => false
-            ),
             'creation_dtime' => array(
                 'type' => 'Pluf_DB_Field_Datetime',
                 'blank' => true,
@@ -74,38 +40,10 @@ class SDP_Asset extends Pluf_Model
                 'editable' => false,
                 'readable' => true
             ),
-            'type' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 250,
-                'editable' => false,
-                'readable' => true
-            ),
-//             'content_name' => array(
-//                 'type' => 'Pluf_DB_Field_Varchar',
-//                 'blank' => false,
-//                 'size' => 2500,
-//                 'editable' => true,
-//                 'readable' => true
-//             ),
             'description' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 250,
-                'editable' => true,
-                'readable' => true
-            ),
-            'mime_type' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 250,
-                'editable' => false,
-                'readable' => true
-            ),
-            'price' => array(
-                'type' => 'Pluf_DB_Field_Integer',
                 'blank' => true,
-                'default' => 0,
+                'size' => 250,
                 'editable' => true,
                 'readable' => true
             ),
@@ -120,8 +58,8 @@ class SDP_Asset extends Pluf_Model
             ),
             'parent' => array(
                 'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'SDP_Asset',
-                'blank' => false,
+                'model' => 'SDP_Category',
+                'blank' => true,
                 'relate_name' => 'parent',
                 'editable' => true,
                 'readable' => true
@@ -141,28 +79,19 @@ class SDP_Asset extends Pluf_Model
                 'relate_name' => 'content',
                 'editable' => true,
                 'readable' => true,
+            ),
+            'assets' => array(
+                'type' => 'Pluf_DB_Field_Manytomany',
+                'model' => 'SDP_Asset',
+                'relate_name' => 'assets',
+                'blank' => false,
+                'editable' => false,
+                'readable' => false
             )
-//             ,
-//             'categories' => array(
-//                 'type' => 'Pluf_DB_Field_Manytomany',
-//                 'model' => 'SDP_Category',
-//                 'relate_name' => 'categories',
-//                 'blank' => false,
-//                 'editable' => false,
-//                 'readable' => false
-//             ),
-//             'tags' => array(
-//                 'type' => 'Pluf_DB_Field_Manytomany',
-//                 'model' => 'SDP_Tag',
-//                 'relate_name' => 'tags',
-//                 'blank' => false,
-//                 'editable' => false,
-//                 'readable' => false
-//             )
         );
         
         $this->_a['idx'] = array(
-            'page_class_idx' => array(
+            'category_idx' => array(
                 'col' => 'tenant, parent, name',
                 'type' => 'unique', // normal, unique, fulltext, spatial
                 'index_type' => '', // hash, btree
@@ -205,8 +134,6 @@ class SDP_Asset extends Pluf_Model
      */
     function preDelete()
     {
-        if (file_exists($this->path . '/' . $this->id)) {
-            unlink($this->path . '/' . $this->id);
-        }
+        
     }
 }

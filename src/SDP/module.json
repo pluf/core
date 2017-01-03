@@ -5,7 +5,9 @@
   "model": [
 		"SDP_Asset",
 		"SDP_Link",
-		"SDP_AssetRelation"
+		"SDP_AssetRelation",
+		"SDP_TAG",
+		"SDP_Category"
 	],
 	"permisson": []
 }

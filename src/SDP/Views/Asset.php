@@ -16,6 +16,7 @@ class SDP_Views_Asset
             if (isset($request->FILES['file'])) {
                 $file = $request->FILES['file'];
                 $request->REQUEST['name'] = basename($file['name']);
+                $request->REQUEST['type'] = 'file';
             } else {
                 $request->REQUEST['name'] = "noname" . rand(0, 9999);
             }

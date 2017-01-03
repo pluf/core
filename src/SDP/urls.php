@@ -41,6 +41,150 @@ return array(
         'method' => 'findchild',
         'http-method' => 'GET'
     ),
+    // ************************************************************* Category
+    array( // Find
+        'regex' => '#^/category/find$#',
+        'model' => 'SaaS_Views',
+        'method' => 'findObject',
+        'http-method' => 'GET',
+        'params' => array(
+            'model' => 'SDP_Category',
+            'listFilters' => array(
+                'id',
+                'name',
+                'parent'
+            ),
+            'searchFields' => array(
+                'name',
+                'description'
+            ),
+            'sortFields' => array(
+                'id',
+                'name',
+                'parent',
+                'creation_date',
+                'modif_dtime'
+            )
+        )
+    ),
+    array( // Create
+        'regex' => '#^/category/new$#',
+        'model' => 'SaaS_Views',
+        'method' => 'createObject',
+        'http-method' => 'POST',
+        'params' => array(
+            'model' => 'SDP_Category'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    array( // Get info
+        'regex' => '#^/category/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'getObject',
+        'http-method' => 'GET',
+        'params' => array(
+            'model' => 'SDP_Category'
+        )
+    ),
+    array( // Delete
+        'regex' => '#^/category/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'deleteObject',
+        'http-method' => 'DELETE',
+        'params' => array(
+            'model' => 'SDP_Category',
+            'permanently' => true
+        ),
+        'precond' => array(
+            'SaaS_Precondition::tenantOwner'
+        )
+    ),
+    array( // Update
+        'regex' => '#^/category/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'updateObject',
+        'http-method' => 'POST',
+        'params' => array(
+            'model' => 'SDP_Category'
+        ),
+        'precond' => array(
+            'SaaS_Precondition::tenantOwner'
+        )
+    ),
+    // ************************************************************* Tag
+    array( // Find
+        'regex' => '#^/tag/find$#',
+        'model' => 'SaaS_Views',
+        'method' => 'findObject',
+        'http-method' => 'GET',
+        'params' => array(
+            'model' => 'SDP_Tag',
+            'listFilters' => array(
+                'id',
+                'name'
+            ),
+            'searchFields' => array(
+                'name',
+                'description'
+            ),
+            'sortFields' => array(
+                'id',
+                'name',
+                'creation_date',
+                'modif_dtime'
+            )
+        )
+    ),
+    array( // Create
+        'regex' => '#^/tag/new$#',
+        'model' => 'SaaS_Views',
+        'method' => 'createObject',
+        'http-method' => 'POST',
+        'params' => array(
+            'model' => 'SDP_Tag'
+        ),
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    array( // Get info
+        'regex' => '#^/tag/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'getObject',
+        'http-method' => 'GET',
+        'params' => array(
+            'model' => 'SDP_Tag'
+        )
+    ),
+    array( // Delete
+        'regex' => '#^/tag/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'deleteObject',
+        'http-method' => 'DELETE',
+        'params' => array(
+            'model' => 'SDP_Tag',
+            'permanently' => true
+        ),
+        'precond' => array(
+            'SaaS_Precondition::tenantOwner'
+        )
+    ),
+    array( // Update
+        'regex' => '#^/tag/(?P<modelId>\d+)$#',
+        'model' => 'SaaS_Views',
+        'method' => 'updateObject',
+        'http-method' => 'POST',
+        'params' => array(
+            'model' => 'SDP_Tag'
+        ),
+        'precond' => array(
+            'SaaS_Precondition::tenantOwner'
+        )
+    ),
     // ************************************************************* Link
     array( // Link urls
         'regex' => '#^/asset/(?P<asset_id>\d+)/link$#',
@@ -75,27 +219,27 @@ return array(
         'method' => 'download',
         'http-method' => 'GET'
     ),
-	// ************************************************************* Payments
-		array ( // pay to get secure link for an asset which has price
-				'regex' => '#^/link/(?P<linkId>\d+)/pay$#',
-				'model' => 'SDP_Views_Link',
-				'method' => 'payment',
-				'http-method' => 'POST',
-				'precond' => array (
-						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember'
-				)
-		),
-		array ( // Activate secure link that has been activated
-				'regex' => '#^/link/(?P<linkId>\d+)/activate$#',
-				'model' => 'SaaSDM_Views_Link',
-				'method' => 'activate',
-				'http-method' => 'GET',
-				'precond' => array (
-						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember'
-				)
-		),
+    // ************************************************************* Payments
+    array( // pay to get secure link for an asset which has price
+        'regex' => '#^/link/(?P<linkId>\d+)/pay$#',
+        'model' => 'SDP_Views_Link',
+        'method' => 'payment',
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    array( // Activate secure link that has been activated
+        'regex' => '#^/link/(?P<linkId>\d+)/activate$#',
+        'model' => 'SaaSDM_Views_Link',
+        'method' => 'activate',
+        'http-method' => 'GET',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
     // ************************************************************* AssetRelation
     array(
         'regex' => '#^/assetrelation/find$#',
