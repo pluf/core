@@ -172,4 +172,153 @@ class SDP_Views_Asset
         }
         return new Pluf_HTTP_Response_Json($asset);
     }
+    
+    // *******************************************************************
+    // Tags of Asset
+    // *******************************************************************
+    public static function tags($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        $tag = new SDP_Tag();
+        $tagTable = $tag->_a['table'];
+        $assocTable = 'sdp_asset_sdp_tag_assoc';
+        $tag->_a['views']['myView'] = array(
+            'select' => $tag->getSelect(),
+            'join' => 'LEFT JOIN ' . $assocTable . ' ON ' . $tagTable . '.id=' . $assocTable . '.sdp_tag_id'
+        );
+        
+        $page = new Pluf_Paginator($tag);
+        $sql = new Pluf_SQL('sdp_asset_id=%s', array(
+            $asset
+        ));
+        $page->forced_where = $sql;
+        $page->model_view = 'myView';
+        $page->list_filters = array(
+            'id',
+            'name'
+        );
+        $search_fields = array(
+            'name',
+            'description'
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'creation_date',
+            'modif_dtime'
+        );
+        $page->configure(array(), $search_fields, $sort_fields);
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    public static function addTag($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['tagId'])) {
+            $tagId = $match['tagId'];
+        } else {
+            $tagId = $request->REQUEST['tagId'];
+        }
+        $tag = Pluf_Shortcuts_GetObjectOr404('SDP_Tag', $tagId);
+        $asset->setAssoc($tag);
+        return new Pluf_HTTP_Response_Json($tag);
+    }
+
+    public static function removeTag($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['tagId'])) {
+            $tagId = $match['tagId'];
+        } else {
+            $tagId = $request->REQUEST['tagId'];
+        }
+        $tag = Pluf_Shortcuts_GetObjectOr404('SDP_Tag', $tagId);
+        $asset->delAssoc($tag);
+        return new Pluf_HTTP_Response_Json($tag);
+    }
+    // *******************************************************************
+    // Categories of Asset
+    // *******************************************************************
+    public static function categories($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        $category = new SDP_Category();
+        $categoryTable = $category->_a['table'];
+        $assocTable = 'sdp_asset_sdp_category_assoc';
+        $category->_a['views']['myView'] = array(
+            'select' => $category->getSelect(),
+            'join' => 'LEFT JOIN ' . $assocTable . ' ON ' . $categoryTable . '.id=' . $assocTable . '.sdp_category_id'
+        );
+        
+        $page = new Pluf_Paginator($category);
+        $sql = new Pluf_SQL('sdp_asset_id=%s', array(
+            $asset->id
+        ));
+        $page->forced_where = $sql;
+        $page->model_view = 'myView';
+        $page->list_filters = array(
+            'id',
+            'name',
+            'parent'
+        );
+        $search_fields = array(
+            'name',
+            'description'
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'parent',
+            'creation_date',
+            'modif_dtime'
+        );
+        $page->configure(array(), $search_fields, $sort_fields);
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    public static function addCategory($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['categoryId'])) {
+            $categoryId = $match['categoryId'];
+        } else {
+            $categoryId = $request->REQUEST['categoryId'];
+        }
+        $category = Pluf_Shortcuts_GetObjectOr404('SDP_Category', $categoryId);
+        $asset->setAssoc($category);
+        return new Pluf_HTTP_Response_Json($category);
+    }
+
+    public static function removeCategory($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['categoryId'])) {
+            $categoryId = $match['categoryId'];
+        } else {
+            $categoryId = $request->REQUEST['categoryId'];
+        }
+        $category = Pluf_Shortcuts_GetObjectOr404('SDP_Category', $categoryId);
+        $asset->delAssoc($category);
+        return new Pluf_HTTP_Response_Json($category);
+    }
 }
