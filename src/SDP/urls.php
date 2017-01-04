@@ -1,7 +1,7 @@
 <?php
 return array(
     // ************************************************************* Assets
-    array( // Assets urls
+    array( // Create
         'regex' => '#^/asset/new$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'create',
@@ -11,31 +11,31 @@ return array(
             'SaaS_Precondition::tenantMember'
         )
     ),
-    array(
+    array( // Find
         'regex' => '#^/asset/find$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'find',
         'http-method' => 'GET'
     ),
-    array( // Asset urls
+    array( // Get information
         'regex' => '#^/asset/(?P<id>\d+)$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'get',
         'http-method' => 'GET'
     ),
-    array(
+    array( // Delete
         'regex' => '#^/asset/(?P<id>\d+)$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'delete',
         'http-method' => 'DELETE'
     ),
-    array( // Asset urls
+    array( // Update
         'regex' => '#^/asset/(?P<id>\d+)$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'update',
         'http-method' => 'POST'
     ),
-    array( // Asset urls
+    array( // Find childs (if asset is folder)
         'regex' => '#^/asset/(?P<id>\d+)/find$#',
         'model' => 'SDP_Views_Asset',
         'method' => 'findchild',
