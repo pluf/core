@@ -37,6 +37,7 @@ class Bank_Backend extends Pluf_Model
     {
         $this->_a['table'] = 'bank_backend';
         $this->_a['model'] = 'Bank_Backend';
+        $this->_a['Multitenant'] = true;
         $this->_model = 'Bank_Backend';
         $this->_a['cols'] = array(
                 'id' => array(

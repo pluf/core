@@ -48,6 +48,7 @@ class Bank_Receipt extends Pluf_Model
     function init ()
     {
         $this->_a['table'] = 'bank_receipt';
+        $this->_a['Multitenant'] = true;
         $this->_a['model'] = 'Bank_Receipt';
         $this->_model = 'Bank_Receipt';
         $this->_a['cols'] = array (
