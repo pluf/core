@@ -53,14 +53,6 @@ class Bank_Views_Backend
                 'DESC'
         );
         $pag->setFromRequest($request);
-        if (! Pluf::f('bank_centeral', true)) {
-            // XXX: maso, 1395: این بخش باید تست بشه
-            $pag->forced_where = new Pluf_SQL('tenant=%s', 
-                    array(
-                            'tenant',
-                            $request->tenant->id
-                    ));
-        }
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 

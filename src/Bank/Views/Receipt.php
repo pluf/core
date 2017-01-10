@@ -52,10 +52,6 @@ class Bank_Views_Receipt
                 'DESC'
         );
         $pag->setFromRequest($request);
-        $pag->forced_where = new Pluf_SQL('tenant=%s', 
-                array(
-                        $request->tenant->id
-                ));
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 

@@ -120,12 +120,6 @@ class Bank_Receipt extends Pluf_Model
 				 * مالک این پرداخت را تعیین می‌کند. این مالک می‌تواند هر موجودیتی در
 				 * سیستم باشد.
 				 */
-				'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
-                        'blank' => false,
-                        'relate_name' => 'tenant'
-                ),
                 'owner_id' => array(
                         'type' => 'Pluf_DB_Field_Integer',
                         'blank' => false,
