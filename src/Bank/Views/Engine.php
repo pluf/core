@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
+Pluf::loadFunction('Bank_Shortcuts_GetEngineOr404');
 
 /**
  *
  * @author maso <mostafa.barmsohry@dpq.co.ir>
  *        
  */
-class SaaSBank_Views_Engine
+class Bank_Views_Engine
 {
 
     /**
@@ -34,7 +34,7 @@ class SaaSBank_Views_Engine
     public function find ($request, $match)
     {
         // XXX: maso, 1395:
-        $items = SaaSBank_Service::engines();
+        $items = Bank_Service::engines();
         $page = array(
                 'items' => $items,
                 'counts' => count($items),
@@ -60,6 +60,6 @@ class SaaSBank_Views_Engine
     public function get ($request, $match)
     {
         return new Pluf_HTTP_Response_Json(
-                SaaSBank_Shortcuts_GetEngineOr404($match['type']));
+                Bank_Shortcuts_GetEngineOr404($match['type']));
     }
 }

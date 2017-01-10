@@ -22,7 +22,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaSBank_Form_ReceiptNew extends Pluf_Form
+class Bank_Form_ReceiptNew extends Pluf_Form
 {
 
     /**
@@ -82,7 +82,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
 
     function clean_backend ()
     {
-        $backend = Pluf::factory('SaaSBank_Backend', 
+        $backend = Pluf::factory('Bank_Backend', 
                 $this->cleaned_data['backend']);
         if ($backend->isAnonymous()) {
             throw new Pluf_Exception('backend not found');
@@ -95,7 +95,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
      *
      * @param string $commit            
      * @throws Pluf_Exception
-     * @return SaaSBank_Backend
+     * @return Bank_Backend
      */
     function save ($commit = true)
     {
@@ -105,7 +105,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
                     'Cannot save a receipt from an invalid form.');
         }
         // Set attributes
-        $receipt = new SaaSBank_Receipt();
+        $receipt = new Bank_Receipt();
         $receipt->setFromFormData($this->cleaned_data);
         $receipt->tenant = $this->tenant;
         $receipt->secure_id = $this->getSecureKey();
@@ -125,7 +125,7 @@ class SaaSBank_Form_ReceiptNew extends Pluf_Form
      */
     private function getSecureKey ()
     {
-        $recipt = new SaaSBank_Receipt();
+        $recipt = new Bank_Receipt();
         while (1) {
             $key = sha1(
                     microtime() . rand(0, 123456789) . Pluf::f('secret_key'));

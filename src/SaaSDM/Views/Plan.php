@@ -104,7 +104,7 @@ class SaaSDM_Views_Plan {
 		$backend = $request->REQUEST['backend'];
 		
 
-		$payment = SaaSBank_Service::create ( $request, array (
+		$payment = Bank_Service::create ( $request, array (
 				'amount' => $plan->price, // مقدار پرداخت به ریال
 				'title' => 'خرید پلن  ' . $plan->id,
 				'description' => 'description',
@@ -128,7 +128,7 @@ class SaaSDM_Views_Plan {
 		
 		$plan = SaaSDM_Shortcuts_GetPlanOr404($match['planId']);
 		
-		SaaSBank_Service::update($plan->get_payment());
+		Bank_Service::update($plan->get_payment());
 		
 		if ($plan->get_payment()->isPayed())
 			$plan->activate();

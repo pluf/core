@@ -21,7 +21,7 @@ return array(
         // اطلاعات بسته
         array(
                 'regex' => '#^/$#',
-                'model' => 'SaaSBank_Views_Main',
+                'model' => 'Bank_Views_Main',
                 'method' => 'modeul',
                 'http-method' => array(
                         'GET'
@@ -30,7 +30,7 @@ return array(
         // متورهای پرداخت
         array(
                 'regex' => '#^/engine/find$#',
-                'model' => 'SaaSBank_Views_Engine',
+                'model' => 'Bank_Views_Engine',
                 'method' => 'find',
                 'http-method' => array(
                         'GET'
@@ -38,7 +38,7 @@ return array(
         ),
         array(
                 'regex' => '#^/engine/(?P<type>.+)$#',
-                'model' => 'SaaSBank_Views_Engine',
+                'model' => 'Bank_Views_Engine',
                 'method' => 'get',
                 'http-method' => array(
                         'GET'
@@ -48,7 +48,7 @@ return array(
         // پشتوانه‌ها
         array(
                 'regex' => '#^/backend/find$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'find',
                 'http-method' => array(
                         'GET'
@@ -56,7 +56,7 @@ return array(
         ),
         array(
                 'regex' => '#^/backend/new$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'createParameter',
                 'http-method' => array(
                         'GET'
@@ -64,7 +64,7 @@ return array(
         ),
         array(
                 'regex' => '#^/backend/new$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'create',
                 'http-method' => array(
                         'POST'
@@ -72,7 +72,7 @@ return array(
         ),
         array(
                 'regex' => '#^/backend/(?P<id>\d+)$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'get',
                 'http-method' => array(
                         'GET'
@@ -80,7 +80,7 @@ return array(
         ),
         array(
                 'regex' => '#^/backend/(?P<id>\d+)$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'update',
                 'http-method' => array(
                         'POST'
@@ -88,7 +88,7 @@ return array(
         ),
         array(
                 'regex' => '#^/backend/(?P<id>\d+)$#',
-                'model' => 'SaaSBank_Views_Backend',
+                'model' => 'Bank_Views_Backend',
                 'method' => 'delete',
                 'http-method' => array(
                         'DELETE'
@@ -100,7 +100,7 @@ return array(
          */
         array(
                 'regex' => '#^/receipt/find$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'find',
                 'http-method' => array(
                         'GET'
@@ -108,7 +108,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/new$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'create',
                 'http-method' => array(
                         'POST'
@@ -116,7 +116,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/(?P<id>\d+)$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'get',
                 'http-method' => array(
                         'GET'
@@ -124,7 +124,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/(?P<secure_id>.+)$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'getBySecureId',
                 'http-method' => array(
                         'GET'
@@ -132,7 +132,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/(?P<id>\d+)$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'update',
                 'http-method' => array(
                         'POST'
@@ -140,7 +140,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/(?P<secure_id>.+)$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'updateBySecureId',
                 'http-method' => array(
                         'POST'
@@ -148,7 +148,7 @@ return array(
         ),
         array(
                 'regex' => '#^/receipt/(?P<id>.+)$#',
-                'model' => 'SaaSBank_Views_Receipt',
+                'model' => 'Bank_Views_Receipt',
                 'method' => 'delete',
                 'http-method' => array(
                         'DELETE'

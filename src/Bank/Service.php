@@ -23,7 +23,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaSBank_Service
+class Bank_Service
 {
 
     /**
@@ -65,14 +65,14 @@ class SaaSBank_Service
      * @param HTTP_REQUEST $request            
      * @param array $receiptParam            
      * @param Pluf_Model $owner            
-     * @return SaaSBank_Receipt
+     * @return Bank_Receipt
      */
     public static function create ($request, $param, $owner = null)
     {
         $extra = array(
                 'tenant' => $request->tenant
         );
-        $form = new SaaSBank_Form_ReceiptNew($param, $extra);
+        $form = new Bank_Form_ReceiptNew($param, $extra);
         $receipt = $form->save(false);
         $backend = $receipt->get_backend();
         $engine = $backend->get_engine();
@@ -92,8 +92,8 @@ class SaaSBank_Service
      * سمت بانک انجام شده است. این فراخوانی این بررسی رو انجام می‌ده و حالت
      * پرداخت رو به روز می‌کنه.
      *
-     * @param SaaSBank_Receipt $receipt            
-     * @return SaaSBank_Receipt
+     * @param Bank_Receipt $receipt            
+     * @return Bank_Receipt
      */
     public static function update ($receipt)
     {
@@ -108,13 +108,13 @@ class SaaSBank_Service
     /**
      * فهرست متورهای پرداخت موجود را تعیین می‌کند
      *
-     * @return SaaSBank_Engine_Mellat[]|SaaSBank_Engine_Zarinpal[]
+     * @return Bank_Engine_Mellat[]|Bank_Engine_Zarinpal[]
      */
     public static function engines ()
     {
         return array(
-                new SaaSBank_Engine_Mellat(),
-                new SaaSBank_Engine_Zarinpal()
+                new Bank_Engine_Mellat(),
+                new Bank_Engine_Zarinpal()
         );
     }
 }

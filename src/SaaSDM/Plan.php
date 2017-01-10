@@ -88,7 +88,7 @@ class SaaSDM_Plan extends Pluf_Model {
 				),
 				'payment' => array(
 						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaSBank_Receipt',
+						'model' => 'Bank_Receipt',
 						'blank' => false,
 						'editable' => false,
 						'readable' => true,

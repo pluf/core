@@ -19,19 +19,34 @@
 
 /**
  * 
- * 
- * @author maso <mostafa.barmsohry@dpq.co.ir>
+ * @author maso<mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaSBank_Views_Main {
+class Bank_Engine_Mellat extends Bank_Engine {
+	
+	/*
+	 *
+	 */
+	public function getTitle() {
+		return 'Mellat';
+	}
+	
+	/*
+	 *
+	 */
+	public function getDescription() {
+		return 'Mellat Payment Service';
+	}
 	
 	/**
-	 *
-	 * @param unknown $request        	
-	 * @param unknown $match        	
 	 */
-	public function module($request, $match) {
-// 		$params = array ();
-// 		return Pluf_Shortcuts_RenderToResponse ( 'index.html', $params, $request );
+	public function create() {
+		// XXX: maso, 1395: ایجاد یک پرداخت
+	}
+	
+	/**
+	 */
+	public function update() {
+		// XXX: maso, 1395: ایجاد یک پرداخت
 	}
 }

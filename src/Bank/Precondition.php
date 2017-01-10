@@ -23,6 +23,6 @@
  * @author maso
  *
  */
-class SaaSBank_Precondition {
+class Bank_Precondition {
 	
 }

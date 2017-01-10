@@ -16,9 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
 
-class SaaSBank_Backend extends Pluf_Model
+/**
+ * ساختارهای داده‌ای برای رسید را ایجاد می‌کند.
+ * 
+ * رسید عبارت است از یک مجموعه از داده‌ها که برای پرداخت به بانک ارسال 
+ * می‌شود. این رسید زمانی که بانک تایید کند به روز شده و اطلاعات دریافتی
+ * از بانک نیز به آن اضافه می شود.
+ * 
+ * از رسید در کارهای متفاوتی می‌توان استفاده کرد. برای نمونه پرداخت‌هایی
+ * که برای خرید یک کالا توسط یک فرد انجام می‌شود در ساختار رسید قرار می‌گیرد.
+ * 
+ * @author maso
+ *
+ */
+class Bank_Receipt extends Pluf_Model
 {
 
     public $data = array();
@@ -35,14 +47,26 @@ class SaaSBank_Backend extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'saasbank_backend';
-        $this->_a['model'] = 'SaaSBank_Backend';
-        $this->_model = 'SaaSBank_Backend';
-        $this->_a['cols'] = array(
-                'id' => array(
+        $this->_a['table'] = 'bank_receipt';
+        $this->_a['model'] = 'Bank_Receipt';
+        $this->_model = 'Bank_Receipt';
+        $this->_a['cols'] = array (
+				/*
+				 * داده‌های عمومی برای یک پرداخت
+				 */
+				'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
-                        'blank' => true,
-                        'verbose' => 'unique and no repreducable id fro reception'
+                        'blank' => true
+                ),
+                'secure_id' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 64
+                ),
+                'amount' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'unique' => false
                 ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -54,28 +78,60 @@ class SaaSBank_Backend extends Pluf_Model
                         'blank' => true,
                         'size' => 200
                 ),
-                'symbol' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 50
-                ),
-                'home' => array(
+                'email' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 50
+                        'size' => 100
                 ),
-                'redirect' => array(
+                'phone' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 50,
-                        'secure' => true
+                        'blank' => true,
+                        'size' => 100
                 ),
-                'meta' => array(
+                // مسیر را تعیین می‌کند که بعد از تکمیل باید فراخوانی شود
+                'callbackURL' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'secure' => true
+                        'blank' => true,
+                        'size' => 200
                 ),
-                'engine' => array(
+                
+                'payRef' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                // مسیری رو تعیین می‌کنه که برای تکمیل خرید باید دنبال کنیم
+                'callURL' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 200
+                ),
+                'payMeta' => array(
+                        'type' => 'Pluf_DB_Field_Text',
+                        'blank' => false
+                ),
+                'backend' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Bank_Backend',
+                        'blank' => false,
+                        'relate_name' => 'backend'
+                ),
+				/*
+				 * مالک این پرداخت را تعیین می‌کند. این مالک می‌تواند هر موجودیتی در
+				 * سیستم باشد.
+				 */
+				'tenant' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'SaaS_Application',
+                        'blank' => false,
+                        'relate_name' => 'tenant'
+                ),
+                'owner_id' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'verbose' => 'owner ID'
+                ),
+                'owner_class' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 50
@@ -92,23 +148,42 @@ class SaaSBank_Backend extends Pluf_Model
                         'verbose' => 'modification date'
                 )
         );
-        $this->_a['views'] = array(
-                'global' => array(
-                        'select' => $this->getGlobalSelect()
-                )
-        );
+        $this->_a['views'] = array();
     }
 
-    /*
-     * @see Pluf_Model::preSave()
+    /**
+     * پیش ذخیره را انجام می‌دهد
+     *
+     * در این فرآیند نیازهای ابتدایی سیستم به آن اضافه می‌شود. این نیازها
+     * مقادیری هستند که
+     * در زمان ایجاد باید تعیین شوند. از این جمله می‌توان به کاربر و تاریخ اشاره
+     * کرد.
+     *
+     * @param $create حالت
+     *            ساخت یا به روز رسانی را تعیین می‌کند
      */
     function preSave ($create = false)
     {
-        $this->meta = serialize($this->data);
+        $this->payMeta = serialize($this->data);
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
+    }
+
+    /**
+     * حالت آپارتمان ایجاد شده را به روز می‌کند
+     *
+     * @see Pluf_Model::postSave()
+     */
+    function postSave ($create = false)
+    {
+        if (! is_null($this->callbackURL) &&
+                 strpos($this->callbackURL, '{secure_id}')) {
+            $this->callbackURL = str_replace('{secure_id}', $this->secure_id, 
+                    $this->callbackURL);
+            $this->update();
+        }
     }
 
     /**
@@ -118,7 +193,7 @@ class SaaSBank_Backend extends Pluf_Model
      */
     function restore ()
     {
-        $this->data = unserialize($this->meta);
+        $this->data = unserialize($this->payMeta);
     }
 
     /**
@@ -154,7 +229,7 @@ class SaaSBank_Backend extends Pluf_Model
         }
         $this->touched = true;
     }
-    
+
     /**
      * داده معادل با کلید تعیین شده را برمی‌گرداند
      *
@@ -174,30 +249,16 @@ class SaaSBank_Backend extends Pluf_Model
         }
     }
 
-    private function getGlobalSelect ()
-    {
-        if (isset($this->_cache['getGlobalSelect']))
-            return $this->_cache['getGlobalSelect'];
-        $select = array();
-        $table = $this->getSqlTable();
-        foreach ($this->_a['cols'] as $col => $val) {
-            if (($val['type'] == 'Pluf_DB_Field_Manytomany') ||
-                     (array_key_exists('secure', $val) && $val['secure'])) {
-                continue;
-            }
-            $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
-                     $this->_con->qn($col);
-        }
-        $this->_cache['getSelect'] = implode(', ', $select);
-        return $this->_cache['getSelect'];
-    }
-
     /**
+     * آیا پرداخت انجام شده یا نه
      *
-     * @return unknown
+     * در صورتی که پرداخت انجام شده باشد برای آن لینک مرجع وجود دارد. این
+     * فراخوانی بررسی می‌کند که آیا شمار مرجع وچود دارد یا نه.
+     *
+     * @return boolean
      */
-    public function get_engine ()
+    function isPayed ()
     {
-        return SaaSBank_Shortcuts_GetEngineOr404($this->engine);
+        return ! is_null($this->payRef);
     }
 }

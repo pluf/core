@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
-Pluf::loadFunction('SaaSBank_Shortcuts_GetReceiptOr404');
+Pluf::loadFunction('Bank_Shortcuts_GetEngineOr404');
+Pluf::loadFunction('Bank_Shortcuts_GetReceiptOr404');
 
 /**
  *
  * @author maso <mostafa.barmsohry@dpq.co.ir>
  *        
  */
-class SaaSBank_Views_Receipt
+class Bank_Views_Receipt
 {
 
     /**
@@ -34,7 +34,7 @@ class SaaSBank_Views_Receipt
      */
     public function find ($request, $match)
     {
-        $pag = new Pluf_Paginator(new SaaSBank_Receipt());
+        $pag = new Pluf_Paginator(new Bank_Receipt());
         $pag->configure(array(), 
                 array( // search
                         'title',
@@ -67,7 +67,7 @@ class SaaSBank_Views_Receipt
      */
     public function create ($request, $match)
     {
-        $receipt = SaaSBank_Service::create($request, $request->REQUEST);
+        $receipt = Bank_Service::create($request, $request->REQUEST);
         return new Pluf_HTTP_Response_Json($receipt);
     }
 
@@ -78,7 +78,7 @@ class SaaSBank_Views_Receipt
      */
     public function get ($request, $match)
     {
-        $receipt = SaaSBank_Shortcuts_GetReceiptOr404($match['id']);
+        $receipt = Bank_Shortcuts_GetReceiptOr404($match['id']);
         return new Pluf_HTTP_Response_Json($receipt);
     }
 
@@ -89,7 +89,7 @@ class SaaSBank_Views_Receipt
      */
     public function getBySecureId ($request, $match)
     {
-        $receipt = new SaaSBank_Receipt();
+        $receipt = new Bank_Receipt();
         $sql = new Pluf_SQL('secure_id=%s', 
                 array(
                         $match['secure_id']
@@ -105,8 +105,8 @@ class SaaSBank_Views_Receipt
      */
     public function update ($request, $match)
     {
-        $receipt = SaaSBank_Shortcuts_GetReceiptOr404($match['id']);
-        return new Pluf_HTTP_Response_Json(SaaSBank_Service::update($receipt));
+        $receipt = Bank_Shortcuts_GetReceiptOr404($match['id']);
+        return new Pluf_HTTP_Response_Json(Bank_Service::update($receipt));
     }
 
     /**
@@ -116,7 +116,7 @@ class SaaSBank_Views_Receipt
      */
     public function updateBySecureId ($request, $match)
     {
-        $receipt = new SaaSBank_Receipt();
+        $receipt = new Bank_Receipt();
         $sql = new Pluf_SQL('secure_id=%s', 
                 array(
                         $match['secure_id']
@@ -137,7 +137,7 @@ class SaaSBank_Views_Receipt
      */
     public function delete ($request, $match)
     {
-        $receipt = SaaSBank_Shortcuts_GetReceiptOr404($match['id']);
+        $receipt = Bank_Shortcuts_GetReceiptOr404($match['id']);
         $receipt->delete();
         return new Pluf_HTTP_Response_Json($receipt);
     }

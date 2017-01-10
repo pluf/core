@@ -19,34 +19,25 @@
 
 /**
  * 
- * @author maso<mostafa.barmshory@dpq.co.ir>
+ * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaSBank_Engine_Mellat extends SaaSBank_Engine {
-	
-	/*
-	 *
-	 */
-	public function getTitle() {
-		return 'Mellat';
-	}
-	
-	/*
-	 *
-	 */
-	public function getDescription() {
-		return 'Mellat Payment Service';
-	}
-	
-	/**
-	 */
-	public function create() {
-		// XXX: maso, 1395: ایجاد یک پرداخت
-	}
-	
-	/**
-	 */
-	public function update() {
-		// XXX: maso, 1395: ایجاد یک پرداخت
-	}
+class Bank_Exception_EngineNotFound extends Pluf_Exception
+{
+
+    /**
+     * یک نمونه از این کلاس ایجاد می‌کند.
+     *
+     * @param string $message            
+     * @param Pluf_Exception $previous            
+     * @param string $link            
+     * @param string $developerMessage            
+     */
+    public function __construct ($message = "Engine not found.", $previous = null, $link = null, 
+            $developerMessage = null)
+    {
+        // XXX: maso, 1395: تعیین کد خطا
+        parent::__construct($message, 4401, $previous, 404, $link, 
+                $developerMessage);
+    }
 }

@@ -18,24 +18,12 @@
  */
 
 /**
- * فرم کلی ایجاد یک متور پرداخت جدید
- * 
- * این فرم به صورت خودکار پارامترهای مورد استفاده در متورهای پرداخت را تعیین کرده
- * و بر اساس آن فیلدهای دریافتی را فیلتر می‌کند. در نهای بر اساس این داده‌ها یک متور
- * پرداخت جدید ایجاد خواهد شد.
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaSBank_Form_BackendNew extends Pluf_Form
+class Bank_Form_BackendUpdate extends Pluf_Form
 {
-
-    /**
-     * ملکی که متور به آن تعلق دارد
-     * 
-     * @var unknown
-     */
-    var $tenant;
 
     
     /**
@@ -43,17 +31,17 @@ class SaaSBank_Form_BackendNew extends Pluf_Form
      * 
      * @var unknown
      */
-    var $engine;
+    var $backend;
 
     /*
      * 
      */
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        $this->engine = $extra['engine'];
+        $this->backend = $extra['backend'];
         
-        $params = $this->engine->getParameters();
+        $engin =  $this->backend->get_engine();
+        $params = $engin->getParameters();
         foreach ($params['children'] as $param) {
             $options = array(
                     // 'required' => $param['required']
@@ -80,9 +68,9 @@ class SaaSBank_Form_BackendNew extends Pluf_Form
      *
      * @param string $commit            
      * @throws Pluf_Exception
-     * @return SaaSBank_Backend
+     * @return Bank_Backend
      */
-    function save ($commit = true)
+    function update ($commit = true)
     {
         if (! $this->isValid()) {
             // TODO: maso, 1395: باید از خطای مدل فرم استفاده شود.
@@ -90,18 +78,15 @@ class SaaSBank_Form_BackendNew extends Pluf_Form
                     __('Cannot save the backend from an invalid form.'));
         }
         // Set attributes
-        $backend = new SaaSBank_Backend();
-        $backend->setFromFormData($this->cleaned_data);
-        $backend->tenant = $this->tenant;
-        $backend->engine = $this->engine->getType();
+        $this->backend->setFromFormData($this->cleaned_data);
         // TODO: maso, 1395: تنها پارامترهایی اضافه باید به صورت کد شده در
         // موجودیت قرار گیرد.
         if ($commit) {
-            if (! $backend->create()) {
+            if (! $this->backend->update()) {
                 throw new Pluf_Exception(__('Fail to create the backend.'));
             }
         }
-        return $backend;
+        return $this->backend;
     }
 }
 

@@ -23,10 +23,10 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaSBank_Engine implements JsonSerializable
+class Bank_Engine implements JsonSerializable
 {
 
-    const ENGINE_PREFIX = 'saasbank_engine_';
+    const ENGINE_PREFIX = 'bank_engine_';
 
     /**
      *
@@ -37,11 +37,11 @@ class SaaSBank_Engine implements JsonSerializable
         $name = strtolower(get_class($this));
         // NOTE: maso, 1395: تمام متورهای پرداخت باید در پوشه تعیین شده قرار
         // بگیرند
-        if (strpos($name, SaaSBank_Engine::ENGINE_PREFIX) !== 0) {
-            throw new SaaSBank_Exception_EngineLoad(
+        if (strpos($name, Bank_Engine::ENGINE_PREFIX) !== 0) {
+            throw new Bank_Exception_EngineLoad(
                     'Engine class must be placed in engine package.');
         }
-        return substr($name, strlen(SaaSBank_Engine::ENGINE_PREFIX));
+        return substr($name, strlen(Bank_Engine::ENGINE_PREFIX));
     }
 
     /**

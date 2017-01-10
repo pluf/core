@@ -87,11 +87,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'SaaSNewspaper/urls.php' 
 		),
-		// SaaSBank
+		// Bank
 		array ( 
 				'regex' => '#^/api/bank#',
 				'base' => $base,
-				'sub' => include 'SaaSBank/urls.php' 
+				'sub' => include 'Bank/urls.php' 
 		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',

@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('SaaSBank_Shortcuts_GetEngineOr404');
+Pluf::loadFunction('Bank_Shortcuts_GetEngineOr404');
 
 /**
  *
  * @author maso <mostafa.barmsohry@dpq.co.ir>
  *        
  */
-class SaaSBank_Views_Backend
+class Bank_Views_Backend
 {
     // XXX: maso, 1395: add security
     /**
@@ -34,8 +34,7 @@ class SaaSBank_Views_Backend
      */
     public function find ($request, $match)
     {
-        throw new Exception();
-        $pag = new Pluf_Paginator(new SaaSBank_Backend());
+        $pag = new Pluf_Paginator(new Bank_Backend());
         $pag->configure(array(), 
                 array( // search
                         'title',
@@ -54,7 +53,7 @@ class SaaSBank_Views_Backend
                 'DESC'
         );
         $pag->setFromRequest($request);
-        if (! Pluf::f('saas_bank_centeral', true)) {
+        if (! Pluf::f('bank_centeral', true)) {
             // XXX: maso, 1395: این بخش باید تست بشه
             $pag->forced_where = new Pluf_SQL('tenant=%s', 
                     array(
@@ -76,7 +75,7 @@ class SaaSBank_Views_Backend
         if (array_key_exists('type', $request->REQUEST)) {
             $type = $request->REQUEST['type'];
         }
-        $engine = SaaSBank_Shortcuts_GetEngineOr404($type);
+        $engine = Bank_Shortcuts_GetEngineOr404($type);
         return new Pluf_HTTP_Response_Json($engine->getParameters());
     }
 
@@ -92,12 +91,12 @@ class SaaSBank_Views_Backend
         if (array_key_exists('type', $request->REQUEST)) {
             $type = $request->REQUEST['type'];
         }
-        $engine = SaaSBank_Shortcuts_GetEngineOr404($type);
+        $engine = Bank_Shortcuts_GetEngineOr404($type);
         $params = array(
                 'tenant' => $request->tenant,
                 'engine' => $engine
         );
-        $form = new SaaSBank_Form_BackendNew($request->REQUEST, $params);
+        $form = new Bank_Form_BackendNew($request->REQUEST, $params);
         $backend = $form->save();
         return new Pluf_HTTP_Response_Json($backend);
     }
@@ -109,7 +108,7 @@ class SaaSBank_Views_Backend
      */
     public function get ($request, $match)
     {
-        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        $backend = Bank_Shortcuts_GetBankOr404($match['id']);
         return new Pluf_HTTP_Response_Json($backend);
     }
 
@@ -120,7 +119,7 @@ class SaaSBank_Views_Backend
      */
     public function delete ($request, $match)
     {
-        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        $backend = Bank_Shortcuts_GetBankOr404($match['id']);
         $backend->delete();
         return new Pluf_HTTP_Response_Json($backend);
     }
@@ -132,11 +131,11 @@ class SaaSBank_Views_Backend
      */
     public function update ($request, $match)
     {
-        $backend = SaaSBank_Shortcuts_GetBankOr404($match['id']);
+        $backend = Bank_Shortcuts_GetBankOr404($match['id']);
         $params = array(
                 'backend' => $backend
         );
-        $form = new SaaSBank_Form_BackendUpdate($request->REQUEST, $params);
+        $form = new Bank_Form_BackendUpdate($request->REQUEST, $params);
         $backend = $form->update();
         return new Pluf_HTTP_Response_Json($backend);
     }

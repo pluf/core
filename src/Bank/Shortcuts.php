@@ -24,10 +24,10 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
  * در صورتی که پیش از این نمونه‌ای برای پرداخت ایجاد شده باشد آن را به عنوان
  * نتیجه برمی‌گرداند.
  *
- * @param SaaSBank_Receipt $object            
- * @return SaaSBank_Receipt
+ * @param Bank_Receipt $object            
+ * @return Bank_Receipt
  */
-function SaaSBank_Shortcuts_receiptFactory ($object)
+function Bank_Shortcuts_receiptFactory ($object)
 {
     if ($object == null || ! isset($object))
         return new Bank_Receipt();
@@ -38,29 +38,29 @@ function SaaSBank_Shortcuts_receiptFactory ($object)
  * یک متور پرداخت را پیدا می‌کند.
  *
  * @param unknown $type            
- * @throws SaaSBank_Exception_EngineNotFound
+ * @throws Bank_Exception_EngineNotFound
  * @return unknown
  */
-function SaaSBank_Shortcuts_GetEngineOr404 ($type)
+function Bank_Shortcuts_GetEngineOr404 ($type)
 {
-    $items = SaaSBank_Service::engines();
+    $items = Bank_Service::engines();
     foreach ($items as $item) {
         if ($item->getType() === $type) {
             return $item;
         }
     }
-    throw new SaaSBank_Exception_EngineNotFound();
+    throw new Bank_Exception_EngineNotFound();
 }
 
 /**
  *
  * @param unknown $id            
  * @throws Pluf_HTTP_Error404
- * @return SaaSBank_Backend
+ * @return Bank_Backend
  */
-function SaaSBank_Shortcuts_GetBankOr404 ($id)
+function Bank_Shortcuts_GetBankOr404 ($id)
 {
-    $item = new SaaSBank_Backend($id);
+    $item = new Bank_Backend($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
@@ -71,11 +71,11 @@ function SaaSBank_Shortcuts_GetBankOr404 ($id)
  *
  * @param unknown $id            
  * @throws Pluf_HTTP_Error404
- * @return SaaSBank_Receipt
+ * @return Bank_Receipt
  */
-function SaaSBank_Shortcuts_GetReceiptOr404 ($id)
+function Bank_Shortcuts_GetReceiptOr404 ($id)
 {
-    $item = new SaaSBank_Receipt($id);
+    $item = new Bank_Receipt($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }

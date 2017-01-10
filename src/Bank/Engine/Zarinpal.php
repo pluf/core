@@ -22,7 +22,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
+class Bank_Engine_Zarinpal extends Bank_Engine
 {
 
     const MerchantID = 'MerchantID';
@@ -75,7 +75,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
     public function create ($receipt)
     {
         $backend = $receipt->get_backend();
-        $MerchantID = $backend->get(SaaSBank_Engine_Zarinpal::MerchantID);
+        $MerchantID = $backend->get(Bank_Engine_Zarinpal::MerchantID);
         $Authority = $receipt->getMeta('Authority', null);
         // Check
         Pluf_Assert::assertNull($Authority, 'Receipt is created before');
@@ -102,7 +102,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
         
         // Redirect to URL You can do it also by creating a form
         if ($result->Status != 100) {
-            throw new SaaSBank_Exception_Engine('fail to create payment');
+            throw new Bank_Exception_Engine('fail to create payment');
         }
         $receipt->putMeta('Authority', $result->Authority);
         $receipt->callUrl = 'https://www.zarinpal.com/pg/StartPay/' .
@@ -114,7 +114,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
     public function update ($receipt)
     {
         $backend = $receipt->get_backend();
-        $MerchantID = $backend->get(SaaSBank_Engine_Zarinpal::MerchantID);
+        $MerchantID = $backend->get(Bank_Engine_Zarinpal::MerchantID);
         $Authority = $receipt->getMeta('Authority', null);
         // Check
         Pluf_Assert::assertNotNull($Authority, 'Receipt is created before');
@@ -137,7 +137,7 @@ class SaaSBank_Engine_Zarinpal extends SaaSBank_Engine
                         'Amount' => $receipt->amount
                 ]);
         if ($result->Status == 100) {
-            throw new SaaSBank_Exception_Engine('fail to check payment');
+            throw new Bank_Exception_Engine('fail to check payment');
         }
         $receipt->payRef = $result->RefID;
         return true;
