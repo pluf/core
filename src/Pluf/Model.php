@@ -73,6 +73,7 @@ class Pluf_Model implements JsonSerializable
     // added by some fields
     function __construct ($pk = null, $values = array())
     {
+        $this->_model = get_class($this);
         $this->_init();
         if ((int) $pk > 0) {
             $this->get($pk); // Should not have a side effect
@@ -108,6 +109,7 @@ class Pluf_Model implements JsonSerializable
             return;
         }
         $this->init();
+        $this->_a['model'] = get_class($this);
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']('', $col);
             $col_lower = strtolower($col);
