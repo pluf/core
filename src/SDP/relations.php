@@ -37,5 +37,11 @@ return array(
         'relate_to_many' => array(
             'SDP_Asset'
         )
+    ),
+    'SDP_Profile' => array(
+        'relate_to' => array(
+            'Pluf_User'
+        )
     )
+    
 );

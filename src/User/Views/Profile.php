@@ -28,11 +28,13 @@ class User_Views_Profile
         if ($profile_model === false) {
             throw new Pluf_Exception(__('Profile model is not configured.'));
         }
+        $userId = $match['userId'];
+        $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $userId);
         try {
-            $profile = $request->user->getProfile();
+            $profile = $user->getProfile();
         } catch (Pluf_Exception_DoesNotExist $ex) {
             $profile = new $profile_model();
-            $profile->user = $request->user;
+            $profile->user = $user;
             $profile->create();
         }
         return new Pluf_HTTP_Response_Json($profile);
@@ -72,6 +74,8 @@ class User_Views_Profile
         // TODO: Hadi, 1395-07-23: should consider security permissions
         $currentUser = $request->user;
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        return User_Shortcuts_UpdateProfile($user, $request->REQUEST);
+        if($currentUser.id === $user.id || SaaS_Precondition::tenantOwner($request))
+            return User_Shortcuts_UpdateProfile($user, $request->REQUEST);
+        throw new Pluf_Exception_PermissionDenied("Permission is denied");
     }
 }
