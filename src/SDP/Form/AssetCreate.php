@@ -1,4 +1,5 @@
 <?php
+Pluf::loadFunction('SaaSDM_Shortcuts_GetAssetOr404');
 
 /**
  * ایجاد یک دارایی جدید
