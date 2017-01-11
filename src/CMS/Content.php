@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,9 +20,9 @@
 
 /**
  * ساختار داده‌ای یک دستگاه را تعیین می‌کند.
- * 
- * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
+ * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
+ *        
  */
 class CMS_Content extends Pluf_Model
 {
@@ -79,22 +80,14 @@ class CMS_Content extends Pluf_Model
                         'help_text' => __('content mime type'),
                         'editable' => false
                 ),
-                'tag' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
-                        'size' => 20,
-                        'default' => 'binary',
-                        'verbose' => __('tag'),
-                        'help_text' => __('content tag'),
-                        'editable' => true
-                ),
                 'file_path' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 250,
                         'verbose' => __('file path'),
                         'help_text' => __('content file path'),
-                        'editable' => false
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'file_name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -135,32 +128,12 @@ class CMS_Content extends Pluf_Model
                         'verbose' => __('modification'),
                         'help_text' => __('content modification time'),
                         'editable' => false
-                ),
-                // رابطه‌ها
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_Tenant',
-                        'blank' => false,
-                        'relate_name' => 'tenant',
-                        'default' => 'no title',
-                        'verbose' => __('tenant'),
-                        'help_text' => __('content tenant'),
-                        'editable' => false
-                ),
-                'submitter' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_User',
-                        'blank' => false,
-                        'relate_name' => 'content_submitter',
-                        'verbose' => __('submitter'),
-                        'help_text' => __('content submitter'),
-                        'editable' => false
                 )
         );
         
         $this->_a['idx'] = array(
                 'content_idx' => array(
-                        'col' => 'tenant, name',
+                        'col' => 'name',
                         'type' => 'normal', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',
@@ -168,7 +141,7 @@ class CMS_Content extends Pluf_Model
                         'lock_option' => ''
                 ),
                 'content_mime_filter_idx' => array(
-                        'col' => 'tenant, mime_type',
+                        'col' => 'mime_type',
                         'type' => 'normal', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',
@@ -176,7 +149,7 @@ class CMS_Content extends Pluf_Model
                         'lock_option' => ''
                 ),
                 'content_tag_filter_idx' => array(
-                        'col' => 'tenant, tag',
+                        'col' => 'tag',
                         'type' => 'normal', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',

@@ -5,5 +5,18 @@
 	"model": [
 		"CMS_Content"
 	],
-	"permisson": []
+	"permisson": [],
+	"monitor":[{
+		"bean": "cms",
+		"property": "count",
+		"title": "Number of contents",
+		"description": "Defines number of contents created on the server.",
+		"function": "CMS_Monitor::count"
+	}, {
+		"bean": "cms",
+		"property": "size",
+		"title": "Contents size",
+		"description": "Size of all contents.",
+		"function": "CMS_Monitor::size"
+	}]
 }

@@ -1,5 +1,7 @@
 <?php
 
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+
 /**
  * ایجاد یک صفحه جدید
  *
@@ -49,7 +51,7 @@ class CMS_Form_PageCreate extends Pluf_Form
     public function clean_content()
     {
         $contentId = $this->cleaned_data['content'];
-        $content = CMS_Shortcuts_GetContentOr404($contentId);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $contentId);
         // TODO: hadi 1395-01-26: بررسی صحت محتوا
         return $content->id;
     }

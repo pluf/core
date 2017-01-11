@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,23 +18,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function CMS_Shortcuts_GetContentOr404 ($id)
+/**
+ * Get content based on name
+ * 
+ * @param string $name
+ * @throws CMS_Exception_ObjectNotFound
+ * @return ArrayObject
+ */
+function CMS_Shortcuts_GetNamedContentOr404 ($name)
 {
-    $item = new CMS_Content($id);
-    if ((int) $id > 0 && $item->id == $id) {
-        return $item;
-    }
-    throw new CMS_Exception_ObjectNotFound(
-            "CMS content not found (Content id:" . $id . ")");
-}
-
-function CMS_Shortcuts_GetNamedContentOr404 ($tenant, $name)
-{
-    $q = new Pluf_SQL('tenant=%s and name=%s', 
-            array(
-                    $tenant->id,
-                    $name
-            ));
+    $q = new Pluf_SQL('name=%s', array(
+            $name
+    ));
     $item = new CMS_Content();
     $item = $item->getList(
             array(
@@ -53,16 +49,6 @@ function CMS_Shortcuts_GetNamedContentOr404 ($tenant, $name)
             "CMS content not found (Content name:" . $name . ")");
 }
 
-function CMS_Shortcuts_GetPageOr404 ($id)
-{
-    $item = new CMS_Page($id);
-    if ((int) $id > 0 && $item->id == $id) {
-        return $item;
-    }
-    throw new CMS_Exception_ObjectNotFound(
-            "CMS page not found (Page id:" . $id . ")");
-}
-
 /**
  * یک نام جدید را بررسی می‌کند.
  *
@@ -77,16 +63,14 @@ function CMS_Shortcuts_GetPageOr404 ($id)
  * @throws Pluf_Exception
  * @return unknown
  */
-function CMS_Shortcuts_CleanName ($name, $tenant)
+function CMS_Shortcuts_CleanName ($name)
 {
     if ($name === 'new' || $name === 'find') {
         throw new Pluf_Exception(__('content name must not be new, find'));
     }
-    $q = new Pluf_SQL('tenant=%s and name=%s', 
-            array(
-                    $tenant->id,
-                    $name
-            ));
+    $q = new Pluf_SQL('name=%s', array(
+            $name
+    ));
     $items = Pluf::factory('CMS_Content')->getList(
             array(
                     'filter' => $q->gen()

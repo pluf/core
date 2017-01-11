@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('CMS_Shortcuts_GetContentOr404');
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 
 class CMS_Views
 {
@@ -26,7 +26,6 @@ class CMS_Views
         // initial content data
         $extra = array(
                 'user' => $request->user,
-                'tenant' => $request->tenant,
                 'model' => new CMS_Content()
         );
                    
@@ -51,11 +50,6 @@ class CMS_Views
     public static function find ($request, $match)
     {
         $content = new Pluf_Paginator(new CMS_Content());
-        $sql = new Pluf_SQL('tenant=%s', 
-                array(
-                        $request->tenant->id
-                ));
-        $content->forced_where = $sql;
         $content->list_filters = array(
                 'id',
         		'name',
@@ -88,7 +82,6 @@ class CMS_Views
                 'modif_dtime'
         );
         $content->configure($list_display, $search_fields, $sort_fields);
-        $content->items_per_page = 10;
         $content->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($content->render_object());
     }
@@ -97,14 +90,11 @@ class CMS_Views
     {
         // تعیین داده‌ها
         if (array_key_exists('id', $match)) {
-            $content = CMS_Shortcuts_GetContentOr404($match['id']);
+            $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match['id']);
             // XXX: maso, 1395: محتوی در ملک باشد
         } else {
-            $content = CMS_Shortcuts_GetNamedContentOr404($request->tenant, 
-                    $match['name']);
+            $content = CMS_Shortcuts_GetNamedContentOr404($match['name']);
         }
-        // حق دسترسی
-        // CMS_Precondition::userCanAccessContent($request, $content);
         // اجرای درخواست
         return new Pluf_HTTP_Response_Json($content);
     }
@@ -112,17 +102,11 @@ class CMS_Views
     public static function update ($request, $match)
     {
         // تعیین داده‌ها
-        $content = CMS_Shortcuts_GetContentOr404($match['id']);
-        // حق دسترسی
-        // CMS_Precondition::userCanUpdateContent($request, $content);
+        $content = Pluf_Shortcuts_GetObjectOr404($match['id']);
         // اجرای درخواست
         $extra = array(
-                // 'user' => $request->user,
-                'model' => $content,
-                'tenant' => $request->tenant
+                'model' => $content
         );
-        // 'tenant' => $request->tenant
-        
         $form = new CMS_Form_ContentUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $content = $form->save();
@@ -132,11 +116,11 @@ class CMS_Views
     public static function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $content = CMS_Shortcuts_GetContentOr404($match['id']);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match['id']);
         // دسترسی
         // CMS_Precondition::userCanDeleteContent($request, $content);
         // اجرا
-        $content2 = CMS_Shortcuts_GetContentOr404($content->id);
+        $content2 = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $content->id);
         $content->delete();
         
         // TODO: فایل مربوط به کانتنت باید حذف شود
@@ -147,12 +131,7 @@ class CMS_Views
     public static function download ($request, $match)
     {
         // GET data
-        $app = $request->tenant;
-        $content = CMS_Shortcuts_GetContentOr404($match['id']);
-        // Check permission
-        // SaaS_Precondition::userCanAccessApplication($request, $app);
-        // SaaS_Precondition::userCanAccessResource($request, $content);
-        
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match['id']);
         // Do
         $content->downloads += 1;
         $content->update();
@@ -166,12 +145,7 @@ class CMS_Views
     public static function updateFile ($request, $match)
     {
         // GET data
-        $app = $request->tenant;
-        $content = CMS_Shortcuts_GetContentOr404($match[1]);
-        // Check permission
-        // SaaS_Precondition::userCanAccessApplication($request, $app);
-        // SaaS_Precondition::userCanAccessResource($request, $content);
-        
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match[1]);
         if (array_key_exists('file', $request->FILES)) {
             // $extra = array(
             // // 'user' => $request->user,

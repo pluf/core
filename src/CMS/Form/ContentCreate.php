@@ -33,7 +33,7 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
 
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
+        $this->tenant = Pluf_Tenant::current();
         $this->user = $extra['user'];
         parent::initFields($extra);       
     }
