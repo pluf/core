@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -20,7 +21,8 @@
 /**
  * پیش شرط‌های استاندارد را ایجاد می‌کند.
  *
- * در بسیاری از موارد لایه نمایش تنها با در نظر گرفتن برخی پیش شرط‌ها قابل دست رسی است
+ * در بسیاری از موارد لایه نمایش تنها با در نظر گرفتن برخی پیش شرط‌ها قابل دست
+ * رسی است
  * در این کلاس پیش شرطهای استاندارد تعریف شده است.
  */
 class Pluf_Precondition
@@ -129,5 +131,86 @@ class Pluf_Precondition
                     'https://' . $request->http_host . $request->uri);
         }
         return true;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که مالک tenant
+     * است یا نه.
+     * در صورتی که کاربر مالک tenant نباشد استثنای
+     * Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
+    static public function ownerRequired ($request)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        // SaaS_Precondition::baseAccess($request);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که عضو tenant
+     * است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد استثنای
+     * Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
+    static public function memberRequired ($request)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        // SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) ||
+                 $request->user->hasPerm('Pluf.member', null, 
+                        $request->tenant->id)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که در tenant
+     * مجاز است یا نه.
+     * در صورتی که کاربر در tenant مجاز نباشد استثنای
+     * Pluf_Exception_PermissionDenied صادر می‌شود
+     *
+     * @param unknown $request            
+     * @throws Pluf_Exception_PermissionDenied
+     */
+    static public function authorizedRequired ($request)
+    {
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        // SaaS_Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) ||
+                 $request->user->hasPerm('Pluf.member', null, 
+                        $request->tenant->id) ||
+                 $request->user->hasPerm('Pluf.authorized', null, 
+                        $request->tenant->id)) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied();
     }
 }

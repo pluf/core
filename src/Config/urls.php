@@ -26,7 +26,7 @@ return array(
                         'Pluf_Precondition::adminRequired'
                 ),
                 'params' => array(
-                        'model' => 'SaaS_Configuration',
+                        'model' => 'Pluf_Configuration',
                         'sql' => new Pluf_SQL('type=0'),
                         'listFilters' => array(
                                 'id',

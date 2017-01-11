@@ -19,19 +19,19 @@ class Setting_Views extends Pluf_Views
      */
     public function get ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND saas_configuration.key=%s', 
+        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
                 array(
                         $request->tenant->id,
-                        SaaS_ConfigurationType::APPLICATION,
+                        Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));
-        $model = new SaaS_Configuration();
+        $model = new Pluf_Configuration();
         $model = $model->getOne(
                 array(
                         'filter' => $sql->gen()
                 ));
         if (! isset($model)) {
-            $model = new SaaS_Configuration();
+            $model = new Pluf_Configuration();
         }
         return new Pluf_HTTP_Response_Json($model);
     }
@@ -47,23 +47,23 @@ class Setting_Views extends Pluf_Views
      */
     public function update ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND saas_configuration.key=%s', 
+        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
                 array(
                         $request->tenant->id,
-                        SaaS_ConfigurationType::APPLICATION,
+                        Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));
-        $model = new SaaS_Configuration();
+        $model = new Pluf_Configuration();
         $model = $model->getOne(
                 array(
                         'filter' => $sql->gen()
                 ));
         if (! isset($model)) {
-            $model = new SaaS_Configuration();
+            $model = new Pluf_Configuration();
             $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST);
             $model = $form->save(false);
             $model->tenant = $request->tenant;
-            $model->type = SaaS_ConfigurationType::APPLICATION;
+            $model->type = Pluf_ConfigurationType::APPLICATION;
             $model->key = $match['key'];
             $model->create();
         } else {
@@ -81,19 +81,19 @@ class Setting_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND saas_configuration.key=%s', 
+        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
                 array(
                         $request->tenant->id,
-                        SaaS_ConfigurationType::APPLICATION,
+                        Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));
-        $model = new SaaS_Configuration();
+        $model = new Pluf_Configuration();
         $model = $model->getOne(
                 array(
                         'filter' => $sql->gen()
                 ));
         if (! isset($model)) {
-            $model = new SaaS_Configuration();
+            $model = new Pluf_Configuration();
         } else {
             $model->delete();
         }

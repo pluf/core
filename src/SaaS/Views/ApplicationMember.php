@@ -86,7 +86,7 @@ class SaaS_Views_ApplicationMember
                 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
                          $false, 
                         array(
-                                'SaaS_Application',
+                                'Pluf_Tenant',
                                 $request->tenant->id,
                                 'Pluf_User',
                                 $operm->id

@@ -41,13 +41,10 @@
 class Pluf_Queue extends Pluf_Model
 {
 
-    public $_model = __CLASS__;
-
     function init ()
     {
-        $this->_a['verbose'] = __('message queue');
+        $this->_a['verbose'] =  'message queue' ;
         $this->_a['table'] = 'pluf_queue';
-        $this->_a['model'] = __CLASS__;
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(

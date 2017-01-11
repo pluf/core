@@ -29,13 +29,13 @@ class Tenant_Views extends Pluf_Views
     public function find ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از نرم افزارها
-        $pag = new Pluf_Paginator(new SaaS_Application());
+        $pag = new Pluf_Paginator(new Pluf_Tenant());
         if (! $request->user->administrator) {
             $pag->model_view = 'user_model_permission';
             $pag->forced_where = new Pluf_SQL(
                     'model_class=%s AND owner_class=%s AND owner_id=%s', 
                     array(
-                            'SaaS_Application',
+                            'Pluf_Tenant',
                             'Pluf_User',
                             $request->user->id
                     ));
@@ -79,7 +79,7 @@ class Tenant_Views extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        $model = Pluf::factory('SaaS_Application');
+        $model = Pluf::factory('Pluf_Tenant');
         $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
                 array());
         $model = $form->save();
@@ -95,7 +95,7 @@ class Tenant_Views extends Pluf_Views
      */
     public function update ($request, $match)
     {
-        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Tenant', $match['id']);
         $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
                 array());
         return new Pluf_HTTP_Response_Json($form->save());
@@ -108,7 +108,7 @@ class Tenant_Views extends Pluf_Views
      */
     public function get ($request, $match)
     {
-        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Tenant', $match['id']);
         return new Pluf_HTTP_Response_Json($model);
     }
 
@@ -119,8 +119,8 @@ class Tenant_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        $model = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', $match['id']);
-        $model2 = Pluf_Shortcuts_GetObjectOr404('SaaS_Application', 
+        $model = Pluf_Shortcuts_GetObjectOr404('Pluf_Tenant', $match['id']);
+        $model2 = Pluf_Shortcuts_GetObjectOr404('Pluf_Tenant', 
                 $match['id']);
         $model2->delete();
         // XXX: maso, 1395: delete permisions

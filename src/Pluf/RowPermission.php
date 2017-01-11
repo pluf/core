@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -29,8 +30,6 @@
 class Pluf_RowPermission extends Pluf_Model
 {
 
-    public $_model = 'Pluf_RowPermission';
-
     /**
      * مدل رشته‌ای این گواهی را تعیین می‌کند
      *
@@ -38,80 +37,77 @@ class Pluf_RowPermission extends Pluf_Model
      */
     private $_cache_to_string;
 
-    function init()
+    function init ()
     {
         $this->_a['table'] = 'rowpermissions';
-        $this->_a['model'] = 'Pluf_RowPermission';
+        $this->_a['verbose'] = 'row permissions';
         $this->_a['cols'] = array(
-            // It is mandatory to have an "id" column.
-            'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
-                // It is automatically added.
-                'blank' => true
-            ),
-            'version' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => true
-            ),
-            'model_id' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'verbose' => __('model ID')
-            ),
-            'model_class' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 50,
-                'verbose' => __('model class')
-            ),
-            'owner_id' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'verbose' => __('owner ID')
-            ),
-            'owner_class' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
-                'size' => 50,
-                'verbose' => __('owner class'),
-                'help_text' => __('For example Pluf_User or Pluf_Group.')
-            ),
-            'negative' => array(
-                'type' => 'Pluf_DB_Field_Boolean',
-                'blank' => false,
-                'default' => false,
-                'verbose' => __('do not have the permission')
-        ),
-            /*
-             * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
-             */
-            'tenant' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false
-            ),
-            'permission' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'Pluf_Permission',
-                'blank' => false,
-                'verbose' => __('permission')
-            )
+                // It is mandatory to have an "id" column.
+                'id' => array(
+                        'type' => 'Pluf_DB_Field_Sequence',
+                        // It is automatically added.
+                        'blank' => true
+                ),
+                'version' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => true
+                ),
+                'model_id' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'verbose' => __('model ID')
+                ),
+                'model_class' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50,
+                        'verbose' => __('model class')
+                ),
+                'owner_id' => array(
+                        'type' => 'Pluf_DB_Field_Integer',
+                        'blank' => false,
+                        'verbose' => __('owner ID')
+                ),
+                'owner_class' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => false,
+                        'size' => 50,
+                        'verbose' => __('owner class'),
+                        'help_text' => __(
+                                'For example Pluf_User or Pluf_Group.')
+                ),
+                'negative' => array(
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'blank' => false,
+                        'default' => false,
+                        'verbose' => __('do not have the permission')
+                ),
+                'permission' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_Permission',
+                        'blank' => false,
+                        'verbose' => __('permission')
+                )
         );
         $this->_a['idx'] = array(
-            'permission_combo_idx' => array(
-                'type' => 'unique',
-                'col' => 'model_id, model_class, owner_id, owner_class, permission, tenant'
-            )
+                'permission_combo_idx' => array(
+                        'type' => 'unique',
+                        'col' => 'model_id, model_class, owner_id, owner_class, permission'
+                )
         );
         $t_perm = $this->_con->pfx . 'permissions';
         $this->_a['views'] = array(
-            'join_permission' => array(
-                'select' => $this->getSelect() . ', ' . $t_perm . '.code_name AS code_name, ' . $t_perm . '.application AS application ',
-                'join' => 'LEFT JOIN ' . $t_perm . ' ON ' . $t_perm . '.id=permission',
-                'props' => array(
-                    'code_name' => 'code_name',
-                    'application' => 'application'
+                'join_permission' => array(
+                        'select' => $this->getSelect() . ', ' . $t_perm .
+                                 '.code_name AS code_name, ' . $t_perm .
+                                 '.application AS application ',
+                                'join' => 'LEFT JOIN ' . $t_perm . ' ON ' .
+                                 $t_perm . '.id=permission',
+                                'props' => array(
+                                        'code_name' => 'code_name',
+                                        'application' => 'application'
+                                )
                 )
-            )
         );
     }
 
@@ -124,17 +120,18 @@ class Pluf_RowPermission extends Pluf_Model
      * @param bool $negative            
      * @throws Exception
      */
-    public static function add($owner, $object, $perm, $negative = false, $tenant = 0)
+    public static function add ($owner, $object, $perm, $negative = false)
     {
         if (! is_object($perm)) {
             // Find matching permission
             $found = Pluf_Permission::getFromString($perm);
             if (false === $found) {
-                throw new Pluf_Exception(sprintf('The permission %s does not exist.', $perm));
+                throw new Pluf_Exception(
+                        sprintf('The permission %s does not exist.', $perm));
             }
             $perm = $found;
         }
-        Pluf_RowPermission::remove($owner, $object, $perm, $tenant);
+        Pluf_RowPermission::remove($owner, $object, $perm);
         $nperm = new Pluf_RowPermission();
         $nperm->owner_id = $owner->id;
         $nperm->owner_class = $owner->_a['model'];
@@ -144,7 +141,6 @@ class Pluf_RowPermission extends Pluf_Model
         }
         $nperm->permission = $perm;
         $nperm->negative = $negative;
-        $nperm->tenant = $tenant;
         $nperm->create();
         return $nperm;
     }
@@ -157,36 +153,40 @@ class Pluf_RowPermission extends Pluf_Model
      * @param unknown $perm            
      * @throws Exception
      */
-    public static function remove($owner, $object, $perm, $tenant = 0)
+    public static function remove ($owner, $object, $perm)
     {
         if (! is_object($perm)) {
             $found = Pluf_Permission::getFromString($perm);
             if (false === $found) {
-                throw new Pluf_Exception(sprintf('The permission %s does not exist.', $perm));
+                throw new Pluf_Exception(
+                        sprintf('The permission %s does not exist.', $perm));
             }
             $perm = $found;
         }
         $growp = new Pluf_RowPermission();
         if (isset($model) && ! $model->isAnonymous()) {
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s AND model_id=%s AND model_class=%s AND permission=%s AND tenant=%s', array(
-                $owner->id,
-                $owner->_a['model'],
-                $object->id,
-                $object->_a['model'],
-                $perm->id,
-                $tenant
-            ));
+            $sql = new Pluf_SQL(
+                    'owner_id=%s AND owner_class=%s AND model_id=%s AND model_class=%s AND permission=%s', 
+                    array(
+                            $owner->id,
+                            $owner->_a['model'],
+                            $object->id,
+                            $object->_a['model'],
+                            $perm->id
+                    ));
         } else {
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s AND permission=%s AND tenant=%s', array(
-                $owner->id,
-                $owner->_a['model'],
-                $perm->id,
-                $tenant
-            ));
+            $sql = new Pluf_SQL(
+                    'owner_id=%s AND owner_class=%s AND permission=%s', 
+                    array(
+                            $owner->id,
+                            $owner->_a['model'],
+                            $perm->id
+                    ));
         }
-        $perms = $growp->getList(array(
-            'filter' => $sql->gen()
-        ));
+        $perms = $growp->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
         foreach ($perms as $p) {
             $p->delete();
         }
@@ -196,7 +196,7 @@ class Pluf_RowPermission extends Pluf_Model
     /**
      * این مجوز را به رشته تبدیل می‌کند
      */
-    public function toString()
+    public function toString ()
     {
         if (isset($this->_cache_to_string)) {
             return $this->_cache_to_string;
@@ -213,7 +213,8 @@ class Pluf_RowPermission extends Pluf_Model
         }
         // create string
         if (isset($this->model_class)) {
-            $this->_cache_to_string = sprintf('%s.%s#%s(%s)', $application, $code_name, $this->model_class, $this->model_id);
+            $this->_cache_to_string = sprintf('%s.%s#%s(%s)', $application, 
+                    $code_name, $this->model_class, $this->model_id);
         } else {
             $this->_cache_to_string = sprintf('%s.%s', $application, $code_name);
         }

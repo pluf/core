@@ -4,7 +4,7 @@ return array(
                 'relate_to' => array(
                         'Wiki_Book',
                         'Pluf_User',
-                        'SaaS_Application'
+                        'Pluf_Tenant'
                 ),
                 'relate_to_many' => array(
                         'KM_Label',
@@ -14,7 +14,7 @@ return array(
         'Wiki_Book' => array(
                 'relate_to' => array(
                         'Pluf_User',
-                        'SaaS_Application'
+                        'Pluf_Tenant'
                 ),
                 'relate_to_many' => array(
                         'KM_Label',

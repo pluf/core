@@ -7,7 +7,7 @@ return array(
                 'http-method' => 'GET',
                 'precond' => array(),
                 'params' => array(
-                        'model' => 'SaaS_Configuration',
+                        'model' => 'Pluf_Configuration',
                         'sql' => new Pluf_SQL('type=1'),
                         'listFilters' => array(
                                 'id',

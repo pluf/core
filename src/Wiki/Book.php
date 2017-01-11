@@ -87,7 +87,7 @@ class Wiki_Book extends Pluf_Model
                 ),
                 'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
+                        'model' => 'Pluf_Tenant',
                         'blank' => false,
                         'relate_name' => 'tenant',
                         'verbose' => __('tenant'),

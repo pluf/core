@@ -6,7 +6,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Middleware_TenantFromSession
+class Pluf_Middleware_TenantFromConfig
 {
 
     function process_request (&$request)
@@ -15,11 +15,12 @@ class SaaS_Middleware_TenantFromSession
             return false;
         }
         
-        // $application_id = $request->session->getData('application', '');
-        // if ($application_id === '') {
-        // $application_id = null;
-        // }
-        
+            $appName = Pluf::f('saas_tenant_default');
+            $app = Pluf_Tenant::bySubDomain($appName);
+            if($app){
+                $request->tenant = $app;
+                $request->application = $app;
+            }
         return false;
     }
 }

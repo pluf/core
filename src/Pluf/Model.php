@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -21,11 +22,28 @@
  * Sort of Active Record Class
  *
  * @author maso<mostafa.barmshory@dpq.co.ir>
- * @date 1394 روش کدگزاری JSON به کلاس اضافه شده است تا به سادگی بتوان به عنوان نتیجه از یک مدل
- * استفاده شود.
+ *         @date 1394 روش کدگزاری JSON به کلاس اضافه شده است تا به سادگی بتوان
+ *         به عنوان نتیجه از یک مدل
+ *         استفاده شود.
  */
 class Pluf_Model implements JsonSerializable
 {
+
+    /**
+     * Tenant field
+     *
+     * This field is added to model in the multi-tenancy mode automaticlly.
+     *
+     * @var array
+     */
+    protected $tenant_field = array(
+            'type' => 'Pluf_DB_Field_Foreignkey',
+            'model' => 'Pluf_Tenant',
+            'blank' => false,
+            'relate_name' => 'tenant',
+            'editable' => false,
+            'readable' => false
+    );
 
     public $_model = __CLASS__;
     // set it to your model name
@@ -49,6 +67,7 @@ class Pluf_Model implements JsonSerializable
      * 'verbose': The verbose name of the model.
      */
     public $_a = array(
+            'multitenant' => false,
             'table' => 'model',
             'model' => 'Pluf_Model',
             'cols' => array(),
@@ -91,6 +110,8 @@ class Pluf_Model implements JsonSerializable
     function __construct ($pk = null, $values = array())
     {
         $this->_model = get_class($this);
+        $this->_a['model'] = $this->_model;
+        $this->_a['multitenant'] = true;
         $this->_init();
         if ((int) $pk > 0) {
             $this->get($pk); // Should not have a side effect
@@ -126,7 +147,7 @@ class Pluf_Model implements JsonSerializable
             return;
         }
         $this->init();
-        $this->_a['model'] = get_class($this);
+        $this->_setupMultitenantFields();
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']('', $col);
             $col_lower = strtolower($col);
@@ -266,7 +287,6 @@ class Pluf_Model implements JsonSerializable
      */
     function delAssoc ($model)
     {
-        
         // check if ok to make the association
         // current model has a many to many key with $model
         // $model has a many to many key with current model
@@ -447,8 +467,20 @@ class Pluf_Model implements JsonSerializable
      */
     function get ($id)
     {
-        $req = 'SELECT * FROM ' . $this->getSqlTable() . ' WHERE id=' .
-                 $this->_toDb($id, 'id');
+        $req = 'SELECT * FROM ' . $this->getSqlTable() . ' WHERE ';
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            $sql = new Pluf_SQL('tenant=%s AND id=%s', 
+                    array(
+                            Pluf_Tenant::current()->id,
+                            $this->_toDb($id, 'id')
+                    ));
+        } else {
+            $sql = new Pluf_SQL('id=%s',
+                    array(
+                            $this->_toDb($id, 'id')
+                    ));
+        }
+        $req .= $sql->gen();
         if (false === ($rs = $this->_con->select($req))) {
             throw new Exception($this->_con->getError());
         }
@@ -573,6 +605,17 @@ class Pluf_Model implements JsonSerializable
                 $query['where'] .= ' AND ';
             }
             $query['where'] .= ' (' . $p['filter'] . ') ';
+        }
+        // Multi-Tenant filter
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            $sql = new Pluf_SQL('tenant=%s', 
+                    array(
+                            Pluf_Tenant::current()->id
+                    ));
+            if (strlen($query['where']) > 0) {
+                $query['where'] = ' AND ' . $query['where'];
+            }
+            $query['where'] = $sql->gen() . $query['where'];
         }
         if (! is_null($p['order'])) {
             if (is_array($p['order'])) {
@@ -702,7 +745,7 @@ class Pluf_Model implements JsonSerializable
                  is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new Exception(
+                throw new Pluf_Exception(
                         sprintf(
                                 __(
                                         'No matching foreign key found in model: %s for model %s'), 
@@ -839,6 +882,9 @@ class Pluf_Model implements JsonSerializable
     {
         if (! $raw) {
             $this->preSave(true);
+        }
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            $this->tenant = Pluf_Tenant::current();
         }
         $req = 'INSERT INTO ' . $this->getSqlTable() . "\n";
         $icols = array();
@@ -1149,6 +1195,23 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
+     * Add tenant required fields
+     *
+     * Adds extra fields if multi-tenant is enabled
+     */
+    protected function _setupMultitenantFields ()
+    {
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            // Add key
+            $this->_a['cols']['tenant'] = $this->tenant_field;
+            // Add idx
+            foreach ($this->_a['idx'] as $col => $idx) {
+                $idx['col'] = 'tenant,' . $idx['col'];
+            }
+        }
+    }
+
+    /**
      * بررسی می‌کند که آیا مدل داده‌ای وجود دارد یا نه
      *
      * در صورتی که مدل داده‌ای ذخیره نشده باشد به عنوان داده بی نام و نشان در
@@ -1198,7 +1261,7 @@ class Pluf_Model implements JsonSerializable
             /*
              * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
              */
-            if ( array_key_exists($col, $this->_a['cols']) && array_key_exists(
+            if (array_key_exists($col, $this->_a['cols']) && array_key_exists(
                     'readable', $this->_a['cols'][$col]) &&
                      ! $this->_a['cols'][$col]['readable'])
                 continue;

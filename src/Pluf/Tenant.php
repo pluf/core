@@ -5,7 +5,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaS_Application extends Pluf_Model
+class Pluf_Tenant extends Pluf_Model
 {
 
     /**
@@ -35,9 +35,8 @@ class SaaS_Application extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'saas_application';
-        $this->_a['model'] = 'SaaS_Application';
-        $this->_model = 'SaaS_Application';
+        $this->_a['table'] = 'pluf_tenant';
+        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
@@ -49,21 +48,16 @@ class SaaS_Application extends Pluf_Model
                         'blank' => true,
                         'editable' => false
                 ),
-                'access_count' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'editable' => false
-                ),
-                'validate' => array(
-                        'type' => 'Pluf_DB_Field_Boolean',
-                        'default' => false,
-                        'blank' => true,
-                        'editable' => false
-                ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
                         'size' => 100
+                ),
+                'description' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'blank' => true,
+                        'size' => 250,
+                        'editable' => true
                 ),
                 'domain' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -79,27 +73,11 @@ class SaaS_Application extends Pluf_Model
                         'size' => 63,
                         'editable' => false
                 ),
-                'description' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                'validate' => array(
+                        'type' => 'Pluf_DB_Field_Boolean',
+                        'default' => false,
                         'blank' => true,
-                        'size' => 250,
-                        'editable' => true
-                ),
-                'setting' => array(
-                        'type' => 'Pluf_DB_Field_Text',
-                        'blank' => true,
-                        'verbose' => 'Setting',
-                        'help_text' => 'Settings are editable by owner',
-                        'editable' => false,
-                        'readable' => false
-                ),
-                'config' => array(
-                        'type' => 'Pluf_DB_Field_Text',
-                        'blank' => true,
-                        'verbose' => 'Configuration',
-                        'help_text' => 'Configuration used by system and administrator',
-                        'editable' => false,
-                        'readable' => false
+                        'editable' => false
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
@@ -110,18 +88,12 @@ class SaaS_Application extends Pluf_Model
                         'type' => 'Pluf_DB_Field_Datetime',
                         'blank' => true,
                         'editable' => false
-                ),
-                'spa' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_SPA',
-                        'blank' => true,
-                        'editable' => true
                 )
         );
         $this->_a['views'] = array(
                 'user_model_permission' => array(
                         'join' => 'LEFT JOIN ' . $this->_con->pfx .
-                                 'rowpermissions ON saas_application.id=' .
+                                 'rowpermissions ON Pluf_Tenant.id=' .
                                  $this->_con->pfx . 'rowpermissions.model_id',
                                 'select' => $this->getSelect() . ', permission',
                                 'props' => array(
@@ -139,145 +111,10 @@ class SaaS_Application extends Pluf_Model
      */
     function preSave ($create = false)
     {
-        // encode settingData into setting
-        if ($this->settingChanged)
-            $this->setting = serialize($this->settingData);
-            
-            // encode configData into config
-        if ($this->configChanged)
-            $this->config = serialize($this->configData);
-        
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
         $this->modif_dtime = gmdate('Y-m-d H:i:s');
-    }
-
-    /**
-     * Restore function to decode the setting and config into $this->settingData
-     * and $this->configData.
-     */
-    function restore ()
-    {
-        $this->settingData = unserialize($this->setting);
-        $this->configData = unserialize($this->config);
-    }
-
-    function preDelete ()
-    {
-        // @unlink(Pluf::f('upload_issue_path').'/'.$this->attachment);
-    }
-
-    /**
-     * حالت کار ایجاد شده را به روز می‌کند
-     *
-     * @see Pluf_Model::postSave()
-     */
-    function postSave ($create = false)
-    {
-        //
-    }
-
-    /**
-     * تعیین یک داده در تنظیمات ملک
-     *
-     * با استفاده از این فراخوانی می‌توان در تنظیمات ملک، برای مشخصه تعیین شده
-     * با کلید key
-     * یک مقدار تعیین کرد. این کلید برای دستیابی‌های بعد مورد استفاده قرار خواهد
-     * گرفت.
-     *
-     * @param $key کلید
-     *            داده
-     * @param $value داده
-     *            مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
-     *            حذف است.
-     */
-    function setSetting ($key, $value = null)
-    {
-        if (is_null($value)) {
-            unset($this->settingData[$key]);
-        } else {
-            $this->settingData[$key] = $value;
-        }
-        $this->settingChanged = true;
-    }
-
-    /**
-     * داده معادل با کلید تعیین شده را از تنظیمات ملک برمی‌گرداند
-     *
-     * در صورتی که داده تعیین نشده بود مقدار پیش فرض تعیین شده به عنوان نتیجه
-     * این فراخوانی برگردانده خواهد شد.
-     */
-    function getSetting ($key = null, $default = '')
-    {
-        // if (is_null($key)) {
-        // return parent::getData();
-        // }
-        if (isset($this->settingData[$key])) {
-            return $this->settingData[$key];
-        } else {
-            return $default;
-        }
-    }
-
-    /**
-     * تعیین یک داده در پیکره‌بندی ملک
-     *
-     * با استفاده از این فراخوانی می‌توان در پیکره‌بندی ملک، برای مشخصه تعیین
-     * شده با کلید key
-     * یک مقدار تعیین کرد. این کلید برای دستیابی‌های بعد مورد استفاده قرار خواهد
-     * گرفت.
-     *
-     * @param $key کلید
-     *            داده
-     * @param $value داده
-     *            مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
-     *            حذف است.
-     */
-    function setConfig ($key, $value = null)
-    {
-        if (is_null($value)) {
-            unset($this->configData[$key]);
-        } else {
-            $this->configData[$key] = $value;
-        }
-        $this->configChanged = true;
-    }
-
-    /**
-     * داده معادل با کلید تعیین شده را از پیکره‌بندی ملک برمی‌گرداند
-     *
-     * در صورتی که داده تعیین نشده بود مقدار پیش فرض تعیین شده به عنوان نتیجه
-     * این فراخوانی برگردانده خواهد شد.
-     */
-    function getConfig ($key = null, $default = '')
-    {
-        // if (is_null($key)) {
-        // return parent::getData();
-        // }
-        if (isset($this->configData[$key])) {
-            return $this->configData[$key];
-        } else {
-            return $default;
-        }
-    }
-
-    /**
-     * تمام داده‌های موجود در تنظیمات ملک را پاک می‌کند.
-     */
-    function clearSetting ()
-    {
-        $this->settingData = array();
-        $this->settingChanged = true;
-    }
-
-    /**
-     * تمام داده‌های موجود در پیکره‌بندی ملک را پاک می‌کند.
-     */
-    function clearConfig ()
-    {
-        $this->configData = array();
-        $this->configChanged = true;
     }
 
     /**
@@ -308,7 +145,7 @@ class SaaS_Application extends Pluf_Model
                 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
                          $false, 
                         array(
-                                'SaaS_Application',
+                                'Pluf_Tenant',
                                 $this->id,
                                 'Pluf_User',
                                 $operm->id
@@ -328,7 +165,7 @@ class SaaS_Application extends Pluf_Model
                 'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
                          $false, 
                         array(
-                                'SaaS_Application',
+                                'Pluf_Tenant',
                                 $this->id,
                                 'Pluf_User',
                                 $mperm->id
@@ -350,7 +187,7 @@ class SaaS_Application extends Pluf_Model
                     'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
                              $false, 
                             array(
-                                    'SaaS_Application',
+                                    'Pluf_Tenant',
                                     $this->id,
                                     'Pluf_User',
                                     $aperm->id
@@ -458,7 +295,7 @@ class SaaS_Application extends Pluf_Model
     public static function bySubDomain ($subdomain)
     {
         $sql = new Pluf_SQL('subdomain=%s', $subdomain);
-        return Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        return Pluf::factory('Pluf_Tenant')->getOne($sql->gen());
     }
 
     /**
@@ -469,7 +306,21 @@ class SaaS_Application extends Pluf_Model
     public static function byDomain ($domain)
     {
         $sql = new Pluf_SQL('domain=%s', $domain);
-        $result = Pluf::factory('SaaS_Application')->getOne($sql->gen());
+        $result = Pluf::factory('Pluf_Tenant')->getOne($sql->gen());
         return $result;
+    }
+    
+    /**
+     * Gets current tenant
+     * 
+     * @return unknown
+     */
+    public static function current()
+    {
+        if(!Pluf::f('multitenant', false)){
+            return Pluf::factory('Pluf_Tenant');
+        }
+        // load tenant from request
+        return $GLOBALS ['_PX_request']->tenant;
     }
 }

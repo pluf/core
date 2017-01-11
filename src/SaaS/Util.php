@@ -8,8 +8,8 @@ class SaaS_Util
         if ($configuration != null) {
             return $configuration;
         }
-        $sysConfig = new SaaS_Configuration();
-        $sysConfig->type = SaaS_ConfigurationType::GENERAL;
+        $sysConfig = new Pluf_Configuration();
+        $sysConfig->type = Pluf_ConfigurationType::GENERAL;
         $sysConfig->owner_write = true;
         $sysConfig->member_write = false;
         $sysConfig->authorized_write = false;
@@ -24,10 +24,10 @@ class SaaS_Util
     public static function initConfiguration ($tenant)
     {
         // System configuration
-        $sysConfig = new SaaS_Configuration();
+        $sysConfig = new Pluf_Configuration();
         $sysConfig->tenant = $tenant;
         $sysConfig->key = 'system';
-        $sysConfig->type = SaaS_ConfigurationType::SYSTEM;
+        $sysConfig->type = Pluf_ConfigurationType::SYSTEM;
         $sysConfig->setData("level", 0);
         $sysConfig->owner_write = false;
         $sysConfig->member_write = false;
@@ -40,10 +40,10 @@ class SaaS_Util
         $sysConfig->create();
         
         // Theme configuration
-        $themeConfig = new SaaS_Configuration();
+        $themeConfig = new Pluf_Configuration();
         $themeConfig->tenant = $tenant;
         $themeConfig->key = 'theme';
-        $themeConfig->type = SaaS_ConfigurationType::GENERAL;
+        $themeConfig->type = Pluf_ConfigurationType::GENERAL;
         $themeConfig->setData("id", "g1");
         $themeConfig->setData("style", "default");
         $themeConfig->owner_write = false;

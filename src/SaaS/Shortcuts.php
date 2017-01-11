@@ -5,25 +5,25 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
  * یک ساختار داده‌ای برای یک نرم‌افزار ایجاد می‌کند
  *
  * @param unknown $object            
- * @return SaaS_Application|unknown
+ * @return Pluf_Tenant|unknown
  */
 function SaaS_Shortcuts_applicationFactory ($object)
 {
     if ($object == null || ! isset($object))
-        return new SaaS_Application();
+        return new Pluf_Tenant();
     return $object;
 }
 
 /**
  *
  * @param unknown $object            
- * @return SaaS_Configuration|unknown
+ * @return Pluf_Configuration|unknown
  */
 function SaaS_Shortcuts_configurationFactory ($object)
 {
     if ($object == null || ! isset($object)) {
-        $sysConfig = new SaaS_Configuration();
-        $sysConfig->type = SaaS_ConfigurationType::GENERAL;
+        $sysConfig = new Pluf_Configuration();
+        $sysConfig->type = Pluf_ConfigurationType::GENERAL;
         $sysConfig->owner_write = true;
         $sysConfig->member_write = false;
         $sysConfig->authorized_write = false;
@@ -59,7 +59,7 @@ function SaaS_Shortcuts_GetSPAOr404 ($id)
 
 function SaaS_Shortcuts_GetApplicationOr404 ($id)
 {
-    $item = new SaaS_Application($id);
+    $item = new Pluf_Tenant($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }

@@ -35,14 +35,14 @@ try {
     debug('Password:admin');
     
     debug('# Default tenant');
-    $tenant = new SaaS_Application();
+    $tenant = new Pluf_Tenant();
     $tenant->title = 'Default Tenant';
     $tenant->description = 'Auto generated tenant';
     $tenant->subdomain = Pluf::f('saas_tenant_default', 'main');
     $tenant->domain = Pluf::f('general_domain', 'donate.com');
     $tenant->create();
     
-    Pluf_RowPermission::add($user, $tenant, 'SaaS.owner', $tenant->id);
+    Pluf_RowPermission::add($user, $tenant, 'Pluf.owner');
 } catch (Exception $e) {
     var_export($e);
 }

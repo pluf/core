@@ -6,24 +6,26 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class SaaS_Middleware_TenantFromDomain
+class Pluf_Middleware_TenantFromHeader
 {
 
-    function process_request(&$request)
+    /**
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @return boolean
+     */
+    function process_request (&$request)
     {
         if (! $request->tenant->isAnonymous()) {
             return false;
         }
         try {
-            $domain = $request->http_host;
-            $domain = preg_replace('/^www\./', '', $domain);
-            $app = SaaS_Application::byDomain($domain);
+            $app = new Pluf_Tenant($request->HEADERS['_PX_tenant']);
             if ($app) {
                 $request->tenant = $app;
-                $request->application = $app;
             }
         } catch (Exception $e) {
-//             echo $e->getMessage();
+            // echo $e->getMessage();
         }
         return false;
     }

@@ -6,7 +6,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class SaaS_Middleware_TenantFromSubDomain
+class Pluf_Middleware_TenantFromSubDomain
 {
 
     function process_request(&$request)
@@ -21,7 +21,7 @@ class SaaS_Middleware_TenantFromSubDomain
             // استخراج زیر دامنه
             $subdomain = SaaS_Middleware_TenantFromSubDomain::extract_subdomains($domain);
             // پیدا کردن ملک با زیر دامنه داده شده
-            $app = SaaS_Application::bySubDomain($subdomain);
+            $app = Pluf_Tenant::bySubDomain($subdomain);
             if ($app) {
                 $request->tenant = $app;
                 $request->application = $app;

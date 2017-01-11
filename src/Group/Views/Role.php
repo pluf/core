@@ -40,7 +40,7 @@ class Group_Views_Role extends Pluf_Views
     {
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
         $permission = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['role']);
-        $row = Pluf_RowPermission::add($group, 'Pluf_Group', $permission, false, $request->tenant->id);
+        $row = Pluf_RowPermission::add($group, 'Pluf_Group', $permission, false);
         // $group->setAssoc($permission);
         return new Pluf_HTTP_Response_Json($row);
     }

@@ -27,9 +27,9 @@ class SaaS_Views_Configuration
             return new Pluf_HTTP_Response_Json(
                     $request->application->getConfigurationList(
                             array(
-                                    SaaS_ConfigurationType::SYSTEM,
-                                    SaaS_ConfigurationType::APPLICATION,
-                                    SaaS_ConfigurationType::GENERAL
+                                    Pluf_ConfigurationType::SYSTEM,
+                                    Pluf_ConfigurationType::APPLICATION,
+                                    Pluf_ConfigurationType::GENERAL
                             ), 
                             array(
                                     'other_read' => 1
@@ -39,9 +39,9 @@ class SaaS_Views_Configuration
             return new Pluf_HTTP_Response_Json(
                     $request->application->getConfigurationList(
                             array(
-                                    SaaS_ConfigurationType::SYSTEM,
-                                    SaaS_ConfigurationType::APPLICATION,
-                                    SaaS_ConfigurationType::GENERAL
+                                    Pluf_ConfigurationType::SYSTEM,
+                                    Pluf_ConfigurationType::APPLICATION,
+                                    Pluf_ConfigurationType::GENERAL
                             ), 
                             array(
                                     'owner_read' => 1
@@ -50,9 +50,9 @@ class SaaS_Views_Configuration
         return new Pluf_HTTP_Response_Json(
                 $request->application->getConfigurationList(
                         array(
-                                SaaS_ConfigurationType::SYSTEM,
-                                SaaS_ConfigurationType::APPLICATION,
-                                SaaS_ConfigurationType::GENERAL
+                                Pluf_ConfigurationType::SYSTEM,
+                                Pluf_ConfigurationType::APPLICATION,
+                                Pluf_ConfigurationType::GENERAL
                         )));
     }
 
@@ -62,7 +62,7 @@ class SaaS_Views_Configuration
 
     public function get ($request, $match)
     {
-        $config = Pluf_Shortcuts_GetObjectOr404('SaaS_Configuration', $match[2]);
+        $config = Pluf_Shortcuts_GetObjectOr404('Pluf_Configuration', $match[2]);
         // XXX: maso, 1394: بررسی نکات امنیتی
         return new Pluf_HTTP_Response_Json($config->data);
     }
@@ -98,11 +98,11 @@ class SaaS_Views_Configuration
         if (! $request->user->administrator) {
             return new Pluf_HTTP_Response_Json(
                     $request->application->getConfiguration(
-                            SaaS_ConfigurationType::APPLICATION));
+                            Pluf_ConfigurationType::APPLICATION));
         }
         return new Pluf_HTTP_Response_Json(
                 $request->application->getConfiguration(
-                        SaaS_ConfigurationType::SYSTEM));
+                        Pluf_ConfigurationType::SYSTEM));
     }
 
     public $create_precond = array(

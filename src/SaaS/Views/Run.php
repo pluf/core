@@ -111,7 +111,7 @@ class SaaS_Views_Run {
      * SPA is used.
      *
      * @param unknown $request
-     * @param SaaS_Application $tenant
+     * @param Pluf_Tenant $tenant
      * @param SaaS_SPA $spa
      * @param string $resource
      * @throws Pluf_EXception if tenant is null or spa could not be found.

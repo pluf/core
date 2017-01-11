@@ -33,6 +33,7 @@ class Pluf_HTTP_Request
     public $REQUEST = array();
     public $COOKIE = array();
     public $FILES = array();
+    public $HEADERS = array();
     public $query = '';
     public $method = '';
     public $uri = '';
@@ -60,5 +61,9 @@ class Pluf_HTTP_Request
         $this->SERVER =& $_SERVER;
         $this->uid = $GLOBALS['_PX_uniqid']; 
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
+        /*
+         * Load request header
+         */
+        $this->HEADERS = apache_request_headers();
     }
 }

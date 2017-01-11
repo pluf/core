@@ -15,7 +15,7 @@ class SaaS_Template_Configuration extends Pluf_Template_Tag {
 	 * @param unknown $default        	
 	 */
 	function start($app, $key, $default) {
-		$application = Pluf_Shortcuts_GetObjectOr404 ( 'SaaS_Application', $app );
+		$application = Pluf_Shortcuts_GetObjectOr404 ( 'Pluf_Tenant', $app );
 		echo $application->getProperty ( $key, $default );
 	}
 }

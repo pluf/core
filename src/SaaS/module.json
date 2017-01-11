@@ -1,27 +1,15 @@
 {
 	"name": "SaaS",
 	"version": "1",
-	"title": "PaaS framework",
+	"title": "SaaS framework",
 	"model": [
-		"SaaS_Application",
-		"SaaS_Configuration",
 		"SaaS_SPA"
 	],
 	"permisson": [
 		{
-			"name": "ownership",
-			"code_name": "owner",
-			"description": "Permission given to software owners."
-		},
-		{
-			"name": "membership",
-			"code_name": "member",
-			"description": "Permission given to software members."
-		},
-		{
-			"name": "authorized users",
-			"code_name": "authorized",
-			"description": "Permission given to users allowed to access a tenant."
+			"name": "Developer",
+			"code_name": "developer",
+			"description": "Permission given to developr to manage SPAs."
 		}
 	]
 }

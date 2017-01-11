@@ -110,7 +110,7 @@ class SaaS_Views_ApplicationSpa
         $sql = new Pluf_SQL('model_class=%s AND owner_class=%s AND owner_id=%s', 
                 array(
                         'SaaS_SPA',
-                        'SaaS_Application',
+                        'Pluf_Tenant',
                         $request->application->id
                 ));
         // Permissions

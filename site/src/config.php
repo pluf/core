@@ -25,20 +25,20 @@ $cfg['installed_apps'] = array(
         'Group',
         'Role',
         'Tenant',
-        'Spa',
-        'Monitor',
-        'SDP',
-        'SaaSDM',
-        'Message',
-        'Setting',
-        'Config',
+//         'Spa',
+//         'Monitor',
+//         'SDP',
+//         'SaaSDM',
+//         'Message',
+//         'Setting',
+//         'Config',
         
 
-        'SaaS',
-        'CMS',
-        'SaaSNewspaper',
-        'Wiki',
-        'Bank',
+//         'SaaS',
+//         'CMS',
+//         'SaaSNewspaper',
+//         'Wiki',
+//         'Bank',
 );
 
 /*
@@ -50,12 +50,12 @@ $cfg['middleware_classes'] = array(
         'Pluf_Middleware_Session',
         'Pluf_Middleware_Translation',
         // Tenant loading
-        'SaaS_Middleware_TenantEmpty',
-        // 'SaaS_Middleware_TenantFromSubDomain',
-        // 'SaaS_Middleware_TenantFromDomain',
-        // 'SaaS_Middleware_TenantFromRequestMatch',
-        // 'SaaS_Middleware_TenantFromSession',
-        'SaaS_Middleware_TenantFromConfig',
+        'Pluf_Middleware_TenantEmpty',
+        'Pluf_Middleware_TenantFromHeader',
+        // 'Pluf_Middleware_TenantFromDomain',
+        // 'Pluf_Middleware_TenantFromRequestMatch',
+        // 'Pluf_Middleware_TenantFromSession',
+        'Pluf_Middleware_TenantFromConfig',
         'Seo_Middleware_Spa',
         'Pluf_Middleware_Api'
 );
@@ -89,14 +89,6 @@ $cfg['encoding'] = 'UTF-8';
  * dd if=/dev/urandom bs=1 count=64 2>/dev/null | base64 -w 0
  */
 $cfg['secret_key'] = 'WMaTo4uv3uFl6MIl0Dm3Ek';
-
-/*
- * پروفایل کاربر را تعیین می‌کند. این پروفایل یک مدل داده‌ای است که رابطه یک به
- * یک با یک کاربر دارد. این مدل داده‌ای به صورت خودکار در سطح سکو مدیریت خواهد
- * شد.
- */
-$cfg['pluf_custom_group'] = 'Pluf_Group';
-$cfg['pluf_custom_user'] = 'Pluf_User';
 
 /*
  * زمانی که یک کاربر ایجاد می‌شود حالت آن را به صورت پیش فرض به حالت فعال تبدیل
@@ -303,6 +295,11 @@ $cfg['saas_spa_default'] = 'test';
 
 $cfg['saas_tenant_default'] = 'main';
 $cfg['saas_tenant_match'] = array();
+
+/*
+ * Enable or disable multitenant mode.
+ */
+$cfg['multitenant'] = true;
 
 /*
  * ----------------------------------------------------------------------------

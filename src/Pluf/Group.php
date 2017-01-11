@@ -26,13 +26,10 @@
 class Pluf_Group extends Pluf_Model
 {
 
-    public $_model = 'Pluf_Group';
-
     function init()
     {
-        $this->_a['verbose'] = __('group');
         $this->_a['table'] = 'groups';
-        $this->_a['model'] = 'Pluf_Group';
+        $this->_a['verbose'] = 'group';
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
@@ -51,7 +48,7 @@ class Pluf_Group extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
                 'size' => 50,
-                'verbose' => __('name'),
+                'verbose' =>'name',
                 'readable' => true,
                 'editable' => true
             ),
@@ -59,18 +56,9 @@ class Pluf_Group extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
                 'size' => 250,
-                'verbose' => __('description'),
+                'verbose' => 'description',
                 'readable' => true,
                 'editable' => true
-            ),
-            /*
-             * XXX: maso, 1395: بهتر هست که ساختار کلود توی همین بسته بیاد
-             */
-            'tenant' => array(
-                'type' => 'Pluf_DB_Field_Integer',
-                'blank' => false,
-                'readable' => false,
-                'editable' => false
             ),
             'permissions' => array(
                 'type' => 'Pluf_DB_Field_Manytomany',
@@ -80,7 +68,7 @@ class Pluf_Group extends Pluf_Model
             )
         );
         $group_table = $this->_con->pfx . $this->_a['table'];
-        $group_model = Pluf::f('pluf_custom_group', 'Pluf_Group');
+        $group_model = 'Pluf_Group';
         if (Pluf::f('pluf_use_rowpermission', false)) {
             $this->_a['views'] = array(
                 'group_permission' => array(

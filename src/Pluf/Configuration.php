@@ -5,7 +5,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class SaaS_Configuration extends Pluf_Model
+class Pluf_Configuration extends Pluf_Model
 {
 
     public $data = array();
@@ -19,25 +19,15 @@ class SaaS_Configuration extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'saas_configuration';
-        $this->_a['model'] = 'SaaS_Configuration';
+        $this->_a['table'] = 'Pluf_Configuration';
         $this->_a['verbose'] = 'Configuration';
-        $this->_model = 'SaaS_Configuration';
-        
+        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true,
                         'editable' => false,
                         'readable' => true
-                ),
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
-                        'blank' => false,
-                        'relate_name' => 'tenant',
-                        'editable' => false,
-                        'readable' => false
                 ),
                 'type' => array(
                         'type' => 'Pluf_DB_Field_Integer',
@@ -86,12 +76,12 @@ class SaaS_Configuration extends Pluf_Model
         $this->_a['idx'] = array(
                 'key_idx' => array(
                         'type' => 'unique',
-                        'col' => 'tenant, type, key'
+                        'col' => 'type, key'
                 )
         );
         $this->_a['views'] = array(
                 'list' => array(
-                        'select' => 'id, saas_configuration.key, description, creation_dtime, modif_dtime'
+                        'select' => 'id, pluf_configuration.key, description, creation_dtime, modif_dtime'
                 )
         );
     }

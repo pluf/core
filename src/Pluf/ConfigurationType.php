@@ -1,6 +1,6 @@
 <?php
 
-final class SaaS_ConfigurationType
+final class Pluf_ConfigurationType
 {
 
     const SYSTEM = 0;

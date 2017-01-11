@@ -112,7 +112,7 @@ class SDP_Asset extends Pluf_Model
             // relations
             'tenant' => array(
                 'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'SaaS_Application',
+                'model' => 'Pluf_Tenant',
                 'blank' => false,
                 'relate_name' => 'tenant',
                 'editable' => false,

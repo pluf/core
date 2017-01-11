@@ -5,7 +5,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class SaaS_Middleware_TenantEmpty
+class Pluf_Middleware_TenantEmpty
 {
 
     function process_request (&$request)
@@ -14,7 +14,7 @@ class SaaS_Middleware_TenantEmpty
             return false;
         }
         
-        $request->tenant = new SaaS_Application();
+        $request->tenant = new Pluf_Tenant();
         $request->application = $request->tenant;
         return false;
     }

@@ -1,8 +1,8 @@
 <?php
 return array (
-		'SaaS_Configuration' => array (
+		'Pluf_Configuration' => array (
 				'relate_to' => array (
-						'SaaS_Application' 
+						'Pluf_Tenant' 
 				) 
 		) 
 );

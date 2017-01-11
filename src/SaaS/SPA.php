@@ -32,21 +32,12 @@ class SaaS_SPA extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'SaaS_SPA';
         $this->_a['table'] = 'saas_spa';
-        $this->_a['model'] = $this->_model;
+        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => true
-                ),
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
-                        'blank' => false,
-                        'relate_name' => 'tenant',
-                        'editable' => false,
-                        'readable' => false
                 ),
                 'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -236,7 +227,7 @@ class SaaS_SPA extends Pluf_Model
      * اولین spa که نامش با نام تعیین شده یکی باشد برگردانده می‌شود
      *
      * @param string $name نام
-     * @param SaaS_Application $tenant            
+     * @param Pluf_Tenant $tenant            
      */
     public static function getSpaByName ($name, $tenant = null)
     {

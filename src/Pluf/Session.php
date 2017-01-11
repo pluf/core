@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -18,14 +19,12 @@
  */
 /**
  * ساختار داده‌ای یک نشست را تعیین می‌کند
- * 
- * @author maso
  *
+ * @author maso
+ *        
  */
 class Pluf_Session extends Pluf_Model
 {
-
-    public $_model = 'Pluf_Session';
 
     public $data = array();
 
@@ -43,7 +42,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند.
-     * 
+     *
      * @see Pluf_Model::_init()
      */
     function _init ()
@@ -54,13 +53,14 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * ساختارهای داده‌ای مورد نیاز برای نشت را تعیین می‌کند.
-     * 
+     *
      * @see Pluf_Model::init()
      */
     function init ()
     {
         $this->_a['table'] = 'sessions';
-        $this->_a['model'] = 'Pluf_Session';
+        $this->_a['verbose'] = 'sessions';
+        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
@@ -140,7 +140,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * تمام داده‌های موجود در نشت را پاک می‌کند.
-     * 
+     *
      * تمام داده‌های ذخیره شده در نشست را پاک می‌کند.
      */
     function clear ()
@@ -151,7 +151,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * یک کلید نشت جدید را ایجاد می‌کند.
-     * 
+     *
      * از این کلید برای دستیابی به داده‌ها استفاده می‌شود.
      */
     function getNewSessionKey ()

@@ -68,6 +68,8 @@ class Pluf_Dispatcher
                     }
                 }
             }
+            // Puts request in global scope
+            $GLOBALS ['_PX_request'] = $req;
             if ($skip === false) {
                 $response = self::match($req);
                 if (! empty($req->response_vary_on)) {

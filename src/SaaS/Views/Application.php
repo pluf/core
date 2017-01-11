@@ -117,7 +117,7 @@ class SaaS_Views_Application
     public static function update ($request, $match)
     {
         // GET data
-        // $app = new SaaS_Application($match[1]);
+        // $app = new Pluf_Tenant($match[1]);
         $app = SaaS_Shortcuts_GetApplicationOr404($match[1]);
         
         // TODO: Check permission
@@ -163,7 +163,7 @@ class SaaS_Views_Application
     public static function tenants ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از نرم افزارها
-        $pag = new Pluf_Paginator(new SaaS_Application());
+        $pag = new Pluf_Paginator(new Pluf_Tenant());
         $list_display = array(
                 'id' => __('tenant id'),
                 'title' => __('title'),
@@ -209,12 +209,12 @@ class SaaS_Views_Application
     public function userApplications ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از آپارتمان‌ها
-        $pag = new Pluf_Paginator(new SaaS_Application());
+        $pag = new Pluf_Paginator(new Pluf_Tenant());
         $pag->model_view = 'user_model_permission';
         $pag->forced_where = new Pluf_SQL(
                 'model_class=%s AND owner_class=%s AND owner_id=%s', 
                 array(
-                        'SaaS_Application',
+                        'Pluf_Tenant',
                         'Pluf_User',
                         $request->user->id
                 ));
