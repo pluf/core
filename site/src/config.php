@@ -21,6 +21,8 @@ $cfg['general_admin_email'] = array(
  */
 $cfg['installed_apps'] = array(
         'Pluf',
+        'CMS',
+
         'User',
         'Group',
         'Role',
@@ -35,7 +37,6 @@ $cfg['installed_apps'] = array(
         
 
 //         'SaaS',
-//         'CMS',
 //         'SaaSNewspaper',
 //         'Wiki',
 //         'Bank',

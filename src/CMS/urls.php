@@ -23,7 +23,7 @@ return array(
         'method' => 'create',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -44,8 +44,7 @@ return array(
         'method' => 'delete',
         'http-method' => 'DELETE',
         'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -54,8 +53,7 @@ return array(
         'method' => 'update',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     
@@ -72,8 +70,7 @@ return array(
         'method' => 'updateFile',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
         

@@ -17,6 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+Pluf::loadFunction('CMS_Shortcuts_CleanName');
+
 /**
  * ایجاد یک محتوای جدید
  *
@@ -43,7 +45,7 @@ class CMS_Form_ContentCreate extends Pluf_Form_Model
         $name = $this->cleaned_data['name'];
         if (empty($name))
             return null;
-        return CMS_Shortcuts_CleanName($name, $this->tenant);
+        return CMS_Shortcuts_CleanName($name);
     }
 
     function save ($commit = true)

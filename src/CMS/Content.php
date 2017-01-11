@@ -147,14 +147,6 @@ class CMS_Content extends Pluf_Model
                         'index_option' => '',
                         'algorithm_option' => '',
                         'lock_option' => ''
-                ),
-                'content_tag_filter_idx' => array(
-                        'col' => 'tag',
-                        'type' => 'normal', // normal, unique, fulltext, spatial
-                        'index_type' => '', // hash, btree
-                        'index_option' => '',
-                        'algorithm_option' => '',
-                        'lock_option' => ''
                 )
         );
     }
