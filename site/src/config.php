@@ -23,9 +23,9 @@ $cfg['installed_apps'] = array(
         'Pluf',
         'User',
         'Group',
+        
         'Role',
         'Tenant',
-        
         'CMS',
         'Bank',
         'Config',
