@@ -36,7 +36,6 @@ class Bank_Backend extends Pluf_Model
     function init ()
     {
         $this->_a['table'] = 'bank_backend';
-        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
@@ -72,7 +71,10 @@ class Bank_Backend extends Pluf_Model
                 'meta' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
-                        'secure' => true
+                        'secure' => true,
+                        'size' => 3000,
+                        'editable' => false,
+                        'readable' => false
                 ),
                 'engine' => array(
                         'type' => 'Pluf_DB_Field_Varchar',

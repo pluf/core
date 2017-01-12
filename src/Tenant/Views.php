@@ -83,7 +83,7 @@ class Tenant_Views extends Pluf_Views
         $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST, 
                 array());
         $model = $form->save();
-        Pluf_RowPermission::add($request->user, $model, 'SaaS.owner', 
+        Pluf_RowPermission::add($request->user, $model, 'Pluf.owner', 
                 $model->id);
         return new Pluf_HTTP_Response_Json($model);
     }

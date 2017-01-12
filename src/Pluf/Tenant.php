@@ -71,7 +71,7 @@ class Pluf_Tenant extends Pluf_Model
                         'blank' => false,
                         'unique' => true,
                         'size' => 63,
-                        'editable' => false
+                        'editable' => true
                 ),
                 'validate' => array(
                         'type' => 'Pluf_DB_Field_Boolean',

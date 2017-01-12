@@ -48,7 +48,6 @@ class Bank_Receipt extends Pluf_Model
     function init ()
     {
         $this->_a['table'] = 'bank_receipt';
-        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array (
 				/*
 				 * داده‌های عمومی برای یک پرداخت

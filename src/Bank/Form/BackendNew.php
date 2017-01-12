@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,9 +20,11 @@
 
 /**
  * فرم کلی ایجاد یک متور پرداخت جدید
- * 
- * این فرم به صورت خودکار پارامترهای مورد استفاده در متورهای پرداخت را تعیین کرده
- * و بر اساس آن فیلدهای دریافتی را فیلتر می‌کند. در نهای بر اساس این داده‌ها یک متور
+ *
+ * این فرم به صورت خودکار پارامترهای مورد استفاده در متورهای پرداخت را تعیین
+ * کرده
+ * و بر اساس آن فیلدهای دریافتی را فیلتر می‌کند. در نهای بر اساس این داده‌ها یک
+ * متور
  * پرداخت جدید ایجاد خواهد شد.
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
@@ -31,26 +34,17 @@ class Bank_Form_BackendNew extends Pluf_Form
 {
 
     /**
-     * ملکی که متور به آن تعلق دارد
-     * 
-     * @var unknown
-     */
-    var $tenant;
-
-    
-    /**
      * نوع متور پرداخت را تعیین می‌کند.
-     * 
+     *
      * @var unknown
      */
     var $engine;
 
     /*
-     * 
+     *
      */
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
         $this->engine = $extra['engine'];
         
         $params = $this->engine->getParameters();
@@ -92,8 +86,15 @@ class Bank_Form_BackendNew extends Pluf_Form
         // Set attributes
         $backend = new Bank_Backend();
         $backend->setFromFormData($this->cleaned_data);
-        $backend->tenant = $this->tenant;
         $backend->engine = $this->engine->getType();
+        $params = $this->engine->getParameters();
+        foreach ($params['children'] as $param) {
+            if ($param['name'] === 'title' || $param['name'] === 'description' ||
+                     $param['name'] === 'symbol' || $param['name'] === 'title')
+                continue;
+            $backend->setMeta($param['name'], 
+                    $this->cleaned_data[$param['name']]);
+        }
         // TODO: maso, 1395: تنها پارامترهایی اضافه باید به صورت کد شده در
         // موجودیت قرار گیرد.
         if ($commit) {
