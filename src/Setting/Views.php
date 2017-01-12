@@ -19,9 +19,8 @@ class Setting_Views extends Pluf_Views
      */
     public function get ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
                 array(
-                        $request->tenant->id,
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));
@@ -47,9 +46,8 @@ class Setting_Views extends Pluf_Views
      */
     public function update ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
                 array(
-                        $request->tenant->id,
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));
@@ -62,7 +60,6 @@ class Setting_Views extends Pluf_Views
             $model = new Pluf_Configuration();
             $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST);
             $model = $form->save(false);
-            $model->tenant = $request->tenant;
             $model->type = Pluf_ConfigurationType::APPLICATION;
             $model->key = $match['key'];
             $model->create();
@@ -81,9 +78,8 @@ class Setting_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        $sql = new Pluf_SQL('tenant=%s AND type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
                 array(
-                        $request->tenant->id,
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
                 ));

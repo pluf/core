@@ -25,15 +25,17 @@ $cfg['installed_apps'] = array(
         'Group',
         'Role',
         'Tenant',
+        
         'CMS',
         'Bank',
+        'Config',
+        'Setting',
+        
 //         'Spa',
 //         'Monitor',
 //         'SDP',
 //         'SaaSDM',
 //         'Message',
-//         'Setting',
-//         'Config',
         
 
 //         'SaaS',
@@ -52,7 +54,7 @@ $cfg['middleware_classes'] = array(
         // Tenant loading
         'Pluf_Middleware_TenantEmpty',
         'Pluf_Middleware_TenantFromHeader',
-        // 'Pluf_Middleware_TenantFromDomain',
+        'Pluf_Middleware_TenantFromDomain',
         // 'Pluf_Middleware_TenantFromRequestMatch',
         // 'Pluf_Middleware_TenantFromSession',
         'Pluf_Middleware_TenantFromConfig',
