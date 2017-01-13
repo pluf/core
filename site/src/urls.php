@@ -71,24 +71,7 @@ return array (
 				'base' => $base,
 				'sub' => include 'Seo/urls.php' 
 		),
-        
-        
-        
-        
-        
-		array (
-				'regex' => '#^/api/saas#',
-				'base' => $base,
-				'sub' => include 'SaaS/urls.php' 
-		),
-		// SaaSNewspaper : online applications
-		array ( 
-				'regex' => '#^/api/newspaper#',
-				'base' => $base,
-				'sub' => include 'SaaSNewspaper/urls.php' 
-		),
-		// Bank
-		array ( 
+		array ( // Bank
 				'regex' => '#^/api/bank#',
 				'base' => $base,
 				'sub' => include 'Bank/urls.php' 
@@ -96,7 +79,7 @@ return array (
 		array ( // SaaS : online applications
 				'regex' => '#^#',
 				'base' => $base,
-				'sub' => include 'SaaS/urls-app2.php' 
+				'sub' => include 'Spa/urls-app2.php' 
 		) 
 );
 
