@@ -33,9 +33,7 @@ class KM_Category extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'KM_Category';
         $this->_a['table'] = 'km_category';
-        $this->_a['model'] = 'KM_Category';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',

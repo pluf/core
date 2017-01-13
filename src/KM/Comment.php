@@ -32,9 +32,7 @@ class KM_Comment extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'KM_Comment';
         $this->_a['table'] = 'km_comment';
-        $this->_a['model'] = 'KM_Comment';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',

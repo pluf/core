@@ -29,7 +29,7 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/label/create$#',
+                'regex' => '#^/label/new$#',
                 'model' => 'KM_Views_Label',
                 'method' => 'create',
                 'precond' => array(
@@ -52,7 +52,7 @@ return array(
                 'model' => 'KM_Views_Label',
                 'method' => 'update',
                 'precond' => array(
-                        'Pluf_Precondition::loginRequired'
+                        'Pluf_Precondition::ownerRequired'
                 ),
                 'http-method' => array(
                         'POST'
@@ -63,7 +63,7 @@ return array(
                 'model' => 'KM_Views_Label',
                 'method' => 'delete',
                 'precond' => array(
-                        'Pluf_Precondition::loginRequired'
+                        'Pluf_Precondition::ownerRequired'
                 ),
                 'http-method' => array(
                         'DELETE'
@@ -81,26 +81,15 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/category/create$#',
+                'regex' => '#^/category/new$#',
                 'model' => 'KM_Views_Category',
                 'method' => 'create',
                 'precond' => array(
-                        'Pluf_Precondition::adminRequired'
+                        'Pluf_Precondition::ownerRequired'
                 ),
                 'http-method' => array(
                         'POST'
                 )
-        ),
-        array(
-                'regex' => '#^/category/(\d+)/create$#',
-                'model' => 'KM_Views_Category',
-                'method' => 'createSubCategory',
-                'precond' => array(
-                        'Pluf_Precondition::adminRequired'
-                ),
-                'http-method' => array(
-                        'POST'
-                ),
         ),
         array(
                 'regex' => '#^/category/(\d+)$#',
@@ -125,25 +114,9 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/category/root$#',
-                'model' => 'KM_Views_Category',
-                'method' => 'root',
-                'http-method' => array(
-                        'GET'
-                )
-        ),
-        array(
                 'regex' => '#^/category/(\d+)$#',
                 'model' => 'KM_Views_Category',
                 'method' => 'get',
-                'http-method' => array(
-                        'GET'
-                )
-        ),
-        array(
-                'regex' => '#^/category/(\d+)/children$#',
-                'model' => 'KM_Views_Category',
-                'method' => 'children',
                 'http-method' => array(
                         'GET'
                 )

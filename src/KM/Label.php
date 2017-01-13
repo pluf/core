@@ -33,9 +33,7 @@ class KM_Label extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'KM_Label';
         $this->_a['table'] = 'km_label';
-        $this->_a['model'] = 'KM_Label';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
