@@ -2,7 +2,7 @@
 return array(
         array(
                 'regex' => '#^/find$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => 'GET',
                 'precond' => array(),

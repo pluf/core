@@ -187,16 +187,11 @@ class Pluf_Views
                 'sortFields' => array()
         );
         $p = array_merge($default, $p);
-        $sql = new Pluf_SQL('tenant=%s', 
-                array(
-                        $request->tenant->id
-                ));
-        if (isset($p['sql'])) {
-            $sql = $sql->SAnd($p['sql']);
-        }
         // Create page
         $page = new Pluf_Paginator(new $p['model']());
-        $page->forced_where = $sql;
+        if (isset($p['sql'])) {
+            $page->forced_where = $p['sql'];
+        }
         $page->list_filters = $p['listFilters'];
         $page->configure($p['listDisplay'], $p['searchFields'], 
                 $p['sortFields']);

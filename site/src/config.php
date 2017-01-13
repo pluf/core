@@ -22,7 +22,6 @@ $cfg['general_admin_email'] = array(
 $cfg['installed_apps'] = array(
         'Pluf',
         'User',
-        
         'Group',
         'Role',
         'Tenant',
@@ -30,8 +29,8 @@ $cfg['installed_apps'] = array(
         'Bank',
         'Config',
         'Setting',
-        
         'Spa',
+        
 //         'Monitor',
 //         'SDP',
 //         'SaaSDM',
@@ -301,7 +300,7 @@ $cfg['saas_tenant_match'] = array();
 /*
  * Enable or disable multitenant mode.
  */
-$cfg['multitenant'] = true;
+$cfg['multitenant'] = false;
 
 /*
  * ----------------------------------------------------------------------------
