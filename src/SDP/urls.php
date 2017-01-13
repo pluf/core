@@ -8,7 +8,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Find
@@ -54,7 +54,7 @@ return array(
         'method' => 'addTag',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -63,7 +63,7 @@ return array(
         'method' => 'addTag',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -72,7 +72,7 @@ return array(
         'method' => 'removeTag',
         'http-method' => 'DELETE',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Categories of Assets
@@ -88,7 +88,7 @@ return array(
         'method' => 'addCategory',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -97,7 +97,7 @@ return array(
         'method' => 'addCategory',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -106,13 +106,13 @@ return array(
         'method' => 'removeCategory',
         'http-method' => 'DELETE',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Category
     array( // Find
         'regex' => '#^/category/find$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'findObject',
         'http-method' => 'GET',
         'params' => array(
@@ -137,7 +137,7 @@ return array(
     ),
     array( // Create
         'regex' => '#^/category/new$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'createObject',
         'http-method' => 'POST',
         'params' => array(
@@ -145,12 +145,12 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Get info
         'regex' => '#^/category/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'getObject',
         'http-method' => 'GET',
         'params' => array(
@@ -159,7 +159,7 @@ return array(
     ),
     array( // Delete
         'regex' => '#^/category/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'deleteObject',
         'http-method' => 'DELETE',
         'params' => array(
@@ -167,19 +167,19 @@ return array(
             'permanently' => true
         ),
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array( // Update
         'regex' => '#^/category/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'updateObject',
         'http-method' => 'POST',
         'params' => array(
             'model' => 'SDP_Category'
         ),
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Assets in Category
@@ -195,7 +195,7 @@ return array(
         'method' => 'addAsset',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -204,7 +204,7 @@ return array(
         'method' => 'addAsset',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -213,13 +213,13 @@ return array(
         'method' => 'removeAsset',
         'http-method' => 'DELETE',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Tag
     array( // Find
         'regex' => '#^/tag/find$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'findObject',
         'http-method' => 'GET',
         'params' => array(
@@ -242,7 +242,7 @@ return array(
     ),
     array( // Create
         'regex' => '#^/tag/new$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'createObject',
         'http-method' => 'POST',
         'params' => array(
@@ -250,12 +250,12 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Get info
         'regex' => '#^/tag/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'getObject',
         'http-method' => 'GET',
         'params' => array(
@@ -264,7 +264,7 @@ return array(
     ),
     array( // Delete
         'regex' => '#^/tag/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'deleteObject',
         'http-method' => 'DELETE',
         'params' => array(
@@ -272,19 +272,19 @@ return array(
             'permanently' => true
         ),
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array( // Update
         'regex' => '#^/tag/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'updateObject',
         'http-method' => 'POST',
         'params' => array(
             'model' => 'SDP_Tag'
         ),
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Assets with Tag
@@ -300,7 +300,7 @@ return array(
         'method' => 'addAsset',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -309,7 +309,7 @@ return array(
         'method' => 'addAsset',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -318,7 +318,7 @@ return array(
         'method' => 'removeAsset',
         'http-method' => 'DELETE',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     // ************************************************************* Link
@@ -335,7 +335,7 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Link urls
@@ -345,7 +345,7 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* download asset
@@ -363,7 +363,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Activate secure link that has been activated
@@ -373,13 +373,13 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* AssetRelation
     array(
         'regex' => '#^/assetrelation/find$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'findObject',
         'http-method' => 'GET',
         'params' => array(
@@ -412,11 +412,11 @@ return array(
     ),
     array(
         'regex' => '#^/assetrelation/new$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'createObject',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         ),
         'params' => array(
             'model' => 'SDP_AssetRelation'
@@ -424,7 +424,7 @@ return array(
     ),
     array(
         'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'getObject',
         'http-method' => 'GET',
         'params' => array(
@@ -433,11 +433,11 @@ return array(
     ),
     array(
         'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'deleteObject',
         'http-method' => 'DELETE',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         ),
         'params' => array(
             'model' => 'SDP_AssetRelation',
@@ -446,11 +446,11 @@ return array(
     ),
     array(
         'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-        'model' => 'SaaS_Views',
+        'model' => 'Pluf_Views',
         'method' => 'updateObject',
         'http-method' => 'POST',
         'precond' => array(
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         ),
         'params' => array(
             'model' => 'SDP_AssetRelation'

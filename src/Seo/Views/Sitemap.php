@@ -18,7 +18,7 @@ class Seo_Views_Sitemap
      */
     public static function get ($request, $match)
     {
-        $sp = new SaaS_SPA();
+        $sp = new SPA();
         $spaList = $sp->getList();
         
         // TODO: روشی برای اضافه کردن لینک های خارجی هم باید ایجاد بشه

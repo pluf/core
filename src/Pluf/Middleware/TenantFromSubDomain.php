@@ -19,7 +19,7 @@ class Pluf_Middleware_TenantFromSubDomain
             // حذف www. در صورت وجود
             $domain = preg_replace('/^www\./', '', $domain);
             // استخراج زیر دامنه
-            $subdomain = SaaS_Middleware_TenantFromSubDomain::extract_subdomains($domain);
+            $subdomain = Middleware_TenantFromSubDomain::extract_subdomains($domain);
             // پیدا کردن ملک با زیر دامنه داده شده
             $app = Pluf_Tenant::bySubDomain($subdomain);
             if ($app) {
@@ -69,7 +69,7 @@ class Pluf_Middleware_TenantFromSubDomain
      */
     private static function extract_subdomains($str)
     {
-        $dom = SaaS_Middleware_TenantFromSubDomain::extract_domain($str);
+        $dom = Middleware_TenantFromSubDomain::extract_domain($str);
         
         $subdomains = rtrim(strstr($str, $dom, true), '.');
         

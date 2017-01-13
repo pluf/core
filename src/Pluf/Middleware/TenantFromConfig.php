@@ -15,7 +15,7 @@ class Pluf_Middleware_TenantFromConfig
             return false;
         }
         
-            $appName = Pluf::f('saas_tenant_default');
+            $appName = Pluf::f('tenant_default');
             $app = Pluf_Tenant::bySubDomain($appName);
             if($app){
                 $request->tenant = $app;

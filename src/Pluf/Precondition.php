@@ -175,9 +175,8 @@ class Pluf_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) ||
-                 $request->user->hasPerm('Pluf.member', null, 
-                        $request->tenant->id)) {
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) || $request->user->hasPerm(
+                'Pluf.member', null, $request->tenant->id)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
@@ -201,13 +200,84 @@ class Pluf_Precondition
         if ($request->user->administrator) {
             return true;
         }
-        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) ||
-                 $request->user->hasPerm('Pluf.member', null, 
-                        $request->tenant->id) ||
-                 $request->user->hasPerm('Pluf.authorized', null, 
-                        $request->tenant->id)) {
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id) || $request->user->hasPerm(
+                'Pluf.member', null, $request->tenant->id) || $request->user->hasPerm(
+                'Pluf.authorized', null, $request->tenant->id)) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied();
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که مالک tenant
+     * است یا نه.
+     * در صورتی که کاربر مالک tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @return اگر کاربر مالک tenant باشد مقدار true وگرنه مقدار false برگردانده
+     *         می‌شود
+     */
+    static public function isOwner ($request)
+    {
+        if (! isset($request->user) or $request->user->isAnonymous()) {
+            return false;
+        }
+        // Precondition::baseAccess($request, $app);
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که عضو tenant
+     * است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @return اگر کاربر عضو tenant باشد مقدار true وگرنه مقدار false برگردانده
+     *         می‌شود
+     */
+    static public function isMember ($request)
+    {
+        if (! isset($request->user) or $request->user->isAnonymous()) {
+            return false;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', $request->application) || $request->user->hasPerm(
+                'Pluf.member')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * بررسی می‌کند که آیا درخواست داده شده توسط کاربری ارسال شده که در tenant
+     * مجاز است یا نه.
+     * در صورتی که کاربر عضو tenant نباشد مقدار false برگردانده می‌شود.
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @return اگر کاربر در tenant مجاز باشد مقدار true وگرنه مقدار false
+     *         برگردانده می‌شود
+     */
+    static public function isAuthorized ($request)
+    {
+        if (! isset($request->user) or $request->user->isAnonymous()) {
+            return false;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', $request->application) ||
+                 $request->user->hasPerm('Pluf.member', $request->application) || $request->user->hasPerm(
+                        'Pluf.authorized')) {
+            return true;
+        }
+        return false;
     }
 }

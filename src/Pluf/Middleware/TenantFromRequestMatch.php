@@ -15,7 +15,7 @@ class Pluf_Middleware_TenantFromRequestMatch
             return false;
         }
         
-        $regexs = Pluf::f('saas_tenant_match', array());
+        $regexs = Pluf::f('tenant_match', array());
         foreach ($regexs as $regex) {
             try {
                 $match = array();

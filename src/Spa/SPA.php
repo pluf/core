@@ -41,7 +41,7 @@ class Spa_SPA extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'saas_spa';
+        $this->_a['table'] = 'spa';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
@@ -208,6 +208,6 @@ class Spa_SPA extends Pluf_Model
     public static function getSpaByName ($name, $tenant = null)
     {
         $sql = new Pluf_SQL('name=%s', array($name));
-        return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
+        return Pluf::factory('SPA')->getOne($sql->gen());
     }
 }

@@ -74,7 +74,7 @@ class User_Views_Profile
         // TODO: Hadi, 1395-07-23: should consider security permissions
         $currentUser = $request->user;
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        if($currentUser->getId() === $user->getId() || SaaS_Precondition::tenantOwner($request))
+        if($currentUser->getId() === $user->getId() || Pluf_Precondition::ownerRequired($request))
             return User_Shortcuts_UpdateProfile($user, $request->REQUEST);
         throw new Pluf_Exception_PermissionDenied("Permission is denied");
     }

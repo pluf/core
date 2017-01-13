@@ -38,7 +38,7 @@ try {
     $tenant = new Pluf_Tenant();
     $tenant->title = 'Default Tenant';
     $tenant->description = 'Auto generated tenant';
-    $tenant->subdomain = Pluf::f('saas_tenant_default', 'main');
+    $tenant->subdomain = Pluf::f('tenant_default', 'main');
     $tenant->domain = Pluf::f('general_domain', 'donate.com');
     $tenant->create();
     

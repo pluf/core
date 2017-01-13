@@ -82,7 +82,7 @@ class Bank_Engine_Zarinpal extends Bank_Engine
         Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
         Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
         
-        if (Pluf::f('saas_bank_debug', false)) {
+        if (Pluf::f('bank_debug', false)) {
             $receipt->setMeta('Authority', 'back engine is in debug mode');
             $receipt->callURL = 'https://www.zarinpal.com/pg/StartPay/example';
             return;
@@ -121,7 +121,7 @@ class Bank_Engine_Zarinpal extends Bank_Engine
         Pluf_Assert::assertNotNull($backend, 'Bakend is empty');
         Pluf_Assert::assertNotNull($MerchantID, 'MerchantID is not defined');
         
-        if (Pluf::f('saas_bank_debug', false)) {
+        if (Pluf::f('bank_debug', false)) {
             $receipt->payRef = 'back engine is in debug mode';
             return true;
         }

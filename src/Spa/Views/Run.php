@@ -6,7 +6,7 @@
  * @author maso
  *
  */
-class SaaS_Views_Run {
+class Pluf_Views_Run {
 
     /**
      * **************************************************************************************
@@ -29,26 +29,26 @@ class SaaS_Views_Run {
         if (! isset($path)) {
             throw new Pluf_Exception('Name for spa or resource is null!');
         }
-        $spa = SaaS_SPA::getSpaByName($path, $tenant);
+        $spa = SPA::getSpaByName($path, $tenant);
         $resource = null;
         if (! isset($spa)) {
             $spa = $tenant->get_spa();
             $resource = $path;
         }
-        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
+        return Pluf_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $resource);
         // // TODO: Check access
-        // SaaS_Precondition::userCanAccessApplication($request, $tenant);
-        // // SaaS_Precondition::userCanAccessSpa($request, $spa);
+        // Precondition::userCanAccessApplication($request, $tenant);
+        // // Precondition::userCanAccessSpa($request, $spa);
     
         // // نمایش اصلی
-        // return SaaS_Views_Run::loadSpa($request, $tenant, $spa);
+        // return Pluf_Views_Run::loadSpa($request, $tenant, $spa);
     }
     
     public static function defaultSpa ($request, $match)
     {
         $tenant = $request->tenant;
-        return SaaS_Views_Run::loadSpaResource($request, $tenant);
+        return Pluf_Views_Run::loadSpaResource($request, $tenant);
     }
     
     public static function getResource ($request, $match)
@@ -57,19 +57,19 @@ class SaaS_Views_Run {
         $resourcePath = $match['resource'];
         $tenant = $request->tenant;
         if ($match['spa']) {
-            $spa = SaaS_SPA::getSpaByName($match['spa'], $tenant);
+            $spa = SPA::getSpaByName($match['spa'], $tenant);
         }
         if (! isset($spa)) {
             $spa = $tenant->get_spa();
             $resourcePath = $match[0];
         }
-        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
+        return Pluf_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $resourcePath);
         // // TODO: Check access
         // $resPath = $spa->getResourcePath($resourcePath);
         // if (! $resPath) {
         // // Try to load resource form assets directory of platform
-        // $resPath = SaaS_SPA::getAssetsPath($resourcePath);
+        // $resPath = SPA::getAssetsPath($resourcePath);
         // }
         // return new Pluf_HTTP_Response_File($resPath,
         // Pluf_FileUtil::getMimeType($resPath));
@@ -81,14 +81,14 @@ class SaaS_Views_Run {
         $tenant = $request->tenant;
         $spa = $tenant->get_spa();
     
-        return SaaS_Views_Run::loadSpaResource($request, $tenant, $spa,
+        return Pluf_Views_Run::loadSpaResource($request, $tenant, $spa,
                 $match['resource']);
         // // TODO: Check access
         // // Load resource form local resources of spa
         // $res = $spa->getResourcePath($match['resource']);
         // if (! $res) {
         // // Try to load resource form assets directory of platform
-        // $res = SaaS_SPA::getAssetsPath($match['resource']);
+        // $res = SPA::getAssetsPath($match['resource']);
         // }
         // return new Pluf_HTTP_Response_File($res,
         // Pluf_FileUtil::getMimeType($res));
@@ -112,7 +112,7 @@ class SaaS_Views_Run {
      *
      * @param unknown $request
      * @param Pluf_Tenant $tenant
-     * @param SaaS_SPA $spa
+     * @param SPA $spa
      * @param string $resource
      * @throws Pluf_EXception if tenant is null or spa could not be found.
      * @return Pluf_HTTP_Response_File|Pluf_HTTP_Response|Pluf_HTTP_Response_File
@@ -136,13 +136,13 @@ class SaaS_Views_Run {
         }
         // Resource
         if (! isset($resource)) {
-            return SaaS_Views_Run::loadSpa($request, $tenant, $_spa);
+            return Pluf_Views_Run::loadSpa($request, $tenant, $_spa);
         }
         // TODO: Check access
         $resPath = $_spa->getResourcePath($resource);
         if (! $resPath) {
             // Try to load resource form assets directory of platform
-            $resPath = SaaS_SPA::getAssetsPath($resource);
+            $resPath = SPA::getAssetsPath($resource);
         }
         return new Pluf_HTTP_Response_File($resPath,
                 Pluf_FileUtil::getMimeType($resPath));

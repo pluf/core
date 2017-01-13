@@ -93,7 +93,7 @@ class Pluf_FileUtil
         static $mimes = null;
         if ($mimes == null) {
             $mimes = array();
-            $src = Pluf::f('saas_mimetypes_db', '/etc/mime.types');
+            $src = Pluf::f('mimetypes_db', '/etc/mime.types');
             $filecontent = @file_get_contents($src);
             if ($filecontent !== false) {
                 $mimes = preg_split("/\015\012|\015|\012/", $filecontent);

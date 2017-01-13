@@ -216,470 +216,469 @@ class Pluf_User extends Pluf_Model
         $select = array();
         $table = $this->getSqlTable();
         foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany' &&
-                     ! (array_key_exists('secure', $val) &&
-                     $val['secure'] == true)) {
+            if ($val['type'] != 'Pluf_DB_Field_Manytomany' && ! (array_key_exists(
+                    'secure', $val) && $val['secure'] == true)) {
                 $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
-                 $this->_con->qn($col);
+                         $this->_con->qn($col);
+            }
+        }
+        $this->_cache['getSecureSelect'] = implode(', ', $select);
+        return $this->_cache['getSecureSelect'];
     }
-}
-$this->_cache['getSecureSelect'] = implode(', ', $select);
-return $this->_cache['getSecureSelect'];
-}
 
-/**
- * Hook for extended class
- */
-function extended_init ()
-{
-return;
-}
+    /**
+     * Hook for extended class
+     */
+    function extended_init ()
+    {
+        return;
+    }
 
-/**
- * نمایش رشته‌ای از یک کاربر
- *
- * این کلاس یک نمایش رشته‌ای از کاربر ایجاد می‌کند.
- */
-function __toString ()
-{
-$repr = $this->last_name;
-if (strlen($this->first_name) > 0) {
-    $repr = $this->first_name . ' ' . $repr;
-}
-return $repr;
-}
+    /**
+     * نمایش رشته‌ای از یک کاربر
+     *
+     * این کلاس یک نمایش رشته‌ای از کاربر ایجاد می‌کند.
+     */
+    function __toString ()
+    {
+        $repr = $this->last_name;
+        if (strlen($this->first_name) > 0) {
+            $repr = $this->first_name . ' ' . $repr;
+        }
+        return $repr;
+    }
 
-/**
- * فراخوانی‌های پیش از حذف کاربر
- *
- * پیش از این که کاربر حذف شود یک سیگنال به کل سیستم ارسال شده و حذف کاربر
- * گزارش می‌شود.
- */
-function preDelete ()
-{
-/**
- * [signal]
- *
- * Pluf_User::preDelete
- *
- * [sender]
- *
- * Pluf_User
- *
- * [description]
- *
- * This signal allows an application to perform special
- * operations at the deletion of a user.
- *
- * [parameters]
- *
- * array('user' => $user)
- */
-$params = array(
-        'user' => $this
-);
-Pluf_Signal::send('Pluf_User::preDelete', 'Pluf_User', $params);
+    /**
+     * فراخوانی‌های پیش از حذف کاربر
+     *
+     * پیش از این که کاربر حذف شود یک سیگنال به کل سیستم ارسال شده و حذف کاربر
+     * گزارش می‌شود.
+     */
+    function preDelete ()
+    {
+        /**
+         * [signal]
+         *
+         * Pluf_User::preDelete
+         *
+         * [sender]
+         *
+         * Pluf_User
+         *
+         * [description]
+         *
+         * This signal allows an application to perform special
+         * operations at the deletion of a user.
+         *
+         * [parameters]
+         *
+         * array('user' => $user)
+         */
+        $params = array(
+                'user' => $this
+        );
+        Pluf_Signal::send('Pluf_User::preDelete', 'Pluf_User', $params);
+        
+        if (Pluf::f('pluf_use_rowpermission', false)) {
+            $_rpt = Pluf::factory('Pluf_RowPermission')->getSqlTable();
+            $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', 
+                    array(
+                            $this->_a['model'],
+                            $this->_data['id']
+                    ));
+            $this->_con->execute(
+                    'DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
+        }
+    }
 
-if (Pluf::f('pluf_use_rowpermission', false)) {
-    $_rpt = Pluf::factory('Pluf_RowPermission')->getSqlTable();
-    $sql = new Pluf_SQL('owner_class=%s AND owner_id=%s', 
-            array(
-                    $this->_a['model'],
-                    $this->_data['id']
-            ));
-    $this->_con->execute('DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
-}
-}
+    /**
+     * Set the password of a user.
+     *
+     * You need to manually save the user to store the password in the
+     * database. The supported algorithms are md5, crc32 and sha1,
+     * sha1 being the default.
+     *
+     * @param
+     *            string New password
+     * @return bool Success
+     */
+    function setPassword ($password)
+    {
+        $salt = Pluf_Utils::getRandomString(5);
+        $this->password = 'sha1:' . $salt . ':' . sha1($salt . $password);
+        return true;
+    }
 
-/**
- * Set the password of a user.
- *
- * You need to manually save the user to store the password in the
- * database. The supported algorithms are md5, crc32 and sha1,
- * sha1 being the default.
- *
- * @param
- *            string New password
- * @return bool Success
- */
-function setPassword ($password)
-{
-$salt = Pluf_Utils::getRandomString(5);
-$this->password = 'sha1:' . $salt . ':' . sha1($salt . $password);
-return true;
-}
+    /**
+     * تعیین صحت گذرواژه کاربر
+     *
+     * در صورتی که گذرواژه کاربر تعیین شود، این متد بررسی می‌کن که آیا مقدار
+     * درستی برای
+     * آن تعیین شده است یا نه.
+     *
+     * @param
+     *            string گذرواژه
+     * @return bool مقدار درستی در صورت موفقیت
+     */
+    function checkPassword ($password)
+    {
+        if ($this->password == '') {
+            return false;
+        }
+        list ($algo, $salt, $hash) = explode(':', $this->password);
+        if ($hash == $algo($salt . $password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-/**
- * تعیین صحت گذرواژه کاربر
- *
- * در صورتی که گذرواژه کاربر تعیین شود، این متد بررسی می‌کن که آیا مقدار
- * درستی برای
- * آن تعیین شده است یا نه.
- *
- * @param
- *            string گذرواژه
- * @return bool مقدار درستی در صورت موفقیت
- */
-function checkPassword ($password)
-{
-if ($this->password == '') {
-    return false;
-}
-list ($algo, $salt, $hash) = explode(':', $this->password);
-if ($hash == $algo($salt . $password)) {
-    return true;
-} else {
-    return false;
-}
-}
-
-/**
- * Check if the login creditentials are valid.
- *
- * @param
- *            string Login
- * @param
- *            string Password
- * @return mixed False or matching user
- */
-function checkCreditentials ($login, $password)
-{
-$where = 'login = ' . $this->_toDb($login, 'login');
-$users = $this->getList(array(
-        'filter' => $where
-));
-if ($users === false or count($users) !== 1) {
-    return false;
-}
-if ($users[0]->active and $users[0]->checkPassword($password)) {
-    return $users[0];
-}
-return false;
-}
-
-/**
- * خصوصیت‌های کاربر را استخراج کرده و در اختیار قرار می دهد.
- *
- * @param unknown $login            
- * @return boolean|ArrayObject
- */
-function getUser ($login)
-{
-$where = 'login = ' . $this->_toDb($login, 'login');
-$users = $this->getList(array(
-        'filter' => $where
-));
-if ($users === false or count($users) !== 1) {
-    return false;
-}
-return $users[0];
-}
-
-/**
- * Set the last_login and date_joined before creating.
- */
-function preSave ($create = false)
-{
-if (! ($this->id > 0)) {
-    $this->last_login = gmdate('Y-m-d H:i:s');
-    $this->date_joined = gmdate('Y-m-d H:i:s');
-}
-}
-
-/**
- * تمام دسترسی‌هایی که یک کاربر دارد را تعیین می‌کند.
- *
- * این که گواهی مربوط به یک سطر است یا نه به صورت کلی تعیین شده است مهم نیست
- * و تنها وجود گواهی برای کاربر در نظر گرفته می‌شود.
- *
- * گواهی می‌تواند به کاربر و یا به گروه انتصاب داده شده باشد.
- *
- * @param
- *            bool Force the reload of the list of permissions (false)
- * @return array List of permissions
- */
-function getAllPermissions ($force = false, $tenant = 0)
-{
-if ($force == false and ! is_null($this->_cache_perms)) {
-    return $this->_cache_perms;
-}
-$this->_cache_perms = array();
-if ($this->isAnonymous()) {
-    return $this->_cache_perms;
-}
-// load user permissions
-$perms = (array) $this->get_permissions_list();
-
-// XXX:maso, group in tenant
-// Load groups
-$groups = $this->get_groups_list();
-$ids = array();
-foreach ($groups as $group) {
-    $ids[] = $group->id;
-}
-// load groups permisson
-if (count($ids) > 0) {
-    $this->loadGroupPermissions($ids, $tenant);
-}
-// load row permission
-if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
-    $this->loadRowPermissions($ids, $tenant);
-}
-return $this->_cache_perms;
-}
-
-/**
- * فهرستی از شی داده شده را برمی‌گرداند که این کاربر دسترسی تعیین شده را روی
- * آن‌ها دارد.
- * به عنوان مثال فراخوانی این متد به صورت getAllPermittedObject('App.manage',
- * new Pluf_Group(), 1)
- * فهرستی از Pluf_Group هایی را برمی‌گرداند که کاربر جاری روی ان‌ها دسترسی
- * 'manage' رو در ملک با
- * شناسه یک دارد.
- *
- * @param Pluf_Model $object
- *            نمونه از شی مورد نظر
- * @param string $permission
- *            رشته حاوی code_name مربوط به گواهی مورد نظر
- * @param int $tenant
- *            شناسه ملک مورد نظر
- */
-function getAllPermittedObject ($permission, $object, $tenant = 0)
-{
-$permPattern = $permission . '#' . $object->_a['model'];
-$permList = $this->getAllPermissions(false, $tenant);
-$result = array();
-foreach ($permList as $rowPerm) {
-    try {
-        preg_match('/^(?P<perm>' . $permPattern . ')\((?P<id>\d+)\)/', $rowPerm, 
-                $m);
-        $obj = new $object->_a['model']($m['id']);
-        array_push($result, $obj);
-    } catch (Exception $e) {}
-}
-return $result;
-}
-
-/*
- * فهرست گروه‌ها را لود می‌کند.
- */
-private function loadGroupPermissions ($ids, $tenant)
-{
-$gperm = new Pluf_Permission();
-$f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) . '_id';
-$perms = array_merge($perms, 
-        (array) $gperm->getList(
+    /**
+     * Check if the login creditentials are valid.
+     *
+     * @param
+     *            string Login
+     * @param
+     *            string Password
+     * @return mixed False or matching user
+     */
+    function checkCreditentials ($login, $password)
+    {
+        $where = 'login = ' . $this->_toDb($login, 'login');
+        $users = $this->getList(
                 array(
-                        'filter' => $f_name . ' IN (' . join(', ', $ids) . ')',
-                        'view' => 'join_group'
-                )));
-foreach ($perms as $perm) {
-    $tos = $perm->toString();
-    if (! in_array($tos, $this->_cache_perms)) {
-        $this->_cache_perms[] = $tos;
-    }
-}
-}
-
-/*
- * تمام گواهی‌هایی که با جدول مشخص شده است را لود می‌کند.
- */
-private function loadRowPermissions ($ids, $tenant)
-{
-$growp = new Pluf_RowPermission();
-$sql = new Pluf_SQL('owner_id=%s AND owner_class=%s AND tenant=%s', 
-        array(
-                $this->id,
-                'Pluf_User',
-                $tenant
-        ));
-if (count($ids) > 0) {
-    $sql2 = new Pluf_SQL('owner_id IN (%s) AND owner_class=%s AND tenant=%s', 
-            array(
-                    join(', ', $ids),
-                    Pluf::f('pluf_custom_group', 'Pluf_Group'),
-                    $tenant
-            ));
-    $sql->SOr($sql2);
-}
-$perms = $growp->getList(
-        array(
-                'filter' => $sql->gen(),
-                'view' => 'join_permission'
-        ));
-foreach ($perms as $perm) {
-    $perm_string = $perm->toString();
-    if (! in_array($perm_string, $this->_cache_perms)) {
-        $this->_cache_perms[] = $perm_string;
-    }
-}
-}
-
-/**
- * تمام گواهی‌های کاربر را تعیین می‌کند
- *
- * این فراخوانی تمام گواهی‌های کاربر را تعیین می‌کند که برای یک موجودیت
- * دارد. برای نمونه تمام گواهی‌هایی که کاربر برای یک نرم افزار دارد را
- * می‌توان با این فراخوانی تعیین کرد.
- *
- * @param unknown $object            
- */
-public function getPermissions ($object)
-{
-    // Group permissions
-    // $groups = $this->get_groups_list();
-    // $ids = array();
-    // foreach ($groups as $group) {
-    // $ids[] = $group->id;
-    // }
-    // if (count($ids) > 0) {
-    // $gperm = new Pluf_Permission();
-    // $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) .
-    // '_id';
-    // $perms = array_merge($perms,
-    // (array) $gperm->getList(
-    // array(
-    // 'filter' => $f_name . ' IN (' .
-    // join(', ', $ids) . ')',
-    // 'view' => 'join_group'
-    // )));
-    // }
-}
-
-/**
- * تعیین گواهی برای شئی تعیین شده
- *
- * یگ گواهی برای یک مدل خاص است، در اینجا می‌توان تعیین کرد که آیا کاربر
- * به شئی مورد نظر این گواهی را دارد.
- *
- * <ul>
- * <li>کاربر باید در سیستم فعال باشد</li>
- * <li>کاربر مدیر تمام دسترسی‌ها را دارد</li>
- * <li></li>
- * </ul>
- *
- * @param
- *            string Permission
- * @param
- *            Object Object for row level permission (null)
- * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
- */
-function hasPerm ($perm, $obj = null, $tenantId = 0)
-{
-if (! $this->active)
-    return false;
-if ($this->administrator)
-    return true;
-$perms = $this->getAllPermissions(false, $tenantId);
-if (! is_null($obj)) {
-    $perm_row = $perm . '#' . $obj->_a['model'] . '(' . $obj->id . ')';
-    if (in_array('!' . $perm_row, $perms))
+                        'filter' => $where
+                ));
+        if ($users === false or count($users) !== 1) {
+            return false;
+        }
+        if ($users[0]->active and $users[0]->checkPassword($password)) {
+            return $users[0];
+        }
         return false;
-    if (in_array($perm_row, $perms))
-        return true;
-}
-if (in_array($perm, $perms))
-    return true;
-return false;
-}
-
-/**
- * تعیین می‌کند که آیا کاربر یکی از مجوزهای نرم افزار را دارد یا نه.
- *
- * @return bool درستی اگر یکی از مجوزها وجود داشته باشد.
- */
-function hasAppPerms ($app)
-{
-if ($this->administrator)
-    return true;
-foreach ($this->getAllPermissions() as $perm) {
-    if (0 === strpos($perm, $app . '.')) {
-        return true;
     }
-}
-return false;
-}
 
-/**
- * تعیین پیام برای کاربر
- *
- * یک پیام جدید را ایجاد کرده و به کاربر اضافه می‌کند. در صورتی که کاربر در
- * سیستم ایجاد نشده باشد یک خطا صادر خواهد شد.
- *
- * @param
- *            string Message
- * @return bool Success
- */
-function setMessage ($message, $tenant = 0)
-{
-if ($this->isAnonymous()) {
-    throw new Pluf_Exception_DoesNotExist(
-            __("User not exist, while you are trying to add message?!"));
-}
-$m = new Pluf_Message();
-$m->user = $this;
-$m->tenant = $tenant;
-$m->message = $message;
-if (! $m->create()) {
-    throw new Pluf_Exception(__("not possible to create a message"));
-}
-return $m;
-}
+    /**
+     * خصوصیت‌های کاربر را استخراج کرده و در اختیار قرار می دهد.
+     *
+     * @param unknown $login            
+     * @return boolean|ArrayObject
+     */
+    function getUser ($login)
+    {
+        $where = 'login = ' . $this->_toDb($login, 'login');
+        $users = $this->getList(
+                array(
+                        'filter' => $where
+                ));
+        if ($users === false or count($users) !== 1) {
+            return false;
+        }
+        return $users[0];
+    }
 
-/**
- * دریافت و حذف پیام‌ها
- *
- * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند.
- * در
- * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
- *
- * @return ArrayObject
- */
-function getAndDeleteMessages ()
-{
-if ($this->isAnonymous()) {
-    throw new Pluf_Exception_DoesNotExist(
-            __("User not exist, while you are trying to get messages?!"));
-}
-$messages = array();
-$ms = $this->get_pluf_message_list();
-foreach ($ms as $m) {
-    $ms = new Pluf_Message($m->id);
-    array_push($messages, $ms);
-    $m->delete();
-}
-return $messages;
-}
+    /**
+     * Set the last_login and date_joined before creating.
+     */
+    function preSave ($create = false)
+    {
+        if (! ($this->id > 0)) {
+            $this->last_login = gmdate('Y-m-d H:i:s');
+            $this->date_joined = gmdate('Y-m-d H:i:s');
+        }
+    }
 
-/**
- * پروفایل کاربر را تعیین می‌کند.
- *
- * Retrieve the profile of the current user. If not profile in the
- * database a Pluf_Exception_DoesNotExist exception is thrown,
- * just catch it and create a profile.
- *
- * @return Pluf_Model User profile
- */
-function getProfile ()
-{
-$pclass = Pluf::f('user_profile_class', false);
-if (false == $pclass) {
-    throw new Pluf_Exception_SettingError(
-            __('"user_profile_class" setting not defined.'));
-}
-$db = $this->getDbConnection();
-$sql = new Pluf_SQL(sprintf('%s=%%s', $db->qn('user')), 
-        array(
-                $this->id
-        ));
-$users = Pluf::factory($pclass)->getList(
-        array(
-                'filter' => $sql->gen()
-        ));
-if ($users->count() != 1) {
-    throw new Pluf_Exception_DoesNotExist(
-            sprintf(__('No profiles available for user: %s'), (string) $this));
-}
-return $users[0];
-}
+    /**
+     * تمام دسترسی‌هایی که یک کاربر دارد را تعیین می‌کند.
+     *
+     * این که گواهی مربوط به یک سطر است یا نه به صورت کلی تعیین شده است مهم نیست
+     * و تنها وجود گواهی برای کاربر در نظر گرفته می‌شود.
+     *
+     * گواهی می‌تواند به کاربر و یا به گروه انتصاب داده شده باشد.
+     *
+     * @param
+     *            bool Force the reload of the list of permissions (false)
+     * @return array List of permissions
+     */
+    function getAllPermissions ($force = false)
+    {
+        if ($force == false and ! is_null($this->_cache_perms)) {
+            return $this->_cache_perms;
+        }
+        $this->_cache_perms = array();
+        if ($this->isAnonymous()) {
+            return $this->_cache_perms;
+        }
+        // load user permissions
+        $perms = (array) $this->get_permissions_list();
+        
+        // Load groups
+        $groups = $this->get_groups_list();
+        $ids = array();
+        foreach ($groups as $group) {
+            $ids[] = $group->id;
+        }
+        // load groups permisson
+        if (count($ids) > 0) {
+            $this->loadGroupPermissions($ids);
+        }
+        // load row permission
+        if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
+            $this->loadRowPermissions($ids);
+        }
+        return $this->_cache_perms;
+    }
+
+    /**
+     * فهرستی از شی داده شده را برمی‌گرداند که این کاربر دسترسی تعیین شده را روی
+     * آن‌ها دارد.
+     * به عنوان مثال فراخوانی این متد به صورت
+     * getAllPermittedObject('App.manage',
+     * new Pluf_Group(), 1)
+     * فهرستی از Pluf_Group هایی را برمی‌گرداند که کاربر جاری روی ان‌ها دسترسی
+     * 'manage' رو در ملک با
+     * شناسه یک دارد.
+     *
+     * @param Pluf_Model $object
+     *            نمونه از شی مورد نظر
+     * @param string $permission
+     *            رشته حاوی code_name مربوط به گواهی مورد نظر
+     */
+    function getAllPermittedObject ($permission, $object)
+    {
+        $permPattern = $permission . '#' . $object->_a['model'];
+        $permList = $this->getAllPermissions(false);
+        $result = array();
+        foreach ($permList as $rowPerm) {
+            try {
+                preg_match('/^(?P<perm>' . $permPattern . ')\((?P<id>\d+)\)/', 
+                        $rowPerm, $m);
+                $obj = new $object->_a['model']($m['id']);
+                array_push($result, $obj);
+            } catch (Exception $e) {}
+        }
+        return $result;
+    }
+
+    /*
+     * فهرست گروه‌ها را لود می‌کند.
+     */
+    private function loadGroupPermissions ($ids)
+    {
+        $gperm = new Pluf_Permission();
+        $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) . '_id';
+        $perms = array_merge($perms, 
+                (array) $gperm->getList(
+                        array(
+                                'filter' => $f_name . ' IN (' . join(', ', $ids) .
+                                         ')',
+                                        'view' => 'join_group'
+                        )));
+        foreach ($perms as $perm) {
+            $tos = $perm->toString();
+            if (! in_array($tos, $this->_cache_perms)) {
+                $this->_cache_perms[] = $tos;
+            }
+        }
+    }
+
+    /*
+     * تمام گواهی‌هایی که با جدول مشخص شده است را لود می‌کند.
+     */
+    private function loadRowPermissions ($ids)
+    {
+        $growp = new Pluf_RowPermission();
+        $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s', 
+                array(
+                        $this->id,
+                        'Pluf_User'
+                ));
+        if (count($ids) > 0) {
+            $sql2 = new Pluf_SQL('owner_id IN (%s) AND owner_class=%s', 
+                    array(
+                            join(', ', $ids),
+                            Pluf::f('pluf_custom_group', 'Pluf_Group')
+                    ));
+            $sql->SOr($sql2);
+        }
+        $perms = $growp->getList(
+                array(
+                        'filter' => $sql->gen(),
+                        'view' => 'join_permission'
+                ));
+        foreach ($perms as $perm) {
+            $perm_string = $perm->toString();
+            if (! in_array($perm_string, $this->_cache_perms)) {
+                $this->_cache_perms[] = $perm_string;
+            }
+        }
+    }
+
+    /**
+     * تمام گواهی‌های کاربر را تعیین می‌کند
+     *
+     * این فراخوانی تمام گواهی‌های کاربر را تعیین می‌کند که برای یک موجودیت
+     * دارد. برای نمونه تمام گواهی‌هایی که کاربر برای یک نرم افزار دارد را
+     * می‌توان با این فراخوانی تعیین کرد.
+     *
+     * @param unknown $object            
+     */
+    public function getPermissions ($object)
+    {
+        // Group permissions
+        // $groups = $this->get_groups_list();
+        // $ids = array();
+        // foreach ($groups as $group) {
+        // $ids[] = $group->id;
+        // }
+        // if (count($ids) > 0) {
+        // $gperm = new Pluf_Permission();
+        // $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) .
+        // '_id';
+        // $perms = array_merge($perms,
+        // (array) $gperm->getList(
+        // array(
+        // 'filter' => $f_name . ' IN (' .
+        // join(', ', $ids) . ')',
+        // 'view' => 'join_group'
+        // )));
+        // }
+    }
+
+    /**
+     * تعیین گواهی برای شئی تعیین شده
+     *
+     * یگ گواهی برای یک مدل خاص است، در اینجا می‌توان تعیین کرد که آیا کاربر
+     * به شئی مورد نظر این گواهی را دارد.
+     *
+     * <ul>
+     * <li>کاربر باید در سیستم فعال باشد</li>
+     * <li>کاربر مدیر تمام دسترسی‌ها را دارد</li>
+     * <li></li>
+     * </ul>
+     *
+     * @param
+     *            string Permission
+     * @param
+     *            Object Object for row level permission (null)
+     * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
+     */
+    function hasPerm ($perm, $obj = null)
+    {
+        if (! $this->active)
+            return false;
+        if ($this->administrator)
+            return true;
+        $perms = $this->getAllPermissions(false);
+        if (! is_null($obj)) {
+            $perm_row = $perm . '#' . $obj->_a['model'] . '(' . $obj->id . ')';
+            if (in_array('!' . $perm_row, $perms))
+                return false;
+            if (in_array($perm_row, $perms))
+                return true;
+        }
+        if (in_array($perm, $perms))
+            return true;
+        return false;
+    }
+
+    /**
+     * تعیین می‌کند که آیا کاربر یکی از مجوزهای نرم افزار را دارد یا نه.
+     *
+     * @return bool درستی اگر یکی از مجوزها وجود داشته باشد.
+     */
+    function hasAppPerms ($app)
+    {
+        if ($this->administrator)
+            return true;
+        foreach ($this->getAllPermissions() as $perm) {
+            if (0 === strpos($perm, $app . '.')) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * تعیین پیام برای کاربر
+     *
+     * یک پیام جدید را ایجاد کرده و به کاربر اضافه می‌کند. در صورتی که کاربر در
+     * سیستم ایجاد نشده باشد یک خطا صادر خواهد شد.
+     *
+     * @param
+     *            string Message
+     * @return bool Success
+     */
+    function setMessage ($message)
+    {
+        if ($this->isAnonymous()) {
+            throw new Pluf_Exception_DoesNotExist(
+                    __("User not exist, while you are trying to add message?!"));
+        }
+        $m = new Pluf_Message();
+        $m->user = $this;
+        $m->message = $message;
+        if (! $m->create()) {
+            throw new Pluf_Exception(__("not possible to create a message"));
+        }
+        return $m;
+    }
+
+    /**
+     * دریافت و حذف پیام‌ها
+     *
+     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند.
+     * در
+     * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
+     *
+     * @return ArrayObject
+     */
+    function getAndDeleteMessages ()
+    {
+        if ($this->isAnonymous()) {
+            throw new Pluf_Exception_DoesNotExist(
+                    __("User not exist, while you are trying to get messages?!"));
+        }
+        $messages = array();
+        $ms = $this->get_pluf_message_list();
+        foreach ($ms as $m) {
+            $ms = new Pluf_Message($m->id);
+            array_push($messages, $ms);
+            $m->delete();
+        }
+        return $messages;
+    }
+
+    /**
+     * پروفایل کاربر را تعیین می‌کند.
+     *
+     * Retrieve the profile of the current user. If not profile in the
+     * database a Pluf_Exception_DoesNotExist exception is thrown,
+     * just catch it and create a profile.
+     *
+     * @return Pluf_Model User profile
+     */
+    function getProfile ()
+    {
+        $pclass = Pluf::f('user_profile_class', false);
+        if (false == $pclass) {
+            throw new Pluf_Exception_SettingError(
+                    __('"user_profile_class" setting not defined.'));
+        }
+        $db = $this->getDbConnection();
+        $sql = new Pluf_SQL(sprintf('%s=%%s', $db->qn('user')), 
+                array(
+                        $this->id
+                ));
+        $users = Pluf::factory($pclass)->getList(
+                array(
+                        'filter' => $sql->gen()
+                ));
+        if ($users->count() != 1) {
+            throw new Pluf_Exception_DoesNotExist(
+                    sprintf(__('No profiles available for user: %s'), 
+                            (string) $this));
+        }
+        return $users[0];
+    }
 }

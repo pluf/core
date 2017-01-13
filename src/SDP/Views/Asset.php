@@ -148,8 +148,8 @@ class SDP_Views_Asset
         $app = $request->tenant;
         $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
         // Check permission
-        // SaaS_Precondition::userCanAccessApplication($request, $app);
-        // SaaS_Precondition::userCanAccessResource($request, $content);
+        // Precondition::userCanAccessApplication($request, $app);
+        // Precondition::userCanAccessResource($request, $content);
         
         if (array_key_exists('file', $request->FILES)) {
             $extra = array(
