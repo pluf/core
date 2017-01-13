@@ -27,9 +27,9 @@ return array (
 				'sub' => include 'CMS/urls.php' 
 		),
 		array (
-				'regex' => '#^/api/book#',
+				'regex' => '#^/api/wiki#',
 				'base' => $base,
-				'sub' => include 'Wiki/urls.php' 
+				'sub' => include 'Book/urls.php' 
 		),
 		array (
 				'regex' => '#^/api/spa#',
@@ -75,6 +75,11 @@ return array (
 				'regex' => '#^/api/bank#',
 				'base' => $base,
 				'sub' => include 'Bank/urls.php' 
+		),
+		array ( // Book
+				'regex' => '#^/api/book#',
+				'base' => $base,
+				'sub' => include 'Book/urls.php' 
 		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',

@@ -3,8 +3,8 @@
 	"version": "1.0.0",
 	"title": "Wiki framework",
 	"model": [
-		"Wiki_Book",
-		"Wiki_Page"
+		"Book_Book",
+		"Book_Page"
 	],
 	"permisson": []
 }

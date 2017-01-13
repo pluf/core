@@ -8,7 +8,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *         @date 1394
  */
-class Wiki_Views_Page
+class Book_Views_Page
 {
 
     /**
@@ -21,15 +21,15 @@ class Wiki_Views_Page
     public function create ($request, $match)
     {
         // تعیین دسترسی
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
-        Wiki_Precondition::userCanCreatePage($request, $book);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
+        Book_Precondition::userCanCreatePage($request, $book);
         // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
                 'tenant' => $request->tenant,
                 'book' => $book
         );
-        $form = new Wiki_Form_PageCreate(
+        $form = new Book_Form_PageCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $page = $form->save();
         $request->user->setMessage(
@@ -49,10 +49,10 @@ class Wiki_Views_Page
     public function get ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Book_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // حق دسترسی
-        Wiki_Precondition::userCanAccessPage($request, $page, $book);
+        Book_Precondition::userCanAccessPage($request, $page, $book);
         // اجرای درخواست
         return new Pluf_HTTP_Response_Json($page);
     }
@@ -66,16 +66,16 @@ class Wiki_Views_Page
     public function update ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Book_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // حق دسترسی
-        Wiki_Precondition::userCanUpdatePage($request, $page, $book);
+        Book_Precondition::userCanUpdatePage($request, $page, $book);
         // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
                 'page' => $page
         );
-        $form = new Wiki_Form_PageUpdate(
+        $form = new Book_Form_PageUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $page = $form->update();
         return new Pluf_HTTP_Response_Json($page);
@@ -91,12 +91,12 @@ class Wiki_Views_Page
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $page = Pluf_Shortcuts_GetObjectOr404('Wiki_Page', $match['pageId']);
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $page = Pluf_Shortcuts_GetObjectOr404('Book_Page', $match['pageId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // دسترسی
-        Wiki_Precondition::userCanDeletePage($request, $page);
+        Book_Precondition::userCanDeletePage($request, $page);
         // اجرا
-        $page2 = new Wiki_Page($page->id);
+        $page2 = new Book_Page($page->id);
         $page2->delete();
         return new Pluf_HTTP_Response_Json($page);
     }
@@ -110,13 +110,12 @@ class Wiki_Views_Page
      */
     public function find ($request, $match)
     {
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
-        $pag = new Pluf_Paginator(new Wiki_Page());
-        $sql = new Pluf_SQL('book=%s AND tenant=%s', 
+        $pag = new Pluf_Paginator(new Book_Page());
+        $sql = new Pluf_SQL('book=%s', 
                 array(
                         $book->id,
-                        $request->tenant->id
                 ));
         $pag->forced_where = $sql;
         $pag->list_filters = array(

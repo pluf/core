@@ -35,11 +35,9 @@ $cfg['installed_apps'] = array(
 //         'SDP',
 //         'SaaSDM',
 //         'Message',
-        
 
-//         'SaaS',
 //         'SaaSNewspaper',
-//         'Wiki',
+        'Book',
 );
 
 /*
@@ -255,7 +253,7 @@ $cfg['template_tags'] = array(
  * می‌شوند. تمام
  * مسیرها به ترتیب جستجو می‌شوند.
  */
-$cfg['wiki_repositories'] = array(
+$cfg['Book_repositories'] = array(
         SRC_BASE . '/etc/wiki'
 );
 

@@ -8,7 +8,7 @@
  * @author <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Form_PageUpdate extends Wiki_Form_PageCreate
+class Book_Form_PageUpdate extends Book_Form_PageCreate
 {
 
     public $user = null;

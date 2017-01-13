@@ -6,7 +6,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Book extends Pluf_Model
+class Book_Book extends Pluf_Model
 {
 
     /**
@@ -16,10 +16,7 @@ class Wiki_Book extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'Wiki_Book';
-        
-        $this->_a['table'] = 'wiki_book';
-        $this->_a['model'] = 'Wiki_Book';
+        $this->_a['table'] = 'book';
         $this->_a['cols'] = array(
                 // شناسه‌ها
                 'id' => array(
@@ -85,14 +82,6 @@ class Wiki_Book extends Pluf_Model
                         'verbose' => __('submitter'),
                         'relate_name' => 'submitted_wikipages'
                 ),
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_Tenant',
-                        'blank' => false,
-                        'relate_name' => 'tenant',
-                        'verbose' => __('tenant'),
-                        'help_text' => __('Related tenant.')
-                )
         );
     }
 

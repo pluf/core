@@ -8,7 +8,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Form_BookCreate extends Pluf_Form
+class Book_Form_BookCreate extends Pluf_Form
 {
 
     public $user = null;
@@ -54,7 +54,7 @@ class Wiki_Form_BookCreate extends Pluf_Form
                     __('cannot save the book from an invalid form'));
         }
         // Create the book
-        $page = new Wiki_Book();
+        $page = new Book_Book();
         $page->setFromFormData($this->cleaned_data);
         $page->submitter = $this->user;
         $page->tenant = $this->tenant;

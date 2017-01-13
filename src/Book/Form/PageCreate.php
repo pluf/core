@@ -8,7 +8,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Form_PageCreate extends Pluf_Form
+class Book_Form_PageCreate extends Pluf_Form
 {
 
     public $user = null;
@@ -107,7 +107,7 @@ class Wiki_Form_PageCreate extends Pluf_Form
         // }
         // }
         // Create the page
-        $page = new Wiki_Page();
+        $page = new Book_Page();
         // $page->project = $this->project;
         $page->setFromFormData($this->cleaned_data);
         $page->submitter = $this->user;

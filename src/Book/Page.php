@@ -6,7 +6,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Page extends Pluf_Model
+class Book_Page extends Pluf_Model
 {
 
     /**
@@ -16,10 +16,7 @@ class Wiki_Page extends Pluf_Model
      */
     function init ()
     {
-        $this->_model = 'Wiki_Page';
-        
-        $this->_a['table'] = 'wiki_page';
-        $this->_a['model'] = 'Wiki_Page';
+        $this->_a['table'] = 'book_page';
         $this->_a['cols'] = array(
                 // کلید
                 'id' => array(
@@ -96,14 +93,6 @@ class Wiki_Page extends Pluf_Model
                         'model' => 'Pluf_Book',
                         'blank' => true,
                         'verbose' => __('book')
-                ),
-                'tenant' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_Tenant',
-                        'blank' => false,
-                        'relate_name' => 'tenant',
-                        'verbose' => __('tenant'),
-                        'help_text' => __('Related tenant.')
                 )
         );
         $this->_a['views'] = array(

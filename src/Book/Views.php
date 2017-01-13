@@ -6,7 +6,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  */
-class Wiki_Views_Book
+class Book_Views
 {
 
     /**
@@ -19,12 +19,7 @@ class Wiki_Views_Book
     public function find ($request, $match)
     {
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
-        $pag = new Pluf_Paginator(new Wiki_Book());
-        $sql = new Pluf_SQL('tenant=%s', 
-                array(
-                        $request->tenant->id
-                ));
-        $pag->forced_where = $sql;
+        $pag = new Pluf_Paginator(new Book_Book());
         $pag->list_filters = array(
                 'id',
                 'title'
@@ -62,7 +57,7 @@ class Wiki_Views_Book
                 'user' => $request->user,
                 'tenant' => $request->tenant
         );
-        $form = new Wiki_Form_BookCreate(
+        $form = new Book_Form_BookCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $book = $form->save();
         $request->user->setMessage(
@@ -81,9 +76,9 @@ class Wiki_Views_Book
     public function get ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // بررسی حق دسترسی
-        Wiki_Precondition::userCanAccessBook($request, $book);
+        Book_Precondition::userCanAccessBook($request, $book);
         // اجرای درخواست
         return new Pluf_HTTP_Response_Json($book);
     }
@@ -98,15 +93,15 @@ class Wiki_Views_Book
     public function update ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // حق دسترسی
-        Wiki_Precondition::userCanUpdateBook($request, $book);
+        Book_Precondition::userCanUpdateBook($request, $book);
         // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
                 'book' => $book
         );
-        $form = new Wiki_Form_BookUpdate(
+        $form = new Book_Form_BookUpdate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $book = $form->update();
         $request->user->setMessage(
@@ -125,11 +120,11 @@ class Wiki_Views_Book
     public function delete ($request, $match)
     {
         // تعیین داده‌ها
-        $book = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $book = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         // بررسی حق دسترسی
-        Wiki_Precondition::userCanDeleteBook($request, $book);
+        Book_Precondition::userCanDeleteBook($request, $book);
         // اجرای درخواست
-        $book2 = Pluf_Shortcuts_GetObjectOr404('Wiki_Book', $match['bookId']);
+        $book2 = Pluf_Shortcuts_GetObjectOr404('Book_Book', $match['bookId']);
         $book2->delete();
         return new Pluf_HTTP_Response_Json($book);
     }

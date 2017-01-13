@@ -8,7 +8,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Form_PageDelete extends Pluf_Form
+class Book_Form_PageDelete extends Pluf_Form
 {
 
     protected $page = null;

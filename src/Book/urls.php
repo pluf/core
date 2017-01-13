@@ -5,35 +5,35 @@ return array (
          */
         array(
                 'regex' => '#^/(?P<bookId>\d+)/page/find$#',
-                'model' => 'Wiki_Views_Page',
+                'model' => 'Book_Views_Page',
                 'method' => 'find',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)/page/new$#',
-                'model' => 'Wiki_Views_Page',
+                'model' => 'Book_Views_Page',
                 'method' => 'create',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired',
-                        'Wiki_Precondition::userCanCreatePage'
+                        'Book_Precondition::userCanCreatePage'
                 ),
                 'http-method' => 'POST'
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)/page/(?P<pageId>\d+)$#',
-                'model' => 'Wiki_Views_Page',
+                'model' => 'Book_Views_Page',
                 'method' => 'get',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)/page/(?P<pageId>\d+)$#',
-                'model' => 'Wiki_Views_Page',
+                'model' => 'Book_Views_Page',
                 'method' => 'delete',
                 'http-method' => 'DELETE'
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)/page/(?P<pageId>\d+)$#',
-                'model' => 'Wiki_Views_Page',
+                'model' => 'Book_Views_Page',
                 'method' => 'update',
                 'http-method' => 'POST'
         ),
@@ -43,13 +43,13 @@ return array (
          */
         array(
                 'regex' => '#^/find$#',
-                'model' => 'Wiki_Views_Book',
+                'model' => 'Book_Views',
                 'method' => 'find',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/new$#',
-                'model' => 'Wiki_Views_Book',
+                'model' => 'Book_Views',
                 'method' => 'create',
                 'precond' => array(
                         'Pluf_Precondition::loginRequired'
@@ -58,13 +58,13 @@ return array (
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)$#',
-                'model' => 'Wiki_Views_Book',
+                'model' => 'Book_Views',
                 'method' => 'get',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)$#',
-                'model' => 'Wiki_Views_Book',
+                'model' => 'Book_Views',
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
@@ -73,7 +73,7 @@ return array (
         ),
         array(
                 'regex' => '#^/(?P<bookId>\d+)$#',
-                'model' => 'Wiki_Views_Book',
+                'model' => 'Book_Views',
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(

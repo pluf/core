@@ -1,12 +1,12 @@
 <?php
 
 /**
- * خطای پیدا نشدن یک صفحه از ویکی
+ * خطای یافت نشدن یک کتاب
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Exception_PageNotFound extends Pluf_Exception
+class Book_Exception_BookNotFound extends Pluf_Exception
 {
 
     /**
@@ -17,10 +17,10 @@ class Wiki_Exception_PageNotFound extends Pluf_Exception
      * @param string $link            
      * @param string $developerMessage            
      */
-    public function __construct ($message = "requested wiki page not found.", $previous = null, $link = null, 
+    public function __construct ($message = "requested wiki book not found.", $previous = null, $link = null, 
             $developerMessage = null)
     {
-        parent::__construct($message, 4301, $previous, 404, $link, 
+        parent::__construct($message, 4302, $previous, 404, $link, 
                 $developerMessage);
     }
 }

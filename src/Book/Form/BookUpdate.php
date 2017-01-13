@@ -8,7 +8,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Wiki_Form_BookUpdate extends Pluf_Form
+class Book_Form_BookUpdate extends Pluf_Form
 {
 
     public $user = null;

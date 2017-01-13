@@ -4,7 +4,7 @@
  * پیش شرط‌ها کار با ویکی را ایجاد می‌کند.
  *
  */
-class Wiki_Precondition
+class Book_Precondition
 {
 
     public static function userCanCreateBook ($request)

@@ -41,7 +41,7 @@ class Spa_SPA extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'spa';
+        $this->_a['table'] = 'saas_spa';
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
