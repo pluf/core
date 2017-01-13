@@ -172,7 +172,7 @@ class CMS_Content extends Pluf_Model
             $this->file_size = 0;
         }
         // mime type (based on file name)
-        $fileInfo = SaaS_FileUtil::getMimeType($this->file_name);
+        $fileInfo = Pluf_FileUtil::getMimeType($this->file_name);
         $this->mime_type = $fileInfo[0];
     }
 

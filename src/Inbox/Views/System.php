@@ -19,7 +19,6 @@
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
-Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
  * لایه نمایش مدیریت کاربران را به صورت پیش فرض ایجاد می‌کند

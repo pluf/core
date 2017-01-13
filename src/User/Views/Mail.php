@@ -1,5 +1,4 @@
 <?php
-Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
  * لایه نمایش احراز اصالت را ایجاد می‌کند
@@ -28,7 +27,7 @@ class User_Views_Mail
         }
         // Now we have a change link coming from the right user.
         if ($request->user->email == $email) {
-            return User_Shortcuts_UserJsonResponse($request->user);
+            return new Pluf_HTTP_Response_Json($request->user);
         }
         
         $request->user->email = $email;
@@ -40,6 +39,6 @@ class User_Views_Mail
                         Pluf_esc($email)));
         User_Shortcuts_UpdateLeveFor($request->user, 'user_email_registerd');
         // Return response
-        return User_Shortcuts_UserJsonResponse($request->user);
+        return new Pluf_HTTP_Response_Json($request->user);
     }
 }

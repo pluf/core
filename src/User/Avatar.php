@@ -100,7 +100,7 @@ class User_Avatar extends Pluf_Model
             $this->fileSize = 0;
         }
         // mime type (based on file name)
-        $fileInfo = SaaS_FileUtil::getMimeType($this->fileName);
+        $fileInfo = Pluf_FileUtil::getMimeType($this->fileName);
         $this->mimeType = $fileInfo[0];
     }
 

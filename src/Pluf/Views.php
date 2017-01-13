@@ -95,13 +95,15 @@ class Pluf_Views
         }
         $error = '';
         if ($request->method == 'POST') {
-            foreach (Pluf::f('auth_backends', array(
-                    'Pluf_Auth_ModelBackend'
-            )) as $backend) {
-                $user = call_user_func(array(
-                        $backend,
-                        'authenticate'
-                ), $request->POST);
+            foreach (Pluf::f('auth_backends', 
+                    array(
+                            'Pluf_Auth_ModelBackend'
+                    )) as $backend) {
+                $user = call_user_func(
+                        array(
+                                $backend,
+                                'authenticate'
+                        ), $request->POST);
                 if ($user !== false) {
                     break;
                 }
@@ -164,6 +166,80 @@ class Pluf_Views
         }
         return new Pluf_HTTP_Response_Redirect($success_url);
     }
+
+    /**
+     * List objects
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public static function findObject ($request, $match, $p)
+    {
+        if (! isset($p['model'])) {
+            throw new Pluf_Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        $default = array(
+                'listFilters' => array(),
+                'listDisplay' => array(),
+                'searchFields' => array(),
+                'sortFields' => array()
+        );
+        $p = array_merge($default, $p);
+        $sql = new Pluf_SQL('tenant=%s', 
+                array(
+                        $request->tenant->id
+                ));
+        if (isset($p['sql'])) {
+            $sql = $sql->SAnd($p['sql']);
+        }
+        // Create page
+        $page = new Pluf_Paginator(new $p['model']());
+        $page->forced_where = $sql;
+        $page->list_filters = $p['listFilters'];
+        $page->configure($p['listDisplay'], $p['searchFields'], 
+                $p['sortFields']);
+        // XXX: maso, 1395: add sort order
+        // $page->sort_order = array(
+        // 'creation_dtime',
+        // 'DESC'
+        // );
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    /**
+     * یک موجودیت رو میگیره
+     *
+     * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
+     *
+     * 'model' - Class name string, required.
+     *
+     * در پارامترهای مسیر هم باید پارامترهای زیر باشد
+     *
+     * 'modelIdd' - Id of of the current model to update
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     */
+    public static function getObject ($request, $match, $p)
+    {
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        // Set the default
+        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], 
+                $match['modelId']);
+        return new Pluf_HTTP_Response_Json($object);
+    }
+    
 
     /**
      * Create an object (Part of the CRUD series).
@@ -250,9 +326,10 @@ class Pluf_Views
                     $p['extra_form']);
         }
         return Pluf_Shortcuts_RenderToResponse($template, 
-                array_merge($context, array(
-                        'form' => $form
-                )), $request);
+                array_merge($context, 
+                        array(
+                                'form' => $form
+                        )), $request);
     }
 
     /**
@@ -411,9 +488,10 @@ class Pluf_Views
             return new Pluf_HTTP_Response_Redirect($url);
         }
         return Pluf_Shortcuts_RenderToResponse($template, 
-                array_merge($context, array(
-                        'object' => $object
-                )), $request);
+                array_merge($context, 
+                        array(
+                                'object' => $object
+                        )), $request);
     }
 
     /**

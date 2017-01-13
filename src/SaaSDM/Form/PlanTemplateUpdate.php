@@ -90,10 +90,10 @@ class SaaSDM_Form_PlanTemplateUpdate extends Pluf_Form
             // Extract information of file
             $myFile = $this->data['file'];
             $this->plantemplate->file_name = $myFile['name'];
-            $fileInfo = SaaS_FileUtil::getMimeType($this->plantemplate->file_name);
+            $fileInfo = Pluf_FileUtil::getMimeType($this->plantemplate->file_name);
             $this->plantemplate->type = $fileInfo[0];
             // $this->content->file_name = $this->cleaned_data['file'];
-            // $fileInfo = SaaS_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
+            // $fileInfo = Pluf_FileUtil::getMimeType($this->content->file_path . '/' . $this->content->id);
             // $this->content->mime_type = $fileInfo[0];
             $this->plantemplate->size = filesize($this->plantemplate->path . '/' . $this->plantemplate->id);
         }

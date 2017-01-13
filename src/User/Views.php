@@ -20,7 +20,6 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForUpdateModel');
-Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 Pluf::loadFunction('User_Shortcuts_GetAvatar');
 Pluf::loadFunction('User_Shortcuts_DeleteAvatar');
 Pluf::loadFunction('User_Shortcuts_UpdateAvatar');
@@ -42,7 +41,7 @@ class User_Views
      */
     public static function getAccount($request, $match)
     {
-        return User_Shortcuts_UserJsonResponse($request->user);
+        return new Pluf_HTTP_Response_Json($request->user);
     }
 
     /**
@@ -55,7 +54,7 @@ class User_Views
     {
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $request->user->id);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
-        return User_Shortcuts_UserJsonResponse($form->save());
+        return new Pluf_HTTP_Response_Json($form->save());
     }
 
     /**

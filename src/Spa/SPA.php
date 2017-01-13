@@ -1,4 +1,21 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * 
@@ -6,16 +23,8 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaS_SPA extends Pluf_Model
+class Spa_SPA extends Pluf_Model
 {
-
-    /**
-     * اطلاعات موجود در فایل spa.json به صورت یک آرایه نام‌دار در این شی قرار
-     * می‌گیرد.
-     *
-     * @var config
-     */
-    var $config = null;
 
     /**
      * دایرکتوری ریشه spa که حاوی فایل spa.json و سایر فایل‌ها و پوشه‌های spa
@@ -33,7 +42,6 @@ class SaaS_SPA extends Pluf_Model
     function init ()
     {
         $this->_a['table'] = 'saas_spa';
-        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
@@ -42,39 +50,53 @@ class SaaS_SPA extends Pluf_Model
                 'name' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
-                        'size' => 50
+                        'size' => 50,
+                        'readable' => true,
+                        'editable' => false
                 ),
                 'version' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
-                        'size' => 100
+                        'size' => 100,
+                        'readable' => true,
+                        'editable' => false
                 ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 50
+                        'size' => 50,
+                        'readable' => true,
+                        'editable' => true
                 ),
                 'license' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 250
+                        'size' => 250,
+                        'readable' => true,
+                        'editable' => false
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 250
+                        'size' => 250,
+                        'readable' => false,
+                        'editable' => false
                 ),
                 'path' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'size' => 100,
-                        'verbose' => __('SPA installation path')
+                        'verbose' => 'SPA installation path',
+                        'readable' => false,
+                        'editable' => false
                 ),
                 'main_page' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => false,
                         'default' => 'index.html',
-                        'size' => 100
+                        'size' => 100,
+                        'readable' => false,
+                        'editable' => false
                 ),
                 'homepage' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
@@ -83,17 +105,21 @@ class SaaS_SPA extends Pluf_Model
                 ),
                 'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true
+                        'blank' => true,
+                        'readable' => true,
+                        'editable' => false
                 ),
                 'modif_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true
+                        'blank' => true,
+                        'readable' => true,
+                        'editable' => false
                 )
         );
         
         $this->_a['idx'] = array(
                 'spa_idx' => array(
-                        'col' => 'tenant, name, version',
+                        'col' => 'name, version',
                         'type' => 'unique', // normal, unique, fulltext, spatial
                         'index_type' => '', // hash, btree
                         'index_option' => '',
@@ -103,25 +129,6 @@ class SaaS_SPA extends Pluf_Model
         );
         
         $this->_a['views'] = array()
-        // 'spa_application' => array(
-        // 'join' => 'LEFT JOIN ' . $this->_con->pfx .
-        // 'rowpermissions ON saas_spa.id=' .
-        // $this->_con->pfx . 'rowpermissions.model_id',
-        // 'select' => $this->getSelect() . ', permission',
-        // 'props' => array(
-        // 'permission' => 'permission'
-        // ),
-        // 'group' => 'rowpermissions.model_id'
-        // ),
-        // 'spa_application_permission' => array(
-        // 'join' => 'LEFT JOIN ' . $this->_con->pfx .
-        // 'rowpermissions ON saas_spa.id=' . $this->_con->pfx .
-        // 'rowpermissions.model_id',
-        // 'select' => $this->getSelect() . ', permission',
-        // 'props' => array(
-        // 'permission' => 'permission'
-        // )
-        // )
         ;
     }
 
@@ -164,26 +171,6 @@ class SaaS_SPA extends Pluf_Model
     }
 
     /**
-     * تنظیمات بسته را از سیستم بارگزاری می‌کند
-     *
-     * به عبارتی این متد محتویات فایل spa.josn را خوانده و در متغیر config از
-     * این کلاس ذخیره می‌کند.
-     */
-    public function loadConfig ()
-    {
-        if ($this->config != null) {
-            return $this->config;
-        }
-        $filename = $this->getRootPath() . '/' .
-                 Pluf::f('saas_spa_config', "spa.json");
-        $myfile = fopen($filename, "r") or die("Unable to open file!");
-        $json = fread($myfile, filesize($filename));
-        fclose($myfile);
-        $this->config = json_decode($json, true);
-        return $this->config;
-    }
-
-    /**
      * مسیر دایرکتوری ریشه spa را برمی گرداند.
      *
      * @throws Pluf_Exception
@@ -211,17 +198,6 @@ class SaaS_SPA extends Pluf_Model
     }
 
     /**
-     * مسیر فایل منبع از نرم افزار را تعیین می‌کند.
-     *
-     * @param unknown $name            
-     * @return string
-     */
-    public function getResourcePath ($name)
-    {
-        return $this->getRootPath() . '/' . $name;
-    }
-
-    /**
      * spa با نام تعیین شده را برمی‌گرداند.
      * فرض می‌شود که نام spa ها یکتاست. در غیر این صورت
      * اولین spa که نامش با نام تعیین شده یکی باشد برگردانده می‌شود
@@ -231,7 +207,7 @@ class SaaS_SPA extends Pluf_Model
      */
     public static function getSpaByName ($name, $tenant = null)
     {
-        $sql = new Pluf_SQL('name=%s AND tenant=%s', array($name, $tenant->getId()));
+        $sql = new Pluf_SQL('name=%s', array($name));
         return Pluf::factory('SaaS_SPA')->getOne($sql->gen());
     }
 }

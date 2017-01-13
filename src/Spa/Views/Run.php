@@ -72,7 +72,7 @@ class SaaS_Views_Run {
         // $resPath = SaaS_SPA::getAssetsPath($resourcePath);
         // }
         // return new Pluf_HTTP_Response_File($resPath,
-        // SaaS_FileUtil::getMimeType($resPath));
+        // Pluf_FileUtil::getMimeType($resPath));
     }
     
     public static function getResourceOfDefault ($request, $match)
@@ -91,7 +91,7 @@ class SaaS_Views_Run {
         // $res = SaaS_SPA::getAssetsPath($match['resource']);
         // }
         // return new Pluf_HTTP_Response_File($res,
-        // SaaS_FileUtil::getMimeType($res));
+        // Pluf_FileUtil::getMimeType($res));
     }
     
     protected static function loadSpa ($request, $app, $spa)
@@ -100,7 +100,7 @@ class SaaS_Views_Run {
         $mainPage = $spa->getMainPagePath();
     
         return new Pluf_HTTP_Response_File($mainPage,
-                SaaS_FileUtil::getMimeType($mainPage));
+                Pluf_FileUtil::getMimeType($mainPage));
     }
     
     /**
@@ -145,7 +145,7 @@ class SaaS_Views_Run {
             $resPath = SaaS_SPA::getAssetsPath($resource);
         }
         return new Pluf_HTTP_Response_File($resPath,
-                SaaS_FileUtil::getMimeType($resPath));
+                Pluf_FileUtil::getMimeType($resPath));
     }
     
     

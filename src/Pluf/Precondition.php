@@ -148,7 +148,6 @@ class Pluf_Precondition
         if (true !== $res) {
             return $res;
         }
-        // SaaS_Precondition::baseAccess($request);
         if ($request->user->administrator) {
             return true;
         }
@@ -173,7 +172,6 @@ class Pluf_Precondition
         if (true !== $res) {
             return $res;
         }
-        // SaaS_Precondition::baseAccess($request, $app);
         if ($request->user->administrator) {
             return true;
         }
@@ -200,7 +198,6 @@ class Pluf_Precondition
         if (true !== $res) {
             return $res;
         }
-        // SaaS_Precondition::baseAccess($request, $app);
         if ($request->user->administrator) {
             return true;
         }

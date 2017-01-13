@@ -35,7 +35,7 @@ return array(
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'SaaS_Precondition::tenantOwner'
+                        'Pluf_Precondition::ownerRequired'
                 )
         ),
         array(
@@ -44,7 +44,7 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'SaaS_Precondition::tenantMember'
+                        'Pluf_Precondition::memberRequired'
                 )
         ),
         array(
@@ -53,7 +53,7 @@ return array(
                 'method' => 'call',
                 'http-method' => 'GET',
                 'precond' => array(
-                        'SaaS_Precondition::tenantMember'
+                        'Pluf_Precondition::memberRequired'
                 )
         )
 );

@@ -16,4 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-return array ();
+return array(
+    // url format for SPA main page or a Resource-File of default spa
+    // main page of a spa:               /spa-name
+    // resource-file from default spa:   /resource-file
+    array(
+        'regex' => '#^/(?P<path>[^/]+)$#',
+        'model' => 'Spa_Views_Run',
+        'method' => 'loadSpaOrResource'
+    ),
+    // url format for SPA resources:    
+    // resource from default spa: /path/to/resource
+    // resource form specified spa: /spa-name/path/to/resource
+    array(
+        'regex' => '#^/(?P<spa>[^/]+)/(?P<resource>.*)$#',
+        'model' => 'Spa_Views_Run',
+        'method' => 'getResource'
+    ),    
+    // main page of default SPA
+    array(
+        'regex' => '#^/$#',
+        'model' => 'SaaS_Views_Run',
+        'method' => 'defaultSpa'
+    )
+);

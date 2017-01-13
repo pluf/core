@@ -130,7 +130,7 @@ class SDP_Form_AssetUpdate extends Pluf_Form
         if (array_key_exists('file', $this->cleaned_data)) {
             // Extract information of file
             $myFile = $this->cleaned_data['file'];
-            $fileInfo = SaaS_FileUtil::getMimeType($this->asset->name);
+            $fileInfo = Pluf_FileUtil::getMimeType($this->asset->name);
             $this->asset->mime_type = $fileInfo[0];
             $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }

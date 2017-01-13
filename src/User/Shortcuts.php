@@ -42,18 +42,6 @@ function User_Shortcuts_UserProfileDateFactory($object)
     return $object;
 }
 
-/**
- * داده‌های کاربر را با در نظر گرفتن امنیت ارسال می‌کند.
- *
- * @deprecated این تابع حذف خواهد شد.
- * @param unknown $object            
- * @return unknown
- */
-function User_Shortcuts_UserJsonResponse($user)
-{
-    $user->password = null;
-    return new Pluf_HTTP_Response_Json($user);
-}
 
 /**
  * اطلاعات امنیتی کاربران را حذف می‌کند.
@@ -142,7 +130,7 @@ function User_Shortcuts_UpdateProfile($user, $data = array())
     }
     $form = Pluf_Shortcuts_GetFormForModel($profile, $data, array());
     $sf = $form->save();
-    return User_Shortcuts_UserJsonResponse($sf);
+    return new Pluf_HTTP_Response_Json($sf);
 }
 
 /**
@@ -197,7 +185,7 @@ function User_Shortcuts_GetAvatar($user)
     }
     // default avatar
     $file = Pluf::f('user_avatar_default');
-    return new Pluf_HTTP_Response_File($file, SaaS_FileUtil::getMimeType($file));
+    return new Pluf_HTTP_Response_File($file, Pluf_FileUtil::getMimeType($file));
 }
 
 /**
