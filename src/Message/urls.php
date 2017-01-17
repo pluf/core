@@ -22,20 +22,26 @@ return array(
                 'model' => 'Message_Views',
                 'method' => 'find',
                 'http-method' => 'GET',
-                'precond' => array()
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
         ),
         array(
                 'regex' => '#^/(?P<messageId>\d+)$#',
                 'model' => 'Message_Views',
                 'method' => 'get',
                 'http-method' => 'GET',
-                'precond' => array()
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
         ),
         array(
                 'regex' => '#^/(?P<messageId>\d+)$#',
                 'model' => 'Message_Views',
                 'method' => 'delete',
                 'http-method' => 'DELETE',
-                'precond' => array()
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                ),
         )
 );

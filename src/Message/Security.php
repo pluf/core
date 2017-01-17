@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,7 +20,6 @@
 
 /**
  * متدهایی را برای بررسی شرط‌های امنیتی کار با دیجی‌دکی فراهم می‌کند.
- *
  */
 class Message_Security
 {
@@ -29,8 +29,7 @@ class Message_Security
         if ($request->user->administrator) {
             return true;
         }
-        if ($message->user === $request->user->id &&
-                 $message->tenant === $request->tenant->id)
+        if ($message->user === $request->user->id)
             return true;
         throw new Pluf_Exception_PermissionDenied(
                 'You are not permited to access this message');

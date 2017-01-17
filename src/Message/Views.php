@@ -39,9 +39,8 @@ class Message_Views
     public static function find ($request, $match)
     {
         $content = new Pluf_Paginator(new Pluf_Message());
-        $sql = new Pluf_SQL('tenant=%s AND user=%s', 
+        $sql = new Pluf_SQL('user=%s', 
                 array(
-                        $request->tenant->id,
                         $request->user->id
                 ));
         $content->forced_where = $sql;

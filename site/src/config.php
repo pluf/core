@@ -34,7 +34,7 @@ $cfg['installed_apps'] = array(
 //         'Monitor',
 //         'SDP',
 //         'SaaSDM',
-//         'Message',
+        'Message',
 
 //         'SaaSNewspaper',
         'Book',
