@@ -1,3 +1,4 @@
+
 <?php
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -145,6 +146,7 @@ class Bank_Engine implements JsonSerializable
     public function getParameters ()
     {
         $param = array(
+                'id' => $this->getType(),
                 'name' => $this->getType(),
                 'type' => 'struct',
                 'title' => $this->getTitle(),
