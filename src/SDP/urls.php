@@ -262,6 +262,12 @@ return array(
             'model' => 'SDP_Tag'
         )
     ),
+    array( // Get info (by name)
+        'regex' => '#^/tag/(?P<name>.+)$#',
+        'model' => 'SDP_Views_Tag',
+        'method' => 'getByName',
+        'http-method' => 'GET'
+    ),
     array( // Delete
         'regex' => '#^/tag/(?P<modelId>\d+)$#',
         'model' => 'SaaS_Views',
