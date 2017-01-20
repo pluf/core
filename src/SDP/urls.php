@@ -263,7 +263,7 @@ return array(
         )
     ),
     array( // Get info (by name)
-        'regex' => '#^/tag/(?P<name>.+)$#',
+        'regex' => '#^/tag/(?P<name>[^/]+)$#',
         'model' => 'SDP_Views_Tag',
         'method' => 'getByName',
         'http-method' => 'GET'
