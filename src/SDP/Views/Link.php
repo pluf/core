@@ -86,7 +86,7 @@ class SDP_Views_Link
         $asset = $link->get_asset();
         $user = $link->get_user();
         
-        //Mahdi: Added file extention
+        //Mahdi: Added file extension
         // Do Download
         $httpRange = isset($request->SERVER['HTTP_RANGE']) ? $request->SERVER['HTTP_RANGE'] : null;
         $response = new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name . '.' . SDP_Shortcuts_Mime2Ext($asset->mime_type), $asset->mime_type);
