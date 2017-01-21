@@ -56,6 +56,7 @@ class SDP_Form_LinkCreate extends Pluf_Form
 		// Create the link
 		$link = new SDP_Link();
 		$link->secure_link = chunk_split(substr(md5(time().rand(10000,99999)), 0, 20), 6, '');
+		//TODO: mahdi: Set expiry time here
 		$link->expiry = date('Y-m-d H:i:s' , strtotime(' +1 day'));
 		$link->setFromFormData($this->cleaned_data);
 		$link->asset = $this->asset;
