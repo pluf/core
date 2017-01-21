@@ -86,7 +86,7 @@ class SDP_Views_Asset
             'download',
             'driver_type',
             'driver_id',
-            'creation_date',
+            'creation_dtime',
             'modif_dtime',
             'type',
             'mime_type',
@@ -192,7 +192,7 @@ class SDP_Views_Asset
         
         $page = new Pluf_Paginator($tag);
         $sql = new Pluf_SQL('sdp_asset_id=%s', array(
-            $asset
+            $asset->id
         ));
         $page->forced_where = $sql;
         $page->model_view = 'myView';
@@ -207,7 +207,7 @@ class SDP_Views_Asset
         $sort_fields = array(
             'id',
             'name',
-            'creation_date',
+            'creation_dtime',
             'modif_dtime'
         );
         $page->configure(array(), $search_fields, $sort_fields);
@@ -282,7 +282,7 @@ class SDP_Views_Asset
             'id',
             'name',
             'parent',
-            'creation_date',
+            'creation_dtime',
             'modif_dtime'
         );
         $page->configure(array(), $search_fields, $sort_fields);

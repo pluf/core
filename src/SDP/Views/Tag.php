@@ -1,8 +1,18 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('SDP_Shortcuts_GetTagByNameOr404');
 
 class SDP_Views_Tag
 {
+
+    public static function getByName($request, $match)
+    {
+        $tag = SDP_Shortcuts_GetTagByNameOr404($request->tenant, $match['name']);
+        // حق دسترسی
+        // CMS_Precondition::userCanAccessContent($request, $content);
+        // اجرای درخواست
+        return new Pluf_HTTP_Response_Json($tag);
+    }
 
     public static function assets($request, $match)
     {

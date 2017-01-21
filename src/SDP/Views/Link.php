@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('SDP_Shortcuts_GetLinkOr404');
+Pluf::loadFunction('SDP_Shortcuts_Mime2Ext');
 
 class SDP_Views_Link
 {
@@ -18,6 +19,8 @@ class SDP_Views_Link
         // Create link and get its ID
         $form = new SDP_Form_LinkCreate($request->REQUEST, $extra);
         $link = $form->save();
+        //If asset is without price, created link will be activated automatically.
+        if ($asset->price == null) $link->activate();
         return new Pluf_HTTP_Response_Json($link);
     }
 
@@ -81,12 +84,12 @@ class SDP_Views_Link
         }
         
         $asset = $link->get_asset();
-        
         $user = $link->get_user();
         
+        //Mahdi: Added file extension
         // Do Download
         $httpRange = isset($request->SERVER['HTTP_RANGE']) ? $request->SERVER['HTTP_RANGE'] : null;
-        $response = new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type);
+        $response = new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name . '.' . SDP_Shortcuts_Mime2Ext($asset->mime_type), $asset->mime_type);
         // TODO: do buz.
         $size = $response->computeSize();
         $link->download ++;
