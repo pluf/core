@@ -18,6 +18,8 @@ class SDP_Views_Link
         // Create link and get its ID
         $form = new SDP_Form_LinkCreate($request->REQUEST, $extra);
         $link = $form->save();
+        //If asset is without price, created link will be activated automatically.
+        if ($asset->price == null) $link->activate();
         return new Pluf_HTTP_Response_Json($link);
     }
 
