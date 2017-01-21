@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('SDP_Shortcuts_GetLinkOr404');
+Pluf::loadFunction('SDP_Shortcuts_Mime2Ext');
 
 class SDP_Views_Link
 {
@@ -83,12 +84,12 @@ class SDP_Views_Link
         }
         
         $asset = $link->get_asset();
-        
         $user = $link->get_user();
         
+        //Mahdi: Added file extention
         // Do Download
         $httpRange = isset($request->SERVER['HTTP_RANGE']) ? $request->SERVER['HTTP_RANGE'] : null;
-        $response = new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type);
+        $response = new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name . '.' . SDP_Shortcuts_Mime2Ext($asset->mime_type), $asset->mime_type);
         // TODO: do buz.
         $size = $response->computeSize();
         $link->download ++;
