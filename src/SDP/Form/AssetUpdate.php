@@ -131,7 +131,9 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             // Extract information of file
             $myFile = $this->cleaned_data['file'];
             $fileInfo = SaaS_FileUtil::getMimeType($this->asset->name);
-            $this->asset->mime_type = $fileInfo[0];
+            //TODO: mahdi: What's the reason?? because this makes all types to "application/octet-stream"
+//             $this->asset->mime_type = $fileInfo[0];
+			$this->asset->mime_type = $_FILES['file']['type'];
             $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }
         
