@@ -609,6 +609,8 @@ function SDP_Shortcuts_Mime2Ext($mime_type)
 			'image/jpeg' => 'jpg',
 			'image/pjpeg' => 'jpg' 
 	);
-	
+	if(!array_key_exists($mime_type, $Mime2Ext)){
+	    return '';
+	}
 	return $Mime2Ext [$mime_type];
 }
