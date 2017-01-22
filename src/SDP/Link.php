@@ -8,9 +8,7 @@ class SDP_Link extends Pluf_Model {
 	 */
 	function init() {
 		$this->_a ['table'] = 'sdp_link';
-		$this->_a ['model'] = 'SDP_Link';
         $this->_a['verbose'] = 'SDP Link';
-		$this->_model = 'SDP_Link';
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
@@ -60,14 +58,6 @@ class SDP_Link extends Pluf_Model {
 				),
 				
 				// relations
-				'tenant' => array (
-						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'Pluf_Tenant',
-						'blank' => false,
-						'editable' => false,
-						'readable' => false,						
-						'relate_name' => 'tenant' 
-				),
 				'asset' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SDP_Asset',
@@ -96,7 +86,7 @@ class SDP_Link extends Pluf_Model {
 		
 		$this->_a ['idx'] = array (
 				'link_tenant_idx' => array (
-						'col' => 'tenant, secure_link',
+						'col' => 'secure_link',
 						'type' => 'unique', // normal, unique, fulltext, spatial
 						'index_type' => '', // hash, btree
 						'index_option' => '',

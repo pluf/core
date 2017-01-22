@@ -10,11 +10,7 @@ Pluf::loadFunction ( 'SaaSDM_Shortcuts_GetAssetOr404' );
  *        
  */
 class SDP_Form_AssetCreate extends Pluf_Form {
-	public $tenant = null;
-	// public $user = null;
 	public function initFields($extra = array()) {
-		$this->tenant = $extra ['tenant'];
-		// $this->user = $extra['user'];
 		
 		$this->fields ['name'] = new Pluf_Form_Field_Varchar ( array (
 				'required' => true,
@@ -63,7 +59,7 @@ class SDP_Form_AssetCreate extends Pluf_Form {
 		$asset->mime_type = $_FILES ['file'] ['type'];
 		$asset->driver_id = '0';
 		$asset->setFromFormData ( $this->cleaned_data );
-		$asset->path = Pluf::f ( 'upload_path' ) . '/' . $this->tenant->id . '/sdp';
+		$asset->path = Pluf::f ( 'upload_path' ) . '/' . Pluf_Tenant::current()->id . '/sdp';
 		if (! is_dir ( $asset->path )) {
 			if (false == @mkdir ( $asset->path, 0777, true )) {
 				throw new Pluf_Form_Invalid ( 'An error occured when creating the upload path. Please try to send the file again.' );
@@ -82,8 +78,6 @@ class SDP_Form_AssetCreate extends Pluf_Form {
 			if ($_REQUEST ['type'] == 'folder')
 				$asset->path = '';
 		}
-		// $asset->user = $this->user;
-		$asset->tenant = $this->tenant;
 		if ($commit) {
 			$asset->create ();
 		}

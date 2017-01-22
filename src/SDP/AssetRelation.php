@@ -28,9 +28,7 @@ class SDP_AssetRelation extends Pluf_Model
     function init()
     {
         $this->_a['table'] = 'sdp_assetrelation';
-        $this->_a['model'] = 'SDP_AssetRelation';
         $this->_a['verbose'] = 'AssetRelation';
-        $this->_model = 'SDP_AssetRelation';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -81,14 +79,6 @@ class SDP_AssetRelation extends Pluf_Model
                 'editable' => true,
                 'readable' => true
             ),
-            'tenant' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'Pluf_Tenant',
-                'blank' => false,
-                'relate_name' => 'tenant',
-                'editable' => false,
-                'readable' => false
-            )
         );
         
         $this->_a['idx'] = array(

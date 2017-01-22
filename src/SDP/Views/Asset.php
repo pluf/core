@@ -9,7 +9,6 @@ class SDP_Views_Asset
         // initial asset data
         $extra = array(
             // 'user' => $request->user,
-            'tenant' => $request->tenant
         );
         
         if (! isset($request->REQUEST['name']) || strlen($request->REQUEST['name']) == 0) {
@@ -42,10 +41,6 @@ class SDP_Views_Asset
     public static function find($request, $match)
     {
         $asset = new Pluf_Paginator(new SDP_Asset());
-        $sql = new Pluf_SQL('tenant=%s', array(
-            $request->tenant->id
-        ));
-        $asset->forced_where = $sql;
         $asset->list_filters = array(
             'id',
             'name',

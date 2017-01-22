@@ -32,7 +32,7 @@ $cfg['installed_apps'] = array(
         'Spa',
         
 //         'Monitor',
-//         'SDP',
+        'SDP',
 //         'SaaSDM',
         'Message',
 

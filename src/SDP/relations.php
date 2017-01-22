@@ -2,7 +2,6 @@
 return array(
     'SDP_Link' => array(
         'relate_to' => array(
-            'Pluf_Tenant',
             'SDP_Asset',
             'Pluf_User',
             'SaaSBank_Receipt'
@@ -10,7 +9,6 @@ return array(
     ),
     'SDP_Asset' => array(
         'relate_to' => array(
-            'Pluf_Tenant',
             'SDP_Asset',
             'CMS_Content'
         )
@@ -22,7 +20,6 @@ return array(
     ),
     'SDP_Category' => array(
         'relate_to' => array(
-            'Pluf_Tenant',
             'CMS_Content',
             'SDP_Category'
         ),
@@ -31,9 +28,6 @@ return array(
         )
     ),
     'SDP_Tag' => array(
-        'relate_to' => array(
-            'Pluf_Tenant'
-        ),
         'relate_to_many' => array(
             'SDP_Asset'
         )
