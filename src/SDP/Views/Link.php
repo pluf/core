@@ -12,7 +12,6 @@ class SDP_Views_Link
         // initial link data
         $extra = array(
             'user' => $request->user,
-            'tenant' => $request->tenant,
             'asset' => $asset
         );
         
@@ -33,10 +32,6 @@ class SDP_Views_Link
     public static function find($request, $match)
     {
         $links = new Pluf_Paginator(new SDP_Link());
-        $sql = new Pluf_SQL('tenant=%s', array(
-            $request->tenant->id
-        ));
-        $links->forced_where = $sql;
         $links->list_filters = array(
             'id',
             'secure_link',
@@ -67,9 +62,6 @@ class SDP_Views_Link
     public static function download($request, $match)
     {
         $link = SDP_Shortcuts_GetLinkBySecureIdOr404($match['secure_link']);
-        if ($link->tenant != $request->tenant->id) {
-            // Error 404
-        }
         // Check that asset has price or not
         if ($link->get_asset()->price != null && $link->get_asset()->price > 0) {
             if ($link->active != 1)

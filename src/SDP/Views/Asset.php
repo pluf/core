@@ -213,9 +213,6 @@ class SDP_Views_Asset
     public static function addTag($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['tagId'])) {
             $tagId = $match['tagId'];
         } else {
@@ -229,9 +226,6 @@ class SDP_Views_Asset
     public static function removeTag($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['tagId'])) {
             $tagId = $match['tagId'];
         } else {
@@ -247,9 +241,6 @@ class SDP_Views_Asset
     public static function categories($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $category = new SDP_Category();
         $categoryTable = $category->_a['table'];
         $assocTable = 'sdp_asset_sdp_category_assoc';
@@ -288,9 +279,6 @@ class SDP_Views_Asset
     public static function addCategory($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['categoryId'])) {
             $categoryId = $match['categoryId'];
         } else {
@@ -304,9 +292,6 @@ class SDP_Views_Asset
     public static function removeCategory($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['categoryId'])) {
             $categoryId = $match['categoryId'];
         } else {
