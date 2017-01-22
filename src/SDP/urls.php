@@ -117,7 +117,7 @@ return array(
         // ************************************************************* Category
         array( // Find
                 'regex' => '#^/category/find$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -142,7 +142,7 @@ return array(
         ),
         array( // Create
                 'regex' => '#^/category/new$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'createObject',
                 'http-method' => 'POST',
                 'params' => array(
@@ -154,7 +154,7 @@ return array(
         ),
         array( // Get info
                 'regex' => '#^/category/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'getObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -163,7 +163,7 @@ return array(
         ),
         array( // Delete
                 'regex' => '#^/category/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
                 'params' => array(
@@ -176,7 +176,7 @@ return array(
         ),
         array( // Update
                 'regex' => '#^/category/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'updateObject',
                 'http-method' => 'POST',
                 'params' => array(
@@ -223,7 +223,7 @@ return array(
         // ************************************************************* Tag
         array( // Find
                 'regex' => '#^/tag/find$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -246,7 +246,7 @@ return array(
         ),
         array( // Create
                 'regex' => '#^/tag/new$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'createObject',
                 'http-method' => 'POST',
                 'params' => array(
@@ -258,7 +258,7 @@ return array(
         ),
         array( // Get info
                 'regex' => '#^/tag/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'getObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -273,7 +273,7 @@ return array(
         ),
         array( // Delete
                 'regex' => '#^/tag/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
                 'params' => array(
@@ -286,7 +286,7 @@ return array(
         ),
         array( // Update
                 'regex' => '#^/tag/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'updateObject',
                 'http-method' => 'POST',
                 'params' => array(
@@ -387,7 +387,7 @@ return array(
         // ************************************************************* AssetRelation
         array(
                 'regex' => '#^/assetrelation/find$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -420,7 +420,7 @@ return array(
         ),
         array(
                 'regex' => '#^/assetrelation/new$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'createObject',
                 'http-method' => 'POST',
                 'params' => array(
@@ -432,7 +432,7 @@ return array(
         ),
         array(
                 'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'getObject',
                 'http-method' => 'GET',
                 'params' => array(
@@ -441,7 +441,7 @@ return array(
         ),
         array(
                 'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
                 'params' => array(
@@ -454,7 +454,7 @@ return array(
         ),
         array(
                 'regex' => '#^/assetrelation/(?P<modelId>\d+)$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'updateObject',
                 'http-method' => 'POST',
                 'params' => array(
