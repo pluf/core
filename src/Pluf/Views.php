@@ -1,4 +1,21 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
@@ -78,13 +95,15 @@ class Pluf_Views
         }
         $error = '';
         if ($request->method == 'POST') {
-            foreach (Pluf::f('auth_backends', array(
-                    'Pluf_Auth_ModelBackend'
-            )) as $backend) {
-                $user = call_user_func(array(
-                        $backend,
-                        'authenticate'
-                ), $request->POST);
+            foreach (Pluf::f('auth_backends', 
+                    array(
+                            'Pluf_Auth_ModelBackend'
+                    )) as $backend) {
+                $user = call_user_func(
+                        array(
+                                $backend,
+                                'authenticate'
+                        ), $request->POST);
                 if ($user !== false) {
                     break;
                 }
@@ -149,6 +168,73 @@ class Pluf_Views
     }
 
     /**
+     * List objects
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
+     * @return Pluf_HTTP_Response_Json
+     */
+    public static function findObject ($request, $match, $p)
+    {
+        if (! isset($p['model'])) {
+            throw new Pluf_Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        $default = array(
+                'listFilters' => array(),
+                'listDisplay' => array(),
+                'searchFields' => array(),
+                'sortFields' => array()
+        );
+        $p = array_merge($default, $p);
+        // Create page
+        $page = new Pluf_Paginator(new $p['model']());
+        if (isset($p['sql'])) {
+            $page->forced_where = $p['sql'];
+        }
+        $page->list_filters = $p['listFilters'];
+        $page->configure($p['listDisplay'], $p['searchFields'], 
+                $p['sortFields']);
+        // XXX: maso, 1395: add sort order
+        // $page->sort_order = array(
+        // 'creation_dtime',
+        // 'DESC'
+        // );
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    /**
+     * Access an object (Part of the CRUD series).
+     *
+     * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
+     *
+     * 'model' - Class name string, required.
+     *
+     * در پارامترهای مسیر هم باید پارامترهای زیر باشد
+     *
+     * 'modelIdd' - Id of of the current model to update
+     *
+     * @param
+     *            Pluf_HTTP_Request Request object
+     * @param
+     *            array Match
+     * @param
+     *            array Extra parameters
+     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     */
+    public static function getObject ($request, $match, $p)
+    {
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        // Set the default
+        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], $match['modelId']);
+        return new Pluf_HTTP_Response_Json($object);
+    }
+
+    /**
      * Create an object (Part of the CRUD series).
      *
      * The minimal extra parameter is the model class name. The list
@@ -162,15 +248,7 @@ class Pluf_Views
      * 'extra_form' - Array of key/values to be added to the
      * form generation (array())
      *
-     * 'login_required' - Do we require login (false)
-     *
      * 'template' - Template to use ('"model class"_create_form.html')
-     *
-     * 'post_save_redirect' - View to redirect after saving (use
-     * getAbsoluteUrl() method of the mode)
-     *
-     * 'post_save_redirect_keys' - Which keys of the model to pass to
-     * the view (array('id'))
      *
      * @param
      *            Pluf_HTTP_Request Request object
@@ -184,58 +262,36 @@ class Pluf_Views
     {
         $default = array(
                 'extra_context' => array(),
-                'extra_form' => array(),
-                'login_required' => false
+                'extra_form' => array()
         );
         $p = array_merge($default, $p);
-        if (isset($p['login_required']) && true == $p['login_required']) {
-            if ($request->user->isAnonymous()) {
-                return new Pluf_HTTP_Response_RedirectToLogin($request);
-            }
-        }
         if (! isset($p['model'])) {
             throw new Exception(
                     'The model class was not provided in the parameters.');
         }
         // Set the default
         $model = $p['model'];
-        $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-        $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                $model) . '_create_form.html';
-        $post_save_keys = (isset($p['post_save_redirect_keys'])) ? $p['post_save_redirect_keys'] : array(
-                'id'
-        );
-        
         $object = new $model();
         if ($request->method == 'POST') {
             $form = Pluf_Shortcuts_GetFormForModel($object, $request->POST, 
                     $p['extra_form']);
-            if ($form->isValid()) {
-                $object = $form->save();
-                if (isset($p['post_save_redirect'])) {
-                    $url = Pluf_HTTP_URL_urlForView($p['post_save_redirect'], 
-                            $post_save_keys);
-                } elseif (in_array('getAbsoluteUrl', get_class_methods($object))) {
-                    $url = $object->getAbsoluteUrl();
-                } else {
-                    throw new Exception(
-                            'No URL to redirect to from generic create view.');
-                }
-                if (! $request->user->isAnonymous()) {
-                    $request->user->setMessage(
-                            sprintf(__('The %s was created successfully.'), 
-                                    $object->_a['verbose']));
-                }
-                return new Pluf_HTTP_Response_Redirect($url);
-            }
+            $object = $form->save();
         } else {
-            $form = Pluf_Shortcuts_GetFormForModel($object, null, 
-                    $p['extra_form']);
+            throw new Pluf_Exception("Not supported GET");
         }
-        return Pluf_Shortcuts_RenderToResponse($template, 
-                array_merge($context, array(
-                        'form' => $form
-                )), $request);
+        // Support Template
+        if (isset($p['template'])) {
+            $template = (isset($p['template'])) ? $p['template'] : strtolower(
+                    $model) . '_create_form.html';
+            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
+            return Pluf_Shortcuts_RenderToResponse($template, 
+                    array_merge($context, 
+                            array(
+                                    'object' => $object,
+                                    'form' => $form
+                            )), $request);
+        }
+        return new Pluf_HTTP_Response_Json($object);
     }
 
     /**
@@ -254,77 +310,42 @@ class Pluf_Views
      * 'extra_form' - Array of key/values to be added to the
      * form generation (array())
      *
-     * 'login_required' - Do we require login (false)
-     *
      * 'template' - Template to use ('"model class"_update_form.html')
      *
-     * 'post_save_redirect' - View to redirect after saving (use
-     * getAbsoluteUrl() method of the mode)
-     *
-     * 'post_save_redirect_keys' - Which keys of the model to pass to
-     * the view (array('id'))
-     *
-     * @param
-     *            Pluf_HTTP_Request Request object
-     * @param
-     *            array Match
-     * @param
-     *            array Extra parameters
+     * @param Pluf_HTTP_Request $request object
+     * @param array $match
+     * @param array $p parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
     public function updateObject ($request, $match, $p)
     {
-        if (isset($p['login_required']) && true == $p['login_required']) {
-            if ($request->user->isAnonymous()) {
-                return new Pluf_HTTP_Response_RedirectToLogin($request);
-            }
-        }
+        $default = array(
+                'extra_context' => array(),
+                'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
         if (! isset($p['model'])) {
             throw new Exception(
                     'The model class was not provided in the parameters.');
         }
         // Set the default
         $model = $p['model'];
-        $model_id = $p['model_id'];
-        $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-        $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                $model) . '_update_form.html';
-        $post_save_keys = (isset($p['post_save_redirect_keys'])) ? $p['post_save_redirect_keys'] : array(
-                'id'
-        );
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
+        $object = $form->save();
         
-        $object = Pluf_Shortcuts_GetObjectOr404($model, $model_id);
-        if ($request->method == 'POST') {
-            $form = Pluf_Shortcuts_GetFormForModel($object, $request->POST, 
-                    $p['extra_form']);
-            if ($form->isValid()) {
-                $object = $form->save();
-                if (isset($p['post_save_redirect'])) {
-                    $url = Pluf_HTTP_URL_urlForView($p['post_save_redirect'], 
-                            $post_save_keys);
-                } elseif (in_array('getAbsoluteUrl', get_class_methods($object))) {
-                    $url = $object->getAbsoluteUrl();
-                } else {
-                    throw new Exception(
-                            'No URL to redirect to from generic create view.');
-                }
-                if (! $request->user->isAnonymous()) {
-                    $request->user->setMessage(
-                            sprintf(__('The %s was created successfully.'), 
-                                    $object->_a['verbose']));
-                }
-                return new Pluf_HTTP_Response_Redirect($url);
-            }
-        } else {
-            $form = Pluf_Shortcuts_GetFormForModel($object, $object->getData(), 
-                    $p['extra_form']);
+        if (isset($p['template'])) {
+            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
+            $template = (isset($p['template'])) ? $p['template'] : strtolower(
+                    $model) . '_update_form.html';
+            return Pluf_Shortcuts_RenderToResponse($template, 
+                    array_merge($context, 
+                            array(
+                                    'form' => $form,
+                                    'object' => $object
+                            )), $request);
         }
-        return Pluf_Shortcuts_RenderToResponse($template, 
-                array_merge($context, 
-                        array(
-                                'form' => $form,
-                                'object' => $object
-                        )), $request);
+        return new Pluf_HTTP_Response_Json($object);
     }
 
     /**
@@ -349,54 +370,41 @@ class Pluf_Views
      * 'extra_context' - Array of key/values to be added to the
      * context (array())
      *
-     * @param
-     *            Pluf_HTTP_Request Request object
-     * @param
-     *            array Match
-     * @param
-     *            array Extra parameters
+     * @param Pluf_HTTP_Request $request object
+     * @param array $match
+     * @param array $p parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
     public function deleteObject ($request, $match, $p)
     {
-        if (isset($p['login_required']) && true == $p['login_required']) {
-            if ($request->user->isAnonymous()) {
-                return new Pluf_HTTP_Response_RedirectToLogin($request);
-            }
-        }
+        $default = array(
+                'extra_context' => array(),
+                'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
         if (! isset($p['model'])) {
-            throw new Exception(
-                    'The model class was not provided in the parameters.');
+            throw new Exception('The model class was not provided in the parameters.');
         }
         // Set the default
-        $id = (isset($p['id'])) ? $match[$p['id']] : $match[1];
         $model = $p['model'];
-        $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-        $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                $model) . '_confirm_delete.html';
-        $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $object->delete();
         
-        $object = Pluf_Shortcuts_GetObjectOr404($model, $id);
-        if ($request->method == 'POST') {
-            $object->delete();
-            if (isset($p['post_delete_redirect'])) {
-                $url = Pluf_HTTP_URL_urlForView($p['post_delete_redirect'], 
-                        $post_delete_keys);
-            } else {
-                throw new Exception(
-                        'No URL to redirect to from generic delete view.');
-            }
-            if (! $request->user->isAnonymous()) {
-                $request->user->setMessage(
-                        sprintf(__('The %s was deleted successfully.'), 
-                                $object->_a['verbose']));
-            }
-            return new Pluf_HTTP_Response_Redirect($url);
+        /*
+         * Return a template if is set
+         */
+        if (isset($p['template'])) {
+            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
+            $template = (isset($p['template'])) ? $p['template'] : strtolower(
+                    $model) . '_confirm_delete.html';
+            $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
+            return Pluf_Shortcuts_RenderToResponse($template, 
+                    array_merge($context, 
+                            array(
+                                    'object' => $object
+                            )), $request);
         }
-        return Pluf_Shortcuts_RenderToResponse($template, 
-                array_merge($context, array(
-                        'object' => $object
-                )), $request);
+        return new Pluf_HTTP_Response_Json($object);
     }
 
     /**

@@ -50,13 +50,14 @@ class Pluf_Form_Field_Datetime extends Pluf_Form_Field
                 // PHP's strptime has various quirks, e.g. it doesn't check
                 // gregorian dates for validity and it also allows '60' in
                 // the seconds part
+//                 var_dump($date);
                 if (checkdate($month, $day, $year) && $date['tm_sec'] < 60) {
                     $date = str_pad($year,  4, '0', STR_PAD_LEFT).'-'.
                             str_pad($month, 2, '0', STR_PAD_LEFT).'-'.
                             str_pad($day,   2, '0', STR_PAD_LEFT).' '.
                             str_pad($date['tm_hour'], 2, '0', STR_PAD_LEFT).':'.
-                            str_pad($date['tm_min'],  2, '0', STR_PAD_LEFT).':';
-                            str_pad($date['tm_sec'],  2, '0', STD_PAD_LEFT);
+                            str_pad($date['tm_min'],  2, '0', STR_PAD_LEFT).':'.
+                            str_pad($date['tm_sec'],  2, '0', STR_PAD_LEFT);
                     
                     // we internally use GMT, so we convert it to a GMT date.
                     return gmdate('Y-m-d H:i:s', strtotime($date));

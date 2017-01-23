@@ -1,28 +1,25 @@
 <?php
 Pluf::loadFunction ( 'SaaSDM_Shortcuts_GetLinkOr404' );
-
 class SaaSDM_Views_Link {
 	public static function create($request, $match) {
-		$asset = SaaSDM_Shortcuts_GetAssetOr404($match['asset_id']);
+		$asset = SaaSDM_Shortcuts_GetAssetOr404 ( $match ['asset_id'] );
 		
 		// initial link data
 		$extra = array (
-				// 'user' => $request->user,
+				'user' => $request->user,
 				'tenant' => $request->tenant,
-				'asset' => $asset
+				'asset' => $asset 
 		);
 		
 		// Create link and get its ID
-		$form = new SaaSDM_Form_LinkCreate( $request->REQUEST, $extra );
+		$form = new SaaSDM_Form_LinkCreate ( $request->REQUEST, $extra );
 		$link = $form->save ();
 		return new Pluf_HTTP_Response_Json ( $link );
 	}
-	
 	public static function get($request, $match) {
 		$link = new SaaSDM_Link ( $match ['id'] );
 		return new Pluf_HTTP_Response_Json ( $link );
 	}
-	
 	public static function find($request, $match) {
 		$links = new Pluf_Paginator ( new SaaSDM_Link () );
 		$sql = new Pluf_SQL ( 'tenant=%s', array (
@@ -56,24 +53,44 @@ class SaaSDM_Views_Link {
 		return new Pluf_HTTP_Response_Json ( $links->render_object () );
 	}
 	public static function download($request, $match) {
-		$link = SaaSDM_Shortcuts_GetLinkBySecureIdOr404( $match ['secure_link'] );
+		$link = SaaSDM_Shortcuts_GetLinkBySecureIdOr404 ( $match ['secure_link'] );
 		if ($link->tenant != $request->tenant->id) {
 			// Error 404
 		}
-		// TODO: check link expiry
+		// Check link expiry
+		
+		if (date ( "Y-m-d H:i:s" ) > $link->expiry) {
+			// Error: Link Expiry
+			throw new SaaSDM_Exception_ObjectNotFound ( "This link has been expired." );
+		}
+		
 		$asset = $link->get_asset ();
 		
-		// update download
-		$link->download ++;
-		$link->update();
-		// XXX: DO download
-		$httpRange = isset($request->SERVER['HTTP_RANGE']) ? $request->SERVER['HTTP_RANGE'] : null;
-		$response =  new Pluf_HTTP_Response_ResumableFile($asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type);
+		$user = $link->get_user ();
+		
+		// Do Download
+		$httpRange = isset ( $request->SERVER ['HTTP_RANGE'] ) ? $request->SERVER ['HTTP_RANGE'] : null;
+		$response = new Pluf_HTTP_Response_ResumableFile ( $asset->path . '/' . $asset->id, $httpRange, $asset->name, $asset->mime_type );
 		// TODO: do buz.
-		$size = $response->computeSize();
+		$size = $response->computeSize ();
 		
-		
-		
-		return $response;
+		$planList = new Pluf_Paginator ( new SaaSDM_Plan () );
+		$sql = new Pluf_SQL ( 'user=%s', array (
+				$user->id 
+		) );
+		$planList->forced_where = $sql;
+		foreach ( $planList->render_array() as $plan ) {
+			$plan = SaaSDM_Shortcuts_GetPlanOr404 ( $plan );
+			if ($plan->remain_volume > $size && $plan->remain_count > 0 && $plan->active == 1) {
+				$plan->remain_volume -= $size;
+				$plan->remain_count --;
+				$plan->update ();
+				// update download
+				$link->download ++;
+				$link->update ();
+				return $response;
+			}	
+		}
+		throw new SaaSDM_Exception_ObjectNotFound ( "SaaSDM plan does not have enough priviledges, or there's no appropriate plan (last checked plan id:" . $plan->id . ")" );
 	}
 }

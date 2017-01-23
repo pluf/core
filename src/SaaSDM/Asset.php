@@ -13,77 +13,107 @@ class SaaSDM_Asset extends Pluf_Model {
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => false 
+						'blank' => false,
+						'editable' => false,
+						'readable' => true 
 				),
 				'name' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => true,
+						'readable' => true 
 				),
 				'path' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => false 
 				),
 				'size' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => true 
 				),
 				'download' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => true 
 				),
 				'driver_type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => false 
 				),
 				'driver_id' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => false 
 				),
 				'creation_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => false,
+						'readable' => true 
 				),
 				'modif_dtime' => array (
 						'type' => 'Pluf_DB_Field_Datetime',
-						'blank' => true 
+						'blank' => true,
+						'editable' => false,
+						'readable' => true 
 				),
 				'parent' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'SaaSDM_Asset',
 						'blank' => false,
+						'editable' => true,
+						'readable' => true,
 						'relate_name' => 'parent' 
 				),
 				'type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => true 
 				),
 				'content_name' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 2500 
+						'size' => 2500,
+						'editable' => true,
+						'readable' => true 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => true,
+						'readable' => true 
 				),
 				'mime_type' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => false,
+						'readable' => true 
 				),
 				// relations
 				'tenant' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaS_Application',
+						'model' => 'Pluf_Tenant',
 						'blank' => false,
+						'readable' => false,
+						'editable' => false,
 						'relate_name' => 'tenant' 
 				) 
 		);
@@ -96,6 +126,14 @@ class SaaSDM_Asset extends Pluf_Model {
 						'index_option' => '',
 						'algorithm_option' => '',
 						'lock_option' => '' 
+				) 
+		);
+		$this->_a ['views'] = array (
+				'sumsize' => array (
+						'select' => 'SUM(size) AS sumsize',
+						'props' => array (
+								'sumsize' => 'sumsize' 
+						) 
 				) 
 		);
 	}

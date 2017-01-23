@@ -122,8 +122,8 @@ class User_Form_Account extends Pluf_Form
     function update ($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Pluf_Exception(
-                    __('Cannot save the model from an invalid form.'));
+            throw new Pluf_Exception_Form(
+                    __('Cannot save the model from an invalid form.'), $this);
         }
         if (isset($this->cleaned_data['email'])) {
             $old_email = $this->user_data->email;

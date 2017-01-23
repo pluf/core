@@ -1,0 +1,10 @@
+{
+	"name": "Wiki",
+	"version": "1.0.0",
+	"title": "Wiki framework",
+	"model": [
+		"Book_Book",
+		"Book_Page"
+	],
+	"permisson": []
+}

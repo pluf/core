@@ -7,12 +7,12 @@ return array(
         ),
         'SaaSKM_Tag' => array(
                 'relate_to' => array(
-                        'SaaS_Application'
+                        'Pluf_Tenant'
                 )
         ),
         'SaaSKM_Vote' => array(
                 'relate_to' => array(
-                        'SaaS_Application',
+                        'Pluf_Tenant',
                         'Pluf_User'
                 )
         )

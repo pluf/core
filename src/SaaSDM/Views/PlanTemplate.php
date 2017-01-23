@@ -60,7 +60,7 @@ class SaaSDM_Views_PlanTemplate {
 		// تعیین داده‌ها
 		$plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404 ( $match ["id"] );
 		// حق دسترسی
-		// SaaSCMS_Precondition::userCanAccessContent($request, $content);
+		// CMS_Precondition::userCanAccessContent($request, $content);
 		// اجرای درخواست
 		return new Pluf_HTTP_Response_Json ( $plantemplate );
 	}
@@ -68,7 +68,7 @@ class SaaSDM_Views_PlanTemplate {
 		// تعیین داده‌ها
 		$plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404 ( $match ["id"] );
 		// حق دسترسی
-		// SaaSCMS_Precondition::userCanUpdateContent($request, $content);
+		// CMS_Precondition::userCanUpdateContent($request, $content);
 		// اجرای درخواست
 		$extra = array (
 				// 'user' => $request->user,
@@ -86,7 +86,7 @@ class SaaSDM_Views_PlanTemplate {
 		// تعیین داده‌ها
 		$plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404 ( $match ["id"] );
 		// دسترسی
-		// SaaSCMS_Precondition::userCanDeleteContent($request, $content);
+		// CMS_Precondition::userCanDeleteContent($request, $content);
 		// اجرا
 		$plantemplate->delete ();
 		

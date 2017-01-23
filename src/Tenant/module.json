@@ -1,0 +1,13 @@
+{
+	"name": "Tenant",
+	"version": "2.0.0",
+	"title": "Tenant Management",
+	"permisson": [],
+	"monitor":[{
+		"bean": "tenant",
+		"property": "count",
+		"title": "Number of tenant",
+		"description": "Defines number of tenant created on the server.",
+		"function": "Tenant_Monitor::count"
+	}]
+}

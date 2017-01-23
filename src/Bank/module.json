@@ -1,0 +1,10 @@
+{
+	"name": "Bank",
+	"version": "0.1.0",
+	"title": "Bank framework",
+	"model": [
+		"Bank_Receipt",
+		"Bank_Backend"
+	],
+	"permisson": []
+}

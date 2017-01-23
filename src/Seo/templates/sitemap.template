@@ -1,0 +1,40 @@
+{assign $tag1='<?xml version="1.0" encoding="UTF-8" ?>'}{$tag1|safe}
+{assign $tag2='<?xml-stylesheet href="/api/seo/xsl/sitemap.xsl" type="text/xsl" ?>'}{$tag2|safe}
+<urlset 
+	xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+		http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+	{cfg 'general_domain', '', false, 'cfg_'}
+	{cfg 'general_protocol', 'http', false, 'cfg_'}
+	<url>
+		<loc>{$cfg_general_protocol}://{$cfg_general_domain}</loc>
+		<lastmod>{$tenant->modif_dtime|date:'%Y-%m-%d'}</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	{if $tenant->domain}<url>
+		<loc>{$cfg_general_protocol}://{$tenant->domain}</loc>
+		<lastmod>{$tenant->modif_dtime|date:'%Y-%m-%d'}</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.6</priority>
+	</url>{/if}
+	<url>
+		<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/</loc>
+		<lastmod>{$tenant->modif_dtime|date:'%Y-%m-%d'}</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.6</priority>
+	</url>
+	{foreach $spaList as $spa}{if $tenant->domain}<url>
+		<loc>{$cfg_general_protocol}://{$tenant->domain}/{$spa->name}</loc>
+		<lastmod>{$spa->modif_dtime|date:'%Y-%m-%d'}</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.5</priority>
+	</url>{/if}
+	<url>
+		<loc>{$cfg_general_protocol}://{$tenant->subdomain}.{$cfg_general_domain}/{$spa->name}/</loc>
+		<lastmod>{$spa->modif_dtime|date:'%Y-%m-%d'}</lastmod>
+		<changefreq>weekly</changefreq>
+		<priority>0.5</priority>
+	</url>{/foreach}
+</urlset>

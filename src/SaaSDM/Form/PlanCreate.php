@@ -17,15 +17,14 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
     public function initFields ($extra = array())
     {
         $this->tenant = $extra['tenant'];
-//         $this->user = $extra['user'];
+		$this->user = $extra['user'];
 
-        $this->fields[ 'tempalteID' ] = new Pluf_Form_Field_Varchar(
+        $this->fields[ 'templateId' ] = new Pluf_Form_Field_Varchar(
         		array(
         				'required' => true,
         				'label' => 'PlanTemplateID',
         				'help_text' => 'Id of plan template'
         		)); 
-      
     }
 
     function save ($commit = true)
@@ -37,16 +36,17 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $plan = new SaaSDM_Plan();
         
         //Checking existnce of plan template
-        $plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404( $this->cleaned_data ['tempalteID']);
+        $plantemplate = SaaSDM_Shortcuts_GetPlanTemplateOr404( $this->cleaned_data ['templateId']);
         $plan->period = $plantemplate->period;
         $plan->max_count = $plantemplate->max_count;
         $plan->max_volume = $plantemplate->max_volume;
         $plan->remain_count = $plantemplate->max_count;
         $plan->remain_volume = $plantemplate->max_volume;
         $plan->active = false;
+        $plan->price = $plantemplate->price;
         //TODO: add relation to BANK payments
-        //TODO: add relation to accont and user
- 
+        
+        $plan->user = $this->user;
         
         $plan->setFromFormData($this->cleaned_data);
 //         $plan->user = $this->user;

@@ -22,11 +22,22 @@ $cfg['general_admin_email'] = array(
 $cfg['installed_apps'] = array(
         'Pluf',
         'User',
-        'SaaS',
-        'SaaSNewspaper',
-        'SaaSCMS',
-        'Wiki',
-        'SaaSBank'
+        'Group',
+        'Role',
+        'Tenant',
+        'CMS',
+        'Bank',
+        'Config',
+        'Setting',
+        'Spa',
+        
+//         'Monitor',
+        'SDP',
+//         'SaaSDM',
+        'Message',
+
+//         'SaaSNewspaper',
+        'Book',
 );
 
 /*
@@ -38,12 +49,14 @@ $cfg['middleware_classes'] = array(
         'Pluf_Middleware_Session',
         'Pluf_Middleware_Translation',
         // Tenant loading
-        'SaaS_Middleware_TenantEmpty',
-        // 'SaaS_Middleware_TenantFromSubDomain',
-        // 'SaaS_Middleware_TenantFromDomain',
-        // 'SaaS_Middleware_TenantFromRequestMatch',
-        // 'SaaS_Middleware_TenantFromSession',
-        'SaaS_Middleware_TenantFromConfig'
+        'Pluf_Middleware_TenantEmpty',
+        'Pluf_Middleware_TenantFromHeader',
+        'Pluf_Middleware_TenantFromDomain',
+        // 'Pluf_Middleware_TenantFromRequestMatch',
+        // 'Pluf_Middleware_TenantFromSession',
+        'Pluf_Middleware_TenantFromConfig',
+        'Seo_Middleware_Spa',
+        'Pluf_Middleware_Api'
 );
 
 /*
@@ -58,6 +71,9 @@ $cfg['migrate_allow_web'] = true;
  * مسیر ذخیره فایل‌های آپلود شده برای کانتنت‌ها
  */
 $cfg['upload_path'] = SRC_BASE . '/tenant';
+
+$cfg['time_zone'] = 'Europe/Berlin';
+$cfg['encoding'] = 'UTF-8';
 
 /*
  * ----------------------------------------------------------------------------
@@ -74,18 +90,12 @@ $cfg['upload_path'] = SRC_BASE . '/tenant';
 $cfg['secret_key'] = 'WMaTo4uv3uFl6MIl0Dm3Ek';
 
 /*
- * پروفایل کاربر را تعیین می‌کند. این پروفایل یک مدل داده‌ای است که رابطه یک به
- * یک با یک کاربر دارد. این مدل داده‌ای به صورت خودکار در سطح سکو مدیریت خواهد
- * شد.
- */
-$cfg['pluf_custom_group'] = 'Pluf_Group';
-$cfg['pluf_custom_user'] = 'Pluf_User';
-
-/*
  * زمانی که یک کاربر ایجاد می‌شود حالت آن را به صورت پیش فرض به حالت فعال تبدیل
  * می‌کند.
  */
 $cfg['user_signup_active'] = true;
+$cfg['user_avatar_default'] = SRC_BASE . '/var/avatar.svg';
+$cfg['user_avatra_max_size'] = 2097152;
 
 /*
  * روش‌های متفاوتی برای تعیین احراز اصالت وجود دارد. در اینجا تعیین می‌شود که
@@ -202,7 +212,8 @@ $cfg['tmp_folder'] = SRC_BASE . '/var/tmp';
  */
 $cfg['template_folders'] = array(
         SRC_BASE . '/src/templates',
-        PLUF_BASE . '/SaaS/templates'
+        PLUF_BASE . '/SaaS/templates',
+        PLUF_BASE . '/Seo/templates',
 );
 
 /*
@@ -224,10 +235,10 @@ $cfg['languages'] = array(
  * https://github.com/phoenix-scholars/Pluf/tree/master/document
  */
 $cfg['template_tags'] = array(
-        'SaaSConfig' => 'SaaS_Template_Configuration',
+        'SaaSConfig' => 'Template_Configuration',
         'now' => 'Pluf_Template_Tag_Now',
         'cfg' => 'Pluf_Template_Tag_Cfg',
-        'spaView' => 'SaaS_Template_SapMainView'
+        'spaView' => 'Template_SapMainView'
 );
 
 /*
@@ -242,7 +253,7 @@ $cfg['template_tags'] = array(
  * می‌شوند. تمام
  * مسیرها به ترتیب جستجو می‌شوند.
  */
-$cfg['wiki_repositories'] = array(
+$cfg['Book_repositories'] = array(
         SRC_BASE . '/etc/wiki'
 );
 
@@ -251,7 +262,7 @@ $cfg['wiki_repositories'] = array(
  * SaaS
  * ----------------------------------------------------------------------------
  */
-$cfg['saas_mimetypes_db'] = SRC_BASE . '/etc/mime.types';
+$cfg['mimetypes_db'] = SRC_BASE . '/etc/mime.types';
 /*
  * فعال بودن لایه رایگان در سیستم را تعیین می‌کند. در صورتی که این مدل تجاری
  * فعال
@@ -259,31 +270,35 @@ $cfg['saas_mimetypes_db'] = SRC_BASE . '/etc/mime.types';
  * کنند
  * در غیر این صورت سیستم آنها را بلاکه می‌کند.
  */
-$cfg['saas_freemium_enable'] = true;
+$cfg['freemium_enable'] = true;
 
 /*
  * بالاترین سطح دسترسی در مدل فریمیوم را تعیین می‌کند. بسیاری از کاربردها مانند
  * ایجاد
  * یک تنظمی جدید تنها در بالاترین لایه نرم افزار در دسترس است.
  */
-$cfg['saas_freemium_full'] = 5;
+$cfg['freemium_full'] = 5;
 
 /*
  * برنامه‌های کاربردی در مخزن‌های متفاوتی قرار دارند. در این مسیر تمام
  * مخزن‌ها فهرست شده تا سیستم در صورت نیاز آنها را بازیابی و در اختیار
  * کاربران قرار دهد.
  */
-$cfg['saas_spa_repository'] = array(
-        SRC_BASE . '/spa'
-)
-// TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
-;
-$cfg['saas_spa_package'] = "/spa.json";
-$cfg['saas_spa_view'] = '/main.html';
-$cfg['saas_spa_default'] = 'test';
+$cfg['spa_repository'] = SRC_BASE . '/spa';
 
-$cfg['saas_tenant_default'] = 'main';
-$cfg['saas_tenant_match'] = array();
+// TODO: maso, 1395: اضافه کردن مسیر تمام مخازن نرم افزاری
+
+$cfg['spa_package'] = "/spa.json";
+$cfg['spa_view'] = '/main.html';
+$cfg['spa_default'] = 'test';
+
+$cfg['tenant_default'] = 'main';
+$cfg['tenant_match'] = array();
+
+/*
+ * Enable or disable multitenant mode.
+ */
+$cfg['multitenant'] = false;
 
 /*
  * ----------------------------------------------------------------------------
@@ -301,14 +316,14 @@ $cfg['saas_tenant_match'] = array();
  * تنظیم‌های
  * سیستم روش غیر متمرکز را تعیین کند.
  */
-$cfg['saas_bank_centeral'] = true;
+$cfg['bank_centeral'] = true;
 
 /*
  * در فرآیند توسعه نیاز هست که فرآنید ایجاد یک پرداخت و مدیرت آن به صورت افلاین
  * انجام شود. با این تنظیم‌متورهای پروداخت به صورت پیش فرض به این کار می‌پردازند
  * و داده‌های فرضی ایجاد می‌کنند.
  */
-$cfg['saas_bank_debug'] = true;
+$cfg['bank_debug'] = true;
 
 return $cfg;
 

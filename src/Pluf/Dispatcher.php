@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -69,6 +68,8 @@ class Pluf_Dispatcher
                     }
                 }
             }
+            // Puts request in global scope
+            $GLOBALS ['_PX_request'] = $req;
             if ($skip === false) {
                 $response = self::match($req);
                 if (! empty($req->response_vary_on)) {
@@ -92,23 +93,22 @@ class Pluf_Dispatcher
                 throw $e;
             }
             $response = new Pluf_HTTP_Response_ServerError($e);
-            $response->render(
-                    $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+            $response->render($req->method != 'HEAD');
             try { // 1- Add to log
-                if (! ($e instanceof Pluf_Exception)) {
-                    Pluf_Log::fatal(
-                            array(
-                                    'query' => $query,
-                                    'error' => $e
-                            ));
-                }
-            } catch (Exception $e) {}
-            try { // 2- send email
-                $from =  Pluf::f('general_from_email', 'info@dpq.co.ir');
-                $email = new Pluf_Mail($from, $from, 'fatal error in system');
-                $email->addTextMessage('unsupported error in system.');
-                $email->sendMail();
-            } catch (Exception $e) {}
+                Pluf_Log::fatal(
+                        array(
+                                'query' => $query,
+                                'error' => $e
+                        ));
+            } catch (Exception $ex) {}
+            if (! ($e instanceof Pluf_Exception)) {
+                try { // 2- send email
+                    $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
+                    $email = new Pluf_Mail($from, $from, 'fatal error in system');
+                    $email->addTextMessage('unsupported error in system:' . $e);
+                    $email->sendMail();
+                } catch (Exception $ex) {}
+            }
         }
         /**
          * [signal]

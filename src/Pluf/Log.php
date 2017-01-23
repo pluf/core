@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -269,6 +268,9 @@ class Pluf_Log
      */
     public static function flush ()
     {
+        if(count(self::$stack) == 0){
+            return;
+        }
         $writer = Pluf::f('log_handler', 'Pluf_Log_File');
         call_user_func(
                 array(

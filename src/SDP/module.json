@@ -1,0 +1,14 @@
+{
+  "name": "SDP",
+  "version": "1",
+  "title": "Sell Digital Products System",
+  "model": [
+		"SDP_Asset",
+		"SDP_Link",
+		"SDP_AssetRelation",
+		"SDP_TAG",
+		"SDP_Category",
+		"SDP_Profile"
+	],
+	"permisson": []
+}

@@ -12,21 +12,41 @@ class User_Views_Group extends Pluf_Views
 {
 
     /**
-     * پیش نیازهای دسترسی به فهرست گروه‌ها
-     *
-     * @var unknown
-     */
-    public $groups_precond = array(
-            'Pluf_Precondition::staffRequired'
-    );
-
-    /**
-     * فهرست تمام گروه‌ها را نمایش می‌دهد
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public function groups ($request, $match)
+    public function find ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function create ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function get ($request, $match)
+    {
+        throw new Pluf_Exception_NotImplemented();
+    }
+
+    /**
+     *
+     * @param unknown_type $request            
+     * @param unknown_type $match            
+     */
+    public function delete ($request, $match)
     {
         throw new Pluf_Exception_NotImplemented();
     }

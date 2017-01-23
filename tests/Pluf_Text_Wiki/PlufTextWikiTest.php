@@ -46,7 +46,7 @@ class PlufTextWikiTest extends PHPUnit_Framework_TestCase {
 
     public function testSimpleRender()
     {
-        $renderer = Pluf::factory('Pluf_Text_Wiki_Renderer');
+        $renderer = Pluf::factory('Pluf_Text_Book_Renderer');
         $this->assertEquals("\n".'<h4>Title</h4>'."\n", 
                             $renderer->render('!!Title')
                             );
@@ -54,7 +54,7 @@ class PlufTextWikiTest extends PHPUnit_Framework_TestCase {
 
     public function testFullRender()
     {
-        $renderer = Pluf::factory('Pluf_Text_Wiki_Renderer');
+        $renderer = Pluf::factory('Pluf_Text_Book_Renderer');
         $string = file_get_contents(dirname(__FILE__).'/wikisample.txt');
         $render = file_get_contents(dirname(__FILE__).'/wikisample.render.txt');
         $this->assertEquals($render, $renderer->render($string));
@@ -62,14 +62,14 @@ class PlufTextWikiTest extends PHPUnit_Framework_TestCase {
 
     public function testRenderActionUrl()
     {
-        $GLOBALS['_PX_config']['wiki_create_action'] = true;
+        $GLOBALS['_PX_config']['Book_create_action'] = true;
         $GLOBALS['_PX_config']['app_base'] = '/testapp/';
         $GLOBALS['_PX_config']['url_format'] = 'simple';
         $string = '[Hello|/link/to]';
         $string2 = '[/link/to]';
         $string3 = '[http://example.com]';
         $string4 = '[Hello|/link/to/file.ext]';
-        $renderer = new Pluf_Text_Wiki_Renderer();
+        $renderer = new Pluf_Text_Book_Renderer();
         $this->assertEquals("<p>\n".'<a href="/testapp/?_px_action='.urlencode('/link/to').'">Hello</a>'."\n</p>",
                             $renderer->render($string));
         $this->assertEquals("<p>\n".'<a href="/testapp/?_px_action='.urlencode('/link/to').'">/link/to</a>'."\n</p>",
@@ -78,7 +78,7 @@ class PlufTextWikiTest extends PHPUnit_Framework_TestCase {
                             $renderer->render($string3));
         $this->assertEquals("<p>\n".'<a href="/link/to/file.ext">Hello</a>'."\n</p>",
                             $renderer->render($string4));
-        $GLOBALS['_PX_config']['wiki_create_action'] = false;
+        $GLOBALS['_PX_config']['Book_create_action'] = false;
         $this->assertEquals("<p>\n".'<a href="/link/to">Hello</a>'."\n</p>",
                             $renderer->render($string));
         $this->assertEquals("<p>\n".'<a href="/link/to">/link/to</a>'."\n</p>",

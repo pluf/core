@@ -13,52 +13,68 @@ class SaaSDM_PlanTemplate extends Pluf_Model {
 		$this->_a ['cols'] = array (
 				'id' => array (
 						'type' => 'Pluf_DB_Field_Sequence',
-						'blank' => false 
+						'blank' => false,
+						'editable' => false,
+						'readable' => true 
 				),
 				'description' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 2500
+						'size' => 2500,
+						'editable' => true,
+						'readable' => true
 				),
 				'label' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 250 
+						'size' => 250,
+						'editable' => true,
+						'readable' => true
 				),
 				'period' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250 
+						'editable' => false,
+						'readable' => true
 				),
 				'max_count' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 250
+						'editable' => false,
+						'readable' => true
 				),
 				'max_volume' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-				),				
+						'editable' => false,
+						'readable' => true
+				),
 				'content_name' => array (
 						'type' => 'Pluf_DB_Field_Varchar',
 						'blank' => false,
-						'size' => 500 
+						'size' => 500,
+						'editable' => true,
+						'readable' => true
 				),
 				'price' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 20
+						'editable' => false,
+						'readable' => true
 				),
 				'off' => array (
 						'type' => 'Pluf_DB_Field_Integer',
 						'blank' => false,
-						'size' => 10
+						'editable' => true,
+						'readable' => true
 				),
 				// relations
 				'tenant' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'SaaS_Application',
+						'model' => 'Pluf_Tenant',
 						'blank' => false,
+						'editable' => false,
+						'readable' => false,
 						'relate_name' => 'tenant' 
 				) 
 		);

@@ -1,5 +1,6 @@
 <?php
 
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 /**
  * ایجاد یک صفحه جدید
  *
@@ -8,7 +9,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *
  */
-class SaaSCMS_Form_PageCreate extends Pluf_Form
+class CMS_Form_PageCreate extends Pluf_Form
 {
 
     public $tenant = null;
@@ -37,7 +38,7 @@ class SaaSCMS_Form_PageCreate extends Pluf_Form
             throw new Pluf_Exception('cannot save the page from an invalid form');
         }
         // Create the page
-        $page = new SaaSCMS_Page();
+        $page = new CMS_Page();
         $page->setFromFormData($this->cleaned_data);
         $page->tenant = $this->tenant;
         if ($commit) {
@@ -49,7 +50,7 @@ class SaaSCMS_Form_PageCreate extends Pluf_Form
     public function clean_content()
     {
         $contentId = $this->cleaned_data['content'];
-        $content = SaaSCMS_Shortcuts_GetContentOr404($contentId);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $contentId);
         // TODO: hadi 1395-01-26: بررسی صحت محتوا
         return $content->id;
     }

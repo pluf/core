@@ -28,3 +28,18 @@
 - Security layer
 - Plug and play
 
+# حق نشر
+
+این بسته توسط شرکت دانش پژوهان ققنوس توسعه یافته است:
+
+[Phoinex Scholars Co.](http://dpq.co.ir)
+
+# نسخه‌ها
+
+## current
+
+- اضافه کردن ماژول SDP
+
+## 0.4.0
+
+- ماژول SaaSDM اضافه شد
