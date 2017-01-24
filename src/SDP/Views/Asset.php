@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('SDP_Shortcuts_GetAssetOr404');
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 
 class SDP_Views_Asset
 {
@@ -320,5 +321,112 @@ class SDP_Views_Asset
         $category = Pluf_Shortcuts_GetObjectOr404('SDP_Category', $categoryId);
         $asset->delAssoc($category);
         return new Pluf_HTTP_Response_Json($category);
+    }
+    
+    // *******************************************************************
+    // Relations of Asset
+    // *******************************************************************
+    public static function relations($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        $relatedAsset = new SDP_Asset();
+        $relatedAssetTable = $relatedAsset->_a['table'];
+        $assocTable = 'sdp_assetrelation';
+        $relatedAsset->_a['views']['myView'] = array(
+            'select' => $relatedAsset->getSelect(),
+            'join' => 'LEFT JOIN ' . $assocTable . ' ON ' . $relatedAssetTable . '.id=' . $assocTable . '.end'
+        );
+        
+        $page = new Pluf_Paginator($relatedAsset);
+        $sql = new Pluf_SQL('start=%s', array(
+            $asset->id
+        ));
+        $page->forced_where = $sql;
+        $page->model_view = 'myView';
+        $page->list_filters = array(
+            'id',
+            'name',
+            'size',
+            'download',
+            'driver_type',
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
+        );
+        $search_fields = array(
+            'name',
+            'driver_type',
+            'driver_id',
+            'type',
+            'description',
+            'mime_type'
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'size',
+            'download',
+            'driver_type',
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
+        );
+        $page->configure(array(), $search_fields, $sort_fields);
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    public static function addRelation($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['endId'])) {
+            $endId = $match['endId'];
+        } else {
+            $endId = $request->REQUEST['endId'];
+        }
+        $endAsset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $endId);
+        $request->REQUEST['start'] = $asset->getId();
+        $request->REQUEST['end'] = $endAsset->getId();
+        $form = Pluf_Shortcuts_GetFormForModel(new SDP_AssetRelation(), $request->REQUEST, array());
+        return new Pluf_HTTP_Response_Json($form->save());
+    }
+
+    public static function removeRelation($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if ($asset->tenant != $request->tenant->id) {
+            throw new Pluf_Exception();
+        }
+        if (isset($match['endId'])) {
+            $endId = $match['endId'];
+        } else {
+            $endId = $request->REQUEST['endId'];
+        }
+        $endAsset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $endId);
+        $relation = new SDP_AssetRelation();
+        $relationList = $relation->getList(array(
+            'filter' => array('tenant='.$request->tenant->id, 'start='.$asset->id, 'end='.$endAsset->id)
+        ));
+        $relateListCopy = array();
+        foreach($relationList as $rel){
+            $val = clone $rel;
+            array_push($relateListCopy, $val);
+            $rel->delete();
+        }
+        return new Pluf_HTTP_Response_Json($relateListCopy);
     }
 }

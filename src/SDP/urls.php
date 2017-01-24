@@ -123,6 +123,44 @@ return array(
             'SaaS_Precondition::tenantMember'
         )
     ),
+    // ************************************************************* Relations of Asset
+    array(
+        'regex' => '#^/asset/(?P<assetId>\d+)/relation/find$#',
+        'model' => 'SDP_Views_Asset',
+        'method' => 'relations',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/asset/(?P<assetId>\d+)/relation/new$#',
+        'model' => 'SDP_Views_Asset',
+        'method' => 'addRelation',
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    array(
+        'regex' => '#^/asset/(?P<assetId>\d+)/relation/(?P<endId>\d+)$#',
+        'model' => 'SDP_Views_Asset',
+        'method' => 'addRelation',
+        'http-method' => 'POST',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    array(
+        'regex' => '#^/asset/(?P<assetId>\d+)/relation/(?P<endId>\d+)$#',
+        'model' => 'SDP_Views_Asset',
+        'method' => 'removeRelation',
+        'http-method' => 'DELETE',
+        'precond' => array(
+            'Pluf_Precondition::loginRequired',
+            'SaaS_Precondition::tenantMember'
+        )
+    ),
+    
     // ************************************************************* Category
     array( // Find
         'regex' => '#^/category/find$#',

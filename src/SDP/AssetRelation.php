@@ -92,14 +92,14 @@ class SDP_AssetRelation extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-//             'page_class_idx' => array(
-//                 'col' => 'tenant, type, start, end',
-//                 'type' => 'unique', // normal, unique, fulltext, spatial
-//                 'index_type' => '', // hash, btree
-//                 'index_option' => '',
-//                 'algorithm_option' => '',
-//                 'lock_option' => ''
-//             )
+            'page_class_idx' => array(
+                'col' => 'tenant, type, start, end',
+                'type' => 'unique', // normal, unique, fulltext, spatial
+                'index_type' => '', // hash, btree
+                'index_option' => '',
+                'algorithm_option' => '',
+                'lock_option' => ''
+            )
         );
     }
 
