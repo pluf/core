@@ -94,6 +94,9 @@ class SDP_Views_Link
         $size = $response->computeSize();
         $link->download ++;
         $link->update();
+        // Hadi, 1395-11-07: download counter of asset should be increased.
+        $asset->download ++;
+        $asset->update();
         return $response;
         // throw new SDP_Exception_ObjectNotFound ( "SDP plan does not have enough priviledges." );
     }
