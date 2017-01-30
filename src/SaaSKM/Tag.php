@@ -65,7 +65,7 @@ class SaaSKM_Tag extends Pluf_Model
                  */
                 'tenant' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'SaaS_Application',
+                        'model' => 'Pluf_Tenant',
                         'blank' => false,
                         'verbose' => __('tenant'),
                         'help_text' => __('Related tenant.')

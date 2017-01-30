@@ -8,7 +8,7 @@ return array (
 				'http-method' => 'POST',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array (
@@ -19,7 +19,7 @@ return array (
 		),
 		// 'precond' => array (
 		// //'Pluf_Precondition::loginRequired',
-		// //'SaaS_Precondition::tenantMember'
+		// //'Pluf_Precondition::memberRequired'
 		// )
 		array ( // Asset urls
 				'regex' => '#^/asset/(?P<id>\d+)$#',
@@ -29,7 +29,7 @@ return array (
 		),
 		// 'precond' => array (
 		// //'Pluf_Precondition::loginRequired',
-		// //'SaaS_Precondition::tenantMember'
+		// //'Pluf_Precondition::memberRequired'
 		// )
 		array ( // Asset urls
 				'regex' => '#^/asset/(?P<id>\d+)/find$#',
@@ -39,7 +39,7 @@ return array (
 		),
 		// 'precond' => array (
 		// //'Pluf_Precondition::loginRequired',
-		// //'SaaS_Precondition::tenantMember'
+		// //'Pluf_Precondition::memberRequired'
 		// )
 		array ( // Asset urls
 				'regex' => '#^/asset/(?P<id>\d+)$#',
@@ -54,7 +54,7 @@ return array (
 				'http-method' => 'DELETE',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember'
+						'Pluf_Precondition::memberRequired'
 				)
 		),		
 		array ( // Link urls
@@ -65,7 +65,7 @@ return array (
 		),
 		// 'precond' => array (
 		// 'Pluf_Precondition::loginRequired',
-		// 'SaaS_Precondition::tenantMember'
+		// 'Pluf_Precondition::memberRequired'
 		// )
 		array ( // Link urls
 				'regex' => '#^/link/(?P<id>\d+)$#',
@@ -74,7 +74,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Link urls
@@ -84,7 +84,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Plan urls
@@ -94,7 +94,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Plan urls
@@ -104,7 +104,7 @@ return array (
 				'http-method' => 'POST',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Plan urls
@@ -114,7 +114,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Plan urls
@@ -124,7 +124,7 @@ return array (
 				'http-method' => 'POST',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Plan urls
@@ -134,7 +134,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // PlanTemplate urls
@@ -144,7 +144,7 @@ return array (
 				'http-method' => 'GET',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // PlanTemplate urls
@@ -154,7 +154,7 @@ return array (
 				'http-method' => 'POST',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // PlanTemplate urls
@@ -164,7 +164,7 @@ return array (
 				'http-method' => 'POST',
 				'precond' => array (
 						'Pluf_Precondition::loginRequired',
-						'SaaS_Precondition::tenantMember' 
+						'Pluf_Precondition::memberRequired' 
 				) 
 		),
 		array ( // Download urls
@@ -175,13 +175,13 @@ return array (
 		),
 		// 'precond' => array (
 		// 'Pluf_Precondition::loginRequired',
-		// 'SaaS_Precondition::tenantMember'
+		// 'Pluf_Precondition::memberRequired'
 		// )
 );
 
 
 // 'precond' => array (
 // //'Pluf_Precondition::loginRequired',
-// //'SaaS_Precondition::tenantMember'
+// //'Pluf_Precondition::memberRequired'
 // )
 

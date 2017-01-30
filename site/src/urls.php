@@ -27,9 +27,9 @@ return array (
 				'sub' => include 'CMS/urls.php' 
 		),
 		array (
-				'regex' => '#^/api/book#',
+				'regex' => '#^/api/wiki#',
 				'base' => $base,
-				'sub' => include 'Wiki/urls.php' 
+				'sub' => include 'Book/urls.php' 
 		),
 		array (
 				'regex' => '#^/api/spa#',
@@ -71,32 +71,20 @@ return array (
 				'base' => $base,
 				'sub' => include 'Seo/urls.php' 
 		),
-        
-        
-        
-        
-        
-		array (
-				'regex' => '#^/api/saas#',
-				'base' => $base,
-				'sub' => include 'SaaS/urls.php' 
-		),
-		// SaaSNewspaper : online applications
-		array ( 
-				'regex' => '#^/api/newspaper#',
-				'base' => $base,
-				'sub' => include 'SaaSNewspaper/urls.php' 
-		),
-		// SaaSBank
-		array ( 
+		array ( // Bank
 				'regex' => '#^/api/bank#',
 				'base' => $base,
-				'sub' => include 'SaaSBank/urls.php' 
+				'sub' => include 'Bank/urls.php' 
+		),
+		array ( // Book
+				'regex' => '#^/api/book#',
+				'base' => $base,
+				'sub' => include 'Book/urls.php' 
 		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',
 				'base' => $base,
-				'sub' => include 'SaaS/urls-app2.php' 
+				'sub' => include 'Spa/urls-app2.php' 
 		) 
 );
 

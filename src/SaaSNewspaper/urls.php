@@ -26,7 +26,7 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -36,7 +36,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     ),
     array(
@@ -46,7 +46,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'SaaS_Precondition::tenantOwner'
+            'Pluf_Precondition::ownerRequired'
         )
     )
 );

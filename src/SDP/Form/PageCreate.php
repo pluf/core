@@ -1,5 +1,7 @@
 <?php
 
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+
 /**
  * ایجاد یک صفحه جدید
  *
@@ -11,13 +13,8 @@
 class CMS_Form_PageCreate extends Pluf_Form
 {
 
-    public $tenant = null;
-    // public $user = null;
     public function initFields($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        // $this->user = $extra['user'];
-        
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => true,
             'label' => 'Name',
@@ -39,7 +36,6 @@ class CMS_Form_PageCreate extends Pluf_Form
         // Create the page
         $page = new CMS_Page();
         $page->setFromFormData($this->cleaned_data);
-        $page->tenant = $this->tenant;
         if ($commit) {
             $page->create();
         }
@@ -49,7 +45,7 @@ class CMS_Form_PageCreate extends Pluf_Form
     public function clean_content()
     {
         $contentId = $this->cleaned_data['content'];
-        $content = CMS_Shortcuts_GetContentOr404($contentId);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $contentId);
         // TODO: hadi 1395-01-26: بررسی صحت محتوا
         return $content->id;
     }

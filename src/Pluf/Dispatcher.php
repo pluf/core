@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -69,6 +68,8 @@ class Pluf_Dispatcher
                     }
                 }
             }
+            // Puts request in global scope
+            $GLOBALS ['_PX_request'] = $req;
             if ($skip === false) {
                 $response = self::match($req);
                 if (! empty($req->response_vary_on)) {

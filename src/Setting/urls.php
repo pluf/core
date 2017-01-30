@@ -2,12 +2,12 @@
 return array(
         array(
                 'regex' => '#^/find$#',
-                'model' => 'SaaS_Views',
+                'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => 'GET',
                 'precond' => array(),
                 'params' => array(
-                        'model' => 'SaaS_Configuration',
+                        'model' => 'Pluf_Configuration',
                         'sql' => new Pluf_SQL('type=1'),
                         'listFilters' => array(
                                 'id',
@@ -45,7 +45,7 @@ return array(
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'SaaS_Precondition::tenantOwner'
+                        'Pluf_Precondition::ownerRequired'
                 )
         ),
         array(
@@ -54,7 +54,7 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'SaaS_Precondition::tenantOwner'
+                        'Pluf_Precondition::ownerRequired'
                 )
         )
 );

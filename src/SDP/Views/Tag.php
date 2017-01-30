@@ -7,7 +7,7 @@ class SDP_Views_Tag
 
     public static function getByName($request, $match)
     {
-        $tag = SDP_Shortcuts_GetTagByNameOr404($request->tenant, $match['name']);
+        $tag = SDP_Shortcuts_GetTagByNameOr404($match['name']);
         // حق دسترسی
         // CMS_Precondition::userCanAccessContent($request, $content);
         // اجرای درخواست
@@ -17,9 +17,6 @@ class SDP_Views_Tag
     public static function assets($request, $match)
     {
         $tag = Pluf_Shortcuts_GetObjectOr404('SDP_Tag', $match['tagId']);
-        if ($tag->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $asset = new SDP_Asset();
         $assetTable = $asset->_a['table'];
         $assocTable = 'sdp_asset_sdp_tag_assoc';
@@ -56,9 +53,6 @@ class SDP_Views_Tag
     public static function addAsset($request, $match)
     {
         $tag = Pluf_Shortcuts_GetObjectOr404('SDP_Tag', $match['tagId']);
-        if ($tag->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['assetId'])) {
             $assetId = $match['assetId'];
         } else {
@@ -72,9 +66,6 @@ class SDP_Views_Tag
     public static function removeAsset($request, $match)
     {
         $tag = Pluf_Shortcuts_GetObjectOr404('SDP_Tag', $match['tagId']);
-        if ($tag->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['assetId'])) {
             $assetId = $match['assetId'];
         } else {

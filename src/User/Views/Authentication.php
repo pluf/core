@@ -1,5 +1,4 @@
 <?php
-Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
  * Provide authentication functionality for users.
@@ -18,7 +17,7 @@ class User_Views_Authentication
     public static function login($request, $match)
     {
         if (! $request->user->isAnonymous()) {
-            return User_Shortcuts_UserJsonResponse($request->user);
+            return new Pluf_HTTP_Response_Json($request->user);
         }
         
         $backends = Pluf::f('auth_backends', array(

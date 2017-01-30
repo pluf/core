@@ -10,7 +10,6 @@ class SDP_Views_Asset
         // initial asset data
         $extra = array(
             // 'user' => $request->user,
-            'tenant' => $request->tenant
         );
         
         if (! isset($request->REQUEST['name']) || strlen($request->REQUEST['name']) == 0) {
@@ -43,10 +42,6 @@ class SDP_Views_Asset
     public static function find($request, $match)
     {
         $asset = new Pluf_Paginator(new SDP_Asset());
-        $sql = new Pluf_SQL('tenant=%s', array(
-            $request->tenant->id
-        ));
-        $asset->forced_where = $sql;
         $asset->list_filters = array(
             'id',
             'name',
@@ -149,8 +144,8 @@ class SDP_Views_Asset
         $app = $request->tenant;
         $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
         // Check permission
-        // SaaS_Precondition::userCanAccessApplication($request, $app);
-        // SaaS_Precondition::userCanAccessResource($request, $content);
+        // Precondition::userCanAccessApplication($request, $app);
+        // Precondition::userCanAccessResource($request, $content);
         
         if (array_key_exists('file', $request->FILES)) {
             $extra = array(
@@ -219,9 +214,6 @@ class SDP_Views_Asset
     public static function addTag($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['tagId'])) {
             $tagId = $match['tagId'];
         } else {
@@ -235,9 +227,6 @@ class SDP_Views_Asset
     public static function removeTag($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['tagId'])) {
             $tagId = $match['tagId'];
         } else {
@@ -253,9 +242,6 @@ class SDP_Views_Asset
     public static function categories($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $category = new SDP_Category();
         $categoryTable = $category->_a['table'];
         $assocTable = 'sdp_asset_sdp_category_assoc';
@@ -294,9 +280,6 @@ class SDP_Views_Asset
     public static function addCategory($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['categoryId'])) {
             $categoryId = $match['categoryId'];
         } else {
@@ -310,9 +293,6 @@ class SDP_Views_Asset
     public static function removeCategory($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['categoryId'])) {
             $categoryId = $match['categoryId'];
         } else {

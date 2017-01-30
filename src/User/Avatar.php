@@ -20,9 +20,6 @@ class User_Avatar extends Pluf_Model
     function init()
     {
         $this->_a['table'] = 'user_avatar';
-        $this->_a['model'] = 'User_Avatar';
-        $this->_model = 'User_Avatar';
-        
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -103,7 +100,7 @@ class User_Avatar extends Pluf_Model
             $this->fileSize = 0;
         }
         // mime type (based on file name)
-        $fileInfo = SaaS_FileUtil::getMimeType($this->fileName);
+        $fileInfo = Pluf_FileUtil::getMimeType($this->fileName);
         $this->mimeType = $fileInfo[0];
     }
 

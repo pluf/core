@@ -11,9 +11,7 @@ class SDP_Tag extends Pluf_Model
     function init()
     {
         $this->_a['table'] = 'sdp_tag';
-        $this->_a['model'] = 'SDP_Tag';
         $this->_a['verbose'] = 'SDP Tag';
-        $this->_model = 'SDP_Tag';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -48,14 +46,6 @@ class SDP_Tag extends Pluf_Model
                 'readable' => true
             ),
             // relations
-            'tenant' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'SaaS_Application',
-                'blank' => false,
-                'relate_name' => 'tenant',
-                'editable' => false,
-                'readable' => false
-            ),
             'assets' => array(
                 'type' => 'Pluf_DB_Field_Manytomany',
                 'model' => 'SDP_Asset',
@@ -68,7 +58,7 @@ class SDP_Tag extends Pluf_Model
         
         $this->_a['idx'] = array(
             'tag_idx' => array(
-                'col' => 'tenant, name',
+                'col' => 'name',
                 'type' => 'unique', // normal, unique, fulltext, spatial
                 'index_type' => '', // hash, btree
                 'index_option' => '',

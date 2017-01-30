@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -40,9 +39,8 @@ class Message_Monitor
                 'type' => 'scalar'
         );
         
-        $sql = new Pluf_SQL('tenant=%s AND user=%s', 
+        $sql = new Pluf_SQL('user=%s', 
                 array(
-                        $request->tenant->id,
                         $request->user->id
                 ));
         

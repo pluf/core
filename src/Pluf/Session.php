@@ -1,14 +1,30 @@
 <?php
+
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
  * ساختار داده‌ای یک نشست را تعیین می‌کند
- * 
- * @author maso
  *
+ * @author maso
+ *        
  */
 class Pluf_Session extends Pluf_Model
 {
-
-    public $_model = 'Pluf_Session';
 
     public $data = array();
 
@@ -26,7 +42,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند.
-     * 
+     *
      * @see Pluf_Model::_init()
      */
     function _init ()
@@ -37,13 +53,14 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * ساختارهای داده‌ای مورد نیاز برای نشت را تعیین می‌کند.
-     * 
+     *
      * @see Pluf_Model::init()
      */
     function init ()
     {
         $this->_a['table'] = 'sessions';
-        $this->_a['model'] = 'Pluf_Session';
+        $this->_a['verbose'] = 'sessions';
+        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
@@ -123,7 +140,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * تمام داده‌های موجود در نشت را پاک می‌کند.
-     * 
+     *
      * تمام داده‌های ذخیره شده در نشست را پاک می‌کند.
      */
     function clear ()
@@ -134,7 +151,7 @@ class Pluf_Session extends Pluf_Model
 
     /**
      * یک کلید نشت جدید را ایجاد می‌کند.
-     * 
+     *
      * از این کلید برای دستیابی به داده‌ها استفاده می‌شود.
      */
     function getNewSessionKey ()

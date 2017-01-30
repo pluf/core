@@ -17,7 +17,7 @@ class Seo_Middleware_Spa
     {
         // در صورتی که درخواست مربوط به seo باشد
         if (array_key_exists('_escaped_fragment_', $request->GET)) {
-            return $this->SaaS_Shortcuts_SeoResponse($request);
+            return $this->Shortcuts_SeoResponse($request);
         }
         return false;
     }
@@ -27,7 +27,7 @@ class Seo_Middleware_Spa
      *
      * @param Pluf_HTTP_Request $request
      */
-    function SaaS_Shortcuts_SeoResponse ($request)
+    function Shortcuts_SeoResponse ($request)
     {
         $context = new Pluf_Template_Context(array(
                 'tenant' => $request->tenant

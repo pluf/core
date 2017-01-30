@@ -14,13 +14,10 @@ class SDP_Form_AssetUpdate extends Pluf_Form
     // public $user = null;
     public $asset = null;
 
-    public $tenant = null;
-
     public function initFields($extra = array())
     {
         // $this->user = $extra['user'];
         $this->asset = $extra['asset'];
-        $this->tenant = $extra['tenant'];
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
@@ -89,12 +86,6 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             'initial' => $this->asset->price,
             'help_text' => 'Price of asset'
         ));
-        $this->fields['tenant'] = new Pluf_Form_Field_Varchar(array(
-            'required' => false,
-            'label' => 'Tenant',
-            'initial' => $this->asset->tenant,
-            'help_text' => 'tenant that this asset belonged to'
-        ));
         $this->fields['content'] = new Pluf_Form_Field_Integer(array(
             'required' => false,
             'label' => 'content id of Asset',
@@ -111,7 +102,7 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
             'move_function_params' => array(
-                'upload_path' => Pluf::f('upload_path') . '/' . $this->tenant->id . '/sdp',
+                'upload_path' => Pluf::f('upload_path') . '/' . Pluf_Tenant::current()->id . '/sdp',
                 'file_name' => $this->asset->id,
                 'upload_path_create' => true,
                 'upload_overwrite' => true
@@ -130,10 +121,8 @@ class SDP_Form_AssetUpdate extends Pluf_Form
         if (array_key_exists('file', $this->cleaned_data)) {
             // Extract information of file
             $myFile = $this->cleaned_data['file'];
-            $fileInfo = SaaS_FileUtil::getMimeType($this->asset->name);
-            //TODO: mahdi: What's the reason?? because this makes all types to "application/octet-stream"
-//             $this->asset->mime_type = $fileInfo[0];
-			$this->asset->mime_type = $_FILES['file']['type'];
+            $fileInfo = Pluf_FileUtil::getMimeType($this->asset->name);
+            $this->asset->mime_type = $fileInfo[0];
             $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }
         

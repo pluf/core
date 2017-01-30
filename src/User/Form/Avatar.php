@@ -53,7 +53,7 @@ class User_Form_Avatar extends Pluf_Form_Model
         {
             // Extract information of file
             $myFile = $this->data['file'];
-            $fileInfo = SaaS_FileUtil::getMimeType($myFile['name']);
+            $fileInfo = Pluf_FileUtil::getMimeType($myFile['name']);
             
             $model->fileName = $myFile['name'];
             $model->filePath = Pluf::f('upload_path') . '/avatar';

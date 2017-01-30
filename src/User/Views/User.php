@@ -19,7 +19,6 @@
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
-Pluf::loadFunction('User_Shortcuts_UserJsonResponse');
 
 /**
  * Manage users (CRUD on users account)
@@ -48,7 +47,7 @@ class User_Views_User
         // $profile_model = Pluf::f('user_profile_class', false);
         // $profile_form = Pluf::f('user_profile_form', false);
         // if ($profile_form === false || $profile_model === false) {
-        // return User_Shortcuts_UserJsonResponse($cuser);
+        // return new Pluf_HTTP_Response_Json($cuser);
         // }
         // try {
         // $profile = $cuser->getProfile();
@@ -64,7 +63,7 @@ class User_Views_User
         // $profile = $form->update();
         
         // Return response
-        return User_Shortcuts_UserJsonResponse($cuser);
+        return new Pluf_HTTP_Response_Json($cuser);
     }
 
     /**
@@ -76,7 +75,7 @@ class User_Views_User
     public static function get($request, $match)
     {
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        return User_Shortcuts_UserJsonResponse($user);
+        return new Pluf_HTTP_Response_Json($user);
     }
 
     /**
@@ -91,7 +90,7 @@ class User_Views_User
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
         $request->user->setMessage(sprintf(__('Account data has been updated.'), (string) $model));
-        return User_Shortcuts_UserJsonResponse($form->save());
+        return new Pluf_HTTP_Response_Json($form->save());
     }
 
     /**

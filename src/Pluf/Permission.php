@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -27,15 +26,13 @@
 class Pluf_Permission extends Pluf_Model
 {
 
-    public $_model = 'Pluf_Permission';
-
     private $_cache_to_string;
 
     function init()
     {
-        $this->_a['verbose'] = __('permission');
+        $this->_a['verbose'] = 'permission';
         $this->_a['table'] = 'permissions';
-        $this->_a['model'] = 'Pluf_Permission';
+        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(

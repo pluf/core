@@ -11,9 +11,7 @@ class SDP_Category extends Pluf_Model
     function init()
     {
         $this->_a['table'] = 'sdp_category';
-        $this->_a['model'] = 'SDP_Category';
         $this->_a['verbose'] = 'SDP Category';
-        $this->_model = 'SDP_Category';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -48,14 +46,6 @@ class SDP_Category extends Pluf_Model
                 'readable' => true
             ),
             // relations
-            'tenant' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
-                'model' => 'SaaS_Application',
-                'blank' => false,
-                'relate_name' => 'tenant',
-                'editable' => false,
-                'readable' => false,
-            ),
             'parent' => array(
                 'type' => 'Pluf_DB_Field_Foreignkey',
                 'model' => 'SDP_Category',
@@ -92,7 +82,7 @@ class SDP_Category extends Pluf_Model
         
         $this->_a['idx'] = array(
             'category_idx' => array(
-                'col' => 'tenant, parent, name',
+                'col' => 'parent, name',
                 'type' => 'unique', // normal, unique, fulltext, spatial
                 'index_type' => '', // hash, btree
                 'index_option' => '',
