@@ -73,17 +73,17 @@ class Calender_Event extends Pluf_Model
                 ),
                 'from' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
                         'verbose' => __('creation'),
                         'help_text' => __('content creation time'),
-                        'editable' => false
+                        'blank' => false,
+                        'editable' => true
                 ),
                 'to' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
                         'verbose' => __('modification'),
                         'help_text' => __('content modification time'),
-                        'editable' => false
+                        'blank' => true,
+                        'editable' => true
                 ),
                 // relations
                 'calender' => array(
@@ -91,7 +91,7 @@ class Calender_Event extends Pluf_Model
                         'model' => 'Calender_Calender',
                         'blank' => false,
                         'relate_name' => 'calender',
-                        'editable' => true,
+                        'editable' => false,
                         'readable' => true
                 )
         );
@@ -118,6 +118,11 @@ class Calender_Event extends Pluf_Model
     {
         if ($this->id == '') {
             // XXX: maso, 2017: if to date is empty set 1h+
+            $toDate =$this->to;
+            if(!isset($toDate) || $toDate == ''){
+                $this->to = $this->from;
+            }
+            // Check if to < from
         }
     }
 

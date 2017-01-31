@@ -96,4 +96,49 @@ return array(
                         'model' => 'Calender_Calender'
                 )
         ),
+        
+        
+        
+        
+        
+
+        array(
+                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/new$#',
+                'model' => 'Calender_Views_Event',
+                'method' => 'create',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/find$#',
+                'model' => 'Calender_Views_Event',
+                'method' => 'find',
+                'http-method' => 'GET',
+        ),
+        array(
+                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calender_Views_Event',
+                'method' => 'get',
+                'http-method' => 'GET',
+        ),
+        array(
+                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calender_Views_Event',
+                'method' => 'update',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calender_Views_Event',
+                'method' => 'delete',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                )
+        ),
 );
