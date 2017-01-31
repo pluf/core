@@ -23,7 +23,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Calender_Event extends Pluf_Model
+class Calendar_Event extends Pluf_Model
 {
 
     /**
@@ -33,7 +33,7 @@ class Calender_Event extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'calender_event';
+        $this->_a['table'] = 'calendar_event';
         $this->_a['cols'] = array(
                 // شناسه‌ها
                 'id' => array(
@@ -86,11 +86,11 @@ class Calender_Event extends Pluf_Model
                         'editable' => true
                 ),
                 // relations
-                'calender' => array(
+                'calendar' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Calender_Calender',
+                        'model' => 'Calendar_Calendar',
                         'blank' => false,
-                        'relate_name' => 'calender',
+                        'relate_name' => 'calendar',
                         'editable' => false,
                         'readable' => true
                 )

@@ -30,7 +30,7 @@ $cfg['installed_apps'] = array(
         'Config',
         'Setting',
         'Spa',
-        'Calender',
+        'Calendar',
         'Monitor',
         'SDP',
         'Message',

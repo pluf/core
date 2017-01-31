@@ -24,7 +24,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Calender_Calender extends Pluf_Model
+class Calendar_Calendar extends Pluf_Model
 {
 
     /**
@@ -34,7 +34,7 @@ class Calender_Calender extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'calender';
+        $this->_a['table'] = 'calendar';
         $this->_a['cols'] = array(
                 // شناسه‌ها
                 'id' => array(

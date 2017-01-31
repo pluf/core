@@ -8,7 +8,7 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *         @date 1394
  */
-class Calender_Views_Event
+class Calendar_Views_Event
 {
 
     /**
@@ -20,12 +20,12 @@ class Calender_Views_Event
      */
     public function find ($request, $match)
     {
-        $calender = Pluf_Shortcuts_GetObjectOr404('Calender_Calender', $match['calenderId']);
+        $calendar = Pluf_Shortcuts_GetObjectOr404('Calendar_Calendar', $match['calendarId']);
         // maso, 1394: گرفتن فهرست مناسبی از پیام‌ها
-        $pag = new Pluf_Paginator(new Calender_Event());
-        $sql = new Pluf_SQL('calender=%s', 
+        $pag = new Pluf_Paginator(new Calendar_Event());
+        $sql = new Pluf_SQL('calendar=%s', 
                 array(
-                        $calender->id,
+                        $calendar->id,
                 ));
         $pag->forced_where = $sql;
         $pag->list_filters = array(
@@ -60,11 +60,11 @@ class Calender_Views_Event
      */
     public function create ($request, $match)
     {
-        $calender = Pluf_Shortcuts_GetObjectOr404('Calender_Calender', $match['calenderId']);
-        $object = new Calender_Event();
+        $calendar = Pluf_Shortcuts_GetObjectOr404('Calendar_Calendar', $match['calendarId']);
+        $object = new Calendar_Event();
         $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST);
         $object = $form->save(false);
-        $object->calender = $calender;
+        $object->calendar = $calendar;
         $object->create();
         // Return response
         return new Pluf_HTTP_Response_Json($object);
@@ -79,9 +79,9 @@ class Calender_Views_Event
      */
     public function get ($request, $match)
     {
-        $calender = Pluf_Shortcuts_GetObjectOr404('Calender_Calender', $match['calenderId']);
-        $event = Pluf_Shortcuts_GetObjectOr404('Calender_Event', $match['eventId']);
-        if($event->calender !== $calender->id){
+        $calendar = Pluf_Shortcuts_GetObjectOr404('Calendar_Calendar', $match['calendarId']);
+        $event = Pluf_Shortcuts_GetObjectOr404('Calendar_Event', $match['eventId']);
+        if($event->calendar !== $calendar->id){
             // XXX: maso, 2017: replace with not found exception
             throw  new Pluf_Exception('Not found');
         }
@@ -96,9 +96,9 @@ class Calender_Views_Event
      */
     public function update ($request, $match)
     {
-        $calender = Pluf_Shortcuts_GetObjectOr404('Calender_Calender', $match['calenderId']);
-        $object = Pluf_Shortcuts_GetObjectOr404('Calender_Event', $match['eventId']);
-        if($object->calender !== $calender->id){
+        $calendar = Pluf_Shortcuts_GetObjectOr404('Calendar_Calendar', $match['calendarId']);
+        $object = Pluf_Shortcuts_GetObjectOr404('Calendar_Event', $match['eventId']);
+        if($object->calendar !== $calendar->id){
             // XXX: maso, 2017: replace with not found exception
             throw  new Pluf_Exception('Not found');
         }
@@ -116,9 +116,9 @@ class Calender_Views_Event
      */
     public function delete ($request, $match)
     {
-        $calender = Pluf_Shortcuts_GetObjectOr404('Calender_Calender', $match['calenderId']);
-        $object = Pluf_Shortcuts_GetObjectOr404('Calender_Event', $match['eventId']);
-        if($object->calender !== $calender->id){
+        $calendar = Pluf_Shortcuts_GetObjectOr404('Calendar_Calendar', $match['calendarId']);
+        $object = Pluf_Shortcuts_GetObjectOr404('Calendar_Event', $match['eventId']);
+        if($object->calendar !== $calendar->id){
             // XXX: maso, 2017: replace with not found exception
             throw  new Pluf_Exception('Not found');
         }

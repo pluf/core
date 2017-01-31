@@ -17,16 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 return array(
-        // Calender
+        // calendar
         array(
-                'regex' => '#^/calenders/find$#',
+                'regex' => '#^/calendars/find$#',
                 'model' => 'Pluf_Views',
                 'method' => 'findObject',
                 'http-method' => array(
                         'GET'
                 ),
                 'params' => array(
-                        'model' => 'Calender_Calender',
+                        'model' => 'Calendar_Calendar',
                         'listFilters' => array(
                                 'id',
                                 'key',
@@ -52,7 +52,7 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/calenders/new$#',
+                'regex' => '#^/calendars/new$#',
                 'model' => 'Pluf_Views',
                 'method' => 'createObject',
                 'http-method' => 'POST',
@@ -60,20 +60,20 @@ return array(
                         'Pluf_Precondition::ownerRequired'
                 ),
                 'params' => array(
-                        'model' => 'Calender_Calender'
+                        'model' => 'Calendar_Calendar'
                 )
         ),
         array(
-                'regex' => '#^/calenders/(?P<modelId>\d+)$#',
+                'regex' => '#^/calendars/(?P<modelId>\d+)$#',
                 'model' => 'Pluf_Views',
                 'method' => 'getObject',
                 'http-method' => 'GET',
                 'params' => array(
-                        'model' => 'Calender_Calender'
+                        'model' => 'Calendar_Calendar'
                 )
         ),
         array(
-                'regex' => '#^/calenders/(?P<modelId>\d+)$#',
+                'regex' => '#^/calendars/(?P<modelId>\d+)$#',
                 'model' => 'Pluf_Views',
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
@@ -81,11 +81,11 @@ return array(
                         'Pluf_Precondition::ownerRequired'
                 ),
                 'params' => array(
-                        'model' => 'Calender_Calender'
+                        'model' => 'Calendar_Calendar'
                 )
         ),
         array(
-                'regex' => '#^/calenders/(?P<modelId>\d+)$#',
+                'regex' => '#^/calendars/(?P<modelId>\d+)$#',
                 'model' => 'Pluf_Views',
                 'method' => 'updateObject',
                 'http-method' => 'POST',
@@ -93,7 +93,7 @@ return array(
                         'Pluf_Precondition::ownerRequired'
                 ),
                 'params' => array(
-                        'model' => 'Calender_Calender'
+                        'model' => 'Calendar_Calendar'
                 )
         ),
         
@@ -103,8 +103,8 @@ return array(
         
 
         array(
-                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/new$#',
-                'model' => 'Calender_Views_Event',
+                'regex' => '#^/calendars/(?P<calendarId>\d+)/events/new$#',
+                'model' => 'Calendar_Views_Event',
                 'method' => 'create',
                 'http-method' => 'POST',
                 'precond' => array(
@@ -112,20 +112,20 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/find$#',
-                'model' => 'Calender_Views_Event',
+                'regex' => '#^/calendars/(?P<calendarId>\d+)/events/find$#',
+                'model' => 'Calendar_Views_Event',
                 'method' => 'find',
                 'http-method' => 'GET',
         ),
         array(
-                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
-                'model' => 'Calender_Views_Event',
+                'regex' => '#^/calendars/(?P<calendarId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calendar_Views_Event',
                 'method' => 'get',
                 'http-method' => 'GET',
         ),
         array(
-                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
-                'model' => 'Calender_Views_Event',
+                'regex' => '#^/calendars/(?P<calendarId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calendar_Views_Event',
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
@@ -133,8 +133,8 @@ return array(
                 )
         ),
         array(
-                'regex' => '#^/calenders/(?P<calenderId>\d+)/events/(?<eventId>\d+)$#',
-                'model' => 'Calender_Views_Event',
+                'regex' => '#^/calendars/(?P<calendarId>\d+)/events/(?<eventId>\d+)$#',
+                'model' => 'Calendar_Views_Event',
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(

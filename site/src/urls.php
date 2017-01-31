@@ -82,9 +82,9 @@ return array (
 				'sub' => include 'Book/urls.php' 
 		),
 		array ( // Calender
-				'regex' => '#^/api/calender#',
+				'regex' => '#^/api/calendar#',
 				'base' => $base,
-				'sub' => include 'Calender/urls.php' 
+				'sub' => include 'Calendar/urls.php' 
 		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',
