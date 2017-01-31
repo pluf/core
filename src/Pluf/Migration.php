@@ -105,6 +105,7 @@ class Pluf_Migration
     {
         foreach ($this->apps as $app) {
             $this->installApp($app);
+            debug(' '. $app .' is installed successfully.');
         }
         return true;
     }
