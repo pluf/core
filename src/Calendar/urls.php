@@ -141,4 +141,80 @@ return array(
                         'Pluf_Precondition::ownerRequired'
                 )
         ),
+        
+        
+        
+
+        // calendar
+        array(
+                'regex' => '#^/events/find$#',
+                'model' => 'Pluf_Views',
+                'method' => 'findObject',
+                'http-method' => 'GET',
+                'params' => array(
+                        'model' => 'Calendar_Event',
+                        'listFilters' => array(
+                                'id',
+                        ),
+                        'listDisplay' => array(
+                                'title' => 'title',
+                                'description' => 'description'
+                        ),
+                        'searchFields' => array(
+                                'title',
+                                'description'
+                        ),
+                        'sortFields' => array(
+                                'title',
+                                'description',
+                                'from',
+                                'to'
+                        )
+                )
+        ),
+        array(
+                'regex' => '#^/events/new$#',
+                'model' => 'Pluf_Views',
+                'method' => 'createObject',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                ),
+                'params' => array(
+                        'model' => 'Calendar_Event'
+                )
+        ),
+        array(
+                'regex' => '#^/events/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'getObject',
+                'http-method' => 'GET',
+                'params' => array(
+                        'model' => 'Calendar_Event'
+                )
+        ),
+        array(
+                'regex' => '#^/events/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'deleteObject',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                ),
+                'params' => array(
+                        'model' => 'Calendar_Event'
+                )
+        ),
+        array(
+                'regex' => '#^/events/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'updateObject',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::ownerRequired'
+                ),
+                'params' => array(
+                        'model' => 'Calendar_Event'
+                )
+        ),
 );
