@@ -23,6 +23,18 @@ class CMS_Monitor
     public static function count ()
     {
         // XXX: maso, 1395
+        $result = array(
+                'interval' => 100000,
+                'type' => 'scalar'
+        );
+        $message = new CMS_Content();
+        $res = $message->getList(
+                array(
+                        'count' => true
+                ));
+        // Check permission
+        $result['value'] = $res[0]['nb_items'];
+        return $result;
     }
 
     public static function size ()
