@@ -16,4 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+/*
+ * flush in memory configs
+ */
+Pluf_Signal::connect('Pluf_Dispatcher::postDispatch',
+        array(
+                'Config_Service',
+                'flush'
+        ), 'Pluf_Dispatcher');
+
 return array ();

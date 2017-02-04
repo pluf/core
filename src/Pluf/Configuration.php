@@ -7,11 +7,6 @@
  */
 class Pluf_Configuration extends Pluf_Model
 {
-
-    public $data = array();
-
-    public $touched = false;
-
     /**
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
@@ -19,7 +14,7 @@ class Pluf_Configuration extends Pluf_Model
      */
     function init ()
     {
-        $this->_a['table'] = 'Pluf_Configuration';
+        $this->_a['table'] = 'configuration';
         $this->_a['verbose'] = 'Configuration';
         $this->_a['cols'] = array(
                 'id' => array(
@@ -80,7 +75,7 @@ class Pluf_Configuration extends Pluf_Model
         );
         $this->_a['views'] = array(
                 'list' => array(
-                        'select' => 'id, pluf_configuration.key, description, creation_dtime, modif_dtime'
+                        'select' => 'id, configuration.key, description, creation_dtime, modif_dtime'
                 )
         );
     }
