@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('Monitor_Shortcuts_UserLevel');
 
 class Monitor_Views
 {
@@ -24,11 +25,11 @@ class Monitor_Views
     public static function findBean ($request, $match)
     {
         $content = new Pluf_Paginator(new Pluf_Monitor());
-        // $sql = new Pluf_SQL('tenant=%s',
-        // array(
-        // $request->tenant->id
-        // ));
-        // $content->forced_where = $sql;
+        $sql = new Pluf_SQL('level>=%s', 
+                array(
+                        Monitor_Shortcuts_UserLevel($request)
+                ));
+        $content->forced_where = $sql;
         $content->model_view = 'beans';
         $content->list_filters = array(
                 'bean',
@@ -64,9 +65,10 @@ class Monitor_Views
     public static function findProperty ($request, $match)
     {
         $content = new Pluf_Paginator(new Pluf_Monitor());
-        $sql = new Pluf_SQL('bean=%s', 
+        $sql = new Pluf_SQL('bean=%s AND level>=%s', 
                 array(
-                        $match['monitor']
+                        $match['monitor'],
+                        Monitor_Shortcuts_UserLevel($request)
                 ));
         $content->forced_where = $sql;
         $content->model_view = 'properties';

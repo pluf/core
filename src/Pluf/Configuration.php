@@ -21,7 +21,6 @@ class Pluf_Configuration extends Pluf_Model
     {
         $this->_a['table'] = 'Pluf_Configuration';
         $this->_a['verbose'] = 'Configuration';
-        $this->_a['multitenant'] = true;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
