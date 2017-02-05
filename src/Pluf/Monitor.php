@@ -13,8 +13,11 @@
 class Pluf_Monitor extends Pluf_Model
 {
 
-    public $_model = 'Pluf_Monitor';
-
+    /**
+     * 
+     * {@inheritDoc}
+     * @see Pluf_Model::init()
+     */
     function init ()
     {
         $this->_a['table'] = 'monitor';
@@ -85,14 +88,6 @@ class Pluf_Monitor extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-                'code_name_idx' => array(
-                        'type' => 'normal',
-                        'col' => 'property'
-                ),
-                'application_idx' => array(
-                        'type' => 'normal',
-                        'col' => 'bean'
-                ),
                 'monitor_idx' => array(
                         'col' => 'bean, property',
                         'type' => 'unique', // normal, unique, fulltext, spatial
@@ -100,6 +95,25 @@ class Pluf_Monitor extends Pluf_Model
                         'index_option' => '',
                         'algorithm_option' => '',
                         'lock_option' => ''
+                )
+        );
+        
+        $this->_a['views'] = array(
+                'all' => array(
+                        'select' => $this->getSelect()
+                ),
+                'beans' => array(
+                        'select' => 'bean AS bean_id, title, description, level',
+                        'group' => 'bean',
+                        'props' => array(
+                                'bean_id' => 'id'
+                        )
+                ),
+                'properties' => array(
+                        'select' => 'property AS property_id, title, description, level',
+                        'props' => array(
+                                'property_id' => 'id'
+                        )
                 )
         );
     }

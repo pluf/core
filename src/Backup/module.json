@@ -1,0 +1,9 @@
+{
+	"name": "Backups",
+	"version": "0.1.0",
+	"title": "Backups framework",
+	"model": [
+		"Backup_Backup"
+	],
+	"permisson": []
+}

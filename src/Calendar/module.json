@@ -1,0 +1,10 @@
+{
+	"name": "Calendar",
+	"version": "0.1.0",
+	"title": "Calendar framework",
+	"model": [
+		"Calendar_Calendar",
+		"Calendar_Event"
+	],
+	"permisson": []
+}

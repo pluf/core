@@ -16,20 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+return array();
 
 
-class Setting_Service {
-    // TODO: maso, 1395: what are needed in this service.
-    
-    public static function get($key, $defValue){
-        return $defValue;
-    }
-        
-    public static function set($key, $value){
-        //
-    }
-    
-    public static function flush(){
-        
-    }
-}

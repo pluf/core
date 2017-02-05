@@ -24,5 +24,19 @@ class Tenant_Monitor
     {
         // XXX: maso, 1395
     }
+    
+    public static function storage ()
+    {
+        $result = array(
+                'value' => 35,
+                'min' => 0,
+                'max' => Config_Service::get('storage.size.max', 1048576), // 1Mb
+                'unit' => 'byte',
+                'interval' => 1000000,
+                'type' => 'scalar'
+        );
+        // TODO: maso, 2017: find storage size
+        return $result;
+    }
 }
 

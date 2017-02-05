@@ -8,6 +8,14 @@
 		"property": "count",
 		"title": "Number of tenant",
 		"description": "Defines number of tenant created on the server.",
-		"function": "Tenant_Monitor::count"
+		"function": "Tenant_Monitor::count",
+		"level": 0
+	},{
+		"bean": "tenant",
+		"property": "storage",
+		"title": "Storage size",
+		"description": "Storage size of the tenant.",
+		"function": "Tenant_Monitor::Storage",
+		"level": 1
 	}]
 }
