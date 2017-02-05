@@ -83,7 +83,7 @@ class SDP_AssetRelation extends Pluf_Model
         
         $this->_a['idx'] = array(
             'assetrelation_class_idx' => array(
-                'col' => 'tenant, type, start, end',
+                'col' => 'type, start, end',
                 'type' => 'unique', // normal, unique, fulltext, spatial
                 'index_type' => '', // hash, btree
                 'index_option' => '',

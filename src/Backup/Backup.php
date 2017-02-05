@@ -20,90 +20,75 @@
 
 /**
  *
- * @author maso<mostafa.barmshory@dpq.co.ir>
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
+ *        
  *        
  */
-class Calendar_Event extends Pluf_Model
+class Backup_Backup extends Pluf_Model
 {
 
     /**
-     * مدل داده‌ای را بارگذاری می‌کند.
      *
      * @see Pluf_Model::init()
      */
     function init ()
     {
-        $this->_a['table'] = 'calendar_event';
+        $this->_a['table'] = 'backup';
         $this->_a['cols'] = array(
                 // شناسه‌ها
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
                         'blank' => false,
-                        'verbose' => __('id'),
-                        'help_text' => __('event id'),
-                        'editable' => false
+                        'verbose' => __('first name'),
+                        'help_text' => __('id'),
+                        'editable' => false,
+                        'readable' => true
                 ),
-                // فیلدها
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
                         'size' => 250,
                         'default' => 'no title',
                         'verbose' => __('title'),
                         'help_text' => __('content title'),
-                        'editable' => true
+                        'blank' => true,
+                        'editable' => true,
+                        'readable' => true
                 ),
                 'description' => array(
                         'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => true,
                         'size' => 250,
                         'default' => 'auto created content',
                         'verbose' => __('description'),
                         'help_text' => __('content description'),
-                        'editable' => true
-                ),
-                'location' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
                         'blank' => true,
-                        'size' => 250,
-                        'default' => 'empty',
-                        'verbose' => __('location'),
-                        'help_text' => __('event location'),
-                        'editable' => true
+                        'editable' => true,
+                        'readable' => true
                 ),
-                'from' => array(
+                'file_path' => array(
+                        'type' => 'Pluf_DB_Field_Varchar',
+                        'size' => 250,
+                        'verbose' => __('file path'),
+                        'help_text' => __('content file path'),
+                        'blank' => false,
+                        'editable' => false,
+                        'readable' => false
+                ),
+                'creation_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'verbose' => __('creation'),
                         'help_text' => __('content creation time'),
                         'blank' => false,
-                        'editable' => true
+                        'editable' => false,
+                        'readable' => true
                 ),
-                'to' => array(
+                'modif_dtime' => array(
                         'type' => 'Pluf_DB_Field_Datetime',
                         'verbose' => __('modification'),
                         'help_text' => __('content modification time'),
-                        'blank' => true,
-                        'editable' => true
-                ),
-                // relations
-                'calendar' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Calendar_Calendar',
                         'blank' => false,
-                        'relate_name' => 'calendar',
                         'editable' => false,
                         'readable' => true
-                )
-        );
-        
-        $this->_a['idx'] = array(
-                'calender_idx' => array(
-                        'col' => 'calendar',
-                        'type' => 'normal', // normal, unique, fulltext, spatial
-                        'index_type' => '', // hash, btree
-                        'index_option' => '',
-                        'algorithm_option' => '',
-                        'lock_option' => ''
                 )
         );
     }
@@ -117,22 +102,9 @@ class Calendar_Event extends Pluf_Model
     function preSave ($create = false)
     {
         if ($this->id == '') {
-            // XXX: maso, 2017: if to date is empty set 1h+
-            $toDate =$this->to;
-            if(!isset($toDate) || $toDate == ''){
-                $this->to = $this->from;
-            }
-            // Check if to < from
+            $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
+        $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
 
-    /**
-     * حالت کار ایجاد شده را به روز می‌کند
-     *
-     * @see Pluf_Model::postSave()
-     */
-    function postSave ($create = false)
-    {
-        //
-    }
 }

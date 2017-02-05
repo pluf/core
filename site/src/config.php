@@ -35,6 +35,7 @@ $cfg['installed_apps'] = array(
         'SDP',
         'Message',
         'Book',
+        'Backup'
 );
 
 /*

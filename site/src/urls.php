@@ -86,6 +86,11 @@ return array (
 				'base' => $base,
 				'sub' => include 'Calendar/urls.php' 
 		),
+		array ( // Backup
+				'regex' => '#^/api/backup#',
+				'base' => $base,
+				'sub' => include 'Backup/urls.php' 
+		),
 		array ( // SaaS : online applications
 				'regex' => '#^#',
 				'base' => $base,
