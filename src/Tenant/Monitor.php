@@ -28,7 +28,7 @@ class Tenant_Monitor
     public static function storage ()
     {
         $result = array(
-                'value' => 0,
+                'value' => 35,
                 'min' => 0,
                 'max' => Config_Service::get('storage.size.max', 1048576), // 1Mb
                 'unit' => 'byte',
