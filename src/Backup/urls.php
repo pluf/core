@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 return array(
-        array( // Content urls
+        array(
                 'regex' => '#^/new$#',
                 'model' => 'Backup_Views',
                 'method' => 'create',
@@ -26,4 +26,90 @@ return array(
                         'Pluf_Precondition::adminRequired'
                 )
         ),
+        array(
+                'regex' => '#^/find$#',
+                'model' => 'Pluf_Views',
+                'method' => 'findObject',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                ),
+                'params' => array(
+                        'model' => 'Backup_Backup',
+                        'listFilters' => array(
+                                'title',
+                                'description'
+                        ),
+                        'listDisplay' => array(
+                                'title' => 'title',
+                                'description' => 'description'
+                        ),
+                        'searchFields' => array(
+                                'title',
+                                'description'
+                        ),
+                        'sortFields' => array(
+                                'title',
+                                'description',
+                                'creation_date',
+                                'modif_dtime'
+                        )
+                )
+        ),
+        array(
+                'regex' => '#^/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'getObject',
+                'http-method' => 'GET',
+                'params' => array(
+                        'model' => 'Backup_Backup'
+                ),
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'deleteObject',
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                ),
+                'params' => array(
+                        'model' => 'Backup_Backup'
+                )
+        ),
+        array(
+                'regex' => '#^/(?P<modelId>\d+)$#',
+                'model' => 'Pluf_Views',
+                'method' => 'updateObject',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                ),
+                'params' => array(
+                        'model' => 'Backup_Backup'
+                )
+        ),
+        
+        // Functions
+        array(
+                'regex' => '#^/(?P<modelId>\d+)/restore$#',
+                'model' => 'Backup_Views',
+                'method' => 'restore',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/(?P<modelId>\d+)/download$#',
+                'model' => 'Backup_Views',
+                'method' => 'download',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        )
 );

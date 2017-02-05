@@ -34,10 +34,26 @@ class Backup_Views
         $object = new Backup_Backup();
         $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST);
         $object = $form->save();
-        $object->file_path = sprintf('%s/%s/backups/%s', 
-                Pluf::f('upload_path'), $tenant->id, $object->id);
+        $object->file_path = sprintf('%s/%s/backups/%s', Pluf::f('upload_path'), 
+                $tenant->id, $object->id);
         $object->update();
         Backup_Shortcuts_BackupRun($object->file_path);
         return new Pluf_HTTP_Response_Json($object);
     }
+
+    /**
+     * 
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match
+     */
+    public static function restore ($request, $match)
+    {}
+    
+    /**
+     * 
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match
+     */
+    public static function download ($request, $match)
+    {}
 }

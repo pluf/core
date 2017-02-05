@@ -19,18 +19,15 @@
  */
 
 /**
- * ایجاد پشتیبان
- *
- * !! You need also to backup Pluf if you want the full backup. !!
+ * !! You need also to backup Pluf if you want the full backup.
+ * !!
  *
  * @param
  *            string Path to the folder where to store the backup
- * @param
- *            string Name of the backup (null)
  * @return int The backup was correctly written
  *        
  */
-function Backup_Shortcuts_BackupRun ($folder, $name = null)
+function Backup_Shortcuts_BackupRun ($folder)
 {
     if (! is_dir($folder)) {
         if (false == @mkdir($folder, 0777, true)) {
@@ -38,9 +35,12 @@ function Backup_Shortcuts_BackupRun ($folder, $name = null)
                     'An error occured when creating the file path.');
         }
     }
-    $apps=Pluf::f('installed_apps');
+    $apps = Pluf::f('installed_apps');
     $db = Pluf::db();
-    foreach ($apps as $app){
+    foreach ($apps as $app) {
+        if ($app === 'Bakup') {
+            continue;
+        }
         if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
             continue;
         }
@@ -48,7 +48,7 @@ function Backup_Shortcuts_BackupRun ($folder, $name = null)
         $json = fread($myfile, filesize($file));
         fclose($myfile);
         $moduel = json_decode($json, true);
-        if(!array_key_exists('model', $moduel)){
+        if (! array_key_exists('model', $moduel)) {
             continue;
         }
         $models = $moduel['model'];
@@ -65,51 +65,49 @@ function Backup_Shortcuts_BackupRun ($folder, $name = null)
 }
 
 /**
- * بازیابی پشتیبان
  *
- * @param string Path to the backup folder
- * @param string Backup name
+ * @param
+ *            string Path to the backup folder
  * @return bool Success
  */
-// function KM_Migrations_Backup_restore($folder, $name)
-// {
-
-    //     $db = Pluf::db();
-    //     $schema = new Pluf_DB_Schema($db);
-
-    // 	$models = array(
-    // 			'Peechak_Models_JobResult',
-    // 			'Peechak_Models_JobProperty',
-    // 			'Peechak_Models_JobLib',
-    // 			'Peechak_Models_Job',
-    // 			'Peechak_Models_AgentCapability',
-    // 			'Peechak_Models_Agent',
-    // 	);
-    //     foreach ($models as $model) {
-    //     	$schema->model = new $model();
-    //     	$schema->dropTables();
-    //     }
-
-
-    //     $models = array(
-    // 			'Peechak_Models_Job',
-    // 			'Peechak_Models_JobLib',
-    // 			'Peechak_Models_JobProperty',
-    // 			'Peechak_Models_JobResult',
-    // 			'Peechak_Models_Agent',
-    // 			'Peechak_Models_AgentCapability'
-    //     );
-    //     foreach ($models as $model) {
-    //         $schema->model = new $model();
-    //         $schema->createTables();
-    //     }
-    //     $full_data = json_decode(file_get_contents(sprintf('%s/%s-Peechak.json', $folder, $name)), true);
-    //     foreach ($full_data as $model => $data) {
-    //         Pluf_Test_Fixture::load($data, false);
-    //     }
-    //     foreach ($models as $model) {
-    //         $schema->model = new $model();
-    //         $schema->createConstraints();
-    //     }
-    //     return true;
-// }
+function Backup_Shortcuts_RestoreRun ($folder)
+{
+    $apps = Pluf::f('installed_apps');
+    $db = Pluf::db();
+    $schema = new Pluf_DB_Schema($db);
+    foreach ($apps as $app) {
+        if ($app === 'Bakup') {
+            continue;
+        }
+        if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
+            continue;
+        }
+        $myfile = fopen($file, "r") or die("Unable to open module.json!");
+        $json = fread($myfile, filesize($file));
+        fclose($myfile);
+        $moduel = json_decode($json, true);
+        if (! array_key_exists('model', $moduel)) {
+            continue;
+        }
+        $models = $moduel['model'];
+        foreach ($models as $model) {
+            $schema->model = new $model();
+            $schema->dropTables();
+        }
+        foreach ($models as $model) {
+            $schema->model = new $model();
+            $schema->createTables();
+        }
+        $full_data = json_decode(
+                file_get_contents(sprintf('%s/%s.json', $folder, $app)), 
+                true);
+        foreach ($full_data as $model => $data) {
+            Pluf_Test_Fixture::load($data, false);
+        }
+        foreach ($models as $model) {
+            $schema->model = new $model();
+            $schema->createConstraints();
+        }
+    }
+    return true;
+}
