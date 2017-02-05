@@ -37,7 +37,7 @@ class Setting_Views extends Pluf_Views
      */
     public function get ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
                 array(
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
@@ -64,7 +64,7 @@ class Setting_Views extends Pluf_Views
      */
     public function update ($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
                 array(
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
@@ -96,7 +96,7 @@ class Setting_Views extends Pluf_Views
      */
     public function delete ($request, $match)
     {
-        $sql = new Pluf_SQL('type=%s AND Pluf_Configuration.key=%s', 
+        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
                 array(
                         Pluf_ConfigurationType::APPLICATION,
                         $match['key']
