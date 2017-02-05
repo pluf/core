@@ -412,7 +412,7 @@ return array(
     array( // Link urls
         'regex' => '#^/link/find$#',
         'model' => 'SDP_Views_Link',
-        'method' => 'findlink',
+        'method' => 'find',
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
