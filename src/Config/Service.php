@@ -44,14 +44,17 @@ class Config_Service
                     'derty' => false
             );
             // TODO: maso, 2017: load value
-            $sql = new Pluf_SQL('configuration.key=%s', array(
-                    $key
-            ));
+            $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
+                    array(
+                            Pluf_ConfigurationType::SYSTEM,
+                            $key
+                    ));
             $config = new Pluf_Configuration();
-            $config = $config->getOne(array(
-                    'filter' => $sql->gen()
-            ));
-            if(isset($config)){
+            $config = $config->getOne(
+                    array(
+                            'filter' => $sql->gen()
+                    ));
+            if (isset($config)) {
                 $entary['value'] = $config->value;
             } else {
                 $entary['derty'] = true;
@@ -81,14 +84,17 @@ class Config_Service
         foreach (self::$inMemory as $key => $val) {
             if ($val['derty']) {
                 // TODO: maso, 2017: load value
-                $sql = new Pluf_SQL('configuration.key=%s', array(
-                        $key
-                ));
+                $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
+                        array(
+                                Pluf_ConfigurationType::SYSTEM,
+                                $key
+                        ));
                 $config = new Pluf_Configuration();
-                $config = $config->getOne(array(
-                        'filter' => $sql->gen()
-                ));
-                if(isset($config)){
+                $config = $config->getOne(
+                        array(
+                                'filter' => $sql->gen()
+                        ));
+                if (isset($config)) {
                     $config->value = $val['value'];
                     $config->save();
                 } else {

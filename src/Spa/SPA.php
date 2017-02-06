@@ -205,9 +205,9 @@ class Spa_SPA extends Pluf_Model
      * @param string $name نام
      * @param Pluf_Tenant $tenant            
      */
-    public static function getSpaByName ($name, $tenant = null)
+    public static function getSpaByName ($name)
     {
         $sql = new Pluf_SQL('name=%s', array($name));
-        return Pluf::factory('SPA')->getOne($sql->gen());
+        return Pluf::factory('Spa_SPA')->getOne($sql->gen());
     }
 }
