@@ -8,7 +8,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Find
@@ -30,7 +30,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Update
@@ -40,7 +40,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Find childs (if asset is folder)
@@ -63,7 +63,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -73,7 +73,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -83,7 +83,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Categories of Assets
@@ -100,7 +100,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -110,7 +110,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -120,7 +120,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Relations of Asset
@@ -137,7 +137,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -147,7 +147,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -157,7 +157,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
 
@@ -197,7 +197,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Get info
@@ -220,7 +220,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Update
@@ -233,7 +233,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Assets in Category
@@ -250,7 +250,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -260,7 +260,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -270,7 +270,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Tag
@@ -307,7 +307,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Get info
@@ -336,7 +336,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Update
@@ -349,7 +349,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Assets with Tag
@@ -365,7 +365,8 @@ return array(
         'method' => 'addAsset',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::tenantOwner'
+            'Pluf_Precondition::loginRequired',
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -375,7 +376,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -385,7 +386,7 @@ return array(
         'http-method' => 'DELETE',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* Link
@@ -405,17 +406,17 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Link urls
         'regex' => '#^/link/find$#',
         'model' => 'SDP_Views_Link',
-        'method' => 'findlink',
+        'method' => 'find',
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* download asset
@@ -433,7 +434,7 @@ return array(
         'http-method' => 'POST',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array( // Activate secure link that has been activated
@@ -443,7 +444,7 @@ return array(
         'http-method' => 'GET',
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     // ************************************************************* AssetRelation
@@ -490,7 +491,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -513,7 +514,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     ),
     array(
@@ -526,7 +527,7 @@ return array(
         ),
         'precond' => array(
             'Pluf_Precondition::loginRequired',
-            'Pluf_Precondition::isMember'
+            'Pluf_Precondition::memberRequired'
         )
     )
 );

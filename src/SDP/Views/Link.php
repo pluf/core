@@ -100,7 +100,7 @@ class SDP_Views_Link
      */
     public static function payment($request, $match)
     {
-        $link = SaaSDM_Shortcuts_GetLinkOr404($match['linkId']);
+        $link = SDP_Shortcuts_GetLinkOr404($match['linkId']);
         
         $url = $request->REQUEST['callback'];
         $user = $request->user;
@@ -130,7 +130,7 @@ class SDP_Views_Link
      */
     public static function activate($request, $match)
     {
-        $link = SaaSDM_Shortcuts_GetLinkOr404($match['linkId']);
+        $link = SDP_Shortcuts_GetLinkOr404($match['linkId']);
         
         SaaSBank_Service::update($link->get_payment());
         
