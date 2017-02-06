@@ -188,4 +188,20 @@ class Pluf_FileUtil
         $ext = array_merge(self::$supportedExtenstions, explode(' ', $ext));
         return (in_array($fileinfo[2], $ext));
     }
+
+    public static function removedir ($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir . "/" . $object))
+                        selfe::removedir($dir . "/" . $object);
+                    else
+                        unlink($dir . "/" . $object);
+                }
+            }
+            rmdir($dir);
+        }
+    }
 }

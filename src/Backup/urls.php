@@ -17,6 +17,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 return array(
+        /*
+         * Old systems API
+         */
+        array(
+                'regex' => '#^/system$#',
+                'model' => 'Backup_Views_System',
+                'method' => 'create',
+                'http-method' => 'GET',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/system$#',
+                'model' => 'Backup_Views_System',
+                'method' => 'restore',
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        ),
+        array(
+                'regex' => '#^/system$#',
+                'model' => 'Backup_Views_System',
+                'method' => 'delete',
+                'http-method' => 'delete',
+                'precond' => array(
+                        'Pluf_Precondition::adminRequired'
+                )
+        ),
+        /*
+         * New API
+         */
         array(
                 'regex' => '#^/new$#',
                 'model' => 'Backup_Views',

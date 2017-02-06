@@ -28,6 +28,7 @@ Pluf::loadFunction('Pluf_Form_Field_File_moveToUploadFolder');
  */
 class Spa_Views extends Pluf_Views
 {
+
     /**
      * یک نر افزار را نصب می‌کند
      *
@@ -39,11 +40,11 @@ class Spa_Views extends Pluf_Views
      * @param unknown_type $match            
      */
     public function create ($request, $match)
-    { 
+    {
         // XXX: maso, 1395: remove all data on exception
         $tenant = Pluf_Tenant::current();
         // 1- upload & extract
-        $path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/tmp' ;
+        $path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/tmp';
         Pluf_Form_Field_File_moveToUploadFolder($request->FILES['file'], 
                 array(
                         'file_name' => 'spa.zip',
@@ -73,10 +74,11 @@ class Spa_Views extends Pluf_Views
         $spa->setFromFormData($package);
         $spa->create();
         
-        $spa->path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/' . $spa->id;
+        $spa->path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/' .
+                 $spa->id;
         $spa->update();
-
-        self::rrmdir($spa->path);
+        
+        Pluf_FileUtil::removedir($spa->path);
         rename($path, $spa->path);
         
         return new Pluf_HTTP_Response_Json($spa);
@@ -130,43 +132,8 @@ class Spa_Views extends Pluf_Views
     public function delete ($request, $match)
     {
         $spa = Pluf_Shortcuts_GetObjectOr404('Spa_SPA', $match['spaId']);
-        Spa_Views::rrmdir($spa->path);
+        Pluf_FileUtil::removedir($spa->path);
         $spa->delete();
         return new Pluf_HTTP_Response_Json($spa);
-    }
-
-    static function rrmdir ($dir)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") {
-                        Spa_Views::rrmdir($dir . "/" . $object);
-                    } else {
-                        unlink($dir . "/" . $object);
-                    }
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
-    static function remdir ($dir)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") {
-                        Spa_Views::rrmdir($dir . "/" . $object);
-                    } else {
-                        unlink($dir . "/" . $object);
-                    }
-                }
-            }
-            reset($objects);
-        }
     }
 }

@@ -27,7 +27,7 @@
  * @return int The backup was correctly written
  *        
  */
-function Backup_Shortcuts_BackupRun ($folder)
+function Backup_Shortcuts_BackupRun ($folder, $multitinancy=true)
 {
     if (! is_dir($folder)) {
         if (false == @mkdir($folder, 0777, true)) {
@@ -70,7 +70,7 @@ function Backup_Shortcuts_BackupRun ($folder)
  *            string Path to the backup folder
  * @return bool Success
  */
-function Backup_Shortcuts_RestoreRun ($folder)
+function Backup_Shortcuts_RestoreRun ($folder, $multitinancy=true)
 {
     $apps = Pluf::f('installed_apps');
     $db = Pluf::db();
