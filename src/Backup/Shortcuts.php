@@ -38,7 +38,7 @@ function Backup_Shortcuts_BackupRun ($folder)
     $apps = Pluf::f('installed_apps');
     $db = Pluf::db();
     foreach ($apps as $app) {
-        if ($app === 'Bakup') {
+        if ($app === 'Backup') {
             continue;
         }
         if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
@@ -76,7 +76,7 @@ function Backup_Shortcuts_RestoreRun ($folder)
     $db = Pluf::db();
     $schema = new Pluf_DB_Schema($db);
     foreach ($apps as $app) {
-        if ($app === 'Bakup') {
+        if ($app === 'Backup') {
             continue;
         }
         if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
@@ -90,7 +90,10 @@ function Backup_Shortcuts_RestoreRun ($folder)
             continue;
         }
         $models = $moduel['model'];
-        foreach ($models as $model) {
+        if(sizeof($models) == 0){
+            continue;
+        }
+        foreach (array_reverse($models) as $model) {
             $schema->model = new $model();
             $schema->dropTables();
         }
@@ -103,10 +106,6 @@ function Backup_Shortcuts_RestoreRun ($folder)
                 true);
         foreach ($full_data as $model => $data) {
             Pluf_Test_Fixture::load($data, false);
-        }
-        foreach ($models as $model) {
-            $schema->model = new $model();
-            $schema->createConstraints();
         }
     }
     return true;

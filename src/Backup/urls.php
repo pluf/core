@@ -107,7 +107,7 @@ return array(
                 'regex' => '#^/(?P<modelId>\d+)/download$#',
                 'model' => 'Backup_Views',
                 'method' => 'download',
-                'http-method' => 'POST',
+                'http-method' => 'GET',
                 'precond' => array(
                         'Pluf_Precondition::adminRequired'
                 )

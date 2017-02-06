@@ -47,7 +47,11 @@ class Backup_Views
      * @param array $match
      */
     public static function restore ($request, $match)
-    {}
+    {
+        $backup = Pluf_Shortcuts_GetObjectOr404('Backup_Backup', $match['modelId']);
+        Backup_Shortcuts_RestoreRun($backup->file_path);
+        return new Pluf_HTTP_Response_Json($backup);
+    }
     
     /**
      * 
@@ -55,5 +59,17 @@ class Backup_Views
      * @param array $match
      */
     public static function download ($request, $match)
-    {}
+    {
+        $backup = Pluf_Shortcuts_GetObjectOr404('Backup_Backup', $match['modelId']);
+        $zip = new ZipArchive;
+        $file = Pluf::f('tmp_folder', '/var/tmp').'/backup.zip';
+        $zip->open($file, ZipArchive::CREATE);
+        foreach (glob($backup->file_path.'/*') as $f) {
+            $zip->addFile($f, basename($f));
+        }
+        $zip->close();
+        $response = new Pluf_HTTP_Response_File($file, 'application/zip', true);
+        $response->headers['Content-Disposition'] = 'attachment; filename="backup.zip"';
+        return $response;
+    }
 }
