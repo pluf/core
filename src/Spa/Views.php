@@ -41,10 +41,8 @@ class Spa_Views extends Pluf_Views
      */
     public function create ($request, $match)
     {
-        // XXX: maso, 1395: remove all data on exception
-        $tenant = Pluf_Tenant::current();
         // 1- upload & extract
-        $path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/tmp';
+        $path = Pluf_Tenant::storagePath() . '/spa/tmp';
         Pluf_Form_Field_File_moveToUploadFolder($request->FILES['file'], 
                 array(
                         'file_name' => 'spa.zip',
@@ -74,7 +72,7 @@ class Spa_Views extends Pluf_Views
         $spa->setFromFormData($package);
         $spa->create();
         
-        $spa->path = Pluf::f('upload_path') . '/' . $tenant->id . '/spa/' .
+        $spa->path = Pluf_Tenant::storagePath() . '/spa/' .
                  $spa->id;
         $spa->update();
         

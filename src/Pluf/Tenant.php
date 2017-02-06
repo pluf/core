@@ -325,4 +325,15 @@ class Pluf_Tenant extends Pluf_Model
         // load tenant from request
         return $GLOBALS ['_PX_request']->tenant;
     }
+    
+    /**
+     * Gets tenant storage path
+     * 
+     * @return string
+     */
+    public static function storagePath()
+    {
+        $tenant = self::current();
+        return Pluf::f('upload_path') . '/' . $tenant->id;
+    }
 }
