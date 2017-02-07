@@ -196,7 +196,7 @@ class Pluf_FileUtil
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
                     if (is_dir($dir . "/" . $object))
-                        selfe::removedir($dir . "/" . $object);
+                        self::removedir($dir . "/" . $object);
                     else
                         unlink($dir . "/" . $object);
                 }
