@@ -210,4 +210,15 @@ class Spa_SPA extends Pluf_Model
         $sql = new Pluf_SQL('name=%s', array($name));
         return Pluf::factory('Spa_SPA')->getOne($sql->gen());
     }
+
+    /**
+     * مسیر فایل منبع از نرم افزار را تعیین می‌کند.
+     *
+     * @param unknown $name            
+     * @return string
+     */
+    public function getResourcePath ($name)
+    {
+        return $this->getRootPath() . '/' . $name;
+    }
 }
