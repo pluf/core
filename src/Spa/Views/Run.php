@@ -47,6 +47,11 @@ class Spa_Views_Run
         // Load data
         $resourcePath = $match['resource'];
         $spa = Spa_SPA::getSpaByName($match['spa']);
+        if(!isset($spa)){
+            $name = Setting_Service::get('spa.default', 'start');
+            $spa = Spa_SPA::getSpaByName($name);
+            $resourcePath = $match['spa'].'/'.$resourcePath;
+        }
         return self::loadSpaResource($request, $spa, $resourcePath);
     }
 
