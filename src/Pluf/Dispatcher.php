@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -69,7 +70,7 @@ class Pluf_Dispatcher
                 }
             }
             // Puts request in global scope
-            $GLOBALS ['_PX_request'] = $req;
+            $GLOBALS['_PX_request'] = $req;
             if ($skip === false) {
                 $response = self::match($req);
                 if (! empty($req->response_vary_on)) {
@@ -206,7 +207,7 @@ class Pluf_Dispatcher
     }
 
     /**
-     * نمایشی که در فراخوانی self::match تعیین شده است را فراخوانی می‌کند.
+     * Call Ctrl
      *
      * فراخوانی لایه نمایش ممکن است که با بروز استثنا روبرو شود که در اینجا این
      * نکته
@@ -231,24 +232,11 @@ class Pluf_Dispatcher
                 'match' => $match
         );
         $m = new $ctl['model']();
-        
-        if (
-        /*
-         * XXX: maso, 1394: این مدل در آیند حذف خواهد شد
-         * 
-         * پیش شرط‌ها در خود کنترل باید تعیین شده باشد.
-         */
-                isset($m->{$ctl['method'] . '_precond'}) || 
-        // روش اصلی
-        isset($ctl['precond'])) {
+        if (isset($ctl['precond'])) {
             // Here we have preconditions to respects. If the "answer"
             // is true, then ok go ahead, if not then it a response so
             // return it or an exception so let it go.
-            if (isset($m->{$ctl['method'] . '_precond'})) {
-                $preconds = $m->{$ctl['method'] . '_precond'};
-            } else {
-                $preconds = $ctl['precond'];
-            }
+            $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
                         $preconds
@@ -281,7 +269,7 @@ class Pluf_Dispatcher
     }
 
     /**
-     * لایه کنترل را بارگذاری می‌کند.
+     * Loads Ctrl layer
      *
      * @param
      *            string File including the views.
