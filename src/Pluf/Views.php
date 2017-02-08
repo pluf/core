@@ -194,12 +194,14 @@ class Pluf_Views
         return new Pluf_HTTP_Response($tmpl->render($context));
     }
 
+    // TODO: maso, 2017: document
     private static function CRUD_getModelInstance ($p)
     {
         $model = self::CRUD_getModel($p);
         return new $model();
     }
 
+    // TODO: maso, 2017: document
     private static function CRUD_getModel ($p)
     {
         if (! isset($p['model'])) {
@@ -209,6 +211,7 @@ class Pluf_Views
         return $p['model'];
     }
     
+    // TODO: maso, 2017: document
     private static function CRUD_response ($request, $p, $object, 
             $child = null)
     {
@@ -229,6 +232,7 @@ class Pluf_Views
         return new Pluf_HTTP_Response_Json($object);
     }
 
+    // TODO: maso, 2017: document
     private static function CRUD_checkPreconditions ($request, $p, $object, 
             $child = null)
     {
@@ -242,7 +246,7 @@ class Pluf_Views
             );
         }
         foreach ($preconds as $precond) {
-            $res = call_user_func_array(explode('::', $precond[0]), 
+            $res = call_user_func_array(explode('::', $precond), 
                     array(
                             $request,
                             $object,
