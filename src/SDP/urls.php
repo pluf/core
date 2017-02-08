@@ -439,7 +439,7 @@ return array(
     ),
     array( // Activate secure link that has been activated
         'regex' => '#^/link/(?P<linkId>\d+)/activate$#',
-        'model' => 'SaaSDM_Views_Link',
+        'model' => 'SDP_Views_Link',
         'method' => 'activate',
         'http-method' => 'GET',
         'precond' => array(
