@@ -103,7 +103,7 @@ class CMS_Views
     public static function update ($request, $match)
     {
         // تعیین داده‌ها
-        $content = Pluf_Shortcuts_GetObjectOr404($match['id']);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match['id']);
         // اجرای درخواست
         $extra = array(
                 'model' => $content
