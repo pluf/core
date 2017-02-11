@@ -118,6 +118,9 @@ class SDP_Views_Asset
             'tenant' => $request->tenant
         );
         
+        if (!isset($request->REQUEST['name'])) 
+        	$request->REQUEST['name'] = $asset->name;
+        
         $form = new SDP_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
         $asset = $form->update();
         return new Pluf_HTTP_Response_Json($asset);

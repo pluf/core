@@ -1,5 +1,5 @@
 <?php
-Pluf::loadFunction ( 'SaaSDM_Shortcuts_GetAssetOr404' );
+Pluf::loadFunction ( 'SDP_Shortcuts_GetAssetOr404' );
 
 /**
  * ایجاد یک دارایی جدید
@@ -68,7 +68,7 @@ class SDP_Form_AssetCreate extends Pluf_Form {
 		// To find out whether a file or folder being created and to check that folder exist or Not
 		if (isset ( $_REQUEST ['parent'] )) {
 			// Note: Hadi, 1395-09: It throw exception if asset dose not exist
-			$assetFolder = SaaSDM_Shortcuts_GetAssetOr404 ( $_REQUEST ['parent'] );
+			$assetFolder = SDP_Shortcuts_GetAssetOr404 ( $_REQUEST ['parent'] );
 			if ($assetFolder->type != 'folder') {
 				throw new Pluf_Form_Invalid ( 'The specified folder does not exist.' );
 			}
