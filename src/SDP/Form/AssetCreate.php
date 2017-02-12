@@ -82,8 +82,8 @@ class SDP_Form_AssetCreate extends Pluf_Form
         }
         return $asset;
     }
-    
-    public function clean_name ()
+
+    public function clean_name()
     {
         $fullname = trim($this->cleaned_data['name']);
         return $fullname;
