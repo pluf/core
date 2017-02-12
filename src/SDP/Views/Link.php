@@ -1,5 +1,5 @@
 <?php
-Pluf::loadFunction('SDP_Shortcuts_GetLinkOr404');
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('SDP_Shortcuts_Mime2Ext');
 
 class SDP_Views_Link
@@ -7,7 +7,7 @@ class SDP_Views_Link
 
     public static function create($request, $match)
     {
-        $asset = SDP_Shortcuts_GetAssetOr404($match['asset_id']);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['asset_id']);
         
         // initial link data
         $extra = array(
@@ -100,7 +100,7 @@ class SDP_Views_Link
      */
     public static function payment($request, $match)
     {
-        $link = SDP_Shortcuts_GetLinkOr404($match['linkId']);
+        $link = Pluf_Shortcuts_GetObjectOr404('SDP_Link', $match['linkId']);
         
         $url = $request->REQUEST['callback'];
         $user = $request->user;
@@ -130,7 +130,7 @@ class SDP_Views_Link
      */
     public static function activate($request, $match)
     {
-        $link = SDP_Shortcuts_GetLinkOr404($match['linkId']);
+        $link = Pluf_Shortcuts_GetObjectOr404('SDP_Link', $match['linkId']);
         
         SaaSBank_Service::update($link->get_payment());
         

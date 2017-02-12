@@ -1,5 +1,4 @@
 <?php
-Pluf::loadFunction('SDP_Shortcuts_GetAssetOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 
 class SDP_Views_Asset
@@ -98,7 +97,7 @@ class SDP_Views_Asset
     public static function get($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // حق دسترسی
         // CMS_Precondition::userCanAccessContent($request, $content);
         // اجرای درخواست
@@ -108,7 +107,7 @@ class SDP_Views_Asset
     public static function update($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // حق دسترسی
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
@@ -126,11 +125,11 @@ class SDP_Views_Asset
     public static function delete($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // دسترسی
         // CMS_Precondition::userCanDeleteContent($request, $content);
         // اجرا
-        $asset_copy = SDP_Shortcuts_GetAssetOr404($asset->id);
+        $asset_copy = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $asset->id);
         $asset_copy->path = "";
         
         $asset->delete();
@@ -142,7 +141,7 @@ class SDP_Views_Asset
     {
         // GET data
         $app = $request->tenant;
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // Check permission
         // Precondition::userCanAccessApplication($request, $app);
         // Precondition::userCanAccessResource($request, $content);
