@@ -112,9 +112,7 @@ class SDP_Views_Asset
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
         $extra = array(
-            // 'user' => $request->user,
-            'asset' => $asset,
-            'tenant' => $request->tenant
+            'asset' => $asset
         );
         
         if (!isset($request->REQUEST['name'])) 
@@ -143,7 +141,6 @@ class SDP_Views_Asset
     public static function updateFile($request, $match)
     {
         // GET data
-        $app = $request->tenant;
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // Check permission
         // Precondition::userCanAccessApplication($request, $app);
@@ -151,9 +148,7 @@ class SDP_Views_Asset
         
         if (array_key_exists('file', $request->FILES)) {
             $extra = array(
-                // 'user' => $request->user,
                 'asset' => $asset,
-                'tenant' => $request->tenant
             );
             $form = new SDP_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
             $asset = $form->update();
@@ -177,9 +172,6 @@ class SDP_Views_Asset
     public static function tags($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $tag = new SDP_Tag();
         $tagTable = $tag->_a['table'];
         $assocTable = 'sdp_asset_sdp_tag_assoc';
@@ -311,9 +303,6 @@ class SDP_Views_Asset
     public static function relations($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $relatedAsset = new SDP_Asset();
         $relatedAssetTable = $relatedAsset->_a['table'];
         $assocTable = 'sdp_assetrelation';
@@ -372,9 +361,6 @@ class SDP_Views_Asset
     public static function addRelation($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['endId'])) {
             $endId = $match['endId'];
         } else {
@@ -390,9 +376,6 @@ class SDP_Views_Asset
     public static function removeRelation($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         if (isset($match['endId'])) {
             $endId = $match['endId'];
         } else {
@@ -401,7 +384,7 @@ class SDP_Views_Asset
         $endAsset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $endId);
         $relation = new SDP_AssetRelation();
         $relationList = $relation->getList(array(
-            'filter' => array('tenant='.$request->tenant->id, 'start='.$asset->id, 'end='.$endAsset->id)
+            'filter' => array('start='.$asset->id, 'end='.$endAsset->id)
         ));
         $relateListCopy = array();
         foreach($relationList as $rel){

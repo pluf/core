@@ -54,7 +54,7 @@ class Pluf_Group extends Pluf_Model
             ),
             'description' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
+                'blank' => true,
                 'size' => 250,
                 'verbose' => 'description',
                 'readable' => true,

@@ -7,38 +7,30 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 class SaaSKM_Form_TagCreate extends Pluf_Form
 {
 
-    var $tenant = null;
-
     /**
      * مقدار دهی فیلدها.
      *
      * @see Pluf_Form::initFields()
      */
-    public function initFields ($extra = array())
+    public function initFields($extra = array())
     {
-        $this->tenant = $extra['tenant'];
+        $this->fields['tag_key'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => __('key')
+        ));
+        $this->fields['tag_value'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => __('value')
+        ));
+        $this->fields['tag_title'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => __('title')
+        ));
         
-        $this->fields['tag_key'] = new Pluf_Form_Field_Varchar(
-                array(
-                        'required' => false,
-                        'label' => __('key')
-                ));
-        $this->fields['tag_value'] = new Pluf_Form_Field_Varchar(
-                array(
-                        'required' => false,
-                        'label' => __('value')
-                ));
-        $this->fields['tag_title'] = new Pluf_Form_Field_Varchar(
-                array(
-                        'required' => false,
-                        'label' => __('title')
-                ));
-        
-        $this->fields['tag_description'] = new Pluf_Form_Field_Varchar(
-                array(
-                        'required' => false,
-                        'label' => __('description')
-                ));
+        $this->fields['tag_description'] = new Pluf_Form_Field_Varchar(array(
+            'required' => false,
+            'label' => __('description')
+        ));
     }
 
     /**
@@ -47,29 +39,23 @@ class SaaSKM_Form_TagCreate extends Pluf_Form
      *            ذخیره شود یا نه
      * @return مدل داده‌ای ایجاد شده
      */
-    function save ($commit = true)
+    function save($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Pluf_Exception(
-                    __('cannot save a tag from an invalid form'));
+            throw new Pluf_Exception(__('cannot save a tag from an invalid form'));
         }
         $tag = new SaaSKM_Tag();
         $tag->setFromFormData($this->cleaned_data);
-        $tag->tenant = $this->tenant;
         
         { // XXX: maso, 1394: converto to clean (Check tag exist)
-            $sqlSelect = new Pluf_SQL(
-                    'tag_key=%s AND tag_value=%s AND tenant=%s', 
-                    array(
-                            $tag->tag_key,
-                            $tag->tag_value,
-                            $this->tenant->id
-                    ));
+            $sqlSelect = new Pluf_SQL('tag_key=%s AND tag_value=%s', array(
+                $tag->tag_key,
+                $tag->tag_value
+            ));
             $str = $sqlSelect->gen();
-            $count = Pluf::factory('SaaSKM_Tag')->getCount(
-                    array(
-                            'filter' => $sqlSelect->gen()
-                    ));
+            $count = Pluf::factory('SaaSKM_Tag')->getCount(array(
+                'filter' => $sqlSelect->gen()
+            ));
             if ($count > 0) {
                 throw new Pluf_Exception("Tag exist");
             }

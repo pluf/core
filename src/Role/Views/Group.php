@@ -40,7 +40,7 @@ class Role_Views_Group extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $request->REQUEST['group']);
-        $row = Pluf_RowPermission::add($group, null, $perm, false, $request->tenant->id);
+        $row = Pluf_RowPermission::add($group, null, $perm, false);
         return new Pluf_HTTP_Response_Json($row);
     }
 
@@ -58,13 +58,11 @@ class Role_Views_Group extends Pluf_Views
         $pag = new Pluf_Paginator($grModel);
         $pag->items_per_page = Role_Views::getListCount($request);
         $perm_id_col = Pluf::f('pluf_use_rowpermission', false) ? 'permission' : 'pluf_permission_id';
-        $sql = new Pluf_SQL($grModel->_a['table'].'.tenant=%s AND '.$perm_id_col.'=%s', array(
-            $request->tenant->id,
+        $sql = new Pluf_SQL($perm_id_col.'=%s', array(
             $perm->id
         ));
         $pag->forced_where = $sql;
         $pag->list_filters = array(
-            'tenant',
             'version',
             'name',
             'description'
@@ -107,7 +105,6 @@ class Role_Views_Group extends Pluf_Views
             'view' => 'group_permission',
             'filter' => array(
                 $groupModel->_a['table'].'.id=' . $match['groupId'],
-                $groupModel->_a['table'].'.tenant=' . $request->tenant->id,
                 $perm_id_col. '=' . $perm->id
             )
         );
@@ -129,7 +126,7 @@ class Role_Views_Group extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
-        $row = Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
+        $row = Pluf_RowPermission::remove($owner, null, $perm);
         return new Pluf_HTTP_Response_Json($row);
     }
 }

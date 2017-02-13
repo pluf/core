@@ -6,11 +6,6 @@ class SaaSDM_Views_Asset
 
     public static function create($request, $match)
     {
-        // initial asset data
-        $extra = array(
-            // 'user' => $request->user,
-            'tenant' => $request->tenant
-        );
         
         if (! isset($request->REQUEST['name']) || strlen($request->REQUEST['name']) == 0) {
             if (isset($request->FILES['file'])) {
@@ -22,10 +17,11 @@ class SaaSDM_Views_Asset
         }
         
         // Create asset and get its ID
-        $form = new SaaSDM_Form_AssetCreate($request->REQUEST, $extra);
+        $form = new SaaSDM_Form_AssetCreate($request->REQUEST);
         $asset = $form->save();
         
         // Upload asset file and extract information about it (by updating asset)
+        $extra = array( );
         $extra['asset'] = $asset;
         $form = new SaaSDM_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
         try {
@@ -41,9 +37,7 @@ class SaaSDM_Views_Asset
     public static function find($request, $match)
     {
         $asset = new Pluf_Paginator(new SaaSDM_Asset());
-        $sql = new Pluf_SQL('tenant=%s', array(
-            $request->tenant->id
-        ));
+        $sql = new Pluf_SQL();
         $asset->forced_where = $sql;
         $asset->list_filters = array(
             'id',
@@ -123,9 +117,7 @@ class SaaSDM_Views_Asset
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
         $extra = array(
-            // 'user' => $request->user,
-            'asset' => $asset,
-            'tenant' => $request->tenant
+            'asset' => $asset
         );
         
         $form = new SaaSDM_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
@@ -151,7 +143,6 @@ class SaaSDM_Views_Asset
     public static function updateFile($request, $match)
     {
         // GET data
-        $app = $request->tenant;
         $asset = SaaSDM_Shortcuts_GetAssetOr404($match["id"]);
         // Check permission
         // Precondition::userCanAccessApplication($request, $app);
@@ -159,9 +150,7 @@ class SaaSDM_Views_Asset
         
         if (array_key_exists('file', $request->FILES)) {
             $extra = array(
-                // 'user' => $request->user,
-                'asset' => $asset,
-                'tenant' => $request->tenant
+                'asset' => $asset
             );
             $form = new SaaSDM_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
             $asset = $form->update();

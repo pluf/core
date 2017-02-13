@@ -54,7 +54,6 @@ class Group_Views extends Pluf_Views
     {
         $pag = new Pluf_Paginator(new Pluf_Group());
         $pag->list_filters = array(
-            'tenant',
             'version'
         );
         $search_fields = array(

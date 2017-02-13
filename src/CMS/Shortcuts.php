@@ -41,8 +41,7 @@ function CMS_Shortcuts_GetNamedContentOr404 ($name)
     if ($item->count() > 1) {
         Pluf_Log::error(
                 sprintf(
-                        'more than one content exist with the name $s in tenant $s', 
-                        $name, $tenant->id));
+                        'more than one content exist with the name $s', $name));
         return $item[0];
     }
     throw new CMS_Exception_ObjectNotFound(
@@ -59,7 +58,6 @@ function CMS_Shortcuts_GetNamedContentOr404 ($name)
  * این فراخوانی در فرم‌ها کاربرد دارد.
  *
  * @param unknown $name            
- * @param unknown $tenant            
  * @throws Pluf_Exception
  * @return unknown
  */

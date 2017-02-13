@@ -20,7 +20,7 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
     {
         // $this->user = $extra['user'];
         $this->asset = $extra['asset'];
-        $this->tenant = $extra['tenant'];
+        $this->tenant = Pluf_Tenant::current();
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
@@ -85,14 +85,6 @@ class SaaSDM_Form_AssetUpdate extends Pluf_Form
             'help_text' => 'Parent of asset'
         ));
         
-        $this->fields['tenant'] = new Pluf_Form_Field_Varchar(array(
-            'required' => false,
-            'label' => 'Tenant',
-            'initial' => $this->asset->tenant,
-            'help_text' => 'tenant that this asset belonged to'
-        ));
-        
-       
         $this->fields['file'] = new Pluf_Form_Field_File(array(
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),

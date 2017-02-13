@@ -127,7 +127,7 @@ class Group_Views_Role extends Pluf_Views
     {
         $group = Pluf_Shortcuts_GetObjectOr404('Pluf_Group', $match['groupId']);
         $permission = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
-        $row = Pluf_RowPermission::remove($group, 'Pluf_Group', $permission, $request->tenant->id);
+        $row = Pluf_RowPermission::remove($group, 'Pluf_Group', $permission);
         // $group->delAssoc($permission);
         return new Pluf_HTTP_Response_Json($row);
     }

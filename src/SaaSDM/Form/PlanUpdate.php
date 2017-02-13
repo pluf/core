@@ -20,7 +20,7 @@ class SaaSDM_Form_PlanUpdate extends Pluf_Form
     {
         // $this->user = $extra['user'];
         $this->plan = $extra['plan'];
-        $this->tenant = $extra['tenant'];
+        $this->tenant = Pluf_Tenant::current();
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
@@ -85,14 +85,6 @@ class SaaSDM_Form_PlanUpdate extends Pluf_Form
             'help_text' => 'Parent of plan'
         ));
         
-        $this->fields['tenant'] = new Pluf_Form_Field_Varchar(array(
-            'required' => false,
-            'label' => 'Tenant',
-            'initial' => $this->plan->tenant,
-            'help_text' => 'tenant that this plan belonged to'
-        ));
-        
-       
         $this->fields['file'] = new Pluf_Form_Field_File(array(
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
@@ -112,7 +104,7 @@ class SaaSDM_Form_PlanUpdate extends Pluf_Form
         }
         // update the plan
         $this->plan->setFromFormData($this->cleaned_data);
-                
+        $this->plan->tenant = $this->tenant;
         if ($commit) {
             $this->plan->update();
         }

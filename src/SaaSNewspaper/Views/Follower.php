@@ -7,10 +7,7 @@ class SaaSNewspaper_Views_Follower
     public static function create($request, $match)
     {
         // initial page data
-        $extra = array(
-            'tenant' => $request->tenant
-        );
-        $form = new SaaSNewspaper_Form_FollowerCreate($request->REQUEST, $extra);
+        $form = new SaaSNewspaper_Form_FollowerCreate($request->REQUEST);
         $follower = $form->save();
         return new Pluf_HTTP_Response_Json($follower);
     }
@@ -18,10 +15,6 @@ class SaaSNewspaper_Views_Follower
     public static function find($request, $match)
     {
         $pag = new Pluf_Paginator(new SaaSNewspaper_Follower());
-        $sql = new Pluf_SQL('tenant=%s', array(
-            $request->tenant->id
-        ));
-        $pag->forced_where = $sql;
         $pag->list_filters = array(
             'type',
             'address'
