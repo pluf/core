@@ -29,37 +29,33 @@
 class CMS_Form_ContentUpdate extends Pluf_Form_Model
 {
 
-    public $tenant = null;
-
-    public function initFields ($extra = array())
+    public function initFields($extra = array())
     {
-        $this->tenant = Pluf_Tenant::current();
         parent::initFields($extra);
         
-        $this->fields['file'] = new Pluf_Form_Field_File(
-                array(
-                        'required' => false,
-                        'max_size' => Pluf::f('upload_max_size', 2097152),
-                        'move_function_params' => array(
-                                'upload_path' => $this->model->file_path,
-                                'file_name' => $this->model->id,
-                                'upload_path_create' => true,
-                                'upload_overwrite' => true
-                        )
-                ));
+        $this->fields['file'] = new Pluf_Form_Field_File(array(
+            'required' => false,
+            'max_size' => Pluf::f('upload_max_size', 2097152),
+            'move_function_params' => array(
+                'upload_path' => $this->model->file_path,
+                'file_name' => $this->model->id,
+                'upload_path_create' => true,
+                'upload_overwrite' => true
+            )
+        ));
     }
 
-    public function clean_name ()
+    public function clean_name()
     {
         $name = $this->cleaned_data['name'];
         if (empty($name))
             return null;
             // Note: If old name is same as new name we do not check uniqueness
-        // of the name.
+            // of the name.
         if (strcmp($name, $this->model->name) === 0) {
             return $name;
         }
-        return CMS_Shortcuts_CleanName($name, $this->tenant);
+        return CMS_Shortcuts_CleanName($name);
     }
 
     /**
@@ -68,7 +64,7 @@ class CMS_Form_ContentUpdate extends Pluf_Form_Model
      *
      * @see Pluf_Form_Model::save()
      */
-    function save ($commit = true)
+    function save($commit = true)
     {
         $model = parent::save(false);
         // update the content
@@ -77,7 +73,6 @@ class CMS_Form_ContentUpdate extends Pluf_Form_Model
             $myFile = $this->data['file'];
             $model->file_name = $myFile['name'];
         }
-        
         if ($commit) {
             $model->update();
         }

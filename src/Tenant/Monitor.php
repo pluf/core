@@ -24,5 +24,23 @@ class Tenant_Monitor
     {
         // XXX: maso, 1395
     }
+    
+    public static function storage ()
+    {
+        $result = array(
+                'value' => 35,
+                'min' => 0,
+                'max' => Config_Service::get('storage.size.max', 1048576), // 1Mb
+                'unit' => 'byte',
+                'interval' => 1000000,
+                'type' => 'scalar'
+        );
+        // maso, 2017: find storage size
+        // FIXME: maso, 2017: using php native if is not linux
+        $file_directory = Pluf_Tenant::storagePath();
+        $output = exec('du -sk ' . $file_directory);
+        $result['value'] = trim(str_replace($file_directory, '', $output)) * 1024;
+        return $result;
+    }
 }
 

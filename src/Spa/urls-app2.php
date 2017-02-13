@@ -36,7 +36,7 @@ return array(
     // main page of default SPA
     array(
         'regex' => '#^/$#',
-        'model' => 'Pluf_Views_Run',
+        'model' => 'Spa_Views_Run',
         'method' => 'defaultSpa'
     )
 );

@@ -38,12 +38,11 @@ class User_Views_Permission
         $pag->setFromRequest($request);
         $pag->model_view = 'join_row_permission';
         $pag->forced_where = new Pluf_SQL(
-                'rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s AND tenant=%s', 
+                'rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s', 
                 array(
                         $model->id,
-                        $model->_a['model'],
-                        $request->tenant->id
-                ));
+                        $model->_a['model']
+        ));
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
@@ -57,7 +56,7 @@ class User_Views_Permission
         // XXX: maso, 1395: check user access.
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['id']);
-        Pluf_RowPermission::add($user, null, $perm, false, $request->tenant->id);
+        Pluf_RowPermission::add($user, null, $perm, false);
         return new Pluf_HTTP_Response_Json($user);
     }
 
@@ -82,7 +81,7 @@ class User_Views_Permission
         // XXX: maso, 1395: check user access.
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
-        Pluf_RowPermission::remove($user, null, $perm, $request->tenant->id);
+        Pluf_RowPermission::remove($user, null, $perm);
         return new Pluf_HTTP_Response_Json($user);
     }
 }

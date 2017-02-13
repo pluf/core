@@ -12,13 +12,8 @@ Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 class CMS_Form_PageCreate extends Pluf_Form
 {
 
-    public $tenant = null;
-    // public $user = null;
     public function initFields($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        // $this->user = $extra['user'];
-        
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => true,
             'label' => 'Name',
@@ -40,7 +35,6 @@ class CMS_Form_PageCreate extends Pluf_Form
         // Create the page
         $page = new CMS_Page();
         $page->setFromFormData($this->cleaned_data);
-        $page->tenant = $this->tenant;
         if ($commit) {
             $page->create();
         }

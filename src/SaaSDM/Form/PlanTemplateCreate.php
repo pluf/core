@@ -11,14 +11,9 @@
 class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
 {
 
-    public $tenant = null;
-//     public $user = null;
 
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-//         $this->user = $extra['user'];
-
         $this->fields['label'] = new Pluf_Form_Field_Varchar(
                 array(
                         'required' => false,
@@ -68,12 +63,6 @@ class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
         				'label' => 'off',
         				'help_text' => 'Discount of a plan template'
         		));
-        $this->fields['tenant'] = new Pluf_Form_Field_Integer(
-        		array(
-        				'required' => false,
-        				'label' => 'Tenant',
-        				'help_text' => 'Related Tenant of plan template'
-        		));
     }
 
     function save ($commit = true)
@@ -85,9 +74,6 @@ class SaaSDM_Form_PlanTemplateCreate extends Pluf_Form
         $plantemplate = new SaaSDM_PlanTemplate();
         $plantemplate->setFromFormData($this->cleaned_data);
 
-//         $asset->user = $this->user;
-
-        $plantemplate->tenant = $this->tenant;
         if ($commit) {
             $plantemplate->create();
         }

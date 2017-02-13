@@ -1,5 +1,5 @@
 <?php
-Pluf::loadFunction('SDP_Shortcuts_GetAssetOr404');
+Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 
 class SDP_Views_Asset
 {
@@ -97,7 +97,7 @@ class SDP_Views_Asset
     public static function get($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // حق دسترسی
         // CMS_Precondition::userCanAccessContent($request, $content);
         // اجرای درخواست
@@ -107,15 +107,16 @@ class SDP_Views_Asset
     public static function update($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // حق دسترسی
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
         $extra = array(
-            // 'user' => $request->user,
-            'asset' => $asset,
-            'tenant' => $request->tenant
+            'asset' => $asset
         );
+        
+        if (!isset($request->REQUEST['name'])) 
+        	$request->REQUEST['name'] = $asset->name;
         
         $form = new SDP_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
         $asset = $form->update();
@@ -125,11 +126,11 @@ class SDP_Views_Asset
     public static function delete($request, $match)
     {
         // تعیین داده‌ها
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // دسترسی
         // CMS_Precondition::userCanDeleteContent($request, $content);
         // اجرا
-        $asset_copy = SDP_Shortcuts_GetAssetOr404($asset->id);
+        $asset_copy = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $asset->id);
         $asset_copy->path = "";
         
         $asset->delete();
@@ -140,17 +141,14 @@ class SDP_Views_Asset
     public static function updateFile($request, $match)
     {
         // GET data
-        $app = $request->tenant;
-        $asset = SDP_Shortcuts_GetAssetOr404($match["id"]);
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match["id"]);
         // Check permission
         // Precondition::userCanAccessApplication($request, $app);
         // Precondition::userCanAccessResource($request, $content);
         
         if (array_key_exists('file', $request->FILES)) {
             $extra = array(
-                // 'user' => $request->user,
                 'asset' => $asset,
-                'tenant' => $request->tenant
             );
             $form = new SDP_Form_ContentUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
             $asset = $form->update();
@@ -174,9 +172,6 @@ class SDP_Views_Asset
     public static function tags($request, $match)
     {
         $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
-        if ($asset->tenant != $request->tenant->id) {
-            throw new Pluf_Exception();
-        }
         $tag = new SDP_Tag();
         $tagTable = $tag->_a['table'];
         $assocTable = 'sdp_asset_sdp_tag_assoc';
@@ -300,5 +295,103 @@ class SDP_Views_Asset
         $category = Pluf_Shortcuts_GetObjectOr404('SDP_Category', $categoryId);
         $asset->delAssoc($category);
         return new Pluf_HTTP_Response_Json($category);
+    }
+    
+    // *******************************************************************
+    // Relations of Asset
+    // *******************************************************************
+    public static function relations($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        $relatedAsset = new SDP_Asset();
+        $relatedAssetTable = $relatedAsset->_a['table'];
+        $assocTable = 'sdp_assetrelation';
+        $relatedAsset->_a['views']['myView'] = array(
+            'select' => $relatedAsset->getSelect(),
+            'join' => 'LEFT JOIN ' . $assocTable . ' ON ' . $relatedAssetTable . '.id=' . $assocTable . '.end'
+        );
+        
+        $page = new Pluf_Paginator($relatedAsset);
+        $sql = new Pluf_SQL('start=%s', array(
+            $asset->id
+        ));
+        $page->forced_where = $sql;
+        $page->model_view = 'myView';
+        $page->list_filters = array(
+            'id',
+            'name',
+            'size',
+            'download',
+            'driver_type',
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
+        );
+        $search_fields = array(
+            'name',
+            'driver_type',
+            'driver_id',
+            'type',
+            'description',
+            'mime_type'
+        );
+        $sort_fields = array(
+            'id',
+            'name',
+            'size',
+            'download',
+            'driver_type',
+            'driver_id',
+            'creation_dtime',
+            'modif_dtime',
+            'type',
+            'mime_type',
+            'price',
+            'parent'
+        );
+        $page->configure(array(), $search_fields, $sort_fields);
+        $page->setFromRequest($request);
+        return new Pluf_HTTP_Response_Json($page->render_object());
+    }
+
+    public static function addRelation($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if (isset($match['endId'])) {
+            $endId = $match['endId'];
+        } else {
+            $endId = $request->REQUEST['endId'];
+        }
+        $endAsset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $endId);
+        $request->REQUEST['start'] = $asset->getId();
+        $request->REQUEST['end'] = $endAsset->getId();
+        $form = Pluf_Shortcuts_GetFormForModel(new SDP_AssetRelation(), $request->REQUEST, array());
+        return new Pluf_HTTP_Response_Json($form->save());
+    }
+
+    public static function removeRelation($request, $match)
+    {
+        $asset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $match['assetId']);
+        if (isset($match['endId'])) {
+            $endId = $match['endId'];
+        } else {
+            $endId = $request->REQUEST['endId'];
+        }
+        $endAsset = Pluf_Shortcuts_GetObjectOr404('SDP_Asset', $endId);
+        $relation = new SDP_AssetRelation();
+        $relationList = $relation->getList(array(
+            'filter' => array('start='.$asset->id, 'end='.$endAsset->id)
+        ));
+        $relateListCopy = array();
+        foreach($relationList as $rel){
+            $val = clone $rel;
+            array_push($relateListCopy, $val);
+            $rel->delete();
+        }
+        return new Pluf_HTTP_Response_Json($relateListCopy);
     }
 }

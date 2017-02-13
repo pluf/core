@@ -103,7 +103,7 @@ class CMS_Views
     public static function update ($request, $match)
     {
         // تعیین داده‌ها
-        $content = Pluf_Shortcuts_GetObjectOr404($match['id']);
+        $content = Pluf_Shortcuts_GetObjectOr404('CMS_Content', $match['id']);
         // اجرای درخواست
         $extra = array(
                 'model' => $content
@@ -150,8 +150,7 @@ class CMS_Views
         if (array_key_exists('file', $request->FILES)) {
             // $extra = array(
             // // 'user' => $request->user,
-            // 'content' => $content,
-            // 'tenant' => $request->tenant
+            // 'content' => $content
             // );
             // $form = new CMS_Form_ContentUpdate(
             // array_merge($request->REQUEST, $request->FILES), $extra);

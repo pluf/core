@@ -51,7 +51,7 @@ class Role_Views_User extends Pluf_Views
                 throw new Pluf_HTTP_Error404(__('User not found'));
             }
         }
-        $row = Pluf_RowPermission::add($user, null, $perm, false, $request->tenant->id);
+        $row = Pluf_RowPermission::add($user, null, $perm, false);
         return new Pluf_HTTP_Response_Json($row);
     }
 
@@ -67,8 +67,7 @@ class Role_Views_User extends Pluf_Views
         $perm = new Pluf_Permission($match['id']);
         $pag = new Pluf_Paginator(new Pluf_User());
         $pag->items_per_page = Role_Views::getListCount($request);
-        $sql = new Pluf_SQL('tenant=%s AND permission=%s AND owner_class=%s', array(
-            $request->tenant->id,
+        $sql = new Pluf_SQL('permission=%s AND owner_class=%s', array(
             $perm->id,
             // XXX: maso, 1395: user type is getting from config
             'Pluf_User'
@@ -148,7 +147,7 @@ class Role_Views_User extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        $row = Pluf_RowPermission::remove($owner, null, $perm, $request->tenant->id);
+        $row = Pluf_RowPermission::remove($owner, null, $perm);
         return new Pluf_HTTP_Response_Json($row);
     }
 }

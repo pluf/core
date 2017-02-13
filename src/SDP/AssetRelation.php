@@ -57,7 +57,7 @@ class SDP_AssetRelation extends Pluf_Model
             ),
             'description' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
-                'blank' => false,
+                'blank' => true,
                 'size' => 250,
                 'editable' => true,
                 'readable' => true
@@ -82,14 +82,14 @@ class SDP_AssetRelation extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-//             'page_class_idx' => array(
-//                 'col' => 'tenant, type, start, end',
-//                 'type' => 'unique', // normal, unique, fulltext, spatial
-//                 'index_type' => '', // hash, btree
-//                 'index_option' => '',
-//                 'algorithm_option' => '',
-//                 'lock_option' => ''
-//             )
+            'assetrelation_class_idx' => array(
+                'col' => 'type, start, end',
+                'type' => 'unique', // normal, unique, fulltext, spatial
+                'index_type' => '', // hash, btree
+                'index_option' => '',
+                'algorithm_option' => '',
+                'lock_option' => ''
+            )
         );
     }
 

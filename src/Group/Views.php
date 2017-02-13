@@ -53,9 +53,7 @@ class Group_Views extends Pluf_Views
     public static function find($request, $match)
     {
         $pag = new Pluf_Paginator(new Pluf_Group());
-        $pag->items_per_page = Group_Views::getListCount($request);
         $pag->list_filters = array(
-            'tenant',
             'version'
         );
         $search_fields = array(

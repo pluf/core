@@ -30,14 +30,12 @@ $cfg['installed_apps'] = array(
         'Config',
         'Setting',
         'Spa',
-        
-//         'Monitor',
+        'Calendar',
+        'Monitor',
         'SDP',
-//         'SaaSDM',
         'Message',
-
-//         'SaaSNewspaper',
         'Book',
+        'Backup'
 );
 
 /*
@@ -298,7 +296,7 @@ $cfg['tenant_match'] = array();
 /*
  * Enable or disable multitenant mode.
  */
-$cfg['multitenant'] = false;
+$cfg['multitenant'] = true;
 
 /*
  * ----------------------------------------------------------------------------

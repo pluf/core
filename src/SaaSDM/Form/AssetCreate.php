@@ -12,11 +12,10 @@ class SaaSDM_Form_AssetCreate extends Pluf_Form
 {
 
     public $tenant = null;
-    // public $user = null;
+    
     public function initFields($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        // $this->user = $extra['user'];
+        $this->tenant = Pluf_Tenant::current();
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
             'required' => true,

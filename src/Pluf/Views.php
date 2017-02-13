@@ -168,7 +168,98 @@ class Pluf_Views
     }
 
     /**
-     * List objects
+     * یکی از الگوها را ایجاد و آن را به عنوان نتیجه برمی‌گرداند
+     *
+     * در بسیاری از کاربردها نرم‌افزار کاربردی به صفحه‌های متفاوتی شکسته می‌شود
+     * و بر اساس
+     * حالت کاربر یکی از صفحه‌ها نمایش داده می‌شود. به این ترتیب حجم دانلود برای
+     * هر صفحه
+     * کم شده و توسعه هر صفحه نیز راحتر می‌شود.
+     *
+     * این فراخوانی این امکان را ایجاد می‌کند که در لایه نمایش به سادگی یکی از
+     * الگوها را
+     * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
+     *
+     * @param unknown $request            
+     * @param unknown $match            
+     * @return Pluf_HTTP_Response
+     */
+    function loadTemplate ($request, $match)
+    {
+        $template = $match[1];
+        $extra_context = array();
+        // create and show a template
+        $context = new Pluf_Template_Context_Request($request, $extra_context);
+        $tmpl = new Pluf_Template($template);
+        return new Pluf_HTTP_Response($tmpl->render($context));
+    }
+
+    // TODO: maso, 2017: document
+    private static function CRUD_getModelInstance ($p)
+    {
+        $model = self::CRUD_getModel($p);
+        return new $model();
+    }
+
+    // TODO: maso, 2017: document
+    private static function CRUD_getModel ($p)
+    {
+        if (! isset($p['model'])) {
+            throw new Exception(
+                    'The model class was not provided in the parameters.');
+        }
+        return $p['model'];
+    }
+    
+    // TODO: maso, 2017: document
+    private static function CRUD_response ($request, $p, $object, 
+            $child = null)
+    {
+        /*
+         * Return a template if is set
+         */
+        if (isset($p['template'])) {
+            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
+            $template = (isset($p['template'])) ? $p['template'] : strtolower(
+                    $model) . '_confirm_delete.html';
+                    $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
+                    return Pluf_Shortcuts_RenderToResponse($template,
+                            array_merge($context,
+                                    array(
+                                            'object' => $object
+                                    )), $request);
+        }
+        return new Pluf_HTTP_Response_Json($object);
+    }
+
+    // TODO: maso, 2017: document
+    private static function CRUD_checkPreconditions ($request, $p, $object, 
+            $child = null)
+    {
+        if (! isset($p['precond'])) {
+            return;
+        }
+        $preconds = $p['precond'];
+        if (! is_array($preconds)) {
+            $preconds = array(
+                    $preconds
+            );
+        }
+        foreach ($preconds as $precond) {
+            $res = call_user_func_array(explode('::', $precond), 
+                    array(
+                            $request,
+                            $object,
+                            $child
+                    ));
+            if ($res !== true) {
+                throw new Pluf_Exception('CRUD precondition is not satisfied.');
+            }
+        }
+    }
+
+    /**
+     * List objects (Part of the CRUD series).
      *
      * @param Pluf_HTTP_Request $request            
      * @param array $match            
@@ -176,10 +267,6 @@ class Pluf_Views
      */
     public static function findObject ($request, $match, $p)
     {
-        if (! isset($p['model'])) {
-            throw new Pluf_Exception(
-                    'The model class was not provided in the parameters.');
-        }
         $default = array(
                 'listFilters' => array(),
                 'listDisplay' => array(),
@@ -188,18 +275,13 @@ class Pluf_Views
         );
         $p = array_merge($default, $p);
         // Create page
-        $page = new Pluf_Paginator(new $p['model']());
+        $page = new Pluf_Paginator(self::CRUD_getModelInstance($p));
         if (isset($p['sql'])) {
             $page->forced_where = $p['sql'];
         }
         $page->list_filters = $p['listFilters'];
         $page->configure($p['listDisplay'], $p['searchFields'], 
                 $p['sortFields']);
-        // XXX: maso, 1395: add sort order
-        // $page->sort_order = array(
-        // 'creation_dtime',
-        // 'DESC'
-        // );
         $page->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($page->render_object());
     }
@@ -225,13 +307,11 @@ class Pluf_Views
      */
     public static function getObject ($request, $match, $p)
     {
-        if (! isset($p['model'])) {
-            throw new Exception(
-                    'The model class was not provided in the parameters.');
-        }
         // Set the default
-        $object = Pluf_Shortcuts_GetObjectOr404($p['model'], $match['modelId']);
-        return new Pluf_HTTP_Response_Json($object);
+        $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), 
+                $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        return self::CRUD_response($request, $p, $object);
     }
 
     /**
@@ -265,33 +345,14 @@ class Pluf_Views
                 'extra_form' => array()
         );
         $p = array_merge($default, $p);
-        if (! isset($p['model'])) {
-            throw new Exception(
-                    'The model class was not provided in the parameters.');
-        }
         // Set the default
-        $model = $p['model'];
+        $model = self::CRUD_getModel($p);
         $object = new $model();
-        if ($request->method == 'POST') {
-            $form = Pluf_Shortcuts_GetFormForModel($object, $request->POST, 
-                    $p['extra_form']);
-            $object = $form->save();
-        } else {
-            throw new Pluf_Exception("Not supported GET");
-        }
-        // Support Template
-        if (isset($p['template'])) {
-            $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                    $model) . '_create_form.html';
-            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-            return Pluf_Shortcuts_RenderToResponse($template, 
-                    array_merge($context, 
-                            array(
-                                    'object' => $object,
-                                    'form' => $form
-                            )), $request);
-        }
-        return new Pluf_HTTP_Response_Json($object);
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+                $p['extra_form']);
+        $object = $form->save();
+
+        return self::CRUD_response($request, $p, $object);
     }
 
     /**
@@ -312,9 +373,11 @@ class Pluf_Views
      *
      * 'template' - Template to use ('"model class"_update_form.html')
      *
-     * @param Pluf_HTTP_Request $request object
-     * @param array $match
-     * @param array $p parameters
+     * @param Pluf_HTTP_Request $request
+     *            object
+     * @param array $match            
+     * @param array $p
+     *            parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
     public function updateObject ($request, $match, $p)
@@ -324,28 +387,14 @@ class Pluf_Views
                 'extra_form' => array()
         );
         $p = array_merge($default, $p);
-        if (! isset($p['model'])) {
-            throw new Exception(
-                    'The model class was not provided in the parameters.');
-        }
         // Set the default
-        $model = $p['model'];
+        $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
-        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+                $p['extra_form']);
         $object = $form->save();
-        
-        if (isset($p['template'])) {
-            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-            $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                    $model) . '_update_form.html';
-            return Pluf_Shortcuts_RenderToResponse($template, 
-                    array_merge($context, 
-                            array(
-                                    'form' => $form,
-                                    'object' => $object
-                            )), $request);
-        }
-        return new Pluf_HTTP_Response_Json($object);
+        return self::CRUD_response($request, $p, $object);
     }
 
     /**
@@ -370,9 +419,11 @@ class Pluf_Views
      * 'extra_context' - Array of key/values to be added to the
      * context (array())
      *
-     * @param Pluf_HTTP_Request $request object
-     * @param array $match
-     * @param array $p parameters
+     * @param Pluf_HTTP_Request $request
+     *            object
+     * @param array $match            
+     * @param array $p
+     *            parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
     public function deleteObject ($request, $match, $p)
@@ -382,55 +433,11 @@ class Pluf_Views
                 'extra_form' => array()
         );
         $p = array_merge($default, $p);
-        if (! isset($p['model'])) {
-            throw new Exception('The model class was not provided in the parameters.');
-        }
         // Set the default
-        $model = $p['model'];
+        $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
         $object->delete();
-        
-        /*
-         * Return a template if is set
-         */
-        if (isset($p['template'])) {
-            $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-            $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                    $model) . '_confirm_delete.html';
-            $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
-            return Pluf_Shortcuts_RenderToResponse($template, 
-                    array_merge($context, 
-                            array(
-                                    'object' => $object
-                            )), $request);
-        }
-        return new Pluf_HTTP_Response_Json($object);
-    }
-
-    /**
-     * یکی از الگوها را ایجاد و آن را به عنوان نتیجه برمی‌گرداند
-     *
-     * در بسیاری از کاربردها نرم‌افزار کاربردی به صفحه‌های متفاوتی شکسته می‌شود
-     * و بر اساس
-     * حالت کاربر یکی از صفحه‌ها نمایش داده می‌شود. به این ترتیب حجم دانلود برای
-     * هر صفحه
-     * کم شده و توسعه هر صفحه نیز راحتر می‌شود.
-     *
-     * این فراخوانی این امکان را ایجاد می‌کند که در لایه نمایش به سادگی یکی از
-     * الگوها را
-     * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
-     *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return Pluf_HTTP_Response
-     */
-    function loadTemplate ($request, $match)
-    {
-        $template = $match[1];
-        $extra_context = array();
-        // create and show a template
-        $context = new Pluf_Template_Context_Request($request, $extra_context);
-        $tmpl = new Pluf_Template($template);
-        return new Pluf_HTTP_Response($tmpl->render($context));
+        return self::CRUD_response($request, $p, $object);
     }
 }

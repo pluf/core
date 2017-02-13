@@ -24,36 +24,21 @@ return array(
                 'http-method' => 'GET'
         ),
         array(
-                'regex' => '#^/(?P<id>\d+)$#',
+                'regex' => '#^/(?P<monitor>[^/]+)/find$#',
                 'model' => 'Monitor_Views',
-                'method' => 'get',
+                'method' => 'findProperty',
                 'http-method' => 'GET'
         ),
         array(
-                'regex' => '#^/(?P<id>\d+)$#',
+                'regex' => '#^/(?P<monitor>[^/]+)/property/(?P<property>[^/]+)$#',
                 'model' => 'Monitor_Views',
-                'method' => 'delete',
-                'http-method' => 'DELETE',
-                'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
-                )
-        ),
-        array(
-                'regex' => '#^/(?P<id>\d+)$#',
-                'model' => 'Monitor_Views',
-                'method' => 'update',
-                'http-method' => 'POST',
-                'precond' => array(
-                        'Pluf_Precondition::memberRequired'
-                )
+                'method' => 'call',
+                'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<monitor>[^/]+)/(?P<property>[^/]+)$#',
                 'model' => 'Monitor_Views',
                 'method' => 'call',
-                'http-method' => 'GET',
-                'precond' => array(
-                        'Pluf_Precondition::memberRequired'
-                )
+                'http-method' => 'GET'
         )
 );

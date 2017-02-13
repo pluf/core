@@ -318,9 +318,22 @@ class Pluf_Tenant extends Pluf_Model
     public static function current()
     {
         if(!Pluf::f('multitenant', false)){
-            return Pluf::factory('Pluf_Tenant');
+            $tenant = Pluf::factory('Pluf_Tenant');
+            $tenant->id = 0;
+            return $tenant;
         }
         // load tenant from request
         return $GLOBALS ['_PX_request']->tenant;
+    }
+    
+    /**
+     * Gets tenant storage path
+     * 
+     * @return string
+     */
+    public static function storagePath()
+    {
+        $tenant = self::current();
+        return Pluf::f('upload_path') . '/' . $tenant->id;
     }
 }

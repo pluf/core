@@ -11,12 +11,8 @@
 class SaaSNewspaper_Form_FollowerCreate extends Pluf_Form
 {
 
-    public $tenant = null;
-
     public function initFields($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        
         $this->fields['type'] = new Pluf_Form_Field_Varchar(array(
             'required' => true
         ));
@@ -33,7 +29,6 @@ class SaaSNewspaper_Form_FollowerCreate extends Pluf_Form
         // Create the follower
         $follower = new SaaSNewspaper_Follower();
         $follower->setFromFormData($this->cleaned_data);
-        $follower->tenant = $this->tenant;
         if ($commit) {
             $follower->create();
         }

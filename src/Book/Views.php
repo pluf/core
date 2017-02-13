@@ -54,8 +54,7 @@ class Book_Views
     {
         // initial page data
         $extra = array(
-                'user' => $request->user,
-                'tenant' => $request->tenant
+                'user' => $request->user
         );
         $form = new Book_Form_BookCreate(
                 array_merge($request->REQUEST, $request->FILES), $extra);
