@@ -7,7 +7,6 @@ class SaaSDM_Views_Link {
 		// initial link data
 		$extra = array (
 				'user' => $request->user,
-				'tenant' => $request->tenant,
 				'asset' => $asset 
 		);
 		
@@ -22,9 +21,7 @@ class SaaSDM_Views_Link {
 	}
 	public static function find($request, $match) {
 		$links = new Pluf_Paginator ( new SaaSDM_Link () );
-		$sql = new Pluf_SQL ( 'tenant=%s', array (
-				$request->tenant->id 
-		) );
+		$sql = new Pluf_SQL ();
 		$links->forced_where = $sql;
 		$links->list_filters = array (
 				'id',
@@ -54,11 +51,7 @@ class SaaSDM_Views_Link {
 	}
 	public static function download($request, $match) {
 		$link = SaaSDM_Shortcuts_GetLinkBySecureIdOr404 ( $match ['secure_link'] );
-		if ($link->tenant != $request->tenant->id) {
-			// Error 404
-		}
 		// Check link expiry
-		
 		if (date ( "Y-m-d H:i:s" ) > $link->expiry) {
 			// Error: Link Expiry
 			throw new SaaSDM_Exception_ObjectNotFound ( "This link has been expired." );

@@ -26,7 +26,6 @@ class Book_Views_Page
         // اجرای درخواست
         $extra = array(
                 'user' => $request->user,
-                'tenant' => $request->tenant,
                 'book' => $book
         );
         $form = new Book_Form_PageCreate(

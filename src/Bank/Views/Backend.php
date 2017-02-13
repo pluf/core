@@ -85,7 +85,6 @@ class Bank_Views_Backend
         }
         $engine = Bank_Shortcuts_GetEngineOr404($type);
         $params = array(
-                'tenant' => $request->tenant,
                 'engine' => $engine
         );
         $form = new Bank_Form_BackendNew($request->REQUEST, $params);

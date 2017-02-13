@@ -10,14 +10,12 @@
 class SaaSDM_Form_LinkCreate extends Pluf_Form
 {
 
-	public $tenant = null;
 	public $asset = null;
 	
 	//     public $user = null;
 
 	public function initFields ($extra = array())
 	{
-		$this->tenant = $extra['tenant'];
 		$this->asset = $extra['asset'];
 		
 		$this->user = $extra['user'];
@@ -40,12 +38,6 @@ class SaaSDM_Form_LinkCreate extends Pluf_Form
 						'label' => 'Path',
 						'help_text' => 'Path of asset'
 				));
-		$this->fields['tenant'] = new Pluf_Form_Field_Integer(
-				array(
-						'required' => false,
-						'label' => 'Path',
-						'help_text' => 'Path of asset'
-				));	
 	}
 
 	function save ($commit = true)
@@ -60,7 +52,6 @@ class SaaSDM_Form_LinkCreate extends Pluf_Form
 		$link->setFromFormData($this->cleaned_data);
 		$link->asset = $this->asset;
 		$link->user = $this->user;
-		$link->tenant = $this->tenant;
 		if ($commit) {
 			$link->create();
 		}

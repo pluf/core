@@ -11,12 +11,10 @@
 class SaaSDM_Form_PlanCreate extends Pluf_Form
 {
 
-    public $tenant = null;
     public $user = null;
 
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
 		$this->user = $extra['user'];
 
         $this->fields[ 'templateId' ] = new Pluf_Form_Field_Varchar(
@@ -49,8 +47,6 @@ class SaaSDM_Form_PlanCreate extends Pluf_Form
         $plan->user = $this->user;
         
         $plan->setFromFormData($this->cleaned_data);
-//         $plan->user = $this->user;
-        $plan->tenant = $this->tenant;
         if ($commit) {
             $plan->create();
         }

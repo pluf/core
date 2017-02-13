@@ -70,14 +70,6 @@ class SaaSDM_Plan extends Pluf_Model {
 						'readable' => true
 				),
 				// relations
-				'tenant' => array (
-						'type' => 'Pluf_DB_Field_Foreignkey',
-						'model' => 'Pluf_Tenant',
-						'blank' => false,
-						'readable' => false,
-						'editable' => false,
-						'relate_name' => 'tenant' 
-				),
 				'user' => array (
 						'type' => 'Pluf_DB_Field_Foreignkey',
 						'model' => 'Pluf_User',

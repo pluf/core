@@ -69,10 +69,7 @@ class Bank_Service
      */
     public static function create ($request, $param, $owner = null)
     {
-        $extra = array(
-                'tenant' => $request->tenant
-        );
-        $form = new Bank_Form_ReceiptNew($param, $extra);
+        $form = new Bank_Form_ReceiptNew($param);
         $receipt = $form->save(false);
         $backend = $receipt->get_backend();
         $engine = $backend->get_engine();

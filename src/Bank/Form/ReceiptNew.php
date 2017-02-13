@@ -25,21 +25,11 @@
 class Bank_Form_ReceiptNew extends Pluf_Form
 {
 
-    /**
-     * ملکی که متور به آن تعلق دارد
-     *
-     * @var unknown
-     */
-    var $tenant;
-
     /*
      *
      */
     public function initFields ($extra = array())
     {
-        $this->tenant = $extra['tenant'];
-        // $this->engine = $extra['engine'];
-        
         $this->fields['amount'] = new Pluf_Form_Field_Integer(
                 array(
                         'required' => true,
@@ -107,7 +97,6 @@ class Bank_Form_ReceiptNew extends Pluf_Form
         // Set attributes
         $receipt = new Bank_Receipt();
         $receipt->setFromFormData($this->cleaned_data);
-        $receipt->tenant = $this->tenant;
         $receipt->secure_id = $this->getSecureKey();
         // موجودیت قرار گیرد.
         if ($commit) {

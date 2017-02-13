@@ -150,8 +150,7 @@ class CMS_Views
         if (array_key_exists('file', $request->FILES)) {
             // $extra = array(
             // // 'user' => $request->user,
-            // 'content' => $content,
-            // 'tenant' => $request->tenant
+            // 'content' => $content
             // );
             // $form = new CMS_Form_ContentUpdate(
             // array_merge($request->REQUEST, $request->FILES), $extra);
