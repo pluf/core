@@ -1,0 +1,24 @@
+{
+    "name": "pluf/pluf",
+    "version":"2.0.1",
+    "description": "Pluf core pakcage",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mostafa Barmshory",
+            "email": "mostafa.barmshory@dpq.co.ir"
+        },{
+            "name": "Mohammad hadi Mansouri",
+            "email": "mohammad.hadi.mansouri@dpq.co.ir"
+        },{
+            "name": "Mahdi Arighiani",
+            "email": "mahdi.arghiani@dpq.co.ir"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "pear/mail": "^1.3"
+    },
+    "include-path": ["src/"]
+}

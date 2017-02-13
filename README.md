@@ -34,12 +34,3 @@
 
 [Phoinex Scholars Co.](http://dpq.co.ir)
 
-# نسخه‌ها
-
-## current
-
-- اضافه کردن ماژول SDP
-
-## 0.4.0
-
-- ماژول SaaSDM اضافه شد
