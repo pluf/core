@@ -1,6 +1,6 @@
 {
     "name": "pluf/pluf",
-    "version":"2.0.0",
+    "version":"2.0.1",
     "description": "Pluf core pakcage",
     "type": "library",
     "license": "MIT",
