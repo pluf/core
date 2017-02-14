@@ -379,6 +379,10 @@ function __autoload($class_name) {
         }" );
 	}
 }
+/*
+ * PHP 5.x support
+ */
+spl_autoload_register('__autoload');
 
 /**
  * Exception to catch the PHP errors.

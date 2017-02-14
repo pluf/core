@@ -11,12 +11,12 @@
 class SDP_Form_AssetUpdate extends Pluf_Form
 {
     
-    // public $user = null;
+    private $userRequest = null;
     public $asset = null;
 
     public function initFields($extra = array())
     {
-        // $this->user = $extra['user'];
+        $this->userRequest = $extra['request'];
         $this->asset = $extra['asset'];
         
         $this->fields['name'] = new Pluf_Form_Field_Varchar(array(
@@ -61,12 +61,6 @@ class SDP_Form_AssetUpdate extends Pluf_Form
             'initial' => $this->asset->type,
             'help_text' => 'type of Asset'
         ));
-        // $this->fields['content_name'] = new Pluf_Form_Field_Varchar(array(
-        // 'required' => false,
-        // 'label' => 'content_name of Asset',
-        // 'initial' => $this->asset->content_name,
-        // 'help_text' => 'content_name of Asset'
-        // ));
         $this->fields['description'] = new Pluf_Form_Field_Varchar(array(
             'required' => false,
             'label' => 'description of Asset',
@@ -118,11 +112,10 @@ class SDP_Form_AssetUpdate extends Pluf_Form
         // update the asset
         $this->asset->setFromFormData($this->cleaned_data);
         
-        if (array_key_exists('file', $this->cleaned_data)) {
+        if (array_key_exists('file', $this->userRequest->FILES)) {
             // Extract information of file
-            $myFile = $this->cleaned_data['file'];
-            $fileInfo = Pluf_FileUtil::getMimeType($this->asset->name);
-            $this->asset->mime_type = $fileInfo[0];
+            $myFile = $this->userRequest->FILES['file'];
+            $this->asset->mime_type = $myFile['type'];
             $this->asset->size = filesize($this->asset->path . '/' . $this->asset->id);
         }
         

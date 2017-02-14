@@ -79,13 +79,6 @@ class SDP_Asset extends Pluf_Model
                 'editable' => false,
                 'readable' => true
             ),
-//             'content_name' => array(
-//                 'type' => 'Pluf_DB_Field_Varchar',
-//                 'blank' => false,
-//                 'size' => 2500,
-//                 'editable' => true,
-//                 'readable' => true
-//             ),
             'description' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,

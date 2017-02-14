@@ -6,21 +6,9 @@ class SDP_Views_Asset
 
     public static function create($request, $match)
     {
-        // initial asset data
         $extra = array(
-            // 'user' => $request->user,
+            'request' =>$request
         );
-        
-        if (! isset($request->REQUEST['name']) || strlen($request->REQUEST['name']) == 0) {
-            if (isset($request->FILES['file'])) {
-                $file = $request->FILES['file'];
-                $request->REQUEST['name'] = basename($file['name']);
-                $request->REQUEST['type'] = 'file';
-            } else {
-                $request->REQUEST['name'] = "noname" . rand(0, 9999);
-            }
-        }
-        
         // Create asset and get its ID
         $form = new SDP_Form_AssetCreate($request->REQUEST, $extra);
         $asset = $form->save();
@@ -112,12 +100,9 @@ class SDP_Views_Asset
         // CMS_Precondition::userCanUpdateContent($request, $content);
         // اجرای درخواست
         $extra = array(
+            'request' => $request,
             'asset' => $asset
-        );
-        
-        if (!isset($request->REQUEST['name'])) 
-        	$request->REQUEST['name'] = $asset->name;
-        
+        );        
         $form = new SDP_Form_AssetUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
         $asset = $form->update();
         return new Pluf_HTTP_Response_Json($asset);
