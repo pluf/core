@@ -1,8 +1,10 @@
-# Pluf
+# Pluf core
 
-یک سکوی متن باز ساده برای توسعه سایت‌ها به زبان PHP است. 
+This project is part of pluf.
 
-این سکو یک سکوی بسیار ساده و سبک است که قابلی استفاده در کاربردهای متفاوت را دارد.
+Pluf is open source light RESTFull framework. 
+
+There are severall opensource modules to extend pluf.
 
 ## مدل توسعه
 
