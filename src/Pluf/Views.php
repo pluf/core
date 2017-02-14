@@ -391,7 +391,7 @@ class Pluf_Views
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         self::CRUD_checkPreconditions($request, $p, $object);
-        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, 
                 $p['extra_form']);
         $object = $form->save();
         return self::CRUD_response($request, $p, $object);
