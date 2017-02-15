@@ -57,7 +57,9 @@ class Pluf {
 	 *        	string Configuration file to load.
 	 */
 	static function loadConfig($config_file) {
-		if (false !== ($file = Pluf::fileExists ( $config_file ))) {
+	    if(is_array($config_file)){
+	        $GLOBALS ['_PX_config'] = $config_file;
+	    } else if (false !== ($file = Pluf::fileExists ( $config_file ))) {
 			$GLOBALS ['_PX_config'] = require $file;
 		} else {
 			throw new Exception ( 'Configuration file does not exist: ' . $config_file );
