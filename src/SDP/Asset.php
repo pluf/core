@@ -40,6 +40,14 @@ class SDP_Asset extends Pluf_Model
                 'editable' => false,
                 'readable' => true
             ),
+            'file_name' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
+                'default' => 'noname',
+                'size' => 256,
+                'editable' => true,
+                'readable' => true
+            ),
             'download' => array(
                 'type' => 'Pluf_DB_Field_Integer',
                 'blank' => false,
