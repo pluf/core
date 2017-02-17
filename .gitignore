@@ -5,3 +5,7 @@
 
 # Examples
 /site/tenant
+
+# composer
+vendor
+composer.lock
