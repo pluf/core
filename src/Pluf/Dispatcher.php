@@ -277,6 +277,10 @@ class Pluf_Dispatcher
      */
     public static function loadControllers ($file)
     {
+        if(is_array($file)){
+            $GLOBALS['_PX_views'] = $file;
+            return true;
+        }
         if (file_exists($file)) {
             $GLOBALS['_PX_views'] = include $file;
             return true;
