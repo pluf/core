@@ -18,7 +18,7 @@
  */
 
 /**
- * واسط میان‌افزارها را تعیین می‌کند.
+ * Pluf general middleware
  * 
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
