@@ -135,7 +135,7 @@ class Pluf_RowPermission extends Pluf_Model
         $nperm = new Pluf_RowPermission();
         $nperm->owner_id = $owner->id;
         $nperm->owner_class = $owner->_a['model'];
-        if (isset($model) && $model->isAnonymous()) {
+        if (isset($object) && !$object->isAnonymous()) {
             $nperm->model_id = $object->id;
             $nperm->model_class = $object->_a['model'];
         }

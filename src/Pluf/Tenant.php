@@ -118,108 +118,6 @@ class Pluf_Tenant extends Pluf_Model
     }
 
     /**
-     * داده‌های مربوط به اعضای یک نرم‌افزار را تعیین می‌کند
-     *
-     * نتیجه این فراخوانی یک آرایه با سه کلید است: 'members'، 'owners' و
-     * 'authorized'.
-     *
-     * این ارائه بر اساس داده‌های که در جدول اجازها به وجود آمده است تعیینن
-     * می‌شوند.
-     * به این نکته توجه داشته باشید در صورتی که کاربر مدیر کلی سیستم باشد
-     * دسترسی‌های کلی به تمام نرم‌افزارها را دارد اما در این فهرست آورده
-     * نمی‌شود.
-     *
-     * @param
-     *            string Format ('objects'), 'string'.
-     * @return mixed Array of Pluf_User or newline separated list of logins.
-     */
-    public function getMembershipData ($fmt = 'objects')
-    {
-        $mperm = Pluf_Permission::getFromString('SaaS.software-member');
-        $operm = Pluf_Permission::getFromString('SaaS.software-owner');
-        $aperm = Pluf_Permission::getFromString('SaaS.software-authorized-user');
-        $grow = new Pluf_RowPermission();
-        $db = & Pluf::db();
-        $false = Pluf_DB_BooleanToDb(false, $db);
-        $sql = new Pluf_SQL(
-                'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
-                         $false, 
-                        array(
-                                'Pluf_Tenant',
-                                $this->id,
-                                'Pluf_User',
-                                $operm->id
-                        ));
-        $owners = new Pluf_Template_ContextVars(array());
-        foreach ($grow->getList(
-                array(
-                        'filter' => $sql->gen()
-                )) as $row) {
-            if ($fmt == 'objects') {
-                $owners[] = Pluf::factory('Pluf_User', $row->owner_id);
-            } else {
-                $owners[] = Pluf::factory('Pluf_User', $row->owner_id)->login;
-            }
-        }
-        $sql = new Pluf_SQL(
-                'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
-                         $false, 
-                        array(
-                                'Pluf_Tenant',
-                                $this->id,
-                                'Pluf_User',
-                                $mperm->id
-                        ));
-        $members = new Pluf_Template_ContextVars(array());
-        foreach ($grow->getList(
-                array(
-                        'filter' => $sql->gen()
-                )) as $row) {
-            if ($fmt == 'objects') {
-                $members[] = Pluf::factory('Pluf_User', $row->owner_id);
-            } else {
-                $members[] = Pluf::factory('Pluf_User', $row->owner_id)->login;
-            }
-        }
-        $authorized = new Pluf_Template_ContextVars(array());
-        if ($aperm != false) {
-            $sql = new Pluf_SQL(
-                    'model_class=%s AND model_id=%s AND owner_class=%s AND permission=%s AND negative=' .
-                             $false, 
-                            array(
-                                    'Pluf_Tenant',
-                                    $this->id,
-                                    'Pluf_User',
-                                    $aperm->id
-                            ));
-            foreach ($grow->getList(
-                    array(
-                            'filter' => $sql->gen()
-                    )) as $row) {
-                if ($fmt == 'objects') {
-                    $authorized[] = Pluf::factory('Pluf_User', $row->owner_id);
-                } else {
-                    $authorized[] = Pluf::factory('Pluf_User', $row->owner_id)->login;
-                }
-            }
-        }
-        if ($fmt == 'objects') {
-            return new Pluf_Template_ContextVars(
-                    array(
-                            'members' => $members,
-                            'owners' => $owners,
-                            'authorized' => $authorized
-                    ));
-        } else {
-            return array(
-                    'members' => $members,
-                    'owners' => $owners,
-                    'authorized' => $authorized
-            );
-        }
-    }
-
-    /**
      * Cache of the permissions.
      */
     public $_cache_perms = null;
@@ -289,7 +187,7 @@ class Pluf_Tenant extends Pluf_Model
 
     /**
      * ملک تعیین شده با زیردامنه تعیین شده را برمی‌گرداند
-     * 
+     *
      * @param string $subdomain            
      */
     public static function bySubDomain ($subdomain)
@@ -300,7 +198,7 @@ class Pluf_Tenant extends Pluf_Model
 
     /**
      * ملک با دامنه تعیین شده را برمی‌گرداند.
-     * 
+     *
      * @param unknown $domain            
      */
     public static function byDomain ($domain)
@@ -309,31 +207,34 @@ class Pluf_Tenant extends Pluf_Model
         $result = Pluf::factory('Pluf_Tenant')->getOne($sql->gen());
         return $result;
     }
-    
+
     /**
      * Gets current tenant
-     * 
+     *
      * @return unknown
      */
-    public static function current()
+    public static function current ()
     {
-        if(!Pluf::f('multitenant', false)){
+        if (! Pluf::f('multitenant', false)) {
             $tenant = Pluf::factory('Pluf_Tenant');
             $tenant->id = 0;
             return $tenant;
         }
         // load tenant from request
-        return $GLOBALS ['_PX_request']->tenant;
+        return $GLOBALS['_PX_request']->tenant;
     }
-    
+
     /**
      * Gets tenant storage path
-     * 
+     *
      * @return string
      */
-    public static function storagePath()
+    public static function storagePath ()
     {
         $tenant = self::current();
+        if ($tenant->isAnonymous()) {
+            return Pluf::f('upload_path');
+        }
         return Pluf::f('upload_path') . '/' . $tenant->id;
     }
 }
