@@ -40,13 +40,13 @@ class Bank_Engine_Mellat extends Bank_Engine {
 	
 	/**
 	 */
-	public function create() {
+	public function create($receipt) {
 		// XXX: maso, 1395: ایجاد یک پرداخت
 	}
 	
 	/**
 	 */
-	public function update() {
+	public function update($receipt) {
 		// XXX: maso, 1395: ایجاد یک پرداخت
 	}
 }

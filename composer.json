@@ -1,24 +1,38 @@
 {
-    "name": "pluf/core",
-    "description": "Pluf core pakcage",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mostafa Barmshory",
-            "email": "mostafa.barmshory@dpq.co.ir"
-        },{
-            "name": "Mohammad hadi Mansouri",
-            "email": "mohammad.hadi.mansouri@dpq.co.ir"
-        },{
-            "name": "Mahdi Arighiani",
-            "email": "mahdi.arghiani@dpq.co.ir"
-        }
-    ],
-    "minimum-stability": "stable",
-    "require": {
-        "pear/mail": "^1.3",
-        "pear/mail_mime": "^1.10.0"
-    },
-    "include-path": ["src/"]
+	"name" : "pluf/core",
+	"description" : "Pluf core pakcage",
+	"type" : "library",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Mostafa Barmshory",
+			"email" : "mostafa.barmshory@dpq.co.ir"
+		}, {
+			"name" : "Mohammad hadi Mansouri",
+			"email" : "mohammad.hadi.mansouri@dpq.co.ir"
+		}, {
+			"name" : "Mahdi Arighiani",
+			"email" : "mahdi.arghiani@dpq.co.ir"
+		}
+	],
+	"minimum-stability" : "stable",
+	"require" : {
+		"pear/mail" : "^1.3",
+		"pear/mail_mime" : "^1.10.0"
+	},
+	"include-path" : [
+		"src/"
+	],
+	"support" : {
+		"wiki" : "https://github.com/pluf/core/wiki",
+		"issues" : "https://github.com/pluf/core/issues",
+		"email" : "info@pluf.ir",
+		"source" : "https://github.com/pluf/core"
+	},
+	"homepage" : "http://pluf.ir",
+	"keywords" : [
+		"pluf",
+		"php",
+		"framework",
+		"restfull"
+	]
 }

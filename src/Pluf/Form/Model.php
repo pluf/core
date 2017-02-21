@@ -28,6 +28,8 @@ class Pluf_Form_Model extends Pluf_Form
 
     /**
      * The model for which the form applies.
+     * 
+     * 
      */
     public $model = null;
 

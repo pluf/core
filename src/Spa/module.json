@@ -1,9 +1,0 @@
-{
-	"name": "SPA",
-	"version": "0.1.0",
-	"title": "Single Page Application Management",
-	"model": [
-		"Spa_SPA"
-	],
-	"permisson": []
-}

@@ -20,11 +20,11 @@ return array(
         array(
                 'regex' => '#^/find$#',
                 'model' => 'Monitor_Views',
-                'method' => 'find',
+                'method' => 'findBean',
                 'http-method' => 'GET'
         ),
         array(
-                'regex' => '#^/(?P<monitor>[^/]+)/find$#',
+                'regex' => '#^/(?P<monitor>[^/]+)/property/find$#',
                 'model' => 'Monitor_Views',
                 'method' => 'findProperty',
                 'http-method' => 'GET'
@@ -33,6 +33,12 @@ return array(
                 'regex' => '#^/(?P<monitor>[^/]+)/property/(?P<property>[^/]+)$#',
                 'model' => 'Monitor_Views',
                 'method' => 'call',
+                'http-method' => 'GET'
+        ),
+        array(
+                'regex' => '#^/(?P<monitor>[^/]+)/find$#',
+                'model' => 'Monitor_Views',
+                'method' => 'findProperty',
                 'http-method' => 'GET'
         ),
         array(
