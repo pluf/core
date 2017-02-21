@@ -1,25 +1,22 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+
 /*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Default form field.
@@ -31,45 +28,79 @@
  */
 class Pluf_Form_Field
 {
+
     /**
      * Store the name of the class.
      */
     public $class = 'Pluf_Form_Field';
 
     /**
-     * Widget. The way to "present" the field to the user.
+     * Widget.
+     * The way to "present" the field to the user.
      */
     public $widget = 'Pluf_Form_Widget_TextInput';
-    public $label = ''; /**< The label of the field. */
-    public $required = false; /**< Allowed to be blank. */
-    public $help_text = ''; /**< Help text for the field. */
-    public $initial = ''; /**< Default value when empty. */
-    public $choices = null; /**< Predefined choices for the field. */
 
+    public $label = '';
+
+    /**
+     * < The label of the field.
+     */
+    public $required = false;
+
+    /**
+     * < Allowed to be blank.
+     */
+    public $help_text = '';
+
+    /**
+     * < Help text for the field.
+     */
+    public $initial = '';
+
+    /**
+     * < Default value when empty.
+     */
+    public $choices = null;
+
+    /**
+     * < Predefined choices for the field.
+     */
+    
     /*
      * Following member variables are more for internal cooking.
      */
     public $hidden_widget = 'Pluf_Form_Widget_HiddenInput';
-    public $value = ''; /**< Current value of the field. */
+
+    public $value = '';
+
+    /**
+     * < Current value of the field.
+     */
     /**
      * Returning multiple values (select multiple etc.)
      */
-    public $multiple = false; 
-    protected $empty_values = array('', null, array());
+    public $multiple = false;
+
+    protected $empty_values = array(
+            '',
+            null,
+            array()
+    );
 
     /**
      * Constructor.
      *
      * Example:
-     * $field = new Your_Field(array('required'=>true, 
-     *                               'widget'=>'Pluf_Form_Widget_TextInput',
-     *                               'initial'=>'your name here',
-     *                               'label'=>__('Your name'),
-     *                               'help_text'=>__('You are?'));
+     * $field = new Your_Field(array('required'=>true,
+     * 'widget'=>'Pluf_Form_Widget_TextInput',
+     * 'initial'=>'your name here',
+     * 'label'=>__('Your name'),
+     * 'help_text'=>__('You are?'));
      *
-     * @param array Params of the field.
+     * @param
+     *            array Params of the field.
      */
-    function __construct($params=array())
+    function __construct ($params = array())
     {
         // We basically take the parameters, for each one we grab the
         // corresponding member variable and populate the $default
@@ -79,16 +110,14 @@ class Pluf_Form_Field
         // etc. and update the member variables accordingly. This is
         // practical when you extend this class with your own class.
         $default = array();
-        foreach ($params as $key=>$in) {
+        foreach ($params as $key => $in) {
             if ($key !== 'widget_attrs')
-                $default[$key] = $this->$key; // Here on purpose it
-                                              // will fail if a
-                                              // parameter not needed
-                                              // for this field is
-                                              // passed.
+                // Here on purpose it will fail if a parameter not needed for
+                // this field is passed.
+                $default[$key] = $this->$key;
         }
         $m = array_merge($default, $params);
-        foreach ($params as $key=>$in) {
+        foreach ($params as $key => $in) {
             if ($key !== 'widget_attrs')
                 $this->$key = $m[$key];
         }
@@ -110,13 +139,14 @@ class Pluf_Form_Field
     /**
      * Validate some possible input for the field.
      *
-     * @param mixed Value to clean.
+     * @param
+     *            mixed Value to clean.
      * @return mixed Cleaned data or throw a Pluf_Form_Invalid exception.
      */
-    function clean($value)
+    function clean ($value)
     {
-        if (!$this->multiple and $this->required 
-            and in_array($value, $this->empty_values)) {
+        if (! $this->multiple and $this->required and
+                 in_array($value, $this->empty_values)) {
             throw new Pluf_Form_Invalid(__('This field is required.'));
         }
         if ($this->multiple and $this->required and empty($value)) {
@@ -128,12 +158,13 @@ class Pluf_Form_Field
     /**
      * Set the default empty value for a field.
      *
-     * @param mixed Value
+     * @param
+     *            mixed Value
      * @return mixed Value
      */
-    function setDefaultEmpty($value) 
+    function setDefaultEmpty ($value)
     {
-        if (in_array($value, $this->empty_values) and !$this->multiple) {
+        if (in_array($value, $this->empty_values) and ! $this->multiple) {
             $value = '';
         }
         if (in_array($value, $this->empty_values) and $this->multiple) {
@@ -157,31 +188,32 @@ class Pluf_Form_Field
      *
      * @see Pluf_Form_Field_Integer::clean
      *
-     * @param array Values
+     * @param
+     *            array Values
      * @return array Values
      */
-    public function multiClean($value)
+    public function multiClean ($value)
     {
-        $field = clone($this);
+        $field = clone ($this);
         $field->multiple = false;
         reset($value);
-        while (list($i, $val) = each($value)) {
+        while (list ($i, $val) = each($value)) {
             $value[$i] = $field->clean($val);
         }
         reset($value);
-        return $value;        
+        return $value;
     }
 
     /**
      * Returns the HTML attributes to add to the field.
      *
-     * @param object Widget
+     * @param
+     *            object Widget
      * @return array HTML attributes.
      */
-    public function widgetAttrs($widget)
+    public function widgetAttrs ($widget)
     {
         return array();
     }
-
 }
 
