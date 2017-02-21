@@ -101,7 +101,7 @@ class Setting_Service
                     $config = new Pluf_Configuration();
                     $config->value = $val['value'];
                     $config->key = $key;
-                    $config->type = Pluf_ConfigurationType::SYSTEM;
+                    $config->type = Pluf_ConfigurationType::APPLICATION;
                     $config->create();
                 }
             }
