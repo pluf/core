@@ -128,6 +128,16 @@ class CMS_Content extends Pluf_Model
                         'verbose' => __('modification'),
                         'help_text' => __('content modification time'),
                         'editable' => false
+                ),
+                // relations
+                'submitter' => array(
+                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'model' => 'Pluf_User',
+                        'blank' => false,
+                        'relate_name' => 'content_submitter',
+                        'verbose' => __('submitter'),
+                        'help_text' => __('content submitter'),
+                        'editable' => false
                 )
         );
         
