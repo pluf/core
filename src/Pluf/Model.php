@@ -1208,7 +1208,7 @@ class Pluf_Model implements JsonSerializable
             $this->_a['cols']['tenant'] = $this->tenant_field;
             // Add idx
             foreach ($this->_a['idx'] as $col => $idx) {
-                $idx['col'] = 'tenant,' . $idx['col'];
+                $this->_a['idx'][$col]['col'] = 'tenant,' . $idx['col'];
             }
         }
     }
