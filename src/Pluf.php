@@ -366,19 +366,11 @@ function __autoload($class_name) {
 	try {
 		Pluf::loadClass ( $class_name );
 	} catch ( Exception $e ) {
-// 		if (Pluf::f ( 'debug' )) {
+		if (Pluf::f ( 'debug' )) {
 			print $e->getMessage ();
 			die ();
-// 		}
-		eval ( "class $class_name { 
-          function __construct() { 
-            throw new Exception('Class $class_name not found');
-          }
-          
-          static function __callstatic(\$m, \$args) {
-            throw new Exception('Class $class_name not found');
-          }
-        }" );
+		}
+		throw new Pluf_Exception('Class not found:'.$class_name);
 	}
 }
 /*

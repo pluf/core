@@ -259,17 +259,26 @@ class Pluf_Migration
      */
     public function installAppFromConfig ($app)
     {
+        $module = self::getModulConfig($app);
+        Pluf_Shortcuts_LoadModels($module);
+        Pluf_Shortcuts_LoadPermissions($module);
+        Pluf_Shortcuts_Monitors($module);
+        return true;
+    }
+    
+    /**
+     * Load module configuration
+     * @param unknown $app
+     * @return boolean|mixed
+     */
+    public static function getModuleConfig($app){
         if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
             return false;
         }
         $myfile = fopen($file, "r") or die("Unable to open module.json!");
         $json = fread($myfile, filesize($file));
         fclose($myfile);
-        $moduel = json_decode($json, true);
-        Pluf_Shortcuts_LoadModels($moduel);
-        Pluf_Shortcuts_LoadPermissions($moduel);
-        Pluf_Shortcuts_Monitors($moduel);
-        return true;
+        return json_decode($json, true);
     }
 
     /**
