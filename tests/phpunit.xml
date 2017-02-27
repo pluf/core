@@ -3,6 +3,7 @@
     <testsuites>
         <testsuite name="Pluf">
             <directory>./Pluf/</directory>
+            <directory>./Pluf_Crypt/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
