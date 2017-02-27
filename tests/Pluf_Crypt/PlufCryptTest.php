@@ -23,11 +23,19 @@ require_once 'Pluf.php';
 class PlufCryptTest extends TestCase
 {
 
+    /**
+     * @before
+     */
     protected function setUp ()
     {
         Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
     }
 
+
+    /**
+     *
+     * @test
+     */
     public function testEncrypt ()
     {
         $crypt = Pluf::factory('Pluf_Crypt', 'mykeyasdkjhsdkfjsdhfksjdh');
