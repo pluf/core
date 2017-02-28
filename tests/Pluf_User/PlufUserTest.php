@@ -106,15 +106,15 @@ class PlufUserTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function testGetMessages ()
-    {
-        $user = new Pluf_User(1);
-        $mess = $user->get_pluf_message_list();
-        $this->assertEquals(0, $mess->count());
-    }
+//     /**
+//      * @test
+//      */
+//     public function testGetMessages ()
+//     {
+//         $user = new Pluf_User(1);
+//         $mess = $user->get_pluf_message_list();
+//         $this->assertEquals(0, $mess->count());
+//     }
 
     /**
      * @test

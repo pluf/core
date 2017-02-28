@@ -625,31 +625,6 @@ class Pluf_User extends Pluf_Model
     }
 
     /**
-     * دریافت و حذف پیام‌ها
-     *
-     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند.
-     * در
-     * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
-     *
-     * @return ArrayObject
-     */
-    function getAndDeleteMessages ()
-    {
-        if ($this->isAnonymous()) {
-            throw new Pluf_Exception_DoesNotExist(
-                    __("User not exist, while you are trying to get messages?!"));
-        }
-        $messages = array();
-        $ms = $this->get_pluf_message_list();
-        foreach ($ms as $m) {
-            $ms = new Pluf_Message($m->id);
-            array_push($messages, $ms);
-            $m->delete();
-        }
-        return $messages;
-    }
-
-    /**
      * پروفایل کاربر را تعیین می‌کند.
      *
      * Retrieve the profile of the current user. If not profile in the
