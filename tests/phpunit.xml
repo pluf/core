@@ -5,6 +5,7 @@
             <directory>./Pluf/</directory>
             <directory>./Pluf_Crypt/</directory>
             <directory>./Pluf_Utils/</directory>
+            <directory>./Pluf_User/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
