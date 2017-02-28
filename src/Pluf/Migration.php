@@ -259,7 +259,7 @@ class Pluf_Migration
      */
     public function installAppFromConfig ($app)
     {
-        $module = self::getModulConfig($app);
+        $module = self::getModuleConfig($app);
         Pluf_Shortcuts_LoadModels($module);
         Pluf_Shortcuts_LoadPermissions($module);
         Pluf_Shortcuts_Monitors($module);
