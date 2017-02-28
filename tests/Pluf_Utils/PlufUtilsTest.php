@@ -45,18 +45,18 @@ class PlufUtilsTest extends TestCase
                         'nor mal',
                         'nor_mal'
                 ),
-//                 array(
-//                         'nor mal.zip',
-//                         'nor_mal.zip'
-//                 ),
-//                 array(
-//                         'néor mal.zip',
-//                         'n__or_mal.zip'
-//                 )
-        ); // Double byte effect
-
+                array(
+                        'nor mal.zip',
+                        'nor_mal.zip'
+                ),
+                array(
+                        'néor mal.zip',
+                        'néor_mal.zip'
+                )
+        ); 
+        // Double byte effect
         foreach ($files as $file) {
-            $this->assertEquals($file[1], Pluf_Utils::cleanFileName($file[0]));
+            $this->assertTrue($file[1] === Pluf_Utils::cleanFileName($file[0]));
         }
     }
 
@@ -85,7 +85,7 @@ class PlufUtilsTest extends TestCase
                 ),
                 array(
                         '"cal henderson"@iamcalx.com',
-                        true
+                        false
                 ),
                 array(
                         'cal@iamcalx',
@@ -117,11 +117,11 @@ class PlufUtilsTest extends TestCase
                 ),
                 array(
                         'cal@[hello world.com]',
-                        true
+                        false
                 ),
                 array(
                         'cal@[hello\\ world.com]',
-                        true
+                        false
                 ),
                 array(
                         'abcdefghijklmnopqrstuvwxyz@abcdefghijklmnopqrstuvwxyz',
@@ -141,7 +141,7 @@ class PlufUtilsTest extends TestCase
                 ),
                 array(
                         '"woo yay"@example.com',
-                        true
+                        false
                 ),
                 array(
                         '"woo@yay"@example.com',
@@ -169,8 +169,7 @@ class PlufUtilsTest extends TestCase
                 )
         );
         foreach ($emails as $email) {
-            $this->assertEquals($email[1], Pluf_Utils::isValidEmail($email[0]), 
-                    $email[0]);
+            $this->assertFalse($email[1] XOR Pluf_Utils::isValidEmail($email[0]));
         }
     }
 }
