@@ -20,6 +20,10 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufUserTest extends TestCase
 {
 
@@ -106,15 +110,15 @@ class PlufUserTest extends TestCase
         }
     }
 
-//     /**
-//      * @test
-//      */
-//     public function testGetMessages ()
-//     {
-//         $user = new Pluf_User(1);
-//         $mess = $user->get_pluf_message_list();
-//         $this->assertEquals(0, $mess->count());
-//     }
+    /**
+     * @test
+     */
+    public function testGetMessages ()
+    {
+        $user = new Pluf_User(1);
+        $mess = $user->get_pluf_message_list();
+        $this->assertEquals(0, $mess->count());
+    }
 
     /**
      * @test
