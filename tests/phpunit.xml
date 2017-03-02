@@ -17,6 +17,7 @@
             <directory>./Pluf_Model/</directory>
             <directory>./Pluf_Migration/</directory>
             <directory>./Pluf_Mail/</directory>
+            <directory>./Pluf_HTTP_URL/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
