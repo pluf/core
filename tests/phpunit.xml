@@ -10,6 +10,8 @@
 <!--             <directory>./Pluf_Text_LaTeX_Texvc/</directory> -->
 <!--             <directory>./Pluf_Text_LaTeX/</directory> -->
             <directory>./Pluf_Text_HTML_Filter/</directory>
+            <directory>./Pluf_Template_Compiler/</directory>
+            <directory>./Pluf_Template/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
