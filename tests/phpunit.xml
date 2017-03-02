@@ -12,6 +12,7 @@
             <directory>./Pluf_Text_HTML_Filter/</directory>
             <directory>./Pluf_Template_Compiler/</directory>
             <directory>./Pluf_Template/</directory>
+            <directory>./Pluf_SQL/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
