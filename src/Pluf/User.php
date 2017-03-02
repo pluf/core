@@ -410,7 +410,7 @@ class Pluf_User extends Pluf_Model
             return $this->_cache_perms;
         }
         // load user permissions
-        $perms = (array) $this->get_permissions_list();
+        $this->_cache_perms = (array) $this->get_permissions_list();
         
         // Load groups
         $groups = $this->get_groups_list();
@@ -449,6 +449,7 @@ class Pluf_User extends Pluf_Model
         $permPattern = $permission . '#' . $object->_a['model'];
         $permList = $this->getAllPermissions(false);
         $result = array();
+        $m = array();
         foreach ($permList as $rowPerm) {
             try {
                 preg_match('/^(?P<perm>' . $permPattern . ')\((?P<id>\d+)\)/', 
@@ -467,13 +468,11 @@ class Pluf_User extends Pluf_Model
     {
         $gperm = new Pluf_Permission();
         $f_name = strtolower(Pluf::f('pluf_custom_group', 'Pluf_Group')) . '_id';
-        $perms = array_merge($perms, 
-                (array) $gperm->getList(
-                        array(
-                                'filter' => $f_name . ' IN (' . join(', ', $ids) .
-                                         ')',
-                                        'view' => 'join_group'
-                        )));
+        $perms = (array) $gperm->getList(
+                array(
+                        'filter' => $f_name . ' IN (' . join(', ', $ids) . ')',
+                        'view' => 'join_group'
+                ));
         foreach ($perms as $perm) {
             $tos = $perm->toString();
             if (! in_array($tos, $this->_cache_perms)) {
@@ -622,31 +621,6 @@ class Pluf_User extends Pluf_Model
             throw new Pluf_Exception(__("not possible to create a message"));
         }
         return $m;
-    }
-
-    /**
-     * دریافت و حذف پیام‌ها
-     *
-     * تمام پیام‌هایی که به کار بر اضافه شده است را به عنوان نتیجه برمی‌گرداند.
-     * در
-     * صورتی که کاربر ایجاد نشده باشد پیام خطا صادر خواهد شد.
-     *
-     * @return ArrayObject
-     */
-    function getAndDeleteMessages ()
-    {
-        if ($this->isAnonymous()) {
-            throw new Pluf_Exception_DoesNotExist(
-                    __("User not exist, while you are trying to get messages?!"));
-        }
-        $messages = array();
-        $ms = $this->get_pluf_message_list();
-        foreach ($ms as $m) {
-            $ms = new Pluf_Message($m->id);
-            array_push($messages, $ms);
-            $m->delete();
-        }
-        return $messages;
     }
 
     /**

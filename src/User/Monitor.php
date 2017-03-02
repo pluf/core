@@ -42,7 +42,7 @@ class User_Monitor
         
         // Check user
         if ($request->user->isAnonymous()) {
-            $request['value'] = false;
+            $result['value'] = false;
             return $result;
         }
         
@@ -57,7 +57,7 @@ class User_Monitor
                         'filter' => $sql->gen()
                 ));
         if ($items->count() == 0) {
-            $request['value'] = false;
+            $result['value'] = false;
             return $result;
         }
         

@@ -6,6 +6,8 @@
 # Examples
 /site/tenant
 
-# composer
-vendor
+# Composer
+/vendor/
 composer.lock
+composer-setup.php
+composer.phar

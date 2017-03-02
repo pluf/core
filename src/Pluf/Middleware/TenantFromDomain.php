@@ -16,7 +16,9 @@ class Pluf_Middleware_TenantFromDomain
         }
         try {
             $domain = $request->http_host;
+            // Remove 'www.' if exist
             $domain = preg_replace('/^www\./', '', $domain);
+            // Find tenant by domain
             $app = Pluf_Tenant::byDomain($domain);
             if ($app) {
                 $request->tenant = $app;
