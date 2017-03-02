@@ -18,6 +18,9 @@
             <directory>./Pluf_Migration/</directory>
             <directory>./Pluf_Mail/</directory>
             <directory>./Pluf_HTTP_URL/</directory>
+            <directory>./Pluf_Gettext/</directory>
+            <directory>./Pluf_Form/</directory>
+            <directory>./Pluf_Form_Field/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
