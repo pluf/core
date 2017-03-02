@@ -23,6 +23,9 @@ require_once 'Pluf.php';
 /**
  * Based on the tests provided with the Pluf_Text_HTML_Filter original
  * library.
+ * 
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
  */
 class PlufTextHTMLFilter extends TestCase
 {

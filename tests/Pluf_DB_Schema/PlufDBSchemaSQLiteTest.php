@@ -22,6 +22,10 @@ require_once 'Pluf.php';
 
 include_once dirname(__FILE__) . '/../Pluf_Model/TestModels.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufDBSchemaSQLiteTest extends TestCase
 {
 

@@ -24,6 +24,10 @@ require_once 'Pluf.php';
 require_once dirname(__FILE__).'/../Pluf_Form/TestFormModel.php';
 
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufPaginatorTest extends PHPUnit_Framework_TestCase {
     
     protected function setUp()

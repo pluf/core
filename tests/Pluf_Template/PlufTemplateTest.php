@@ -20,30 +20,35 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-class PlufTemplateTest extends TestCase {
-    
-    protected function setUp()
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
+class PlufTemplateTest extends TestCase
+{
+
+    protected function setUp ()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
     }
 
-    public function testRender()
+    public function testRender ()
     {
-        $folders =  array(
-                          dirname(__FILE__).'/../Pluf_Template_Compiler/tpl1',
-                          dirname(__FILE__).'/../Pluf_Template_Compiler/tpl2',
-                          );
+        $folders = array(
+                dirname(__FILE__) . '/../Pluf_Template_Compiler/tpl1',
+                dirname(__FILE__) . '/../Pluf_Template_Compiler/tpl2'
+        );
         $tmpl = new Pluf_Template('tpl-extends.html', $folders);
-        $this->assertEquals("This is the base template
+        $this->assertEquals(
+                "This is the base template
 
 Hello blockname
 
 toto 
 
-Template base \"Bye bye block2\" here:Bye bye block2", $tmpl->render());
+Template base \"Bye bye block2\" here:Bye bye block2", 
+                $tmpl->render());
     }
-
-
 }
 
 ?>

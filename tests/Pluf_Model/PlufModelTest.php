@@ -22,6 +22,10 @@ require_once 'Pluf.php';
 
 include_once dirname(__FILE__) . '/TestModels.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufModelTest extends TestCase
 {
 

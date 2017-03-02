@@ -22,6 +22,10 @@ require_once 'Pluf.php';
 
 require_once dirname(__FILE__) . '/TestFormModel.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufFormTest extends TestCase
 {
 

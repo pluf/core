@@ -21,6 +21,10 @@ use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class LatexEquationTest extends PHPUnit_Framework_TestCase 
 {
     public $output = '/tmp/latex';

@@ -20,32 +20,37 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
+class PlufTemplateCompilerBlockTransTest extends TestCase
+{
 
-class PlufTemplateCompilerBlockTransTest extends TestCase {
-    
-    protected function setUp()
+    protected function setUp ()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
     }
 
-    public function testCompile()
+    public function testCompile ()
     {
         return '';
         $compiler = new Pluf_Template_Compiler('dummy', array(), false);
         $compiler->templateContent = '{blocktrans $count, $toto}We have one {$toto} element.{plural}We have {$counter} {$toto} elements.{/blocktrans}';
-        $this->assertEquals('<?php $_b_t_c=$t->_vars[\'count\']; ob_start(); ?>We have one %2$s element.<?php $_b_t_s=ob_get_contents(); ob_end_clean(); ob_start(); ?>We have %1$d %2$s elements.<?php $_b_t_p=ob_get_contents(); ob_end_clean(); echo(sprintf(_n($_b_t_s, $_b_t_p, $_b_t_c), $_b_t_c, Pluf_Template_safeEcho($t->_vars[\'toto\'], false))); ?>',
-                            $compiler->getCompiledTemplate());
-
+        $this->assertEquals(
+                '<?php $_b_t_c=$t->_vars[\'count\']; ob_start(); ?>We have one %2$s element.<?php $_b_t_s=ob_get_contents(); ob_end_clean(); ob_start(); ?>We have %1$d %2$s elements.<?php $_b_t_p=ob_get_contents(); ob_end_clean(); echo(sprintf(_n($_b_t_s, $_b_t_p, $_b_t_c), $_b_t_c, Pluf_Template_safeEcho($t->_vars[\'toto\'], false))); ?>', 
+                $compiler->getCompiledTemplate());
     }
 
-    public function testExtract()
+    public function testExtract ()
     {
         $compiler = new Pluf_Translation_TemplateExtractor('dummy', array(), false);
-        $compiler->templateContent = 'not in block {blocktrans $count, $toto}We have one {$toto} {$titi|nl2br} element.{plural}We have {$counter} {$toto} elements.{/blocktrans} not in block {trans \'toto\'} not in block {blocktrans}simple'."\n".' block{/blocktrans} sad {trans "youpla"}';
-        //print $compiler->compile();
+        $compiler->templateContent = 'not in block {blocktrans $count, $toto}We have one {$toto} {$titi|nl2br} element.{plural}We have {$counter} {$toto} elements.{/blocktrans} not in block {trans \'toto\'} not in block {blocktrans}simple' .
+                 "\n" . ' block{/blocktrans} sad {trans "youpla"}';
+        // print $compiler->compile();
     }
 
-    public function testCompileComplex()
+    public function testCompileComplex ()
     {
         $compiler = new Pluf_Template_Compiler('dummy', array(), false);
         $compiler->templateContent = '
@@ -58,7 +63,6 @@ class PlufTemplateCompilerBlockTransTest extends TestCase {
     {/foreach}
     </ul>
     </html>';
-        //echo $compiler->getCompiledTemplate();
+        // echo $compiler->getCompiledTemplate();
     }
-
 }

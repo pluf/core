@@ -20,6 +20,10 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
+/**
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class PlufTemplateCompilerMethodCompileTest extends TestCase
 {
 
@@ -151,7 +155,8 @@ class PlufTemplateCompilerMethodCompileTest extends TestCase
 
 <?php $t->_vars[\'counter\'] = $t->_vars[\'counter\']+1; ?>
 
-<?php endforeach; ?>', $compiler->getCompiledTemplate());
+<?php endforeach; ?>', 
+                $compiler->getCompiledTemplate());
     }
 }
 
