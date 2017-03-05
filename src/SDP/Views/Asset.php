@@ -1,5 +1,6 @@
 <?php
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+Pluf::loadFunction('SDP_Shortcuts_NormalizeItemPerPage');
 
 class SDP_Views_Asset
 {
