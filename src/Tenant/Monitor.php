@@ -30,7 +30,7 @@ class Tenant_Monitor
         $result = array(
                 'value' => 35,
                 'min' => 0,
-                'max' => Config_Service::get('storage.size.max', 1048576), // 1Mb
+                'max' => Config_Service::get('storage.size.max', 10485760), // 10Mb
                 'unit' => 'byte',
                 'interval' => 1000000,
                 'type' => 'scalar'
