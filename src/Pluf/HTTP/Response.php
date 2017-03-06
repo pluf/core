@@ -172,4 +172,8 @@ class Pluf_HTTP_Response
             }
         }
     }
+
+    function hashCode(){
+        return null;
+    }
 }
