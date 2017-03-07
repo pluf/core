@@ -53,4 +53,19 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             @unlink($this->content);
         }
     }
+    
+    /**
+     * Genereate hash code of file
+     * {@inheritDoc}
+     * @see Pluf_HTTP_Response::hashCode()
+     */
+    public function hashCode(){
+        if (isset($this->content)) {
+            if (! isset($this->contentHash)) {
+                $this->contentHash = md5_file($this->content);
+            }
+            return $this->contentHash;
+        }
+        return '0000';
+    }
 }

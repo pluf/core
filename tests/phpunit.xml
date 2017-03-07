@@ -5,10 +5,10 @@
             <directory>./Pluf/</directory>
             <directory>./Pluf_Crypt/</directory>
             <directory>./Pluf_Utils/</directory>
-            <directory>./Pluf_User/</directory>
-            <directory>./Pluf_Text_Wiki/</directory>
-            <directory>./Pluf_Text_LaTeX_Texvc/</directory>
-            <directory>./Pluf_Text_LaTeX/</directory>
+<!--             <directory>./Pluf_User/</directory> -->
+<!--             <directory>./Pluf_Text_Wiki/</directory> -->
+<!--             <directory>./Pluf_Text_LaTeX_Texvc/</directory> -->
+<!--             <directory>./Pluf_Text_LaTeX/</directory> -->
             <directory>./Pluf_Text_HTML_Filter/</directory>
             <directory>./Pluf_Template_Compiler/</directory>
             <directory>./Pluf_Template/</directory>
@@ -18,6 +18,7 @@
             <directory>./Pluf_Migration/</directory>
             <directory>./Pluf_Mail/</directory>
             <directory>./Pluf_HTTP_URL/</directory>
+            <directory>./Pluf_HTTP_Response/</directory>
             <directory>./Pluf_Gettext/</directory>
             <directory>./Pluf_Form/</directory>
             <directory>./Pluf_Form_Field/</directory>
