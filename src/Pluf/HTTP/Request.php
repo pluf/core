@@ -77,7 +77,7 @@ class Pluf_HTTP_Request
          */
         $this->HEADERS = array();
         if(function_exists('apache_request_headers')){
-            apache_request_headers();
+            $this->HEADERS = apache_request_headers();
         }
     }
 }

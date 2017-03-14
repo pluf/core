@@ -1,32 +1,29 @@
 <?php
 
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
- * # ***** BEGIN LICENSE BLOCK *****
- * # This file is part of Plume Framework, a simple PHP Application Framework.
- * # Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
- * #
- * # Plume Framework is free software; you can redistribute it and/or modify
- * # it under the terms of the GNU Lesser General Public License as published by
- * # the Free Software Foundation; either version 2.1 of the License, or
- * # (at your option) any later version.
- * #
- * # Plume Framework is distributed in the hope that it will be useful,
- * # but WITHOUT ANY WARRANTY; without even the implied warranty of
- * # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * # GNU Lesser General Public License for more details.
- * #
- * # You should have received a copy of the GNU Lesser General Public License
- * # along with this program; if not, write to the Free Software
- * # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * #
- * # ***** END LICENSE BLOCK *****
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
- /**
-  * @deprecated
-  * @author maso
-  *
-  */
+
+/**
+ * Error response
+ *
+ * @deprecated
+ *
+ */
 class Pluf_HTTP_Response_ServerErrorDebug extends Pluf_HTTP_Response
 {
 
@@ -207,19 +204,15 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
     if ($e->getCode()) {
         $out .= $o($e->getCode()) . ' : ';
     }
-    $out .= ' ' . $o($e->getMessage()) .
-             '</h2>
+    $out .= ' ' . $o($e->getMessage()) . '</h2>
   <table>
     <tr>
       <th>PHP</th>
-      <td>' .
-             $o($e->getFile()) . ', line ' . $o($e->getLine()) .
-             '</td>
+      <td>' . $o($e->getFile()) . ', line ' . $o($e->getLine()) . '</td>
     </tr>
     <tr>
       <th>URI</th>
-      <td>' .
-             $o($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']) . '</td>
+      <td>' . $o($_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']) . '</td>
     </tr>
   </table>
 </div>
@@ -236,8 +229,7 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
             $frame['line'] = '0';
         }
         $out .= '<li class="frame">' . $sub($frame) . '
-        [' .
-                 $o($frame['file']) . ', line ' . $o($frame['line']) . ']';
+        [' . $o($frame['file']) . ', line ' . $o($frame['line']) . ']';
         if (isset($frame['args']) && count($frame['args']) > 0) {
             $params = $parms($frame);
             $out .= '
@@ -262,8 +254,7 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
                   <td>' . $o($k) . '</td>
                   <td>' . $o($name) . '</td>
                   <td class="code">
-                    <pre>' .
-                         Pluf_esc(print_r($v, true)) . '</pre>
+                    <pre>' . Pluf_esc(print_r($v, true)) . '</pre>
                   </td>
                   </tr>';
             }
@@ -272,11 +263,9 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
         if (is_readable($frame['file'])) {
             $out .= '
         <div class="commands">
-            <a href=\'#\' onclick="return varToggle(this, \'' .
-                     $o($frame_id) . '\',\'c\')"><span>▶</span> Src</a>
+            <a href=\'#\' onclick="return varToggle(this, \'' . $o($frame_id) . '\',\'c\')"><span>▶</span> Src</a>
         </div>
-        <div class="context" id="c' .
-                     $o($frame_id) . '">';
+        <div class="context" id="c' . $o($frame_id) . '">';
             $lines = $src2lines($frame['file']);
             $start = $frame['line'] < 5 ? 0 : $frame['line'] - 5;
             $end = $start + 10;
@@ -286,12 +275,10 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
                     break;
                 }
                 $line = trim(strip_tags($line));
-                if ($k < $start && isset($frames[$frame_id + 1]["function"]) &&
-                         preg_match(
-                                '/function( )*' .
-                                 preg_quote(
-                                        $frames[$frame_id + 1]["function"]) . '/', 
-                                $line)) {
+                if ($k < $start && isset($frames[$frame_id + 1]["function"]) && preg_match(
+                        '/function( )*' .
+                                 preg_quote($frames[$frame_id + 1]["function"]) .
+                                 '/', $line)) {
                     $start = $k;
                 }
                 if ($k >= $start) {
@@ -370,8 +357,7 @@ function Pluf_HTTP_Response_ServerErrorDebug_Pretty ($e)
                 $out .= '<tr>
               <td>' . $o($k) . '</td>
               <td class="code">
-                <div>' .
-                         $o(print_r($v, TRUE)) . '</div>
+                <div>' . $o(print_r($v, TRUE)) . '</div>
                 </td>
             </tr>';
             }
