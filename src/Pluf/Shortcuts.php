@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -16,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 function Pluf_Shortcuts_GetRequestParamOr403 ($request, $id)
 {
     if (array_key_exists($id, $request->REQUEST)) {
@@ -196,4 +196,25 @@ function Pluf_Shortcuts_Monitors ($moduleJson)
         $model->setFromFormData($monitor);
         $model->create();
     }
+}
+
+function Pluf_Shortcuts_folderSize ($dir)
+{
+    $count_size = 0;
+    $count = 0;
+    $dir_array = scandir($dir);
+    foreach ($dir_array as $key => $filename) {
+        if ($filename != ".." && $filename != ".") {
+            if (is_dir($dir . "/" . $filename)) {
+                $new_foldersize = Pluf_Shortcuts_folderSize($dir . "/" .
+                         $filename);
+                $count_size = $count_size + $new_foldersize;
+            } else 
+                if (is_file($dir . "/" . $filename)) {
+                    $count_size = $count_size + filesize($dir . "/" . $filename);
+                    $count ++;
+                }
+        }
+    }
+    return $count_size;
 }

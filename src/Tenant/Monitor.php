@@ -38,8 +38,9 @@ class Tenant_Monitor
         // maso, 2017: find storage size
         // FIXME: maso, 2017: using php native if is not linux
         $file_directory = Pluf_Tenant::storagePath();
-        $output = exec('du -sk ' . $file_directory);
-        $result['value'] = trim(str_replace($file_directory, '', $output)) * 1024;
+//         $output = exec('du -sk ' . $file_directory);
+//         $result['value'] = trim(str_replace($file_directory, '', $output)) * 1024;
+        $result['value'] = Pluf_Shortcuts_folderSize($file_directory);
         return $result;
     }
 }
