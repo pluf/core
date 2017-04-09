@@ -59,6 +59,7 @@ class Pluf_Model implements JsonSerializable
      * property space, all the attributes are stored in this array.
      *
      * Description of the keys:
+     * 'multitenant: Determines possibility of define the model in each tenant separately
      * 'table': The table in which the model is stored.
      * 'model': The name of the model.
      * 'cols': The definition of the columns.
