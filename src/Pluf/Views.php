@@ -436,8 +436,10 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy->id = 0;
         self::CRUD_checkPreconditions($request, $p, $object);
         $object->delete();
-        return self::CRUD_response($request, $p, $object);
+        return self::CRUD_response($request, $p, $objectCopy);
     }
 }
