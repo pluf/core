@@ -32,6 +32,7 @@ class Pluf_HTTP_Request
     public $FILES = array();
     public $HEADERS = array();
     public $query = '';
+    public $query_string = '';
     public $method = '';
     public $uri = '';
     public $view = '';
@@ -40,6 +41,14 @@ class Pluf_HTTP_Request
     public $SERVER = array();
     public $uid = '';
     public $time = '';
+    
+    /**
+     * Protocol
+     * 
+     * @see $_SERVER[HTTP_HOST]
+     * @var boolean
+     */
+    public $https = false;
     
     /**
      * Current user
@@ -65,6 +74,7 @@ class Pluf_HTTP_Request
         $this->COOKIE =& $_COOKIE;
         $this->FILES =& $_FILES;
         $this->query = $query;
+        $this->query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->remote_addr = $_SERVER['REMOTE_ADDR'];
@@ -72,6 +82,7 @@ class Pluf_HTTP_Request
         $this->SERVER =& $_SERVER;
         $this->uid = $GLOBALS['_PX_uniqid']; 
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
+        $this->https = isset($_SERVER['HTTPS']);
         /*
          * Load request header
          */
