@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
 {
 
@@ -53,14 +53,17 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             @unlink($this->content);
         }
     }
-    
+
     /**
      * Genereate hash code of file
-     * {@inheritDoc}
+     * 
+     * {@inheritdoc}
+     *
      * @see Pluf_HTTP_Response::hashCode()
      */
-    public function hashCode(){
-        if (isset($this->content)) {
+    public function hashCode ()
+    {
+        if (isset($this->content) && file_exists($this->content)) {
             if (! isset($this->contentHash)) {
                 $this->contentHash = md5_file($this->content);
             }
