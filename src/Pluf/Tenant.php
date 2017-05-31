@@ -216,7 +216,14 @@ class Pluf_Tenant extends Pluf_Model
     public static function current ()
     {
         if (! Pluf::f('multitenant', false)) {
-            $tenant = Pluf::factory('Pluf_Tenant');
+            $tenant = new Pluf_Tenant();
+            $tenant->setFromFormData(Pluf::f('multitenant_default', array(
+                    'level' => 10,
+                    'title' => 'Tenant title',
+                    'description' => 'Default tenant in single mode',
+                    'domain' => 'pluf.ir',
+                    'subdomain' => 'www',
+                    'validate' => 1)));
             $tenant->id = 0;
             return $tenant;
         }
