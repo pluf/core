@@ -47,8 +47,30 @@ class PlufTenantSingleEmptyTest extends TestCase
         // check id
         $id = $tenant->id;
         $this->assertNotNull($id);
+        
+        // check title
+        $title = $tenant->title;
+        $this->assertNotNull($title);
+        
+        // check description
+        $desc = $tenant->description;
+        $this->assertNotNull($desc);
+    }
+    
+    
+    /**
+     * @test
+     */
+    public function testStoragePath()
+    {
+        $tenant = Pluf_Tenant::current();
+        $this->assertNotNull($tenant);
+        
+        $storage = $tenant->storagePath();
+        $this->assertNotNull($storage);
+        $this->assertEquals(Pluf::f('upload_path'), $storage);
     }
 
 }
 
-?>
+

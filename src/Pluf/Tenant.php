@@ -211,7 +211,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * Gets current tenant
      *
-     * @return unknown
+     * @return Pluf_Tenant
      */
     public static function current ()
     {
