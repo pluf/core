@@ -39,7 +39,9 @@ class User_Views_User
         $form = new User_Form_User(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $cuser = $form->save();
-        
+        // XXX: hadi, 1396-03: It is assumed that permission with id 3 is 'authorized'
+        $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', 3);
+        Pluf_RowPermission::add($cuser, null, $perm, false);
         // User activation
         // $user_active = Pluf::f('user_signup_active', false);
         // $cuser->active = $user_active;
