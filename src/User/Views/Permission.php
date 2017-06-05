@@ -55,9 +55,9 @@ class User_Views_Permission
     {
         // XXX: maso, 1395: check user access.
         // Hadi, 1396: check user access
-        Pluf_Precondition::couldAddRole($request, $match['userId'], $request->REQUEST['id']);
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['id']);
+        Pluf_Precondition::couldAddRole($request, $user->id, $perm->id);
         Pluf_RowPermission::add($user, null, $perm, false);
         return new Pluf_HTTP_Response_Json($user);
     }
