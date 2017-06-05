@@ -229,7 +229,7 @@ class Pluf_Views
                                             'object' => $object
                                     )), $request);
         }
-        return new Pluf_HTTP_Response_Json($object);
+        return $object;
     }
 
     // TODO: maso, 2017: document

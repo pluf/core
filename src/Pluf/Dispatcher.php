@@ -58,7 +58,7 @@ class Pluf_Dispatcher
                 if (method_exists($mw, 'process_request')) {
                     $response = $mw->process_request($req);
                     if ($response !== false) {
-                        self::handleResponse($response);
+                        self::handleResponse($req, $response);
                         $skip = true;
                         break;
                     }
@@ -67,6 +67,7 @@ class Pluf_Dispatcher
             if ($skip === false) {
                 // 2- Call view
                 $response = self::match($req);
+                $response = self::toResponse($response);
                 if (! empty($req->response_vary_on)) {
                     $response->headers['Vary'] = $req->response_vary_on;
                 }
@@ -77,13 +78,13 @@ class Pluf_Dispatcher
                         $response = $mw->process_response($req, $response);
                     }
                 }
-                self::handleResponse($response);
+                self::handleResponse($req, $response);
             }
         } catch (Exception $e) {
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
-            self::handleResponse(new Pluf_HTTP_Response_ServerError($e));
+            self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
             self::logError($e);
         }
         /**
@@ -263,43 +264,45 @@ class Pluf_Dispatcher
         return false;
     }
 
+    private static function toResponse ($response)
+    {
+        if ($response instanceof Pluf_HTTP_Response) {
+            return $response;
+        }
+        $http = new HTTP2();
+        $contentType = array(
+                'application/json',
+                'text/plain'
+        );
+        $mime = $http->negotiateMimeType($contentType, $contentType[0]);
+        if ($mime === false) {
+            throw new Pluf_Exception(
+                    "You don't want any of the content types I have to offer\n");
+        }
+        switch ($mime) {
+            case 'application/json':
+                $response = new Pluf_HTTP_Response_Json($response);
+                break;
+            case 'text/plain':
+                $response = new Pluf_HTTP_Response_PlainText($response);
+                break;
+        }
+        return $response;
+    }
+
     /**
-     * 
-     * @param Pluf_HTTP_Request $req
-     * @param Pluf_HTTP_Response|JsonSerializable $response
+     *
+     * @param Pluf_HTTP_Request $req            
+     * @param Pluf_HTTP_Response $response            
      */
     private static function handleResponse ($req, $response)
     {
-        if(! ($response instanceof Pluf_HTTP_Response)){
-            $http = new HTTP2();
-            $contentType = array(
-                    'application/json',
-                    'text/plain',
-            );
-            $mime = $http->negotiateMimeType($contentType, $contentType[0]);
-            if ($mime=== false) {
-                $response = new Pluf_HTTP_Response_ServerError(
-                        new Pluf_Exception( "You don't want any of the content types I have to offer\n")
-                        );
-            } else {
-                switch ($mime){
-                    case 'application/json':
-                        $response = new Pluf_HTTP_Response_Json($response);
-                        break;
-                    case 'text/plain':
-                        $response = new Pluf_HTTP_Response_PlainText($response);
-                        break;
-                }
-                
-            }
-        }
         // $response is a response
         if (Pluf::f('pluf_runtime_header', false)) {
             $response->headers['X-Perf-Runtime'] = sprintf('%.5f', 
                     (microtime(true) - $GLOBALS['_PX_starttime']));
         }
-        $response->render(
-                $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+        $response->render($req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
     }
 
     /**
@@ -309,7 +312,7 @@ class Pluf_Dispatcher
      */
     private static function logError ($req, $e)
     {
-        try { 
+        try {
             // 1- Add to log
             Pluf_Log::fatal(
                     array(
