@@ -53,7 +53,7 @@ function Monitor_Shortcuts_BeansToPrometheus($beans, $request, $match){
         if($value['type']!=='scaler'){
             continue;
         }
-        $result = $result . $bean->bean . ' ' . Monitor_Shortcuts_BeansToPrometheusLabel($bean, $request, $match) . " " . ($value['value']? $value['value']:'0') . PHP_EOL;
+        $result = $result . Monitor_Shortcuts_BeansToPrometheusLabel($bean, $request, $match) . " " . ($value['value']? $value['value']:'0') . PHP_EOL;
     }
     return new Pluf_HTTP_Response($result, 'text/plain');
 }
@@ -64,7 +64,7 @@ function Monitor_Shortcuts_BeansToPrometheus($beans, $request, $match){
  */
 function Monitor_Shortcuts_BeansToPrometheusLabel($bean){
     $labels = $bean->jsonSerialize();
-    $result = '{';
+    $result = $bean->bean.'_'.$bean->property.'_ {';
     foreach ($labels as $key => $value){
         $result = $result . $key . '="'. $value . '",';
     }
