@@ -54,8 +54,10 @@ class User_Views_Permission
     public function create ($request, $match)
     {
         // XXX: maso, 1395: check user access.
+        // Hadi, 1396: check user access
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $request->REQUEST['id']);
+        Pluf_Precondition::couldAddRole($request, $user->id, $perm->id);
         Pluf_RowPermission::add($user, null, $perm, false);
         return new Pluf_HTTP_Response_Json($user);
     }
@@ -79,8 +81,10 @@ class User_Views_Permission
     public function delete ($request, $match)
     {
         // XXX: maso, 1395: check user access.
+        // Hadi, 1396: check user access
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
+        Pluf_Precondition::couldRemoveRole($request, $user->id, $perm->id);
         Pluf_RowPermission::remove($user, null, $perm);
         return new Pluf_HTTP_Response_Json($user);
     }
