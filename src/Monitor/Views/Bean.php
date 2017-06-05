@@ -18,10 +18,17 @@
  */
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Monitor_Shortcuts_UserLevel');
+Pluf::loadFunction('Monitor_Shortcuts_BeansToPrometheus');
 
 class Monitor_Views_Bean
 {
 
+    /**
+     *
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
+     * @return unknown
+     */
     public function find ($request, $match)
     {
         $content = new Pluf_Paginator(new Pluf_Monitor());
@@ -30,7 +37,14 @@ class Monitor_Views_Bean
                         Monitor_Shortcuts_UserLevel($request)
                 ));
         $content->forced_where = $sql;
-        $content->model_view = 'beans';
+        if (key_exists('_px_format', $request->REQUEST)) {
+            switch ($request->REQUEST['_px_format']) {
+                case 'text/prometheus':
+                    break;
+                default:
+                    $content->model_view = 'beans';
+            }
+        }
         $content->list_filters = array(
                 'bean',
                 'property',
@@ -59,8 +73,13 @@ class Monitor_Views_Bean
         );
         $content->configure($list_display, $search_fields, $sort_fields);
         $content->setFromRequest($request);
-        
+        if (key_exists('_px_format', $request->REQUEST)) {
+            switch ($request->REQUEST['_px_format']) {
+                case 'text/prometheus':
+                    return Monitor_Shortcuts_BeansToPrometheus(
+                    $content->render_object(), $request, $match);
+            }
+        }
         return $content->render_object();
     }
-
 }

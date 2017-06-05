@@ -126,6 +126,7 @@ class Pluf_Monitor extends Pluf_Model
      */
     function invoke ($request, $match = array())
     {
+        $match['property'] = $this->property;
         return call_user_func_array(explode('::', $this->function), 
                 array(
                         $request,
