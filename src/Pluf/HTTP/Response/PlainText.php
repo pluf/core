@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,7 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Monitor_Views
+class Pluf_HTTP_Response_PlainT extends Pluf_HTTP_Response
 {
 
+    /**
+     *
+     * @param
+     *            mixed Values, will be encoded using json_encode
+     */
+    function __construct ($data, $mimetype = 'text/plain; charset=utf-8')
+    {
+        parent::__construct(print_r($data, true), $mimetype);
+    }
 }
+
