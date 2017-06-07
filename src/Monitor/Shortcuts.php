@@ -27,7 +27,7 @@ function Monitor_Shortcuts_UserLevel ($request)
 {
     $user = $request->user;
     if ($user->isAnonymous() || !$user->active) {
-        return 10;
+        return 100;
     }
     if($user->administrator){
         return 0;
@@ -44,4 +44,29 @@ function Monitor_Shortcuts_UserLevel ($request)
     if($user->hasPerm('Pluf::authorized')){
         return 4;
     }
+}
+
+function Monitor_Shortcuts_BeansToPrometheus($beans, $request, $match){
+    $result = '';
+    foreach($beans['items'] as $bean){
+        $value = $bean->invoke($request);
+        if($value['type']!=='scaler'){
+            continue;
+        }
+        $result = $result . Monitor_Shortcuts_BeansToPrometheusLabel($bean, $request, $match) . " " . ($value['value']? $value['value']:'0') . PHP_EOL;
+    }
+    return new Pluf_HTTP_Response($result, 'text/plain');
+}
+
+/**
+ * 
+ * @param Pluf_Monitor $bean
+ */
+function Monitor_Shortcuts_BeansToPrometheusLabel($bean){
+    $labels = $bean->jsonSerialize();
+    $result = $bean->bean.'_'.$bean->property.'_ {';
+    foreach ($labels as $key => $value){
+        $result = $result . $key . '="'. $value . '",';
+    }
+    return $result.'} ';
 }

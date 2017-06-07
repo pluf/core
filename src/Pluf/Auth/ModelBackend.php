@@ -30,6 +30,8 @@ class Pluf_Auth_ModelBackend
      * Given a user id, retrieve it.
      *
      * In the case of the Pluf_User backend, the $user_id is the login.
+     * 
+     * @return Pluf_User
      */
     public static function getUser($user_id)
     {

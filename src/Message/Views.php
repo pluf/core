@@ -56,7 +56,7 @@ class Message_Views
         );
         $content->configure($list_display, $search_fields, $sort_fields);
         $content->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($content->render_object());
+        return $content->render_object();
     }
 
     /**
@@ -70,7 +70,7 @@ class Message_Views
         $message = Pluf_Shortcuts_GetObjectOr404('Pluf_Message', 
                 $match['messageId']);
         Message_Security::canAccessMessage($request, $message);
-        return new Pluf_HTTP_Response_Json($message);
+        return $message;
     }
 
     /**
@@ -85,6 +85,6 @@ class Message_Views
                 $match['messageId']);
         Message_Security::canAccessMessage($request, $message);
         $message->delete();
-        return new Pluf_HTTP_Response_Json($message);
+        return $message;
     }
 }
