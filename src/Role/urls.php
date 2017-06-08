@@ -51,7 +51,7 @@ return array(
         'method' => 'add',
         'http-method' => 'POST',
         'precond' => array(
-            'Pluf_Precondition::adminRequired'
+            'Pluf_Precondition::loginRequired'
         )
     ),
     array(
@@ -74,7 +74,7 @@ return array(
         'method' => 'delete',
         'http-method' => 'DELETE',
         'precond' => array(
-            'Pluf_Precondition::adminRequired'
+            'Pluf_Precondition::loginRequired'
         )
     ),
     /*

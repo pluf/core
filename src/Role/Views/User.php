@@ -51,6 +51,7 @@ class Role_Views_User extends Pluf_Views
                 throw new Pluf_HTTP_Error404(__('User not found'));
             }
         }
+        Pluf_Precondition::couldAddRole($request, $user->id, $perm->id);
         $row = Pluf_RowPermission::add($user, null, $perm, false);
         return new Pluf_HTTP_Response_Json($row);
     }
@@ -147,6 +148,7 @@ class Role_Views_User extends Pluf_Views
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['id']);
         $owner = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
+        Pluf_Precondition::couldRemoveRole($request, $owner->id, $perm->id);
         $row = Pluf_RowPermission::remove($owner, null, $perm);
         return new Pluf_HTTP_Response_Json($row);
     }

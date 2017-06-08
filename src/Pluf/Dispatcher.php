@@ -46,70 +46,46 @@ class Pluf_Dispatcher
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
+            // Puts request in global scope
+            $GLOBALS['_PX_request'] = $req;
             $middleware = array();
             foreach (Pluf::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();
             }
+            // 1- middleware process request
             $skip = false;
             foreach ($middleware as $mw) {
                 if (method_exists($mw, 'process_request')) {
                     $response = $mw->process_request($req);
                     if ($response !== false) {
-                        // $response is a response
-                        if (Pluf::f('pluf_runtime_header', false)) {
-                            $response->headers['X-Perf-Runtime'] = sprintf(
-                                    '%.5f', 
-                                    (microtime(true) - $GLOBALS['_PX_starttime']));
-                        }
-                        $response->render(
-                                $req->method != 'HEAD' and
-                                         ! defined('IN_UNIT_TESTS'));
+                        self::handleResponse($req, $response);
                         $skip = true;
                         break;
                     }
                 }
             }
-            // Puts request in global scope
-            $GLOBALS['_PX_request'] = $req;
             if ($skip === false) {
+                // 2- Call view
                 $response = self::match($req);
+                $response = self::toResponse($response);
                 if (! empty($req->response_vary_on)) {
                     $response->headers['Vary'] = $req->response_vary_on;
                 }
+                // 3- call middleware to
                 $middleware = array_reverse($middleware);
                 foreach ($middleware as $mw) {
                     if (method_exists($mw, 'process_response')) {
                         $response = $mw->process_response($req, $response);
                     }
                 }
-                if (Pluf::f('pluf_runtime_header', false)) {
-                    $response->headers['X-Perf-Runtime'] = sprintf('%.5f', 
-                            (microtime(true) - $GLOBALS['_PX_starttime']));
-                }
-                $response->render(
-                        $req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+                self::handleResponse($req, $response);
             }
         } catch (Exception $e) {
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
-            $response = new Pluf_HTTP_Response_ServerError($e);
-            $response->render($req->method != 'HEAD');
-            try { // 1- Add to log
-                Pluf_Log::fatal(
-                        array(
-                                'query' => $query,
-                                'error' => $e
-                        ));
-            } catch (Exception $ex) {}
-            if (! ($e instanceof Pluf_Exception)) {
-                try { // 2- send email
-                    $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
-                    $email = new Pluf_Mail($from, $from, 'fatal error in system');
-                    $email->addTextMessage('unsupported error in system:' . $e);
-                    $email->sendMail();
-                } catch (Exception $ex) {}
-            }
+            self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
+            self::logError($e);
         }
         /**
          * [signal]
@@ -277,7 +253,7 @@ class Pluf_Dispatcher
      */
     public static function loadControllers ($file)
     {
-        if(is_array($file)){
+        if (is_array($file)) {
             $GLOBALS['_PX_views'] = $file;
             return true;
         }
@@ -286,6 +262,71 @@ class Pluf_Dispatcher
             return true;
         }
         return false;
+    }
+
+    private static function toResponse ($response)
+    {
+        if ($response instanceof Pluf_HTTP_Response) {
+            return $response;
+        }
+        $http = new HTTP2();
+        $contentType = array(
+                'application/json',
+                'text/plain'
+        );
+        $mime = $http->negotiateMimeType($contentType, $contentType[0]);
+        if ($mime === false) {
+            throw new Pluf_Exception(
+                    "You don't want any of the content types I have to offer\n");
+        }
+        switch ($mime) {
+            case 'application/json':
+                $response = new Pluf_HTTP_Response_Json($response);
+                break;
+            case 'text/plain':
+                $response = new Pluf_HTTP_Response_PlainText($response);
+                break;
+        }
+        return $response;
+    }
+
+    /**
+     *
+     * @param Pluf_HTTP_Request $req            
+     * @param Pluf_HTTP_Response $response            
+     */
+    private static function handleResponse ($req, $response)
+    {
+        // $response is a response
+        if (Pluf::f('pluf_runtime_header', false)) {
+            $response->headers['X-Perf-Runtime'] = sprintf('%.5f', 
+                    (microtime(true) - $GLOBALS['_PX_starttime']));
+        }
+        $response->render($req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
+    }
+
+    /**
+     *
+     * @param Pluf_HTTP_Request $req            
+     * @param Exception $e            
+     */
+    private static function logError ($req, $e)
+    {
+        try {
+            // 1- Add to log
+            Pluf_Log::fatal(
+                    array(
+                            'query' => $req->query,
+                            'error' => $e
+                    ));
+            // 2- send email if error is not handled
+            if (! ($e instanceof Pluf_Exception)) {
+                $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
+                $email = new Pluf_Mail($from, $from, 'fatal error in system');
+                $email->addTextMessage('unsupported error in system:' . $e);
+                $email->sendMail();
+            }
+        } catch (Exception $ex) {}
     }
 }
 

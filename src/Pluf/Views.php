@@ -229,7 +229,7 @@ class Pluf_Views
                                             'object' => $object
                                     )), $request);
         }
-        return new Pluf_HTTP_Response_Json($object);
+        return $object;
     }
 
     // TODO: maso, 2017: document
@@ -283,7 +283,7 @@ class Pluf_Views
         $page->configure($p['listDisplay'], $p['searchFields'], 
                 $p['sortFields']);
         $page->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($page->render_object());
+        return $page->render_object();
     }
 
     /**
@@ -436,8 +436,10 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy->id = 0;
         self::CRUD_checkPreconditions($request, $p, $object);
         $object->delete();
-        return self::CRUD_response($request, $p, $object);
+        return self::CRUD_response($request, $p, $objectCopy);
     }
 }

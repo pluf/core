@@ -32,13 +32,15 @@ class User_Views_User
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public static function create($request, $match)
+    public static function create ($request, $match)
     {
         // Create account
         $extra = array();
-        $form = new User_Form_User(array_merge($request->REQUEST, $request->FILES), $extra);
+        $form = new User_Form_User(
+                array_merge($request->REQUEST, $request->FILES), $extra);
         $cuser = $form->save();
-        
+        $perm = Pluf_Permission::getFromString('Pluf.authorized');
+        Pluf_RowPermission::add($cuser, null, $perm, false);
         // User activation
         // $user_active = Pluf::f('user_signup_active', false);
         // $cuser->active = $user_active;
@@ -56,14 +58,15 @@ class User_Views_User
         // $profile->user = $cuser;
         // $profile->create();
         // }
-        // $form = new $profile_form(array_merge($request->POST, $request->FILES),
+        // $form = new $profile_form(array_merge($request->POST,
+        // $request->FILES),
         // array(
         // 'user_profile' => $profile
         // ));
         // $profile = $form->update();
         
         // Return response
-        return new Pluf_HTTP_Response_Json($cuser);
+        return $cuser;
     }
 
     /**
@@ -72,10 +75,10 @@ class User_Views_User
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public static function get($request, $match)
+    public static function get ($request, $match)
     {
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        return new Pluf_HTTP_Response_Json($user);
+        return $user;
     }
 
     /**
@@ -85,12 +88,14 @@ class User_Views_User
      * @param unknown $match            
      * @return unknown
      */
-    public static function update($request, $match)
+    public static function update ($request, $match)
     {
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, array());
-        $request->user->setMessage(sprintf(__('Account data has been updated.'), (string) $model));
-        return new Pluf_HTTP_Response_Json($form->save());
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($model, $request->REQUEST, 
+                array());
+        $request->user->setMessage(
+                sprintf(__('Account data has been updated.'), (string) $model));
+        return $form->save();
     }
 
     /**
@@ -99,59 +104,63 @@ class User_Views_User
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public static function delete($request, $match)
+    public static function delete ($request, $match)
     {
         // XXX: hadi, 1395-07-17: permission should be consider here
         // temporary I constrain this operation only for admin.
         Pluf_Precondition::adminRequired($request);
         $usr = new Pluf_User($match['userId']);
         $usr->delete();
-        return new Pluf_HTTP_Response_Json($usr);
+        return $usr;
     }
 
     /**
      * Returns list of users.
-     * Returned list can be customized using search fields, filters or sort fields.
+     * Returned list can be customized using search fields, filters or sort
+     * fields.
      *
      * @param unknown_type $request            
      * @param unknown_type $match            
      */
-    public static function find($request, $match)
+    public static function find ($request, $match)
     {
         $pag = new Pluf_Paginator(new Pluf_User());
         $pag->list_filters = array(
-            'administrator',
-            'staff',
-            'active'
+                'administrator',
+                'staff',
+                'active'
         );
         $search_fields = array(
-            'login',
-            'first_name',
-            'last_name',
-            'email'
-        );
-        $list_display = array(
-            'login' => __('login'),
-            'first_name' => __('first name'),
-            'last_name' => __('last name'),
-            'email' => __('email')
+                'login',
+                'first_name',
+                'last_name',
+                'email'
         );
         $sort_fields = array(
-            'id',
-            'login',
-            'first_name',
-            'last_name',
-            'date_joined',
-            'last_login'
+                'id',
+                'login',
+                'first_name',
+                'last_name',
+                'date_joined',
+                'last_login'
         );
-        $pag->model_view = 'secure';
-        $pag->configure($list_display, $search_fields, $sort_fields);
+        if (! Pluf_Precondition::isStaff($request) &&
+                 Pluf::f('multitenant', false)) {
+            $pag->model_view = 'roled_user';
+            $pag->forced_where = new Pluf_SQL('tenant=%s', 
+                    array(
+                            Pluf_Tenant::current()->id
+                    ));
+        } else {
+            $pag->model_view = 'secure';
+        }
+        $pag->configure(array(), $search_fields, $sort_fields);
         $pag->items_per_page = User_Views_User::getListCount($request);
         $pag->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($pag->render_object());
+        return $pag->render_object();
     }
 
-    static function getListCount($request)
+    static function getListCount ($request)
     {
         $count = 50;
         if (array_key_exists('_px_ps', $request->GET)) {

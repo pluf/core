@@ -26,6 +26,7 @@
             <directory>./Pluf_DB_Schema/</directory>
             <directory>./Pluf_Dispatcher/</directory>
             <directory>./Pluf_Encoder/</directory>
+            <directory>./Pluf_Tenant/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

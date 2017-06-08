@@ -50,6 +50,26 @@ class Pluf_Precondition
         }
         return true;
     }
+    
+    /**
+     * Check if the user is logged in.
+     *
+     * Returns true if user is loged in and is active
+     *
+     * @param
+     *            Pluf_HTTP_Request
+     * @return boolean
+     */
+    static public function isLogedIn ($request)
+    {
+        if (! isset($request->user) or $request->user->isAnonymous()) {
+            return false;
+        }
+        if (! $request->user->active) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Check if the user is admin or staff.
@@ -90,7 +110,45 @@ class Pluf_Precondition
         throw new Pluf_Exception('admin required', 4004, null, 400, '', 
                 'admin required');
     }
+    
+    /**
+     * Check if the user is admin or staff.
+     *
+     * @param
+     *            Pluf_HTTP_Request
+     * @return boolean
+     */
+    static public function isStaff ($request)
+    {
+        $res = Pluf_Precondition::isLogedIn($request);
+        if (true !== $res) {
+            return $res;
+        }
+        if ($request->user->administrator or $request->user->staff) {
+            return true;
+        }
+        return false;
+    }
 
+    /**
+     * Check if the user is administrator..
+     *
+     * @param
+     *            Pluf_HTTP_Request
+     * @return mixed
+     */
+    static public function isAdministrator ($request)
+    {
+        $res = Pluf_Precondition::isLogedIn($request);
+        if (true !== $res) {
+            return $res;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Check if the user has a given permission..
      *
@@ -279,5 +337,54 @@ class Pluf_Precondition
             return true;
         }
         return false;
+    }
+
+    /**
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param int $userId id of user who role will be granted.
+     * @param int $roldId id of permission to grant
+     * @return mixed|boolean
+     */
+    static public function couldAddRole($request, $userId, $roleId){
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            return true;
+        }
+        $perm = Pluf_Permission::getFromString('Pluf.authorized');
+        if ($request->user->id === $userId && $roleId === $perm->id) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied('You have not permission to add such role.');
+    }
+    
+    /**
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param int $userId id of user who role will be granted.
+     * @param int $roldId id of permission to grant
+     * @return mixed|boolean
+     */
+    static public function couldRemoveRole($request, $userId, $roleId){
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return false;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            return true;
+        }
+        if ($request->user->id === $userId) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied('You have not permission to remove such role.');
     }
 }

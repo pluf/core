@@ -19,32 +19,34 @@
 return array(
         array(
                 'regex' => '#^/find$#',
-                'model' => 'Monitor_Views',
-                'method' => 'findBean',
+                'model' => 'Monitor_Views_Bean',
+                'method' => 'find',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<monitor>[^/]+)/property/find$#',
-                'model' => 'Monitor_Views',
-                'method' => 'findProperty',
+                'model' => 'Monitor_Views_Property',
+                'method' => 'find',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<monitor>[^/]+)/property/(?P<property>[^/]+)$#',
-                'model' => 'Monitor_Views',
-                'method' => 'call',
+                'model' => 'Monitor_Views_Property',
+                'method' => 'get',
                 'http-method' => 'GET'
         ),
+        
+        // Old versions
         array(
                 'regex' => '#^/(?P<monitor>[^/]+)/find$#',
-                'model' => 'Monitor_Views',
-                'method' => 'findProperty',
+                'model' => 'Monitor_Views_Property',
+                'method' => 'find',
                 'http-method' => 'GET'
         ),
         array(
                 'regex' => '#^/(?P<monitor>[^/]+)/(?P<property>[^/]+)$#',
-                'model' => 'Monitor_Views',
-                'method' => 'call',
+                'model' => 'Monitor_Views_Property',
+                'method' => 'get',
                 'http-method' => 'GET'
         )
 );
