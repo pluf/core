@@ -357,8 +357,8 @@ class Pluf_Precondition
         if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
             return true;
         }
-        // XXX: hadi, 1396-03: It is assumed that permission with id 3 is 'authorized'
-        if ($request->user->id === $userId && $roleId === 3) {
+        $perm = Pluf_Permission::getFromString('Pluf.authorized');
+        if ($request->user->id === $userId && $roleId === $perm->id) {
             return true;
         }
         throw new Pluf_Exception_PermissionDenied('You have not permission to add such role.');
