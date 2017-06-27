@@ -28,6 +28,7 @@
             <directory>./Pluf_Encoder/</directory>
             <directory>./Pluf_Tenant/</directory>
             <directory>./Pluf_Tenant_Template/</directory>
+            <directory>./Pluf_Setting_Template/</directory> 
         </testsuite>
     </testsuites>
 </phpunit>

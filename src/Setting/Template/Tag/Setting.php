@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -20,13 +21,12 @@
 /**
  * Display a tenant attribute.
  */
-class Pluf_Template_Tag_Tenant extends Pluf_Template_Tag
+class Setting_Template_Tag_Setting extends Pluf_Template_Tag
 {
 
-    function start ($attr = 'title')
+    function start ($key, $defValue = '')
     {
-        $tenant = Pluf_Tenant::current();
-        echo $tenant->$attr;
+        echo Setting_Service::get($key, $defValue);
     }
 }
 
