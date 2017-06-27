@@ -59,6 +59,7 @@ class Monitor_Views_Property
                 'creation_date',
                 'modif_dtime'
         );
+        $content->sort_order = array('id', 'DESC');
         $content->configure($list_display, $search_fields, $sort_fields);
         $content->setFromRequest($request);
         return $content->render_object();

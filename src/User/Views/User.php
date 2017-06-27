@@ -154,6 +154,7 @@ class User_Views_User
         } else {
             $pag->model_view = 'secure';
         }
+        $pag->sort_order = array('id', 'DESC');
         $pag->configure(array(), $search_fields, $sort_fields);
         $pag->items_per_page = User_Views_User::getListCount($request);
         $pag->setFromRequest($request);

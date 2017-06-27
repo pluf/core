@@ -55,6 +55,10 @@ return array(
                         'sortFields' => array(
                                 'name',
                                 'description'
+                        ),
+                        'sortOrder' => array(
+                                'id',
+                                'DESC'
                         )
                 )
         ),
