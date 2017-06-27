@@ -85,7 +85,7 @@ class Pluf_Dispatcher
                 throw $e;
             }
             self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
-            self::logError($e);
+            self::logError(null, $e);
         }
         /**
          * [signal]

@@ -30,7 +30,6 @@ class User_Avatar extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Foreignkey',
                 'model' => 'Pluf_User',
                 'blank' => false,
-                'unique' => true,
                 'editable' => false
             ),
             'fileName' => array(
@@ -71,6 +70,13 @@ class User_Avatar extends Pluf_Model
                 'help_text' => __('Modification date of the avatar.'),
                 'editable' => false
             )
+        );
+        
+        $this->_a['idx'] = array(
+                'user-avatar-idx' => array(
+                        'col' => 'user',
+                        'type' => 'unique'
+                )
         );
     }
 
