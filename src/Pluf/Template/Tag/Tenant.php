@@ -16,23 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 /**
- * Special array where the keyed indexes can be accessed as properties.
+ * Display a tenant attribute.
  */
-class Pluf_Template_ContextVars extends ArrayObject
+class Pluf_Template_Tag_Tenant extends Pluf_Template_Tag
 {
-    function __get($prop)
-    {
-        return (isset($this[$prop])) ? $this[$prop] : '';
-    }
 
-    function __set($prop, $value)
+    function start ($attr = '')
     {
-        $this[$prop] = $value;
-    }
-
-    function __toString()
-    {
-        return var_export($this, true);
+        $tenant = Pluf_Tenant::current();
+        echo $tenant->$attr;
     }
 }
+
