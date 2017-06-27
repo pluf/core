@@ -39,7 +39,8 @@ class User_Views_User
         $form = new User_Form_User(
                 array_merge($request->REQUEST, $request->FILES), $extra);
         $cuser = $form->save();
-        
+        $perm = Pluf_Permission::getFromString('Pluf.authorized');
+        Pluf_RowPermission::add($cuser, null, $perm, false);
         // User activation
         // $user_active = Pluf::f('user_signup_active', false);
         // $cuser->active = $user_active;
@@ -65,7 +66,7 @@ class User_Views_User
         // $profile = $form->update();
         
         // Return response
-        return new Pluf_HTTP_Response_Json($cuser);
+        return $cuser;
     }
 
     /**
@@ -77,7 +78,7 @@ class User_Views_User
     public static function get ($request, $match)
     {
         $user = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        return new Pluf_HTTP_Response_Json($user);
+        return $user;
     }
 
     /**
@@ -94,7 +95,7 @@ class User_Views_User
                 array());
         $request->user->setMessage(
                 sprintf(__('Account data has been updated.'), (string) $model));
-        return new Pluf_HTTP_Response_Json($form->save());
+        return $form->save();
     }
 
     /**
@@ -110,7 +111,7 @@ class User_Views_User
         Pluf_Precondition::adminRequired($request);
         $usr = new Pluf_User($match['userId']);
         $usr->delete();
-        return new Pluf_HTTP_Response_Json($usr);
+        return $usr;
     }
 
     /**
@@ -153,10 +154,11 @@ class User_Views_User
         } else {
             $pag->model_view = 'secure';
         }
+        $pag->sort_order = array('id', 'DESC');
         $pag->configure(array(), $search_fields, $sort_fields);
         $pag->items_per_page = User_Views_User::getListCount($request);
         $pag->setFromRequest($request);
-        return new Pluf_HTTP_Response_Json($pag->render_object());
+        return $pag->render_object();
     }
 
     static function getListCount ($request)

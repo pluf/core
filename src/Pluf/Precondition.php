@@ -338,4 +338,53 @@ class Pluf_Precondition
         }
         return false;
     }
+
+    /**
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param int $userId id of user who role will be granted.
+     * @param int $roldId id of permission to grant
+     * @return mixed|boolean
+     */
+    static public function couldAddRole($request, $userId, $roleId){
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return $res;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            return true;
+        }
+        $perm = Pluf_Permission::getFromString('Pluf.authorized');
+        if ($request->user->id === $userId && $roleId === $perm->id) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied('You have not permission to add such role.');
+    }
+    
+    /**
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param int $userId id of user who role will be granted.
+     * @param int $roldId id of permission to grant
+     * @return mixed|boolean
+     */
+    static public function couldRemoveRole($request, $userId, $roleId){
+        $res = Pluf_Precondition::loginRequired($request);
+        if (true !== $res) {
+            return false;
+        }
+        if ($request->user->administrator) {
+            return true;
+        }
+        if ($request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            return true;
+        }
+        if ($request->user->id === $userId) {
+            return true;
+        }
+        throw new Pluf_Exception_PermissionDenied('You have not permission to remove such role.');
+    }
 }

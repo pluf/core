@@ -25,16 +25,17 @@ class User_Form_Avatar extends Pluf_Form_Model
         // the file again.');
         // }
         // }
+        $tenant = Pluf_Tenant::current();
+        $path = $tenant->storagePath() . '/avatar';
         $this->fields['file'] = new Pluf_Form_Field_File(
                 array(
                         'required' => true,
                         'max_size' => Pluf::f('user_avatra_max_size', 2097152),
                         'move_function_params' => array(
-                                'upload_path' => Pluf::f('upload_path') .
-                                         '/avatar',
-                                        'file_name' => $this->user->id,
-                                        'upload_path_create' => true,
-                                        'upload_overwrite' => true
+                                'upload_path' => $path,
+                                'file_name' => $this->user->id,
+                                'upload_path_create' => true,
+                                'upload_overwrite' => true
                         )
                 ));
     }
@@ -53,10 +54,11 @@ class User_Form_Avatar extends Pluf_Form_Model
         {
             // Extract information of file
             $myFile = $this->data['file'];
-            $fileInfo = Pluf_FileUtil::getMimeType($myFile['name']);
+            
+            $tenant = Pluf_Tenant::current();
             
             $model->fileName = $myFile['name'];
-            $model->filePath = Pluf::f('upload_path') . '/avatar';
+            $model->filePath = $tenant->storagePath() . '/avatar';
             $model->user = $this->user;
         }
         

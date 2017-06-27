@@ -142,7 +142,11 @@ return array(
                 'model' => 'User_Views',
                 'method' => 'getAvatar',
                 'http-method' => 'GET',
-                'precond' => array()
+                'precond' => array(),
+                // Cache apram
+                'cacheable' => true,
+                'revalidate' => true,
+                'intermediate_cache' => true
         ),
         array(
                 'regex' => '#^/avatar$#',
@@ -170,7 +174,11 @@ return array(
                 'model' => 'User_Views_Avatar',
                 'method' => 'get',
                 'http-method' => 'GET',
-                'precond' => array()
+            'precond' => array(),
+            // Cache apram
+            'cacheable' => true,
+            'revalidate' => true,
+            'intermediate_cache' => true
         ),
         array(
                 'regex' => '#^/(?P<userId>\d+)/avatar$#',
@@ -234,7 +242,10 @@ return array(
                 'regex' => '#^/(?P<userId>\d+)/role/new$#',
                 'model' => 'User_Views_Permission',
                 'method' => 'create',
-                'http-method' => 'POST'
+                'http-method' => 'POST',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
         array(
                 'regex' => '#^/(?P<userId>\d+)/role/find$#',
@@ -248,17 +259,23 @@ return array(
                 'method' => 'get',
                 'http-method' => 'GET'
         ),
-        array(
-                'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
-                'model' => 'User_Views_Permission',
-                'method' => 'POST',
-                'http-method' => 'update'
-        ),
+        // array(
+        // 'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
+        // 'model' => 'User_Views_Permission',
+        // 'method' => 'POST',
+        // 'http-method' => 'update',
+        // 'precond' => array(
+        // 'Pluf_Precondition::ownerRequired'
+        // )
+        // ),
         array(
                 'regex' => '#^/(?P<userId>\d+)/role/(?P<roleId>\d+)$#',
                 'model' => 'User_Views_Permission',
                 'method' => 'delete',
-                'http-method' => 'DELETE'
+                'http-method' => 'DELETE',
+                'precond' => array(
+                        'Pluf_Precondition::loginRequired'
+                )
         ),
         /*
          * Password

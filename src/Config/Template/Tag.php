@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,7 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Monitor_Views
+
+/**
+ * Display a tenant attribute.
+ */
+class Config_Template_Tag extends Pluf_Template_Tag
 {
 
+    function start ($key, $defValue = '')
+    {
+        echo Config_Service::get($key, $defValue);
+    }
 }
+

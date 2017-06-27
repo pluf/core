@@ -68,7 +68,7 @@ class Pluf_Model implements JsonSerializable
      * 'verbose': The verbose name of the model.
      */
     public $_a = array(
-            'multitenant' => false,
+            'multitenant' => true,
             'table' => 'model',
             'model' => 'Pluf_Model',
             'cols' => array(),
@@ -978,6 +978,8 @@ class Pluf_Model implements JsonSerializable
                     'DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
         }
         // Find the models linking to the current one through a foreign key.
+        // XXX: Hadi, 1396-03: It is better to use standard policies: 
+        // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
         foreach ($this->_m['list'] as $method => $details) {
             if (is_array($details)) {
                 // foreignkey

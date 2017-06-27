@@ -16,7 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Monitor_Views
+
+/**
+ * Display a tenant attribute.
+ */
+class Pluf_Template_Tag_Tenant extends Pluf_Template_Tag
 {
 
+    function start ($attr = 'title')
+    {
+        $tenant = Pluf_Tenant::current();
+        echo $tenant->$attr;
+    }
 }
+

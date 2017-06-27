@@ -80,6 +80,7 @@ class Role_Views extends Pluf_Views
             'code_name',
             'application'
         );
+        $pag->sort_order = array('id', 'DESC');
         $pag->configure($list_display, $search_fields, $sort_fields);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());

@@ -98,14 +98,18 @@ class Pluf_RowPermission extends Pluf_Model
         $t_perm = $this->_con->pfx . 'permissions';
         $this->_a['views'] = array(
                 'join_permission' => array(
-                        'select' => $this->getSelect() . ', ' . $t_perm .
-                                 '.code_name AS code_name, ' . $t_perm .
-                                 '.application AS application ',
+                        'select' => $this->getSelect() . ', ' . 
+                        $t_perm .'.code_name AS code_name, ' . 
+                        $t_perm .'.application AS application, '.
+                        $t_perm .'.name AS name, '.
+                        $t_perm .'.description AS description ',
                                 'join' => 'LEFT JOIN ' . $t_perm . ' ON ' .
                                  $t_perm . '.id=permission',
                                 'props' => array(
                                         'code_name' => 'code_name',
-                                        'application' => 'application'
+                                        'application' => 'application',
+                                        'name' => 'name',
+                                        'description' => 'description'
                                 )
                 )
         );

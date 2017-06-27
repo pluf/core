@@ -2,14 +2,14 @@
 <phpunit colors="true">
     <testsuites>
         <testsuite name="Pluf">
-            <directory>./Pluf/</directory>
+            <!-- <directory>./Pluf/</directory>
             <directory>./Pluf_Crypt/</directory>
-            <directory>./Pluf_Utils/</directory>
+            <directory>./Pluf_Utils/</directory> -->
 <!--             <directory>./Pluf_User/</directory> -->
 <!--             <directory>./Pluf_Text_Wiki/</directory> -->
 <!--             <directory>./Pluf_Text_LaTeX_Texvc/</directory> -->
 <!--             <directory>./Pluf_Text_LaTeX/</directory> -->
-            <directory>./Pluf_Text_HTML_Filter/</directory>
+            <!-- <directory>./Pluf_Text_HTML_Filter/</directory>
             <directory>./Pluf_Template_Compiler/</directory>
             <directory>./Pluf_Template/</directory>
             <directory>./Pluf_SQL/</directory>
@@ -27,6 +27,10 @@
             <directory>./Pluf_Dispatcher/</directory>
             <directory>./Pluf_Encoder/</directory>
             <directory>./Pluf_Tenant/</directory>
+            <directory>./Pluf_Tenant_Template/</directory>
+            <directory>./Pluf_Setting_Template/</directory>  -->
+            <directory>./Pluf_Config/</directory> 
+            <directory>./Pluf_Config_Template/</directory> 
         </testsuite>
     </testsuites>
 </phpunit>
