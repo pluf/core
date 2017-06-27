@@ -72,8 +72,8 @@ class Config_Service
     public static function set ($key, $value)
     {
         self::$inMemory[$key] = array(
-                value => $value,
-                derty => true
+                'value' => $value,
+                'derty' => true
         );
     }
 
