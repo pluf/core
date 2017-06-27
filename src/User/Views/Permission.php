@@ -18,7 +18,7 @@ class User_Views_Permission
     {
         // XXX: maso, 1395: check user access.
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
-        $pag = new Pluf_Paginator(new Pluf_Permission());
+        $pag = new Pluf_Paginator(new Pluf_RowPermission());
         $pag->configure(array(), 
                 array( // search
                         'name',
@@ -36,7 +36,7 @@ class User_Views_Permission
                 'DESC'
         );
         $pag->setFromRequest($request);
-        $pag->model_view = 'join_row_permission';
+        $pag->model_view = 'join_permission';
         $pag->forced_where = new Pluf_SQL(
                 'rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s', 
                 array(

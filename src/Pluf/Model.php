@@ -68,7 +68,7 @@ class Pluf_Model implements JsonSerializable
      * 'verbose': The verbose name of the model.
      */
     public $_a = array(
-            'multitenant' => false,
+            'multitenant' => true,
             'table' => 'model',
             'model' => 'Pluf_Model',
             'cols' => array(),
