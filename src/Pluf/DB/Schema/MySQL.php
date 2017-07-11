@@ -339,7 +339,7 @@ class Pluf_DB_Schema_MySQL
             }
             if ($field->type == 'foreignkey') {
                 // Add the foreignkey constraints
-                $referto = new $val['model']();
+//                 $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName(
                         $table . '_' . $col . '_fkey');
             }
