@@ -46,7 +46,10 @@ class Pluf_DB_Schema_MySQL
             'password' => 'varchar(150)',
             'float' => 'numeric(%s, %s)',
             'blob' => 'blob',
-            'point' => 'POINT'
+            // GEO types
+            'point' => 'POINT',
+            'geometry' => 'GEOMETRY',
+            'polygon' => 'POLYGON'
     );
 
     public $defaults = array(
@@ -137,7 +140,11 @@ class Pluf_DB_Schema_MySQL
             }
         }
         $sql .= "\n" . 'PRIMARY KEY (`id`))';
-        $sql .= 'ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+        $engine = 'InnoDB';
+        if(key_exists('engine', $model->_a)){
+            $engine = $model->_['engine'];
+        }
+        $sql .= 'ENGINE='.$engine.' DEFAULT CHARSET=utf8;';
         $tables[$this->con->pfx . $model->_a['table']] = $sql;
         
         // Now for the many to many
