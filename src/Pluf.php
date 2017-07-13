@@ -205,6 +205,9 @@ class Pluf {
 			return;
 		}
 		$file = str_replace ( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
+		if(!file_exists(stream_resolve_include_path($file))){
+		    return ;
+		}
 		include $file;
 		if (! class_exists ( $class, false )) {
 			$error = 'Impossible to load the class: ' . $class . "\n" . 'Tried to include: ' . $file . "\n" . 'Include path: ' . get_include_path ();
