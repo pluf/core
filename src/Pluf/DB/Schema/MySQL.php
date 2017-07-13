@@ -142,7 +142,7 @@ class Pluf_DB_Schema_MySQL
         $sql .= "\n" . 'PRIMARY KEY (`id`))';
         $engine = 'InnoDB';
         if(key_exists('engine', $model->_a)){
-            $engine = $model->_['engine'];
+            $engine = $model->_a['engine'];
         }
         $sql .= 'ENGINE='.$engine.' DEFAULT CHARSET=utf8;';
         $tables[$this->con->pfx . $model->_a['table']] = $sql;
