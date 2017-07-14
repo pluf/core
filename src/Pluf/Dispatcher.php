@@ -41,7 +41,7 @@ class Pluf_Dispatcher
      * @param
      *            string Query string ('')
      */
-    public static function dispatch ($query = '')
+    public static function dispatch ($query = '', $controllers=NULL)
     {
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
@@ -66,6 +66,9 @@ class Pluf_Dispatcher
             }
             if ($skip === false) {
                 // 2- Call view
+                if(isset($controllers)){
+                    self::loadControllers($controllers);
+                }
                 $response = self::match($req);
                 $response = self::toResponse($response);
                 if (! empty($req->response_vary_on)) {
