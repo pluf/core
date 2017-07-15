@@ -42,9 +42,6 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
         $dl = &new HTTP_Download2();
         $dl->setFile($this->content);
 //         $dl->setContentDisposition(HTTP_DOWNLOAD_ATTACHMENT, 'latest.tgz');
-        // with ext/magic.mime
-        // $dl->guessContentType();
-        // else:
         $dl->setContentType($this->headers['Content-Type']);
         $dl->send();
     }
