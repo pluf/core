@@ -39,24 +39,19 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
         if (! file_exists($this->content)) {
             throw new Pluf_Exception_DoesNotExist('Requested resource not found');
         }
-        $this->headers['Content-Length'] = (string) filesize($this->content);
-        $this->outputHeaders();
-        if ($output_body) {
-            $fp = fopen($this->content, 'rb');
-            while (! feof($fp)) {
-                $buffer = fread($fp, 2048);
-                echo $buffer;
-            }
-            fclose($fp);
-        }
-        if ($this->delete_file) {
-            @unlink($this->content);
-        }
+        $dl = &new HTTP_Download2();
+        $dl->setFile($this->content);
+//         $dl->setContentDisposition(HTTP_DOWNLOAD_ATTACHMENT, 'latest.tgz');
+        // with ext/magic.mime
+        // $dl->guessContentType();
+        // else:
+        $dl->setContentType($this->headers['Content-Type']);
+        $dl->send();
     }
 
     /**
      * Genereate hash code of file
-     * 
+     *
      * {@inheritdoc}
      *
      * @see Pluf_HTTP_Response::hashCode()
