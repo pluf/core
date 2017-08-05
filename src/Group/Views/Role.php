@@ -33,8 +33,8 @@ class Group_Views_Role extends Pluf_Views
      * Adds a role to list of roles of a group.
      * Id of added role should be specified in request.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match       
      */
     public static function add($request, $match)
     {
@@ -49,8 +49,8 @@ class Group_Views_Role extends Pluf_Views
      * Returns list of roles of a group.
      * Returned list can be customized with some filter, condition and sort.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function find($request, $match)
     {
@@ -58,7 +58,6 @@ class Group_Views_Role extends Pluf_Views
         // $roles = $group->get_permissions_list();
         // return new Pluf_HTTP_Response_Json($roles);
         $pag = new Pluf_Paginator(new Pluf_Permission());
-        $pag->items_per_page = Group_Views::getListCount($request);
         $sql = new Pluf_SQL('pluf_group_id=%s', array(
             $match['groupId']
         ));
@@ -96,8 +95,8 @@ class Group_Views_Role extends Pluf_Views
     /**
      * Returns information of a role of a group.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function get($request, $match)
     {
@@ -120,8 +119,8 @@ class Group_Views_Role extends Pluf_Views
     /**
      * Deletes a role from roles of a group.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match         
      */
     public static function delete($request, $match)
     {
