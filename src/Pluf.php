@@ -209,10 +209,11 @@ class Pluf {
 		    return ;
 		}
 		include $file;
-		if (! class_exists ( $class, false )) {
-			$error = 'Impossible to load the class: ' . $class . "\n" . 'Tried to include: ' . $file . "\n" . 'Include path: ' . get_include_path ();
-			throw new Exception ( $error );
+		if (class_exists ( $class, false ) || interface_exists($class, false)) {
+		    return;
 		}
+		$error = 'Impossible to load the class: ' . $class . "\n" . 'Tried to include: ' . $file . "\n" . 'Include path: ' . get_include_path ();
+		throw new Exception ( $error );
 	}
 	
 	/**
