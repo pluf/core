@@ -32,7 +32,7 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response
      * در صورتی که خطایی رخ دهد، یک متن پیش فرض به عنوان خطای نتیجه نمایش داده
      * خواهد شد.
      *
-     * @param unknown $request            
+     * @param Pluf_HTTP_Request $request            
      */
     function __construct ($exception, $mimetype = null, $request = null)
     {

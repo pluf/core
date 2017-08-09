@@ -30,7 +30,7 @@ class Pluf_HTTP_Response_NotAvailable extends Pluf_HTTP_Response
 	 * برگردانده شود.
 	 * در صورتی که خطایی رخ دهد، یک متن پیش فرض به عنوان خطای نتیجه نمایش داده خواهد شد.
 	 * 
-	 * @param unknown $request
+	 * @param Pluf_HTTP_Request $request
 	 */
     function __construct($request)
     {

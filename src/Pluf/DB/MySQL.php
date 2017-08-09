@@ -105,7 +105,7 @@ class Pluf_DB_MySQL
     /**
      * یک دستور پایگاه داده را اجرا می‌کند.
      *
-     * @param unknown $query            
+     * @param String $query            
      * @throws Exception
      */
     function execute ($query)
