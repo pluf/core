@@ -1250,7 +1250,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * شناسه را تعیین می‌کند.
      *
-     * @return شناسه
+     * @return integer id
      */
     public function getId ()
     {
