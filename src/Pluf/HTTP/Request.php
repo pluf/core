@@ -45,7 +45,7 @@ class Pluf_HTTP_Request
     /**
      * Protocol
      * 
-     * @see $_SERVER[HTTP_HOST]
+     * @see $_SERVER['HTTP_HOST']
      * @var boolean
      */
     public $https = false;

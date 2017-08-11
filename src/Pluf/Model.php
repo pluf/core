@@ -1125,7 +1125,10 @@ class Pluf_Model implements JsonSerializable
 
     /**
      * Get the value from the DB.
-     *
+     * 
+     * Create DB field and returns. The field type is used as the output
+     * value type.
+     * 
      * @param
      *            mixed Value.
      * @param
@@ -1247,7 +1250,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * شناسه را تعیین می‌کند.
      *
-     * @return شناسه
+     * @return integer id
      */
     public function getId ()
     {

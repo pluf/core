@@ -56,7 +56,7 @@ class Pluf_DB_PostgreSQL
      * Used by the model to convert the values from and to the
      * database.
      *
-     * @see Pluf_DB_defaultTypecast
+     * @see Pluf_DB
      */
     public $type_cast = array();
 

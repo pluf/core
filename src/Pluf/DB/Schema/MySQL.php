@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -46,7 +47,10 @@ class Pluf_DB_Schema_MySQL
             'password' => 'varchar(150)',
             'float' => 'numeric(%s, %s)',
             'blob' => 'blob',
-            'point' => 'POINT'
+            // GEO types
+            'point' => 'POINT',
+            'geometry' => 'GEOMETRY',
+            'polygon' => 'POLYGON'
     );
 
     public $defaults = array(
@@ -66,6 +70,11 @@ class Pluf_DB_Schema_MySQL
             'password' => "''",
             'float' => 0.0,
             'blob' => "''",
+            
+            // GEO types
+            'point' => null,
+            'geometry' => null,
+            'polygon' => null
     );
 
     private $con = null;
@@ -123,11 +132,13 @@ class Pluf_DB_Schema_MySQL
                 if (empty($val['is_null'])) {
                     $sql .= ' NOT NULL';
                 }
-                if ($field->type != 'text' && $field->type != 'blob') {
+                if ($field->type != 'text' && $field->type != 'blob' &&
+                         $field->type != 'geometry' && $field->type != 'polygon') {
                     if (isset($val['default'])) {
                         $sql .= ' default ';
                         $sql .= $model->_toDb($val['default'], $col);
-                    } elseif ($field->type != 'sequence' && $field->type != 'point') {
+                    } elseif ($field->type != 'sequence' &&
+                             $field->type != 'point') {
                         $sql .= ' default ' . $this->defaults[$field->type];
                     }
                 }
@@ -137,7 +148,11 @@ class Pluf_DB_Schema_MySQL
             }
         }
         $sql .= "\n" . 'PRIMARY KEY (`id`))';
-        $sql .= 'ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+        $engine = 'InnoDB';
+        if (key_exists('engine', $model->_a)) {
+            $engine = $model->_a['engine'];
+        }
+        $sql .= 'ENGINE=' . $engine . ' DEFAULT CHARSET=utf8;';
         $tables[$this->con->pfx . $model->_a['table']] = $sql;
         
         // Now for the many to many
@@ -178,7 +193,7 @@ class Pluf_DB_Schema_MySQL
                 $val['col'] = $idx;
             }
             $type = '';
-            if(isset($val['type']) && strcasecmp($val['type'], 'normal') != 0){
+            if (isset($val['type']) && strcasecmp($val['type'], 'normal') != 0) {
                 $type = $val['type'];
             }
             $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf(
@@ -339,7 +354,7 @@ class Pluf_DB_Schema_MySQL
             }
             if ($field->type == 'foreignkey') {
                 // Add the foreignkey constraints
-                $referto = new $val['model']();
+                // $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName(
                         $table . '_' . $col . '_fkey');
             }

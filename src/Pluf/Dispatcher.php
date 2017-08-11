@@ -19,7 +19,7 @@
  */
 
 /**
- * نگاشت تقاضا به لایه نمایش
+ * Dispather of pluf
  *
  * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های
  * لایه
@@ -41,7 +41,7 @@ class Pluf_Dispatcher
      * @param
      *            string Query string ('')
      */
-    public static function dispatch ($query = '')
+    public static function dispatch ($query = '', $controllers=NULL)
     {
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
@@ -66,6 +66,9 @@ class Pluf_Dispatcher
             }
             if ($skip === false) {
                 // 2- Call view
+                if(isset($controllers)){
+                    self::loadControllers($controllers);
+                }
                 $response = self::match($req);
                 $response = self::toResponse($response);
                 if (! empty($req->response_vary_on)) {
@@ -126,7 +129,7 @@ class Pluf_Dispatcher
      * تقاضا و لایه نمایش تعیین شده و لایه نمایش مناسب اجرا می‌شود. نتیجه این
      * فراخوانی داده‌ای است که باید برای کاربران ارسال شود.
      *
-     * @see Pluf_HTTP_URL_reverse
+     * @see Pluf_HTTP_URL
      *
      * @param
      *            Pluf_HTTP_Request Request object
