@@ -45,7 +45,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             'gzip' => false,
             'cache' => true
         ));
-        $dl->send();
+        $dl->send(false);
     }
 
     /**
