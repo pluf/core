@@ -20,4 +20,5 @@ install:
 script:
   - cd tests
   - php run.php
+  - php coverage-checker.php clover.xml 70
 
