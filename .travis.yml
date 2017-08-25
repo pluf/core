@@ -18,6 +18,6 @@ install:
   - php composer.phar install
   
 script:
-  - cd test
+  - cd tests
   - php run.php
 
