@@ -11,5 +11,4 @@ mysql:
   
 before_install:
   - sudo apt-get update > /dev/null
-  
-  composer install
+  - composer install
