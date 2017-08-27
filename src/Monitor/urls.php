@@ -17,36 +17,57 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 return array(
-        array(
-                'regex' => '#^/find$#',
-                'model' => 'Monitor_Views_Bean',
-                'method' => 'find',
-                'http-method' => 'GET'
-        ),
-        array(
-                'regex' => '#^/(?P<monitor>[^/]+)/property/find$#',
-                'model' => 'Monitor_Views_Property',
-                'method' => 'find',
-                'http-method' => 'GET'
-        ),
-        array(
-                'regex' => '#^/(?P<monitor>[^/]+)/property/(?P<property>[^/]+)$#',
-                'model' => 'Monitor_Views_Property',
-                'method' => 'get',
-                'http-method' => 'GET'
-        ),
-        
-        // Old versions
-        array(
-                'regex' => '#^/(?P<monitor>[^/]+)/find$#',
-                'model' => 'Monitor_Views_Property',
-                'method' => 'find',
-                'http-method' => 'GET'
-        ),
-        array(
-                'regex' => '#^/(?P<monitor>[^/]+)/(?P<property>[^/]+)$#',
-                'model' => 'Monitor_Views_Property',
-                'method' => 'get',
-                'http-method' => 'GET'
-        )
+    // Query
+    array(
+        'regex' => '#^/query$#',
+        'model' => 'Monitor_Views_Query',
+        'method' => 'query',
+        'http_method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/query_range$#',
+        'model' => 'Monitor_Views_Query',
+        'method' => 'queryRange',
+        'http_method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/series$#',
+        'model' => 'Monitor_Views_Query',
+        'method' => 'series',
+        'http_method' => 'GET'
+    ),
+    
+    // Monitor
+    array(
+        'regex' => '#^/find$#',
+        'model' => 'Monitor_Views_Bean',
+        'method' => 'find',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/(?P<monitor>[^/]+)/property/find$#',
+        'model' => 'Monitor_Views_Property',
+        'method' => 'find',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/(?P<monitor>[^/]+)/property/(?P<property>[^/]+)$#',
+        'model' => 'Monitor_Views_Property',
+        'method' => 'get',
+        'http-method' => 'GET'
+    ),
+    
+    // Old versions
+    array(
+        'regex' => '#^/(?P<monitor>[^/]+)/find$#',
+        'model' => 'Monitor_Views_Property',
+        'method' => 'find',
+        'http-method' => 'GET'
+    ),
+    array(
+        'regex' => '#^/(?P<monitor>[^/]+)/(?P<property>[^/]+)$#',
+        'model' => 'Monitor_Views_Property',
+        'method' => 'get',
+        'http-method' => 'GET'
+    )
 );
