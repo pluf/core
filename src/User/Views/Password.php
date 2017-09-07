@@ -47,6 +47,58 @@ class User_Views_Password extends Pluf_Views
             throw new Pluf_Exception_PermissionDenied(
                     "You are not allowed to change password.");
         }
-        return new Pluf_HTTP_Response_Json($user);
+        return $user;
+    }
+    
+    /**
+     * Manages user password
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     */
+    public function password($request, $match)
+    {
+        $msg = array(
+            'message' => 'succcess'
+        );
+        // TODO: maso, 2017: recover by mail
+        if (array_key_exists('email', $request->REQUEST)) {
+            $usr = $request->user->getOne('email=' . $request->REQUEST['email']);
+            if ($user) {
+                $this->sendPasswordToken($request, $user);
+            }
+            return $msg;
+        }
+        // TODO: maso, 2017: recover by login
+        if (array_key_exists('login', $request->REQUEST)) {
+            $usr = $request->user->getOne('login=' . $request->REQUEST['login']);
+            if ($user) {
+                $this->sendPasswordToken($request, $user);
+            }
+            return $msg;
+        }
+        // TODO: maso, 2017: reset by token
+        if (array_key_exists('token', $request->REQUEST)) {
+            $token = new User_PasswordToken();
+            $token = $token->getOne('token='.$request->REQUEST['token']);
+            if(!$token || $token->isExpired()){
+                throw new Pluf_Exception_DoesNotExist('Token not exist');
+            }
+            $this->changePassword($request, $token);
+            return $msg;
+        }
+        // TODO: maso, 2017: reset by old password
+        if (array_key_exists('old', $request->REQUEST)) {}
+        
+        throw new Pluf_Exception_MismatchParameter('Invalid request params');
+    }
+    
+    
+    private function sendPasswordToken($request, $user){
+        
+    }
+    
+    private function changePassword($requst, $user){
+        
     }
 }

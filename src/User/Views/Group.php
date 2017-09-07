@@ -31,8 +31,8 @@ class User_Views_Group extends Pluf_Views
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public function find ($request, $match)
     {
@@ -41,8 +41,8 @@ class User_Views_Group extends Pluf_Views
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public function create ($request, $match)
     {
@@ -51,8 +51,8 @@ class User_Views_Group extends Pluf_Views
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public function get ($request, $match)
     {
@@ -61,8 +61,8 @@ class User_Views_Group extends Pluf_Views
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public function delete ($request, $match)
     {

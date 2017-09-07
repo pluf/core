@@ -36,8 +36,8 @@ class User_Views_Avatar extends Pluf_Views
     /**
      * Returns avatar image of user.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function get($request, $match)
     {
@@ -48,8 +48,8 @@ class User_Views_Avatar extends Pluf_Views
     /**
      * Updates avatar image of user.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function update($request, $match)
     {
@@ -64,8 +64,8 @@ class User_Views_Avatar extends Pluf_Views
      * Deletes avatar images of user.
      * This action may set default avatar for user.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function delete($request, $match)
     {

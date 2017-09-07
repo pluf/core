@@ -74,7 +74,7 @@ return array(
     ),
     array( // Password
         'regex' => '#^/password$#',
-        'model' => 'User_Views_Authentication',
+        'model' => 'User_Views_Password',
         'method' => 'password',
         'http-method' => array(
             'POST'
@@ -269,10 +269,10 @@ return array(
             'Pluf_Precondition::loginRequired'
         )
     ),
-        /*
-         * Password
-         */
-        array( // Update information of user (by id)
+    //
+    // Passowrd
+    //
+    array( // Update information of user (by id)
         'regex' => '#^/(?P<userId>\d+)/password$#',
         'model' => 'User_Views_Password',
         'method' => 'update',

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * لایه نمایش مدیریت کاربران را به صورت پیش فرض ایجاد می‌کند
  *
@@ -29,47 +29,43 @@ class User_Views_Permission
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function find ($request, $match)
+    public function find($request, $match)
     {
         // XXX: maso, 1395: check user access.
         $model = Pluf_Shortcuts_GetObjectOr404('Pluf_User', $match['userId']);
         $pag = new Pluf_Paginator(new Pluf_RowPermission());
-        $pag->configure(array(), 
-                array( // search
-                        'name',
-                        'description'
-                ), 
-                array( // sort
-                        'id',
-                        'name',
-                        'application',
-                        'version'
-                ));
+        $pag->configure(array(), array( // search
+            'name',
+            'description'
+        ), array( // sort
+            'id',
+            'name',
+            'application',
+            'version'
+        ));
         $pag->action = array();
         $pag->sort_order = array(
-                'version',
-                'DESC'
+            'version',
+            'DESC'
         );
         $pag->setFromRequest($request);
         $pag->model_view = 'join_permission';
-        $pag->forced_where = new Pluf_SQL(
-                'rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s', 
-                array(
-                        $model->id,
-                        $model->_a['model']
+        $pag->forced_where = new Pluf_SQL('rowpermissions.owner_id=%s AND rowpermissions.owner_class=%s', array(
+            $model->id,
+            $model->_a['model']
         ));
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function create ($request, $match)
+    public function create($request, $match)
     {
         // XXX: maso, 1395: check user access.
         // Hadi, 1396: check user access
@@ -82,10 +78,10 @@ class User_Views_Permission
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function get ($request, $match)
+    public function get($request, $match)
     {
         $perm = Pluf_Shortcuts_GetObjectOr404('Pluf_Permission', $match['roleId']);
         return new Pluf_HTTP_Response_Json($perm);
@@ -93,10 +89,10 @@ class User_Views_Permission
 
     /**
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function delete ($request, $match)
+    public function delete($request, $match)
     {
         // XXX: maso, 1395: check user access.
         // Hadi, 1396: check user access

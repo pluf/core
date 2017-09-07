@@ -36,8 +36,8 @@ class User_Views
     /**
      * Retruns account information of current user
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
     public static function getAccount($request, $match)
     {
@@ -47,8 +47,8 @@ class User_Views
     /**
      * Updates account information of current user
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
     public static function updateAccount($request, $match)
     {
@@ -60,8 +60,8 @@ class User_Views
     /**
      * Delete account of current user.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
     public static function deleteAccount($request, $match)
     {
@@ -74,8 +74,8 @@ class User_Views
      * Returns profile of current user.
      * If current user has no profile yet, returns structure of the profile.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
     public static function getProfile($request, $match)
     {
@@ -85,9 +85,9 @@ class User_Views
     /**
      * اطلاعات حساب کاربری را به روز می‌کند.
      *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return unknown
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return User_Profile
      */
     public static function updateProfile($request, $match)
     {
@@ -97,8 +97,8 @@ class User_Views
     /**
      * Returns avatar image of current user
      *
-     * @param unknown $request            
-     * @param unknown $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      * @throws Pluf_Exception_NotImplemented
      */
     public static function getAvatar($request, $match)
@@ -109,8 +109,8 @@ class User_Views
     /**
      * Updates avatar image of current user
      *
-     * @param unknown $request            
-     * @param unknown $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      * @throws Pluf_Exception_NotImplemented
      */
     public static function updateAvatar($request, $match)
@@ -121,8 +121,8 @@ class User_Views
     /**
      * Deletes avatar image of current user
      *
-     * @param unknown $request            
-     * @param unknown $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      * @throws Pluf_Exception_NotImplemented
      */
     public static function deleteAvatar($request, $match)
