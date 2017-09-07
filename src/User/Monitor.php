@@ -30,8 +30,8 @@ class User_Monitor
     /**
      * Retruns permision status
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function permisson ($request, $match)
     {

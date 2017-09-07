@@ -29,8 +29,8 @@ class User_Views_User
     /**
      * Creates new user
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function create ($request, $match)
     {
@@ -41,29 +41,6 @@ class User_Views_User
         $cuser = $form->save();
         $perm = Pluf_Permission::getFromString('Pluf.authorized');
         Pluf_RowPermission::add($cuser, null, $perm, false);
-        // User activation
-        // $user_active = Pluf::f('user_signup_active', false);
-        // $cuser->active = $user_active;
-        
-        // // Create profile
-        // $profile_model = Pluf::f('user_profile_class', false);
-        // $profile_form = Pluf::f('user_profile_form', false);
-        // if ($profile_form === false || $profile_model === false) {
-        // return new Pluf_HTTP_Response_Json($cuser);
-        // }
-        // try {
-        // $profile = $cuser->getProfile();
-        // } catch (Pluf_Exception_DoesNotExist $ex) {
-        // $profile = new $profile_model();
-        // $profile->user = $cuser;
-        // $profile->create();
-        // }
-        // $form = new $profile_form(array_merge($request->POST,
-        // $request->FILES),
-        // array(
-        // 'user_profile' => $profile
-        // ));
-        // $profile = $form->update();
         
         // Return response
         return $cuser;
@@ -72,8 +49,8 @@ class User_Views_User
     /**
      * Returns information of specified user by id.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function get ($request, $match)
     {
@@ -84,9 +61,9 @@ class User_Views_User
     /**
      * Updates information of specified user (by id)
      *
-     * @param unknown $request            
-     * @param unknown $match            
-     * @return unknown
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
+     * @return Pluf_User
      */
     public static function update ($request, $match)
     {
@@ -101,8 +78,8 @@ class User_Views_User
     /**
      * Delete specified user (by id)
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function delete ($request, $match)
     {
@@ -119,8 +96,8 @@ class User_Views_User
      * Returned list can be customized using search fields, filters or sort
      * fields.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function find ($request, $match)
     {

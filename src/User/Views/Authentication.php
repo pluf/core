@@ -1,4 +1,22 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 /**
  * Provide authentication functionality for users.
@@ -11,13 +29,18 @@ class User_Views_Authentication
 {
 
     /**
-     * Logs in user.
+     * Login user
+     *
      * As a result, returns information of loged in user as JSON information (if login was successful).
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_User
      */
-    public static function login($request, $match)
+    public function login($request, $match)
     {
         if (! $request->user->isAnonymous()) {
-            return new Pluf_HTTP_Response_Json($request->user);
+            return $request->user;
         }
         
         $backends = Pluf::f('auth_backends', array(
@@ -42,19 +65,23 @@ class User_Views_Authentication
         $request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
         $user->last_login = gmdate('Y-m-d H:i:s');
         $user->update();
-
-        return new Pluf_HTTP_Response_Json($user);
+        
+        return $user;
     }
 
     /**
-     * Logs out user.
+     * Logout session
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_User
      */
-    public static function logout($request, $match)
+    public function logout($request, $match)
     {
         $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
         $request->user = new $user_model();
         $request->session->clear();
         $request->session->setData('logout_time', gmdate('Y-m-d H:i:s'));
-        return new Pluf_HTTP_Response_Json(new Pluf_User());
+        return $request->user;
     }
 }

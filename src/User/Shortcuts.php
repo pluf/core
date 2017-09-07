@@ -44,25 +44,6 @@ function User_Shortcuts_UserProfileDateFactory($object)
 
 
 /**
- * اطلاعات امنیتی کاربران را حذف می‌کند.
- *
- * @deprecated این تابع حذف خواهد شد.
- * @param unknown $user            
- */
-function User_Shortcuts_RemoveSecureData(&$user)
-{
-    $user->email = null;
-    $user->password = null;
-    $user->administrator = null;
-    $user->staff = null;
-    $user->active = null;
-    $user->language = null;
-    $user->timezone = null;
-    $user->date_joined = null;
-    $user->last_login = null;
-}
-
-/**
  * سطح کاربر را ارتقا می‌دهد.
  *
  * نوع عمل عمل انجام شده می‌توان سطح کاربر را افزایش و یا کاهش داد. این

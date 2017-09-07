@@ -4,7 +4,8 @@
 	"title": "User Management",
 	"model": [
 		"User_Profile",
-		"User_Avatar"
+		"User_Avatar",
+		"User_PasswordToken"
 	],
 	"monitor":[{
 		"bean": "user",

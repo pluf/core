@@ -18,13 +18,14 @@
  */
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufUserTest extends TestCase
+class Pluf_User_Test extends TestCase
 {
 
     /**
@@ -223,16 +224,20 @@ class PlufUserTest extends TestCase
         // Permission through group
         $mess = new Pluf_Message(1);
         Pluf_RowPermission::add($group, $mess, $perm);
+        
         $this->assertEquals(false, 
                 $user->hasPerm('Pluf_RowPermission.test1', $mess));
+        
         $user->setAssoc($group);
         $user->getAllPermissions(true); // reset the cache
         $this->assertEquals(true, 
                 $user->hasPerm('Pluf_RowPermission.test1', $mess));
         $user->delAssoc($group);
+        
         $user->getAllPermissions(true); // reset the cache
         $this->assertEquals(false, 
                 $user->hasPerm('Pluf_RowPermission.test1', $mess));
+        
         $user->setAssoc($group);
         $user->getAllPermissions(true); // reset the cache
         $this->assertEquals(true, 

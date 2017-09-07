@@ -131,7 +131,7 @@ class User_Profile extends Pluf_Model
      * در زمان ایجاد باید تعیین شوند. از این جمله می‌توان به کاربر و تاریخ اشاره
      * کرد.
      *
-     * @param $create حالت
+     * @param $create boolean
      *            ساخت یا به روز رسانی را تعیین می‌کند
      */
     function preSave ($create = false)
