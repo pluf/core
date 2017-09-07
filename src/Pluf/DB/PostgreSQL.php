@@ -191,6 +191,13 @@ class Pluf_DB_PostgreSQL
 
     function esc($str)
     {
+        if (is_array($str)) {
+            $res = array();
+            foreach ($str as $s){
+                $res[] = '\'' . pg_escape_string($this->con_id, $s) . '\'';
+            }
+            return implode(', ', $res);
+        }
         return '\''.pg_escape_string($this->con_id, $str).'\'';
     }
 

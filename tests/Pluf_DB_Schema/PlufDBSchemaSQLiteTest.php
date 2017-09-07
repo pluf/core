@@ -29,85 +29,105 @@ include_once dirname(__FILE__) . '/../Pluf_Model/TestModels.php';
 class PlufDBSchemaSQLiteTest extends TestCase
 {
 
-    public $db = null;
-
-    protected function setUp ()
+    /**
+     * @beforeClass
+     */
+    public static function initTest()
     {
         Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
-        $this->db = Pluf::db();
-        if ($this->db->engine != 'SQLite') {
+        if (Pluf::db()->engine != 'SQLite') {
             $this->markTestSkipped('Only to be run with the SQLite DB engine');
         }
     }
-
-    protected function tearDown ()
+    
+    /**
+     * @afterCalss
+     */
+    public static function finishTest()
     {
-        $this->db->close();
-        unset($this->db);
+//         $this->db->close();
+//         unset($this->db);
     }
-
-//     public function testGenerateSchema3 ()
-//     {
-//         $model = new TestModel();
-//         $schema = Pluf::factory('Pluf_DB_Schema', $this->db);
-//         $schema->model = $model;
-//         $gen = $schema->getGenerator();
-//         $sql = $gen->getSqlCreate($model);
-//         $create = "CREATE TABLE pluf_unit_tests_testmodel (
-// id integer primary key autoincrement,
-// title varchar(100) default '',
-// description text not null default ''
-// );";
-//         $this->assertEquals($create, $sql['pluf_unit_tests_testmodel']);
-//     }
-
-//     public function testDeleteSchemaTestModel ()
-//     {
-//         $model = new TestModel();
-//         $schema = Pluf::factory('Pluf_DB_Schema', $this->db);
-//         $schema->model = $model;
-//         $gen = $schema->getGenerator();
-//         $del = $gen->getSqlDelete($model);
-//         $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_testmodel', 
-//                 $del[0]);
-//     }
-
-//     public function testGenerateSchema ()
-//     {
-//         $model = new TestModel();
-//         $schema = Pluf::factory('Pluf_DB_Schema', $this->db);
-//         $schema->model = $model;
-//         $gen = $schema->getGenerator();
-//         $this->assertEquals(true, $schema->dropTables());
-//         $sql = $gen->getSqlCreate($model);
-//         foreach ($sql as $k => $query) {
-//             $this->db->execute($query);
-//         }
-//         $sql = $gen->getSqlIndexes($model);
-//         foreach ($sql as $k => $query) {
-//             $this->db->execute($query);
-//         }
-//         $model->title = 'my title';
-//         $model->description = 'A small desc.';
-//         $this->assertEquals(true, $model->create());
-//         $this->assertEquals(1, (int) $model->id);
-//         $del = $gen->getSqlDelete($model);
-//         foreach ($del as $sql) {
-//             $this->db->execute($sql);
-//         }
-//     }
-
-//     public function testGenerateSchema2 ()
-//     {
-//         $model = new TestModel();
-//         $schema = Pluf::factory('Pluf_DB_Schema', $this->db);
-//         $schema->model = $model;
-//         $this->assertEquals(true, $schema->dropTables());
-//         $this->assertEquals(true, $schema->createTables());
-//         $model->title = 'my title';
-//         $model->description = 'A small desc.';
-//         $this->assertEquals(true, $model->create());
-//         $this->assertEquals(1, (int) $model->id);
-//         $this->assertEquals(true, $schema->dropTables());
-//     }
+    
+    /**
+     * @test
+     */
+    public function testGenerateSchema3()
+    {
+        $model = new TestModel();
+        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema->model = $model;
+        $gen = $schema->getGenerator();
+        $sql = $gen->getSqlCreate($model);
+        
+        
+//         CREATE TABLE pluf_unit_tests_testmodel (
+//          id integer primary key autoincrement,
+//          title varchar(100) default '',
+//          description text not null default ''
+//         );
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'CREATE TABLE') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'integer') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'varchar(100)') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'text') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'testmodel') !== false);
+    }
+    
+    /**
+     * @test
+     */
+    public function testDeleteSchemaTestModel()
+    {
+        $model = new TestModel();
+        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema->model = $model;
+        $gen = $schema->getGenerator();
+        $del = $gen->getSqlDelete($model);
+        $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_testmodel', $del[0]);
+    }
+    
+    /**
+     * @test
+     */
+    public function testGenerateSchema()
+    {
+        $model = new TestModel();
+        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema->model = $model;
+        $gen = $schema->getGenerator();
+        $this->assertEquals(true, $schema->dropTables());
+        $sql = $gen->getSqlCreate($model);
+        foreach ($sql as $k => $query) {
+            Pluf::db()->execute($query);
+        }
+        $sql = $gen->getSqlIndexes($model);
+        foreach ($sql as $k => $query) {
+            Pluf::db()->execute($query);
+        }
+        $model->title = 'my title';
+        $model->description = 'A small desc.';
+        $this->assertEquals(true, $model->create());
+        $this->assertEquals(1, (int) $model->id);
+        $del = $gen->getSqlDelete($model);
+        foreach ($del as $sql) {
+            Pluf::db()->execute($sql);
+        }
+    }
+    
+    /**
+     * @test
+     */
+    public function testGenerateSchema2()
+    {
+        $model = new TestModel();
+        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema->model = $model;
+        $this->assertEquals(true, $schema->dropTables());
+        $this->assertEquals(true, $schema->createTables());
+        $model->title = 'my title';
+        $model->description = 'A small desc.';
+        $this->assertEquals(true, $model->create());
+        $this->assertEquals(1, (int) $model->id);
+        $this->assertEquals(true, $schema->dropTables());
+    }
 }

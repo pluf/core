@@ -486,7 +486,7 @@ class Pluf_User extends Pluf_Model
         ));
         if (count($ids) > 0) {
             $sql2 = new Pluf_SQL('owner_id IN (%s) AND owner_class=%s', array(
-                join(', ', $ids),
+                $ids,
                 Pluf::f('pluf_custom_group', 'Pluf_Group')
             ));
             $sql->SOr($sql2);

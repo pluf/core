@@ -73,7 +73,7 @@ class User_Avatar extends Pluf_Model
         );
         
         $this->_a['idx'] = array(
-                'user-avatar-idx' => array(
+                'user_avatar_idx' => array(
                         'col' => 'user',
                         'type' => 'unique'
                 )
