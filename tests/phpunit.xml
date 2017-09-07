@@ -34,7 +34,7 @@
 <!--             <directory>./Pluf_Form/</directory> -->
 
             
-            <directory>./User_PasswordToken/</directory> 
+            <directory>./User_Password_Token/</directory> 
         </testsuite>
     </testsuites>
     

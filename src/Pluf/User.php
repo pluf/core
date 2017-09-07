@@ -301,6 +301,7 @@ class Pluf_User extends Pluf_Model
      */
     function setPassword($password)
     {
+        // TODO: maso, 2017: check password
         $salt = Pluf_Utils::getRandomString(5);
         $this->password = 'sha1:' . $salt . ':' . sha1($salt . $password);
         return true;
@@ -357,7 +358,7 @@ class Pluf_User extends Pluf_Model
     /**
      * خصوصیت‌های کاربر را استخراج کرده و در اختیار قرار می دهد.
      *
-     * @param unknown $login            
+     * @param string $login            
      * @return boolean|ArrayObject
      */
     function getUser($login)
@@ -510,7 +511,7 @@ class Pluf_User extends Pluf_Model
      * دارد. برای نمونه تمام گواهی‌هایی که کاربر برای یک نرم افزار دارد را
      * می‌توان با این فراخوانی تعیین کرد.
      *
-     * @param unknown $object            
+     * @param object $object            
      */
     public function getPermissions($object)
     {
