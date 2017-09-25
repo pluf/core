@@ -1,4 +1,25 @@
-subject: {$subject}
-token: {$token->token}
-user: {$user->id}
-callback: {$callback}
+<html dir="rtl">
+	<head>
+		<meta charset="utf-8">
+	</head>
+    <body>
+		<h3>
+			<strong>{$user->first_name} {$user->last_name}</strong> عزیز
+		</h3>
+		<p>
+			درخواستی برای تغییر رمز عبور (احتمالا توسط خود شما) ارسال شده است.
+			به منظور تغییر رمز عبور لینک ارسال شده در این رایانامه را دنبال کنید
+			یا به صفحه تغییر رمز عبور رفته و توکن ارسال شده در این رایانامه را وارد کنید و 
+			رمز عبور را تغییر دهید.
+		</p>
+		<p>
+			در صورتی که این درخواست توسط شما داده نشده یا دیگر نیازی به آن ندارید تنها این رایانامه را نادیده بگیرید.
+		</p>
+		<p>
+			توکن تغییر رمز: <span style="font-weight: bold; color: orange;">{$token->token}</span>
+		</p>
+		<p>
+			لینک تغییر رمز: <a href="{$callback}">{$callback}</a>
+		</p>
+    </body>
+</html>

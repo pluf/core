@@ -174,6 +174,6 @@ class User_Views_Password extends Pluf_Views
         $calback = str_replace("{{host}}", Pluf_Tenant::current()->domain, $calback);
         $calback = str_replace("{{userId}}", $user->id, $calback);
         $calback = str_replace("{{userLogin}}", $user->login, $calback);
-        return callback;
+        return $calback;
     }
 }
