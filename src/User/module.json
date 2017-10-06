@@ -5,7 +5,8 @@
 	"model": [
 		"User_Profile",
 		"User_Avatar",
-		"User_PasswordToken"
+		"User_PasswordToken",
+		"User_Space"
 	],
 	"monitor":[{
 		"bean": "user",
