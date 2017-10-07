@@ -239,7 +239,7 @@ class Pluf_Dispatcher
         if (! isset($ctl['params'])) {
             return $model->$method($req, $match);
         } else {
-            return $model->$metho($req, $match, $ctl['params']);
+            return $model->$method($req, $match, $ctl['params']);
         }
     }
 
