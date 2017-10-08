@@ -13,7 +13,7 @@ class Pluf_Template_Tag {
 	
 	/**
 	 *
-	 * @var unknown
+	 * @var array
 	 */
 	protected $context;
 	

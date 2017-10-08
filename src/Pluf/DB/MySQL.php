@@ -105,7 +105,7 @@ class Pluf_DB_MySQL
     /**
      * یک دستور پایگاه داده را اجرا می‌کند.
      *
-     * @param unknown $query            
+     * @param String $query            
      * @throws Exception
      */
     function execute ($query)
@@ -175,6 +175,13 @@ class Pluf_DB_MySQL
 
     function esc ($str)
     {
+        if (is_array($str)) {
+            $res = array();
+            foreach ($str as $s){
+                $res[] = '\'' . mysqli_real_escape_string($this->con_id, $s) . '\'';
+            }
+            return implode(', ', $res);
+        }
         return '\'' . mysqli_real_escape_string($this->con_id, $str) . '\'';
     }
 

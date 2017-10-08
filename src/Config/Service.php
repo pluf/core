@@ -30,9 +30,9 @@ class Config_Service
 
     /**
      *
-     * @param unknown $key            
-     * @param unknown $defValue            
-     * @return boolean|unknown|string
+     * @param string $key            
+     * @param object $defValue            
+     * @return boolean|object|string
      */
     public static function get ($key, $defValue)
     {
@@ -44,7 +44,7 @@ class Config_Service
                     'derty' => false
             );
             // TODO: maso, 2017: load value
-            $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
+            $sql = new Pluf_SQL('`type`=%s AND `key`=%s', 
                     array(
                             Pluf_ConfigurationType::SYSTEM,
                             $key
@@ -66,14 +66,14 @@ class Config_Service
 
     /**
      *
-     * @param unknown $key            
-     * @param unknown $value            
+     * @param string $key            
+     * @param object $value            
      */
     public static function set ($key, $value)
     {
         self::$inMemory[$key] = array(
-                value => $value,
-                derty => true
+                'value' => $value,
+                'derty' => true
         );
     }
 
@@ -84,7 +84,7 @@ class Config_Service
         foreach (self::$inMemory as $key => $val) {
             if ($val['derty']) {
                 // TODO: maso, 2017: load value
-                $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
+                $sql = new Pluf_SQL('type=%s AND `key`=%s', 
                         array(
                                 Pluf_ConfigurationType::SYSTEM,
                                 $key

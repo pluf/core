@@ -71,6 +71,7 @@ class Monitor_Views_Bean
                 'creation_date',
                 'modif_dtime'
         );
+        $content->sort_order = array('id', 'DESC');
         $content->configure($list_display, $search_fields, $sort_fields);
         $content->setFromRequest($request);
         if (key_exists('_px_format', $request->REQUEST)) {

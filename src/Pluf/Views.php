@@ -271,7 +271,8 @@ class Pluf_Views
                 'listFilters' => array(),
                 'listDisplay' => array(),
                 'searchFields' => array(),
-                'sortFields' => array()
+                'sortFields' => array(),
+                'sortOrder' => array('id', 'DESC')
         );
         $p = array_merge($default, $p);
         // Create page
@@ -282,6 +283,7 @@ class Pluf_Views
         $page->list_filters = $p['listFilters'];
         $page->configure($p['listDisplay'], $p['searchFields'], 
                 $p['sortFields']);
+        $page->sort_order = $p['sortOrder'];
         $page->setFromRequest($request);
         return $page->render_object();
     }

@@ -97,10 +97,8 @@ class Pluf_Cache_Apc extends Pluf_Cache {
 	 * @return mixed Stored value or default
 	 */
 	public function get($key, $default = null) {
-		$success = false;
-		// NOTE: maso, 1395: این نوع ارسال اشاره‌گر در نسخه ۷ php حذف شده است.
-		$value = apc_fetch ( $this->keyprefix . $key, &$success );
-		if (! $success)
+		$value = apc_fetch ( $this->keyprefix . $key );
+		if ($value === FALSE)
 			return $default;
 		if ($this->compress)
 			$value = gzinflate ( $value );

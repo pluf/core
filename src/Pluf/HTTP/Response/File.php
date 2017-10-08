@@ -22,7 +22,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
 
     public $delete_file = false;
 
-    function __construct ($filepath, $mimetype = null, $delete_file = false)
+    function __construct($filepath, $mimetype = null, $delete_file = false)
     {
         parent::__construct($filepath, $mimetype);
         $this->delete_file = $delete_file;
@@ -34,34 +34,28 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
      * در صورتی که منبع مورد نظر وجود نداشته باشید خطای عدم وجود منبع تولید
      * خواهد شد.
      */
-    function render ($output_body = true)
+    function render($output_body = true)
     {
         if (! file_exists($this->content)) {
             throw new Pluf_Exception_DoesNotExist('Requested resource not found');
         }
-        $this->headers['Content-Length'] = (string) filesize($this->content);
-        $this->outputHeaders();
-        if ($output_body) {
-            $fp = fopen($this->content, 'rb');
-            while (! feof($fp)) {
-                $buffer = fread($fp, 2048);
-                echo $buffer;
-            }
-            fclose($fp);
-        }
-        if ($this->delete_file) {
-            @unlink($this->content);
-        }
+        $dl = new HTTP_Download2(array(
+            'file' => $this->content,
+            'contenttype' => $this->headers['Content-Type'],
+            'gzip' => false,
+            'cache' => true
+        ));
+        $dl->send(false);
     }
 
     /**
      * Genereate hash code of file
-     * 
+     *
      * {@inheritdoc}
      *
      * @see Pluf_HTTP_Response::hashCode()
      */
-    public function hashCode ()
+    public function hashCode()
     {
         if (isset($this->content) && file_exists($this->content)) {
             if (! isset($this->contentHash)) {

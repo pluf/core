@@ -136,7 +136,7 @@ class Pluf_Form_Field_ReCaptcha extends Pluf_Form_Field
      * @param string $challenge
      * @param string $response
      * @param array $extra_params an array of extra variables to post to the server
-     * @return ReCaptchaResponse
+     * @return boolean success of process
      */
     public static function checkAnswer($privkey, $remoteip, $challenge, $response, $extra_params=array())
     {

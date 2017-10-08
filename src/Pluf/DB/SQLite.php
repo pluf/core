@@ -123,6 +123,13 @@ class Pluf_DB_SQLite
 
     function esc($str)
     {
+        if (is_array($str)) {
+            $res = array();
+            foreach ($str as $s){
+                $res[] = $this->con_id->quote($s);
+            }
+            return implode(', ', $res);
+        }
         return $this->con_id->quote($str);
     }
 

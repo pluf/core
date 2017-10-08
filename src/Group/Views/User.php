@@ -33,8 +33,8 @@ class Group_Views_User extends Pluf_Views
      * Adds new user to list of users of a group.
      * Id of added user should be specified in request.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match           
      */
     public static function add($request, $match)
     {
@@ -65,13 +65,12 @@ class Group_Views_User extends Pluf_Views
      * Returns list of users of a group.
      * Resulted list can be customized by using filters, conditions and sort rules.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match           
      */
     public static function find($request, $match)
     {
         $pag = new Pluf_Paginator(new Pluf_User());
-        $pag->items_per_page = Group_Views::getListCount($request);
         $sql = new Pluf_SQL('pluf_group_id=%s', array(
             $match['groupId']
         ));
@@ -110,8 +109,8 @@ class Group_Views_User extends Pluf_Views
     /**
      * Returns information of a user of a group.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match           
      */
     public static function get($request, $match)
     {
@@ -135,8 +134,8 @@ class Group_Views_User extends Pluf_Views
      * Deletes a user from a group.
      * Id of deleted user should be specified in the match.
      *
-     * @param unknown_type $request            
-     * @param unknown_type $match            
+     * @param Pluf_HTTP_Request $request            
+     * @param array $match            
      */
     public static function delete($request, $match)
     {

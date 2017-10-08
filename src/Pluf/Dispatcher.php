@@ -19,7 +19,7 @@
  */
 
 /**
- * نگاشت تقاضا به لایه نمایش
+ * Dispather of pluf
  *
  * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های
  * لایه
@@ -41,7 +41,7 @@ class Pluf_Dispatcher
      * @param
      *            string Query string ('')
      */
-    public static function dispatch ($query = '')
+    public static function dispatch($query = '', $controllers = NULL)
     {
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
@@ -66,6 +66,9 @@ class Pluf_Dispatcher
             }
             if ($skip === false) {
                 // 2- Call view
+                if (isset($controllers)) {
+                    self::loadControllers($controllers);
+                }
                 $response = self::match($req);
                 $response = self::toResponse($response);
                 if (! empty($req->response_vary_on)) {
@@ -85,7 +88,7 @@ class Pluf_Dispatcher
                 throw $e;
             }
             self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
-            self::logError($e);
+            self::logError(null, $e);
         }
         /**
          * [signal]
@@ -108,14 +111,13 @@ class Pluf_Dispatcher
          * 'response' => $response)
          */
         $params = array(
-                'request' => $req,
-                'response' => $response
+            'request' => $req,
+            'response' => $response
         );
-        Pluf_Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', 
-                $params);
+        Pluf_Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', $params);
         return array(
-                $req,
-                $response
+            $req,
+            $response
         );
     }
 
@@ -126,13 +128,13 @@ class Pluf_Dispatcher
      * تقاضا و لایه نمایش تعیین شده و لایه نمایش مناسب اجرا می‌شود. نتیجه این
      * فراخوانی داده‌ای است که باید برای کاربران ارسال شود.
      *
-     * @see Pluf_HTTP_URL_reverse
+     * @see Pluf_HTTP_URL
      *
      * @param
      *            Pluf_HTTP_Request Request object
      * @return Pluf_HTTP_Response Response object
      */
-    public static function match ($req, $firstpass = true)
+    public static function match($req, $firstpass = true)
     {
         // پیدا کردن و اجرای نمایش مناسب
         $views = $GLOBALS['_PX_views'];
@@ -144,8 +146,7 @@ class Pluf_Dispatcher
             // maso, 1394: بررسی متد لایه کنترل
             if (isset($ctl['http-method'])) {
                 $methods = $ctl['http-method'];
-                if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array(
-                        $methods) && ! in_array($req->method, $methods))) {
+                if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array($methods) && ! in_array($req->method, $methods))) {
                     $i ++;
                     continue;
                 }
@@ -171,10 +172,8 @@ class Pluf_Dispatcher
             $res = self::match($req, false);
             if ($res->status_code != 404) {
                 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
-                $name = (isset($req->view[0]['name'])) ? $req->view[0]['name'] : $req->view[0]['model'] .
-                         '::' . $req->view[0]['method'];
-                $url = Pluf_HTTP_URL_urlForView($name, 
-                        array_slice($req->view[1], 1));
+                $name = (isset($req->view[0]['name'])) ? $req->view[0]['name'] : $req->view[0]['model'] . '::' . $req->view[0]['method'];
+                $url = Pluf_HTTP_URL_urlForView($name, array_slice($req->view[1], 1));
                 return new Pluf_HTTP_Response_Redirect($url, 301);
             }
         }
@@ -199,48 +198,48 @@ class Pluf_Dispatcher
      *            array The match found by preg_match
      * @return Pluf_HTTP_Response Response object
      */
-    public static function send ($req, $ctl, $match)
+    public static function send($req, $ctl, $match)
     {
         $req->view = array(
-                $ctl,
-                $match,
-                'ctrl' => $ctl,
-                'match' => $match
+            $ctl,
+            $match,
+            'ctrl' => $ctl,
+            'match' => $match
         );
-        $m = new $ctl['model']();
+        /*
+         * Here we have preconditions to respects. If the "answer"
+         * is true, then ok go ahead, if not then it a response so
+         * return it or an exception so let it go.
+         */
         if (isset($ctl['precond'])) {
-            // Here we have preconditions to respects. If the "answer"
-            // is true, then ok go ahead, if not then it a response so
-            // return it or an exception so let it go.
             $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
-                        $preconds
+                    $preconds
                 );
             }
             foreach ($preconds as $precond) {
                 if (! is_array($precond)) {
-                    $res = call_user_func_array(explode('::', $precond), 
-                            array(
-                                    &$req
-                            ));
+                    $res = call_user_func_array(explode('::', $precond), array(
+                        &$req
+                    ));
                 } else {
-                    $res = call_user_func_array(explode('::', $precond[0]), 
-                            array_merge(
-                                    array(
-                                            &$req
-                                    ), array_slice($precond, 1)));
+                    $res = call_user_func_array(explode('::', $precond[0]), array_merge(array(
+                        &$req
+                    ), array_slice($precond, 1)));
                 }
                 if ($res !== true) {
                     return $res;
                 }
             }
         }
-        
+        // Call controller method (PHP 4, 5, 7)
+        $model = new $ctl['model']();
+        $method = $ctl['method'];
         if (! isset($ctl['params'])) {
-            return $m->$ctl['method']($req, $match);
+            return $model->$method($req, $match);
         } else {
-            return $m->$ctl['method']($req, $match, $ctl['params']);
+            return $model->$method($req, $match, $ctl['params']);
         }
     }
 
@@ -251,7 +250,7 @@ class Pluf_Dispatcher
      *            string File including the views.
      * @return bool Success.
      */
-    public static function loadControllers ($file)
+    public static function loadControllers($file)
     {
         if (is_array($file)) {
             $GLOBALS['_PX_views'] = $file;
@@ -264,20 +263,19 @@ class Pluf_Dispatcher
         return false;
     }
 
-    private static function toResponse ($response)
+    private static function toResponse($response)
     {
         if ($response instanceof Pluf_HTTP_Response) {
             return $response;
         }
         $http = new HTTP2();
         $contentType = array(
-                'application/json',
-                'text/plain'
+            'application/json',
+            'text/plain'
         );
         $mime = $http->negotiateMimeType($contentType, $contentType[0]);
         if ($mime === false) {
-            throw new Pluf_Exception(
-                    "You don't want any of the content types I have to offer\n");
+            throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
         }
         switch ($mime) {
             case 'application/json':
@@ -292,33 +290,31 @@ class Pluf_Dispatcher
 
     /**
      *
-     * @param Pluf_HTTP_Request $req            
-     * @param Pluf_HTTP_Response $response            
+     * @param Pluf_HTTP_Request $req
+     * @param Pluf_HTTP_Response $response
      */
-    private static function handleResponse ($req, $response)
+    private static function handleResponse($req, $response)
     {
         // $response is a response
         if (Pluf::f('pluf_runtime_header', false)) {
-            $response->headers['X-Perf-Runtime'] = sprintf('%.5f', 
-                    (microtime(true) - $GLOBALS['_PX_starttime']));
+            $response->headers['X-Perf-Runtime'] = sprintf('%.5f', (microtime(true) - $GLOBALS['_PX_starttime']));
         }
         $response->render($req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
     }
 
     /**
      *
-     * @param Pluf_HTTP_Request $req            
-     * @param Exception $e            
+     * @param Pluf_HTTP_Request $req
+     * @param Exception $e
      */
-    private static function logError ($req, $e)
+    private static function logError($req, $e)
     {
         try {
             // 1- Add to log
-            Pluf_Log::fatal(
-                    array(
-                            'query' => $req->query,
-                            'error' => $e
-                    ));
+            Pluf_Log::fatal(array(
+                'query' => $req->query,
+                'error' => $e
+            ));
             // 2- send email if error is not handled
             if (! ($e instanceof Pluf_Exception)) {
                 $from = Pluf::f('general_from_email', 'info@dpq.co.ir');

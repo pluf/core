@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -68,7 +67,7 @@ class Pluf_Model implements JsonSerializable
      * 'verbose': The verbose name of the model.
      */
     public $_a = array(
-            'multitenant' => false,
+            'multitenant' => true,
             'table' => 'model',
             'model' => 'Pluf_Model',
             'cols' => array(),
@@ -1125,7 +1124,10 @@ class Pluf_Model implements JsonSerializable
 
     /**
      * Get the value from the DB.
-     *
+     * 
+     * Create DB field and returns. The field type is used as the output
+     * value type.
+     * 
      * @param
      *            mixed Value.
      * @param
@@ -1247,7 +1249,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * شناسه را تعیین می‌کند.
      *
-     * @return شناسه
+     * @return integer id
      */
     public function getId ()
     {

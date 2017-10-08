@@ -1,0 +1,22 @@
+language: php
+php:
+  - '5.6'
+  - '7.0'
+  - '7.1'
+
+mysql:
+  database: test
+  username: root
+  encoding: utf8
+  
+before_install:
+  - sudo apt-get update > /dev/null
+  
+install:
+  - composer install
+  
+script:
+  - cd tests
+  - php run.php
+  - php coverage-checker.php clover.xml 70
+
