@@ -25,58 +25,58 @@ class Pluf_Template_Compiler
      * Variables.
      */
     protected $_vartype = array(
-            T_CHARACTER,
-            T_CONSTANT_ENCAPSED_STRING,
-            T_DNUMBER,
-            T_ENCAPSED_AND_WHITESPACE,
-            T_LNUMBER,
-            T_OBJECT_OPERATOR,
-            T_STRING,
-            T_WHITESPACE,
-            T_ARRAY,
-            T_CLASS,
-            T_PRIVATE,
-            T_LIST
+        T_PROTECTED,
+        T_CONSTANT_ENCAPSED_STRING,
+        T_DNUMBER,
+        T_ENCAPSED_AND_WHITESPACE,
+        T_LNUMBER,
+        T_OBJECT_OPERATOR,
+        T_STRING,
+        T_WHITESPACE,
+        T_ARRAY,
+        T_CLASS,
+        T_PRIVATE,
+        T_LIST
     );
 
     /**
      * Assignation operators.
      */
     protected $_assignOp = array(
-            T_AND_EQUAL,
-            T_DIV_EQUAL,
-            T_MINUS_EQUAL,
-            T_MOD_EQUAL,
-            T_MUL_EQUAL,
-            T_OR_EQUAL,
-            T_PLUS_EQUAL,
-            T_PLUS_EQUAL,
-            T_SL_EQUAL,
-            T_SR_EQUAL,
-            T_XOR_EQUAL
+        T_AND_EQUAL,
+        T_DIV_EQUAL,
+        T_MINUS_EQUAL,
+        T_MOD_EQUAL,
+        T_MUL_EQUAL,
+        T_OR_EQUAL,
+        T_PLUS_EQUAL,
+        T_PLUS_EQUAL,
+        T_SL_EQUAL,
+        T_SR_EQUAL,
+        T_XOR_EQUAL
     );
 
     /**
      * Operators.
      */
     protected $_op = array(
-            T_BOOLEAN_AND,
-            T_BOOLEAN_OR,
-            T_EMPTY,
-            T_INC,
-            T_ISSET,
-            T_IS_EQUAL,
-            T_IS_GREATER_OR_EQUAL,
-            T_IS_IDENTICAL,
-            T_IS_NOT_EQUAL,
-            T_IS_NOT_IDENTICAL,
-            T_IS_SMALLER_OR_EQUAL,
-            T_LOGICAL_AND,
-            T_LOGICAL_OR,
-            T_LOGICAL_XOR,
-            T_SR,
-            T_SL,
-            T_DOUBLE_ARROW
+        T_BOOLEAN_AND,
+        T_BOOLEAN_OR,
+        T_EMPTY,
+        T_INC,
+        T_ISSET,
+        T_IS_EQUAL,
+        T_IS_GREATER_OR_EQUAL,
+        T_IS_IDENTICAL,
+        T_IS_NOT_EQUAL,
+        T_IS_NOT_IDENTICAL,
+        T_IS_SMALLER_OR_EQUAL,
+        T_LOGICAL_AND,
+        T_LOGICAL_OR,
+        T_LOGICAL_XOR,
+        T_SR,
+        T_SL,
+        T_DOUBLE_ARROW
     );
 
     /**
@@ -98,33 +98,33 @@ class Pluf_Template_Compiler
      * Output filters.
      */
     protected $_modifier = array(
-            'upper' => 'strtoupper',
-            'lower' => 'strtolower',
-            'count' => 'count',
-            'md5' => 'md5',
-            'sha1' => 'sha1',
-            'escxml' => 'htmlspecialchars',
-            'escape' => 'Pluf_Template_htmlspecialchars',
-            'strip_tags' => 'strip_tags',
-            'escurl' => 'rawurlencode',
-            'capitalize' => 'ucwords',
-            // Not var_export because of recursive issues.
-            'debug' => 'print_r',
-            'dump' => 'Pluf_Template_varExport',
-            'fulldebug' => 'var_export',
-            'nl2br' => 'Pluf_Template_nl2br',
-            'trim' => 'trim',
-            'ltrim' => 'ltrim',
-            'rtrim' => 'rtrim',
-            'unsafe' => 'Pluf_Template_unsafe',
-            'safe' => 'Pluf_Template_unsafe',
-            'date' => 'Pluf_Template_dateFormat',
-            'time' => 'Pluf_Template_timeFormat',
-            'dateago' => 'Pluf_Template_dateAgo',
-            'timeago' => 'Pluf_Template_timeAgo',
-            'email' => 'Pluf_Template_safeEmail',
-            'first' => 'Pluf_Template_first',
-            'last' => 'Pluf_Template_last'
+        'upper' => 'strtoupper',
+        'lower' => 'strtolower',
+        'count' => 'count',
+        'md5' => 'md5',
+        'sha1' => 'sha1',
+        'escxml' => 'htmlspecialchars',
+        'escape' => 'Pluf_Template_htmlspecialchars',
+        'strip_tags' => 'strip_tags',
+        'escurl' => 'rawurlencode',
+        'capitalize' => 'ucwords',
+        // Not var_export because of recursive issues.
+        'debug' => 'print_r',
+        'dump' => 'Pluf_Template_varExport',
+        'fulldebug' => 'var_export',
+        'nl2br' => 'Pluf_Template_nl2br',
+        'trim' => 'trim',
+        'ltrim' => 'ltrim',
+        'rtrim' => 'rtrim',
+        'unsafe' => 'Pluf_Template_unsafe',
+        'safe' => 'Pluf_Template_unsafe',
+        'date' => 'Pluf_Template_dateFormat',
+        'time' => 'Pluf_Template_timeFormat',
+        'dateago' => 'Pluf_Template_dateAgo',
+        'timeago' => 'Pluf_Template_timeAgo',
+        'email' => 'Pluf_Template_safeEmail',
+        'first' => 'Pluf_Template_first',
+        'last' => 'Pluf_Template_last'
     );
 
     /**
@@ -144,12 +144,12 @@ class Pluf_Template_Compiler
      * in the configuration of the application.
      */
     protected $_allowedTags = array(
-            'url' => 'Pluf_Template_Tag_Url',
-            'aurl' => 'Pluf_Template_Tag_Rurl',
-            'media' => 'Pluf_Template_Tag_MediaUrl',
-            'amedia' => 'Pluf_Template_Tag_RmediaUrl',
-            'aperm' => 'Pluf_Template_Tag_APerm',
-            'getmsgs' => 'Pluf_Template_Tag_Messages'
+        'url' => 'Pluf_Template_Tag_Url',
+        'aurl' => 'Pluf_Template_Tag_Rurl',
+        'media' => 'Pluf_Template_Tag_MediaUrl',
+        'amedia' => 'Pluf_Template_Tag_RmediaUrl',
+        'aperm' => 'Pluf_Template_Tag_APerm',
+        'getmsgs' => 'Pluf_Template_Tag_Messages'
     );
 
     /**
@@ -212,7 +212,7 @@ class Pluf_Template_Compiler
      * @param
      *            bool Load directly the template content. (true)
      */
-    function __construct ($template_file, $folders = array(), $load = true)
+    function __construct($template_file, $folders = array(), $load = true)
     {
         /**
          * [signal]
@@ -237,24 +237,19 @@ class Pluf_Template_Compiler
          * 'modifiers' => array());
          */
         $params = array(
-                'tags' => array(),
-                'modifiers' => array()
+            'tags' => array(),
+            'modifiers' => array()
         );
-        Pluf_Signal::send(
-                'Pluf_Template_Compiler::construct_template_tags_modifiers', 
-                'Pluf_Template_Compiler', $params);
-        $this->_allowedTags = array_merge($this->_allowedTags, $params['tags'], 
-                Pluf::f('template_tags', array()));
-        $this->_modifier = array_merge($this->_modifier, $params['modifiers'], 
-                Pluf::f('template_modifiers', array()));
+        Pluf_Signal::send('Pluf_Template_Compiler::construct_template_tags_modifiers', 'Pluf_Template_Compiler', $params);
+        $this->_allowedTags = array_merge($this->_allowedTags, $params['tags'], Pluf::f('template_tags', array()));
+        $this->_modifier = array_merge($this->_modifier, $params['modifiers'], Pluf::f('template_modifiers', array()));
         foreach ($this->_allowedTags as $name => $model) {
             $this->_extraTags[$name] = new $model();
         }
         $this->_sourceFile = $template_file;
         $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
-        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, 
-                $this->_op);
+        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->templateFolders = $folders;
         if ($load) {
             $this->loadTemplateFile($template_file);
@@ -266,7 +261,7 @@ class Pluf_Template_Compiler
      *
      * @return string PHP code of the compiled template.
      */
-    function compile ()
+    function compile()
     {
         $this->compileBlocks();
         $tplcontent = $this->templateContent;
@@ -278,18 +273,14 @@ class Pluf_Template_Compiler
         // $this->_literals stack
         preg_match_all('!{literal}(.*?){/literal}!s', $tplcontent, $_match);
         $this->_literals = $_match[1];
-        $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', 
-                $tplcontent);
+        $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
         // Core regex to parse the template
-        $result = preg_replace_callback('/{((.).*?)}/s', 
-                array(
-                        $this,
-                        '_callback'
-                ), $tplcontent);
+        $result = preg_replace_callback('/{((.).*?)}/s', array(
+            $this,
+            '_callback'
+        ), $tplcontent);
         if (count($this->_blockStack)) {
-            trigger_error(
-                    sprintf(__('End tag of a block missing: %s'), 
-                            end($this->_blockStack)), E_USER_ERROR);
+            trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
         }
         return $result;
     }
@@ -297,7 +288,7 @@ class Pluf_Template_Compiler
     /**
      * Get a cleaned compile template.
      */
-    function getCompiledTemplate ()
+    function getCompiledTemplate()
     {
         $result = $this->compile();
         if (count($this->_usedModifiers)) {
@@ -309,9 +300,9 @@ class Pluf_Template_Compiler
         }
         // Clean the output
         $result = str_replace(array(
-                '?><?php',
-                '<?php ?>',
-                '<?php  ?>'
+            '?><?php',
+            '<?php ?>',
+            '<?php  ?>'
         ), '', $result);
         // To avoid the triming of the \n after a php closing tag.
         $result = str_replace("?>\n", "?>\n\n", $result);
@@ -324,7 +315,7 @@ class Pluf_Template_Compiler
      * If the current template extends another, it finds the extended
      * template and grabs the defined blocks and compile them.
      */
-    function compileBlocks ()
+    function compileBlocks()
     {
         $tplcontent = $this->templateContent;
         $this->_extendedTemplate = '';
@@ -333,14 +324,10 @@ class Pluf_Template_Compiler
             $this->_extendedTemplate = $_match[1];
         }
         // Get the blocks in the current template
-        $cnt = preg_match_all("!{block\s(\S+?)}(.*?){/block}!s", $tplcontent, 
-                $_match);
+        $cnt = preg_match_all("!{block\s(\S+?)}(.*?){/block}!s", $tplcontent, $_match);
         // Compile the blocks
         for ($i = 0; $i < $cnt; $i ++) {
-            if (! isset($this->_extendBlocks[$_match[1][$i]]) or
-                     false !==
-                     strpos($this->_extendBlocks[$_match[1][$i]], 
-                            '~~{~~superblock~~}~~')) {
+            if (! isset($this->_extendBlocks[$_match[1][$i]]) or false !== strpos($this->_extendBlocks[$_match[1][$i]], '~~{~~superblock~~}~~')) {
                 $compiler = clone ($this);
                 $compiler->templateContent = $_match[2][$i];
                 $_tmp = $compiler->compile();
@@ -348,9 +335,7 @@ class Pluf_Template_Compiler
                 if (! isset($this->_extendBlocks[$_match[1][$i]])) {
                     $this->_extendBlocks[$_match[1][$i]] = $_tmp;
                 } else {
-                    $this->_extendBlocks[$_match[1][$i]] = str_replace(
-                            '~~{~~superblock~~}~~', $_tmp, 
-                            $this->_extendBlocks[$_match[1][$i]]);
+                    $this->_extendBlocks[$_match[1][$i]] = str_replace('~~{~~superblock~~}~~', $_tmp, $this->_extendBlocks[$_match[1][$i]]);
                 }
             }
         }
@@ -363,9 +348,7 @@ class Pluf_Template_Compiler
         } else {
             // Replace the current blocks by a place holder
             if ($cnt) {
-                $this->templateContent = preg_replace(
-                        "!{block\s(\S+?)}(.*?){/block}!s", "{block $1}", 
-                        $tplcontent, - 1);
+                $this->templateContent = preg_replace("!{block\s(\S+?)}(.*?){/block}!s", "{block $1}", $tplcontent, - 1);
             }
         }
     }
@@ -379,13 +362,11 @@ class Pluf_Template_Compiler
      * @param
      *            string Relative path of the file to load.
      */
-    function loadTemplateFile ($file)
+    function loadTemplateFile($file)
     {
         // FIXME: Very small security check, could be better.
         if (strpos($file, '..') !== false) {
-            throw new Exception(
-                    sprintf(__('Template file contains invalid characters: %s'), 
-                            $file));
+            throw new Exception(sprintf(__('Template file contains invalid characters: %s'), $file));
         }
         foreach ($this->templateFolders as $folder) {
             if (file_exists($folder . '/' . $file)) {
@@ -397,35 +378,29 @@ class Pluf_Template_Compiler
         throw new Exception(sprintf(__('Template file not found: %s'), $file));
     }
 
-    function _callback ($matches)
+    function _callback($matches)
     {
         list (, $tag, $firstcar) = $matches;
         if (! preg_match('/^\$|[\'"]|[a-zA-Z\/]$/', $firstcar)) {
-            trigger_error(sprintf(__('Invalid tag syntax: %s'), $tag), 
-                    E_USER_ERROR);
+            trigger_error(sprintf(__('Invalid tag syntax: %s'), $tag), E_USER_ERROR);
             return '';
         }
         $this->_currentTag = $tag;
         if (in_array($firstcar, array(
-                '$',
-                '\'',
-                '"'
+            '$',
+            '\'',
+            '"'
         ))) {
             if ('blocktrans' !== end($this->_blockStack)) {
-                return '<?php Pluf_Template_safeEcho(' .
-                         $this->_parseVariable($tag) . '); ?>';
+                return '<?php Pluf_Template_safeEcho(' . $this->_parseVariable($tag) . '); ?>';
             } else {
                 $tok = explode('|', $tag);
-                $this->_transStack[substr($tok[0], 1)] = $this->_parseVariable(
-                        $tag);
+                $this->_transStack[substr($tok[0], 1)] = $this->_parseVariable($tag);
                 return '%%' . substr($tok[0], 1) . '%%';
             }
         } else {
-            if (! preg_match(
-                    '/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, 
-                    $m)) {
-                trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), 
-                        E_USER_ERROR);
+            if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, $m)) {
+                trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), E_USER_ERROR);
                 return '';
             }
             if (count($m) == 4) {
@@ -445,31 +420,26 @@ class Pluf_Template_Compiler
         }
     }
 
-    function _parseVariable ($expr)
+    function _parseVariable($expr)
     {
         $tok = explode('|', $expr);
         $res = $this->_parseFinal(array_shift($tok), $this->_allowedInVar);
         foreach ($tok as $modifier) {
             if (! preg_match('/^(\w+)(?:\:(.*))?$/', $modifier, $m)) {
-                trigger_error(
-                        sprintf(__('Invalid modifier syntax: (%s) %s'), 
-                                $this->_currentTag, $modifier), E_USER_ERROR);
+                trigger_error(sprintf(__('Invalid modifier syntax: (%s) %s'), $this->_currentTag, $modifier), E_USER_ERROR);
                 return '';
             }
             $targs = array(
-                    $res
+                $res
             );
             if (isset($m[2])) {
                 $res = $this->_modifier[$m[1]] . '(' . $res . ',' . $m[2] . ')';
-            } else 
-                if (isset($this->_modifier[$m[1]])) {
-                    $res = $this->_modifier[$m[1]] . '(' . $res . ')';
-                } else {
-                    trigger_error(
-                            sprintf(__('Unknown modifier: (%s) %s'), 
-                                    $this->_currentTag, $m[1]), E_USER_ERROR);
-                    return '';
-                }
+            } else if (isset($this->_modifier[$m[1]])) {
+                $res = $this->_modifier[$m[1]] . '(' . $res . ')';
+            } else {
+                trigger_error(sprintf(__('Unknown modifier: (%s) %s'), $this->_currentTag, $m[1]), E_USER_ERROR);
+                return '';
+            }
             if (! in_array($this->_modifier[$m[1]], $this->_usedModifiers)) {
                 $this->_usedModifiers[] = $this->_modifier[$m[1]];
             }
@@ -477,53 +447,43 @@ class Pluf_Template_Compiler
         return $res;
     }
 
-    function _parseFunction ($name, $args)
+    function _parseFunction($name, $args)
     {
         switch ($name) {
             case 'if':
-                $res = 'if (' . $this->_parseFinal($args, $this->_allowedInExpr) .
-                         '): ';
+                $res = 'if (' . $this->_parseFinal($args, $this->_allowedInExpr) . '): ';
                 array_push($this->_blockStack, 'if');
                 break;
             case 'else':
                 if (end($this->_blockStack) != 'if') {
-                    trigger_error(
-                            sprintf(__('End tag of a block missing: %s'), 
-                                    end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
                 }
                 $res = 'else: ';
                 break;
             case 'elseif':
                 if (end($this->_blockStack) != 'if') {
-                    trigger_error(
-                            sprintf(__('End tag of a block missing: %s'), 
-                                    end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
                 }
-                $res = 'elseif(' .
-                         $this->_parseFinal($args, $this->_allowedInExpr) . '):';
+                $res = 'elseif(' . $this->_parseFinal($args, $this->_allowedInExpr) . '):';
                 break;
             case 'foreach':
-                $res = 'foreach (' .
-                         $this->_parseFinal($args, 
-                                array_merge(
-                                        array(
-                                                T_AS,
-                                                T_DOUBLE_ARROW,
-                                                T_STRING,
-                                                T_OBJECT_OPERATOR,
-                                                T_LIST,
-                                                $this->_allowedAssign,
-                                                '[',
-                                                ']'
-                                        )), array(
-                                        ';',
-                                        '!'
-                                )) . '): ';
+                $res = 'foreach (' . $this->_parseFinal($args, array_merge(array(
+                    T_AS,
+                    T_DOUBLE_ARROW,
+                    T_STRING,
+                    T_OBJECT_OPERATOR,
+                    T_LIST,
+                    $this->_allowedAssign,
+                    '[',
+                    ']'
+                )), array(
+                    ';',
+                    '!'
+                )) . '): ';
                 array_push($this->_blockStack, 'foreach');
                 break;
             case 'while':
-                $res = 'while(' . $this->_parseFinal($args, 
-                        $this->_allowedInExpr) . '):';
+                $res = 'while(' . $this->_parseFinal($args, $this->_allowedInExpr) . '):';
                 array_push($this->_blockStack, 'while');
                 break;
             case '/foreach':
@@ -531,9 +491,7 @@ class Pluf_Template_Compiler
             case '/while':
                 $short = substr($name, 1);
                 if (end($this->_blockStack) != $short) {
-                    trigger_error(
-                            sprintf(__('End tag of a block missing: %s'), 
-                                    end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
                 }
                 array_pop($this->_blockStack);
                 $res = 'end' . $short . '; ';
@@ -545,13 +503,11 @@ class Pluf_Template_Compiler
                 if (count($this->_literals)) {
                     $res = '?>' . array_shift($this->_literals) . '<?php ';
                 } else {
-                    trigger_error(__('End tag of a block missing: literal'), 
-                            E_USER_ERROR);
+                    trigger_error(__('End tag of a block missing: literal'), E_USER_ERROR);
                 }
                 break;
             case '/literal':
-                trigger_error(__('Start tag of a block missing: literal'), 
-                        E_USER_ERROR);
+                trigger_error(__('Start tag of a block missing: literal'), E_USER_ERROR);
                 break;
             case 'block':
                 $res = '?>' . $this->_extendBlocks[$args] . '<?php ';
@@ -569,12 +525,11 @@ class Pluf_Template_Compiler
                 $this->_transStack = array();
                 if ($args) {
                     $this->_transPlural = true;
-                    $_args = $this->_parseFinal($args, $this->_allowedAssign, 
-                            array(
-                                    ';',
-                                    '[',
-                                    ']'
-                            ), true);
+                    $_args = $this->_parseFinal($args, $this->_allowedAssign, array(
+                        ';',
+                        '[',
+                        ']'
+                    ), true);
                     $res .= '$_b_t_c=' . trim(array_shift($_args)) . '; ';
                 }
                 $res .= 'ob_start(); ';
@@ -582,9 +537,7 @@ class Pluf_Template_Compiler
             case '/blocktrans':
                 $short = substr($name, 1);
                 if (end($this->_blockStack) != $short) {
-                    trigger_error(
-                            sprintf(__('End tag of a block missing: %s'), 
-                                    end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
                 }
                 $res = '';
                 if ($this->_transPlural) {
@@ -592,9 +545,7 @@ class Pluf_Template_Compiler
                     $res .= 'Pluf_Translation::sprintf(_n($_b_t_s, $_b_t_p, $_b_t_c), array(';
                     $_tmp = array();
                     foreach ($this->_transStack as $key => $_trans) {
-                        $_tmp[] = '\'' . addslashes($key) .
-                                 '\' => Pluf_Template_safeEcho(' . $_trans .
-                                 ', false)';
+                        $_tmp[] = '\'' . addslashes($key) . '\' => Pluf_Template_safeEcho(' . $_trans . ', false)';
                     }
                     $res .= implode(', ', $_tmp);
                     unset($_trans, $_tmp);
@@ -608,9 +559,7 @@ class Pluf_Template_Compiler
                         $res .= 'echo(Pluf_Translation::sprintf(__($_b_t_s), array(';
                         $_tmp = array();
                         foreach ($this->_transStack as $key => $_trans) {
-                            $_tmp[] = '\'' . addslashes($key) .
-                                     '\' => Pluf_Template_safeEcho(' . $_trans .
-                                     ', false)';
+                            $_tmp[] = '\'' . addslashes($key) . '\' => Pluf_Template_safeEcho(' . $_trans . ', false)';
                         }
                         $res .= implode(', ', $_tmp);
                         unset($_trans, $_tmp);
@@ -628,8 +577,7 @@ class Pluf_Template_Compiler
                 // XXX fixme: Will need some security check, when online
                 // editing.
                 $argfct = preg_replace('!^[\'"](.*)[\'"]$!', '$1', $args);
-                $_comp = new Pluf_Template_Compiler($argfct, 
-                        $this->templateFolders);
+                $_comp = new Pluf_Template_Compiler($argfct, $this->templateFolders);
                 $res = $_comp->compile();
                 $this->updateModifierStack($_comp);
                 break;
@@ -645,9 +593,7 @@ class Pluf_Template_Compiler
                 // Here we start the template tag calls at the template tag
                 // {tag ...} is not a block, so it must be a function.
                 if (! isset($this->_allowedTags[$name])) {
-                    trigger_error(
-                            sprintf(__('The function tag "%s" is not allowed.'), 
-                                    $name), E_USER_ERROR);
+                    trigger_error(sprintf(__('The function tag "%s" is not allowed.'), $name), E_USER_ERROR);
                 }
                 $argfct = $this->_parseFinal($args, $this->_allowedAssign);
                 // $argfct is a string that can be copy/pasted in the PHP code
@@ -656,20 +602,14 @@ class Pluf_Template_Compiler
                 if (isset($this->_extraTags[$name])) {
                     if (false == $_end) {
                         if (method_exists($this->_extraTags[$name], 'start')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' .
-                                     $this->_allowedTags[$name] .
-                                     '\', $t); $_extra_tag->start(' . $argfct .
-                                     '); ';
+                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->_allowedTags[$name] . '\', $t); $_extra_tag->start(' . $argfct . '); ';
                         }
                         if (method_exists($this->_extraTags[$name], 'genStart')) {
                             $res .= $this->_extraTags[$name]->genStart();
                         }
                     } else {
                         if (method_exists($this->_extraTags[$name], 'end')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' .
-                                     $this->_allowedTags[$name] .
-                                     '\', $t); $_extra_tag->end(' . $argfct .
-                                     '); ';
+                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->_allowedTags[$name] . '\', $t); $_extra_tag->end(' . $argfct . '); ';
                         }
                         if (method_exists($this->_extraTags[$name], 'genEnd')) {
                             $res .= $this->_extraTags[$name]->genEnd();
@@ -677,11 +617,7 @@ class Pluf_Template_Compiler
                     }
                 }
                 if ($res == '') {
-                    trigger_error(
-                            sprintf(
-                                    __(
-                                            'The function tag "{%s ...}" is not supported.'), 
-                                    $oname), E_USER_ERROR);
+                    trigger_error(sprintf(__('The function tag "{%s ...}" is not supported.'), $oname), E_USER_ERROR);
                 }
         }
         return $res;
@@ -701,8 +637,7 @@ class Pluf_Template_Compiler
      * tous : T_VARIABLE, @locale@
      *
      */
-    function _parseFinal ($string, $allowed = array(), $exceptchar = array(';'), 
-            $getAsArray = false)
+    function _parseFinal($string, $allowed = array(), $exceptchar = array(';'), $getAsArray = false)
     {
         $tokens = token_get_all('<?php ' . $string . '?>');
         $result = '';
@@ -715,8 +650,7 @@ class Pluf_Template_Compiler
         $results = array();
         
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
-        if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1]) &&
-                 $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
+        if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1]) && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);
             array_shift($tokens);
         }
@@ -738,18 +672,12 @@ class Pluf_Template_Compiler
                 } elseif ($type == T_WHITESPACE || in_array($type, $allowed)) {
                     $result .= $str;
                 } else {
-                    trigger_error(
-                            sprintf(__('Invalid syntax: (%s) %s.'), 
-                                    $this->_currentTag, 
-                                    $str . ' tokens' . var_export($tokens, true)), 
-                            E_USER_ERROR);
+                    trigger_error(sprintf(__('Invalid syntax: (%s) %s.'), $this->_currentTag, $str . ' tokens' . var_export($tokens, true)), E_USER_ERROR);
                     return '';
                 }
             } else {
                 if (in_array($tok, $exceptchar)) {
-                    trigger_error(
-                            sprintf(__('Invalid character: (%s) %s.'), 
-                                    $this->_currentTag, $tok), E_USER_ERROR);
+                    trigger_error(sprintf(__('Invalid character: (%s) %s.'), $this->_currentTag, $tok), E_USER_ERROR);
                 } elseif ($tok == '.') {
                     $inDot = true;
                     $result .= '->';
@@ -781,7 +709,7 @@ class Pluf_Template_Compiler
     /**
      * Update the current stack of modifiers from another compiler.
      */
-    protected function updateModifierStack ($compiler)
+    protected function updateModifierStack($compiler)
     {
         foreach ($compiler->_usedModifiers as $_um) {
             if (! in_array($_um, $this->_usedModifiers)) {
