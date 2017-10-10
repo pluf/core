@@ -101,7 +101,7 @@ return array(
     // Group rolses
     // --------------------------------------------------------------
     array(
-        'regex' => '#^/(?P<groupId>\d+)/role$#',
+        'regex' => '#^/(?P<groupId>\d+)/role/new$#',
         'model' => 'Group_Views_Role',
         'method' => 'add',
         'http-method' => 'POST',
@@ -134,7 +134,7 @@ return array(
     // Group users
     // --------------------------------------------------------------
     array(
-        'regex' => '#^/(?P<groupId>\d+)/user$#',
+        'regex' => '#^/(?P<groupId>\d+)/user/new$#',
         'model' => 'Group_Views_User',
         'method' => 'add',
         'http-method' => 'POST',

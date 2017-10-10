@@ -115,6 +115,7 @@ class Pluf_User extends Pluf_Model
                 'model' => Pluf::f('pluf_custom_group', 'Pluf_Group'),
                 'relate_name' => 'users'
             ),
+            // XXX: hadi 1396-07: should be deleted. we use rowpermission system.
             'permissions' => array(
                 'type' => 'Pluf_DB_Field_Manytomany',
                 'blank' => true,
@@ -192,7 +193,7 @@ class Pluf_User extends Pluf_Model
             ),
             'user_permission' => array(
                 'select' => $this->getSecureSelect(),
-                'join' => 'LEFT JOIN rowpermissions ON ' . $t_user . '.id=rowpermissions.owner_id'
+                'join' => 'LEFT JOIN rowpermissions ON ' . $t_user . '.id=rowpermissions.owner_id AND rowpermissions.owner_class="' . $this->_a['model'] . '"'
             ),
             'roled_user' => array(
                 'select' => $this->getSecureSelect(),
@@ -203,8 +204,8 @@ class Pluf_User extends Pluf_Model
                 'join' => 'LEFT JOIN ' . $t_asso . ' ON ' . $t_user . '.id=pluf_user_id'
             )
         );
-        if (Pluf::f('pluf_custom_user', false))
-            $this->extended_init();
+//         if (Pluf::f('pluf_custom_user', false))
+//             $this->extended_init();
     }
 
     /**
