@@ -32,9 +32,6 @@
 <!--             <directory>./Pluf_HTTP_Response/</directory> -->
 <!--             <directory>./Pluf_Gettext/</directory> -->
 <!--             <directory>./Pluf_Form/</directory> -->
-
-            
-            <directory>./User_Password_Token/</directory> 
         </testsuite>
     </testsuites>
     
