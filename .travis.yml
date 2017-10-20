@@ -18,5 +18,5 @@ install:
 script:
   - cd tests
   - php run.php
-  - php coverage-checker.php clover.xml 70
+  - php coverage-checker.php coverage/lover.xml 70
 
