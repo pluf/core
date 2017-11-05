@@ -126,7 +126,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * \brief پیش ذخیره را انجام می‌دهد
      *
-     * @param $create حالت
+     * @param boolean $create حالت
      *            ساخت یا به روز رسانی را تعیین می‌کند
      */
     function preSave($create = false)
@@ -216,7 +216,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * ملک با دامنه تعیین شده را برمی‌گرداند.
      *
-     * @param unknown $domain            
+     * @param string $domain            
      */
     public static function byDomain($domain)
     {
