@@ -53,6 +53,7 @@ return array(
                 'description'
             ),
             'sortFields' => array(
+                'id',
                 'name',
                 'description'
             ),

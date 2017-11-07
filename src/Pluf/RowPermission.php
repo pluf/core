@@ -152,9 +152,9 @@ class Pluf_RowPermission extends Pluf_Model
     /**
      * یک گواهی را از سیستم حذف می‌کند.
      *
-     * @param unknown $owner            
-     * @param unknown $object            
-     * @param unknown $perm            
+     * @param Pluf_Model $owner            
+     * @param Pluf_Model $object            
+     * @param string|Pluf_Permission $perm            
      * @throws Exception
      */
     public static function remove ($owner, $object, $perm)
