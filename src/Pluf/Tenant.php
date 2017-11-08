@@ -205,7 +205,8 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * ملک تعیین شده با زیردامنه تعیین شده را برمی‌گرداند
      *
-     * @param string $subdomain            
+     * @param string $subdomain 
+     * @return Pluf_Tenant           
      */
     public static function bySubDomain($subdomain)
     {
