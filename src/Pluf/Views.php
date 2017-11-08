@@ -32,7 +32,6 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
  *
  * If you follow SEEN API guid line, the view is verry usefull in your
  * implementation.
- *
  */
 class Pluf_Views
 {
@@ -86,7 +85,7 @@ class Pluf_Views
      *            array Extra context values (array()).
      * @param
      *            string Login form template ('login_form.html')
-     * @return Response object
+     * @return Pluf_HTTP_Response object
      */
     function login($request, $match, $success_url = '/', $extra_context = array(), $template = 'login_form.html')
     {
@@ -145,7 +144,7 @@ class Pluf_Views
      *            array Match
      * @param
      *            string Default redirect URL after login '/'
-     * @return Response object
+     * @return Pluf_HTTP_Response object
      */
     function logout($request, $match, $success_url = '/')
     {
@@ -201,6 +200,15 @@ class Pluf_Views
             throw new Exception('The model class was not provided in the parameters.');
         }
         return $p['model'];
+    }
+
+    // TODO: maso, 2017: document
+    private static function CRUD_getParentModel($p)
+    {
+        if (! isset($p['parent'])) {
+            throw new Exception('The parent class was not provided in the parameters.');
+        }
+        return $p['parent'];
     }
 
     // TODO: maso, 2017: document
@@ -277,6 +285,32 @@ class Pluf_Views
     }
 
     /**
+     * Get list of Children
+     *
+     * It there is a relation ( Many to one), you can list all child with this
+     * view. The relation must be implemented with forign key in child class.
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function findManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $sql = new Pluf_SQL($p['parentKey'] . '=%s', $parentId);
+        if (isset($p['sql'])) {
+            $sqlMain = new Pluf_SQL($p['sql']);
+            $sql = $sqlMain->SAnd($sql);
+        }
+        $p['sql'] = $sql;
+        return self::findObject($request, $match, $p);
+    }
+
+    /**
      * Access an object (Part of the CRUD series).
      *
      * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
@@ -299,6 +333,34 @@ class Pluf_Views
     {
         // Set the default
         $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        return self::CRUD_response($request, $p, $object);
+    }
+
+    /**
+     * Get children
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_Model
+     */
+    public static function getManyToOne($request, $match, $p)
+    {
+        // Set the default
+        if (array_key_exists('modelId', $request->REQUEST)) {
+            $modelId = $request->REQUEST['modelId'];
+        } else {
+            $modelId = $match['modelId'];
+        }
+        $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), $modelId);
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        // TODO: maso, 2017: assert relation
         self::CRUD_checkPreconditions($request, $p, $object);
         return self::CRUD_response($request, $p, $object);
     }
@@ -344,6 +406,39 @@ class Pluf_Views
     }
 
     /**
+     * Createy a many to one object
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function createManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = new $model();
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
+        $object = $form->save(false);
+        $object->{$p['parentKey']} = $parent;
+        $object->create();
+        
+        return self::CRUD_response($request, $p, $object);
+    }
+
+    /**
      * Update an object (Part of the CRUD series).
      *
      * The minimal extra parameter is the model class name. The list
@@ -378,6 +473,38 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
+        $object = $form->save();
+        return self::CRUD_response($request, $p, $object);
+    }
+    
+    /**
+     * Update many to one
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function updateManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        // TODO: maso, 2017: check relateion
         self::CRUD_checkPreconditions($request, $p, $object);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
@@ -423,6 +550,39 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy->id = 0;
+        self::CRUD_checkPreconditions($request, $p, $object);
+        $object->delete();
+        return self::CRUD_response($request, $p, $objectCopy);
+    }
+    
+    /**
+     * Delete many to one
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function deleteManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        // TODO: maso, 2017: check relateion
         $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         $objectCopy->id = 0;
         self::CRUD_checkPreconditions($request, $p, $object);
