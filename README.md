@@ -1,6 +1,7 @@
 # Pluf core
 
 [![Build Status](https://travis-ci.org/pluf/core.svg?branch=master)](https://travis-ci.org/pluf/core)
+[![codecov](https://codecov.io/gh/pluf/core/branch/master/graph/badge.svg)](https://codecov.io/gh/pluf/core)
 
 Pluf is fast, reliable and small PHP application framework.
 
