@@ -30,7 +30,7 @@ if (version_compare(PHP_VERSION, '5.2.4', '<')) {
     exit(1);
 }
 
-require 'Pluf.php';
+require_once 'Pluf.php';
 Pluf::start($what['conf']);
 if (PHP_SAPI != 'cli' and ! Pluf::f('migrate_allow_web', false)) {
     echo ('Error: This script can only be run from the command line.' . "\n");

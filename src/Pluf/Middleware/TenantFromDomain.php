@@ -6,12 +6,16 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromDomain
+class Pluf_Middleware_TenantFromDomain implements Pluf_Middleware
 {
 
+    /**
+     * {@inheritDoc}
+     * @see Pluf_Middleware::process_request()
+     */
     function process_request(&$request)
     {
-        if (! $request->tenant->isAnonymous()) {
+        if ($request->tenant != null && ! $request->tenant->isAnonymous()) {
             return false;
         }
         try {
@@ -29,4 +33,14 @@ class Pluf_Middleware_TenantFromDomain
         }
         return false;
     }
+    
+    /**
+     * {@inheritDoc}
+     * @see Pluf_Middleware::process_response()
+     */
+    public function process_response($request, $response)
+    {
+        return $response;
+    }
+
 }

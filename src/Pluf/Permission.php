@@ -137,10 +137,16 @@ class Pluf_Permission extends Pluf_Model
             $code,
             $app
         ));
-        $perms = Pluf::factory('Pluf_Permission')->getList(array(
+        $permModel = new Pluf_Permission();
+        $perms = $permModel->getList(array(
             'filter' => $sql->gen()
         ));
-        if ($perms->count() != 1) {
+        if ($perms->count() != 1 && Pluf::f('core_permession_autoCreate', true)) {
+            $permModel->code_name = $code;
+            $permModel->application = $app;
+            if($permModel->create()){
+                return $permModel;
+            }
             return false;
         }
         return $perms[0];

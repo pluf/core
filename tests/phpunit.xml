@@ -32,9 +32,6 @@
 <!--             <directory>./Pluf_HTTP_Response/</directory> -->
 <!--             <directory>./Pluf_Gettext/</directory> -->
 <!--             <directory>./Pluf_Form/</directory> -->
-
-            
-            <directory>./User_Password_Token/</directory> 
         </testsuite>
     </testsuites>
     
@@ -44,6 +41,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./clover.xml"/>
+        <log type="coverage-clover" target="./coverage/clover.xml"/>
+<!--         <log type="coverage-html" target="./coverage/html"/> -->
     </logging>
 </phpunit>

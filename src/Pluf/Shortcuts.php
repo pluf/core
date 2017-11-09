@@ -150,53 +150,6 @@ function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null,
     return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
 }
 
-function Pluf_Shortcuts_LoadModels ($moduleJson)
-{
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    if (! isset($moduleJson['model'])) {
-        return;
-    }
-    $models = $moduleJson['model'];
-    foreach ($models as $model) {
-        $schema->model = new $model();
-        $schema->createTables();
-    }
-}
-
-function Pluf_Shortcuts_LoadPermissions ($moduleJson)
-{
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    if (! isset($moduleJson['permisson'])) {
-        return;
-    }
-    $permissons = $moduleJson['permisson'];
-    foreach ($permissons as $permisson) {
-        $p = new Pluf_Permission();
-        $p->name = $permisson['name'];
-        $p->code_name = $permisson['code_name'];
-        $p->description = $permisson['description'];
-        $p->application = $moduleJson['name'];
-        $p->version = $moduleJson['version'];
-        $p->create();
-    }
-}
-
-function Pluf_Shortcuts_Monitors ($moduleJson)
-{
-    $db = Pluf::db();
-    $schema = new Pluf_DB_Schema($db);
-    if (! isset($moduleJson['monitor'])) {
-        return;
-    }
-    $monitors = $moduleJson['monitor'];
-    foreach ($monitors as $monitor) {
-        $model = new Pluf_Monitor();
-        $model->setFromFormData($monitor);
-        $model->create();
-    }
-}
 
 function Pluf_Shortcuts_folderSize ($dir)
 {

@@ -610,7 +610,7 @@ class Pluf_Model implements JsonSerializable
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
             // Note: Hadi, 1395-11-26: Table should be set before tenant field.
             // It is to avoid ambiguous problem in join tables which both have tenant field.
-            $sql = new Pluf_SQL($this->_a['table'] . '.tenant=%s', 
+            $sql = new Pluf_SQL($this->getSqlTable() . '.tenant=%s', 
                     array(
                             Pluf_Tenant::current()->id
                     ));

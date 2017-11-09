@@ -45,6 +45,9 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             'gzip' => false,
             'cache' => true
         ));
+        if(defined('IN_UNIT_TESTS')){
+            return;
+        }
         $dl->send(false);
     }
 

@@ -24,14 +24,14 @@ Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
 // XXX: maso, 1394: بر اساس ساختارهای REST باید این لایه نمایش نیز به روز شود.
 
 /**
- * دسته‌ای از فراخوانی‌های پایه در لایه نمایش
+ * Basic Pluf fices
  *
- * در بسیاری از کاربردها همواره کارهای ثابتی در لایه نمایش مورد نیاز است. تمام
- * این کارها در اینجا پیاده سازی شده است تا هزینه پیاده سازی لایه نمایش کاهش
- * یابد.
+ * To start a module as fast as possible, you need a basic views such as model
+ * CRUD and list. Here is a list of a basic views which are very common in your
+ * desing.
  *
- * برای نمونه در برخی شرایط نیاز است که مسیر کاربر را به یک مسیر جدید تغییر داد
- * در اینجا یک پیاده سازی ساده برای این کار انجام شده است.
+ * If you follow SEEN API guid line, the view is verry usefull in your
+ * implementation.
  */
 class Pluf_Views
 {
@@ -46,7 +46,7 @@ class Pluf_Views
      * @param
      *            string Redirection URL (not a view)
      */
-    function redirectTo ($request, $match, $url)
+    function redirectTo($request, $match, $url)
     {
         return new Pluf_HTTP_Response_Redirect($url);
     }
@@ -61,7 +61,7 @@ class Pluf_Views
      * @param
      *            string Content of the page
      */
-    function simpleContent ($request, $match, $content)
+    function simpleContent($request, $match, $content)
     {
         return new Pluf_HTTP_Response($content);
     }
@@ -85,41 +85,35 @@ class Pluf_Views
      *            array Extra context values (array()).
      * @param
      *            string Login form template ('login_form.html')
-     * @return Response object
+     * @return Pluf_HTTP_Response object
      */
-    function login ($request, $match, $success_url = '/', $extra_context = array(), 
-            $template = 'login_form.html')
+    function login($request, $match, $success_url = '/', $extra_context = array(), $template = 'login_form.html')
     {
         if (! empty($request->REQUEST['_redirect_after'])) {
             $success_url = $request->REQUEST['_redirect_after'];
         }
         $error = '';
         if ($request->method == 'POST') {
-            foreach (Pluf::f('auth_backends', 
-                    array(
-                            'Pluf_Auth_ModelBackend'
-                    )) as $backend) {
-                $user = call_user_func(
-                        array(
-                                $backend,
-                                'authenticate'
-                        ), $request->POST);
+            foreach (Pluf::f('auth_backends', array(
+                'Pluf_Auth_ModelBackend'
+            )) as $backend) {
+                $user = call_user_func(array(
+                    $backend,
+                    'authenticate'
+                ), $request->POST);
                 if ($user !== false) {
                     break;
                 }
             }
             if (false === $user) {
-                $error = __(
-                        'The login or the password is not valid. The login and the password are case sensitive.');
+                $error = __('The login or the password is not valid. The login and the password are case sensitive.');
             } else {
                 if (! $request->session->getTestCookie()) {
-                    $error = __(
-                            'You need to enable the cookies in your browser to access this website.');
+                    $error = __('You need to enable the cookies in your browser to access this website.');
                 } else {
                     $request->user = $user;
                     $request->session->clear();
-                    $request->session->setData('login_time', 
-                            gmdate('Y-m-d H:i:s'));
+                    $request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
                     $user->last_login = gmdate('Y-m-d H:i:s');
                     $user->update();
                     $request->session->deleteTestCookie();
@@ -129,13 +123,11 @@ class Pluf_Views
         }
         // Show the login form
         $request->session->createTestCookie();
-        $context = new Pluf_Template_Context_Request($request, 
-                array_merge(
-                        array(
-                                'page_title' => __('Sign In'),
-                                '_redirect_after' => $success_url,
-                                'error' => $error
-                        ), $extra_context));
+        $context = new Pluf_Template_Context_Request($request, array_merge(array(
+            'page_title' => __('Sign In'),
+            '_redirect_after' => $success_url,
+            'error' => $error
+        ), $extra_context));
         $tmpl = new Pluf_Template($template);
         return new Pluf_HTTP_Response($tmpl->render($context));
     }
@@ -152,9 +144,9 @@ class Pluf_Views
      *            array Match
      * @param
      *            string Default redirect URL after login '/'
-     * @return Response object
+     * @return Pluf_HTTP_Response object
      */
-    function logout ($request, $match, $success_url = '/')
+    function logout($request, $match, $success_url = '/')
     {
         $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
         $request->user = new $user_model();
@@ -180,11 +172,11 @@ class Pluf_Views
      * الگوها را
      * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
      *
-     * @param unknown $request            
-     * @param unknown $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      * @return Pluf_HTTP_Response
      */
-    function loadTemplate ($request, $match)
+    function loadTemplate($request, $match)
     {
         $template = $match[1];
         $extra_context = array();
@@ -195,46 +187,49 @@ class Pluf_Views
     }
 
     // TODO: maso, 2017: document
-    private static function CRUD_getModelInstance ($p)
+    private static function CRUD_getModelInstance($p)
     {
         $model = self::CRUD_getModel($p);
         return new $model();
     }
 
     // TODO: maso, 2017: document
-    private static function CRUD_getModel ($p)
+    private static function CRUD_getModel($p)
     {
         if (! isset($p['model'])) {
-            throw new Exception(
-                    'The model class was not provided in the parameters.');
+            throw new Exception('The model class was not provided in the parameters.');
         }
         return $p['model'];
     }
-    
+
     // TODO: maso, 2017: document
-    private static function CRUD_response ($request, $p, $object, 
-            $child = null)
+    private static function CRUD_getParentModel($p)
+    {
+        if (! isset($p['parent'])) {
+            throw new Exception('The parent class was not provided in the parameters.');
+        }
+        return $p['parent'];
+    }
+
+    // TODO: maso, 2017: document
+    private static function CRUD_response($request, $p, $object, $child = null)
     {
         /*
          * Return a template if is set
          */
         if (isset($p['template'])) {
             $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-            $template = (isset($p['template'])) ? $p['template'] : strtolower(
-                    $model) . '_confirm_delete.html';
-                    $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
-                    return Pluf_Shortcuts_RenderToResponse($template,
-                            array_merge($context,
-                                    array(
-                                            'object' => $object
-                                    )), $request);
+            $template = (isset($p['template'])) ? $p['template'] : strtolower($model) . '_confirm_delete.html';
+            $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
+            return Pluf_Shortcuts_RenderToResponse($template, array_merge($context, array(
+                'object' => $object
+            )), $request);
         }
         return $object;
     }
 
     // TODO: maso, 2017: document
-    private static function CRUD_checkPreconditions ($request, $p, $object, 
-            $child = null)
+    private static function CRUD_checkPreconditions($request, $p, $object, $child = null)
     {
         if (! isset($p['precond'])) {
             return;
@@ -242,16 +237,15 @@ class Pluf_Views
         $preconds = $p['precond'];
         if (! is_array($preconds)) {
             $preconds = array(
-                    $preconds
+                $preconds
             );
         }
         foreach ($preconds as $precond) {
-            $res = call_user_func_array(explode('::', $precond), 
-                    array(
-                            $request,
-                            $object,
-                            $child
-                    ));
+            $res = call_user_func_array(explode('::', $precond), array(
+                $request,
+                $object,
+                $child
+            ));
             if ($res !== true) {
                 throw new Pluf_Exception('CRUD precondition is not satisfied.');
             }
@@ -261,18 +255,21 @@ class Pluf_Views
     /**
      * List objects (Part of the CRUD series).
      *
-     * @param Pluf_HTTP_Request $request            
-     * @param array $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      * @return Pluf_HTTP_Response_Json
      */
-    public static function findObject ($request, $match, $p)
+    public static function findObject($request, $match, $p)
     {
         $default = array(
-                'listFilters' => array(),
-                'listDisplay' => array(),
-                'searchFields' => array(),
-                'sortFields' => array(),
-                'sortOrder' => array('id', 'DESC')
+            'listFilters' => array(),
+            'listDisplay' => array(),
+            'searchFields' => array(),
+            'sortFields' => array(),
+            'sortOrder' => array(
+                'id',
+                'DESC'
+            )
         );
         $p = array_merge($default, $p);
         // Create page
@@ -281,11 +278,36 @@ class Pluf_Views
             $page->forced_where = $p['sql'];
         }
         $page->list_filters = $p['listFilters'];
-        $page->configure($p['listDisplay'], $p['searchFields'], 
-                $p['sortFields']);
+        $page->configure($p['listDisplay'], $p['searchFields'], $p['sortFields']);
         $page->sort_order = $p['sortOrder'];
         $page->setFromRequest($request);
         return $page->render_object();
+    }
+
+    /**
+     * Get list of Children
+     *
+     * It there is a relation ( Many to one), you can list all child with this
+     * view. The relation must be implemented with forign key in child class.
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_HTTP_Response_Json
+     */
+    public function findManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $sql = new Pluf_SQL($p['parentKey'] . '=%s', $parentId);
+        if (isset($p['sql'])) {
+            $sqlMain = new Pluf_SQL($p['sql']);
+            $sql = $sqlMain->SAnd($sql);
+        }
+        $p['sql'] = $sql;
+        return self::findObject($request, $match, $p);
     }
 
     /**
@@ -307,11 +329,38 @@ class Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public static function getObject ($request, $match, $p)
+    public static function getObject($request, $match, $p)
     {
         // Set the default
-        $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), 
-                $match['modelId']);
+        $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        return self::CRUD_response($request, $p, $object);
+    }
+
+    /**
+     * Get children
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_Model
+     */
+    public static function getManyToOne($request, $match, $p)
+    {
+        // Set the default
+        if (array_key_exists('modelId', $request->REQUEST)) {
+            $modelId = $request->REQUEST['modelId'];
+        } else {
+            $modelId = $match['modelId'];
+        }
+        $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), $modelId);
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        // TODO: maso, 2017: assert relation
         self::CRUD_checkPreconditions($request, $p, $object);
         return self::CRUD_response($request, $p, $object);
     }
@@ -340,20 +389,52 @@ class Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public function createObject ($request, $match, $p)
+    public function createObject($request, $match, $p)
     {
         $default = array(
-                'extra_context' => array(),
-                'extra_form' => array()
+            'extra_context' => array(),
+            'extra_form' => array()
         );
         $p = array_merge($default, $p);
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = new $model();
-        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, 
-                $p['extra_form']);
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
+        
+        return self::CRUD_response($request, $p, $object);
+    }
 
+    /**
+     * Createy a many to one object
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function createManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = new $model();
+        $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
+        $object = $form->save(false);
+        $object->{$p['parentKey']} = $parent;
+        $object->create();
+        
         return self::CRUD_response($request, $p, $object);
     }
 
@@ -377,24 +458,55 @@ class Pluf_Views
      *
      * @param Pluf_HTTP_Request $request
      *            object
-     * @param array $match            
+     * @param array $match
      * @param array $p
      *            parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public function updateObject ($request, $match, $p)
+    public function updateObject($request, $match, $p)
     {
         $default = array(
-                'extra_context' => array(),
-                'extra_form' => array()
+            'extra_context' => array(),
+            'extra_form' => array()
         );
         $p = array_merge($default, $p);
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         self::CRUD_checkPreconditions($request, $p, $object);
-        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, 
-                $p['extra_form']);
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
+        $object = $form->save();
+        return self::CRUD_response($request, $p, $object);
+    }
+    
+    /**
+     * Update many to one
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function updateManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        // TODO: maso, 2017: check relateion
+        self::CRUD_checkPreconditions($request, $p, $object);
+        $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
         return self::CRUD_response($request, $p, $object);
     }
@@ -423,21 +535,54 @@ class Pluf_Views
      *
      * @param Pluf_HTTP_Request $request
      *            object
-     * @param array $match            
+     * @param array $match
      * @param array $p
      *            parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public function deleteObject ($request, $match, $p)
+    public function deleteObject($request, $match, $p)
     {
         $default = array(
-                'extra_context' => array(),
-                'extra_form' => array()
+            'extra_context' => array(),
+            'extra_form' => array()
         );
         $p = array_merge($default, $p);
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        $objectCopy->id = 0;
+        self::CRUD_checkPreconditions($request, $p, $object);
+        $object->delete();
+        return self::CRUD_response($request, $p, $objectCopy);
+    }
+    
+    /**
+     * Delete many to one
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return Pluf_HTTP_Response
+     */
+    public function deleteManyToOne($request, $match, $p)
+    {
+        if (array_key_exists('parentId', $request->REQUEST)) {
+            $parentId = $request->REQUEST['parentId'];
+        } else {
+            $parentId = $match['parentId'];
+        }
+        $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
+        
+        $default = array(
+            'extra_context' => array(),
+            'extra_form' => array()
+        );
+        $p = array_merge($default, $p);
+        // Set the default
+        $model = self::CRUD_getModel($p);
+        $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        // TODO: maso, 2017: check relateion
         $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         $objectCopy->id = 0;
         self::CRUD_checkPreconditions($request, $p, $object);

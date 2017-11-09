@@ -86,12 +86,6 @@ class Group_Views_User extends Pluf_Views
             'last_name',
             'email'
         );
-        $list_display = array(
-            'login' => __('login'),
-            'first_name' => __('first name'),
-            'last_name' => __('last name'),
-            'email' => __('email')
-        );
         $sort_fields = array(
             'id',
             'login',
@@ -101,7 +95,7 @@ class Group_Views_User extends Pluf_Views
             'last_login'
         );
         $pag->model_view = 'user_group';
-        $pag->configure($list_display, $search_fields, $sort_fields);
+        $pag->configure(array(), $search_fields, $sort_fields);
         $pag->setFromRequest($request);
         return new Pluf_HTTP_Response_Json($pag->render_object());
     }
