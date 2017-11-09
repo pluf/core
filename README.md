@@ -2,13 +2,15 @@
 
 [![Build Status](https://travis-ci.org/pluf/core.svg?branch=master)](https://travis-ci.org/pluf/core)
 
+Pluf is fast, reliable and small PHP application framework.
+
 This project is part of pluf.
 
 Pluf is open source light RESTFull framework. 
 
 There are severall opensource modules to extend pluf.
 
-## مدل توسعه
+## Development
 
 ساختار در نظر گرفته شده برای پیاده‌سازی سیستم‌ها MVT است که از سه بخش مدل، نمایش و الگو تشکیل می‌شود. 
 
