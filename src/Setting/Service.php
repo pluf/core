@@ -17,6 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Application/Tenant level configuration
+ * 
+ *  Setting is a key-value in the application level which is editable by owners. All
+ * settings are read only for others.
+ * 
+ * @author maso<mostafa.barmshroy@dpq.co.ir>
+ *
+ */
 class Setting_Service
 {
 

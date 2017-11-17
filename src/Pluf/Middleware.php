@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,14 +20,19 @@
 
 /**
  * Pluf general middleware
- * 
- * @author maso <mostafa.barmshory@dpq.co.ir>
  *
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *        
  */
 interface Pluf_Middleware
 {
 
-    public function process_request (&$request);
+    /**
+     *
+     * @param Pluf_HTTP_Request $request
+     * @return boolean false if ther is no problem otherwize ther is an error
+     */
+    public function process_request(&$request);
 
-    public function process_response ($request, $response);
+    public function process_response($request, $response);
 }

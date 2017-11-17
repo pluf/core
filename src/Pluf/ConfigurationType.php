@@ -7,5 +7,4 @@ final class Pluf_ConfigurationType
 
     const APPLICATION = 1;
 
-    const GENERAL = 2;
 }

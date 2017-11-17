@@ -17,6 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * System level configuration service
+ * 
+ *  Configuration is system level key-value which administrator are able to
+ * edit. All configurations are readable by owners but not editable.
+ * 
+ * @author maso
+ *
+ */
 class Config_Service
 {
 
