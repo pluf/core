@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 
@@ -32,21 +31,25 @@ class Setting_Views extends Pluf_Views
     /**
      * مقدار یک خصوصیت را تعیین می‌کند.
      *
-     * @param Pluf_HTTP_Request $request            
-     * @param array $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function get ($request, $match)
+    public function get($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
-                array(
-                        Pluf_ConfigurationType::APPLICATION,
-                        $match['key']
-                ));
+        $types = array(
+            Pluf_ConfigurationType::TENANT_PUBLIC
+        );
+        if ($request->user->administrator || $request->user->hasPerm('Pluf.owner', null, $request->tenant->id)) {
+            $types[] = Pluf_ConfigurationType::TENANT_PRIVATE;
+        }
+        $sql = new Pluf_SQL('type in %s AND configuration.key=%s', array(
+            $types,
+            $match['key']
+        ));
         $model = new Pluf_Configuration();
-        $model = $model->getOne(
-                array(
-                        'filter' => $sql->gen()
-                ));
+        $model = $model->getOne(array(
+            'filter' => $sql->gen()
+        ));
         if (! isset($model)) {
             $model = new Pluf_Configuration();
         }
@@ -59,21 +62,19 @@ class Setting_Views extends Pluf_Views
      * در صورتی که تنظیم موجود نباشد آن را ایجاد کرده و مقدار تیعیین شده را
      * در آن قرار می‌دهد.
      *
-     * @param Pluf_HTTP_Request $request            
-     * @param array $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function update ($request, $match)
+    public function update($request, $match)
     { // Set the default
-        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
-                array(
-                        Pluf_ConfigurationType::APPLICATION,
-                        $match['key']
-                ));
+        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', array(
+            Pluf_ConfigurationType::APPLICATION,
+            $match['key']
+        ));
         $model = new Pluf_Configuration();
-        $model = $model->getOne(
-                array(
-                        'filter' => $sql->gen()
-                ));
+        $model = $model->getOne(array(
+            'filter' => $sql->gen()
+        ));
         if (! isset($model)) {
             $model = new Pluf_Configuration();
             $form = Pluf_Shortcuts_GetFormForModel($model, $request->REQUEST);
@@ -91,21 +92,19 @@ class Setting_Views extends Pluf_Views
     /**
      * مقدار یک خصوصیت را تعیین می‌کند.
      *
-     * @param Pluf_HTTP_Request $request            
-     * @param array $match            
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
      */
-    public function delete ($request, $match)
+    public function delete($request, $match)
     {
-        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', 
-                array(
-                        Pluf_ConfigurationType::APPLICATION,
-                        $match['key']
-                ));
+        $sql = new Pluf_SQL('type=%s AND configuration.key=%s', array(
+            Pluf_ConfigurationType::APPLICATION,
+            $match['key']
+        ));
         $model = new Pluf_Configuration();
-        $model = $model->getOne(
-                array(
-                        'filter' => $sql->gen()
-                ));
+        $model = $model->getOne(array(
+            'filter' => $sql->gen()
+        ));
         if (! isset($model)) {
             $model = new Pluf_Configuration();
         } else {
