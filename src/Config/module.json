@@ -1,8 +1,0 @@
-{
-	"name": "Config",
-	"version": "0.1.0",
-	"title": "Configuartion Management",
-	"description": "Administrator and system are allowd to change settings.",
-	"model": [],
-	"permisson": []
-}
