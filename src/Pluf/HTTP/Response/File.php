@@ -46,6 +46,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             'cache' => true
         ));
         if(defined('IN_UNIT_TESTS')){
+            parent::render($output_body);
             return;
         }
         $dl->send(false);

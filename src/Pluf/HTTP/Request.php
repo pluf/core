@@ -41,6 +41,7 @@ class Pluf_HTTP_Request
     public $SERVER = array();
     public $uid = '';
     public $time = '';
+    public $agent = '';
     
     /**
      * Protocol
@@ -83,6 +84,7 @@ class Pluf_HTTP_Request
         $this->uid = $GLOBALS['_PX_uniqid']; 
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
         $this->https = isset($_SERVER['HTTPS']);
+        $this->agent = (isset($_SERVER['HTTP_USER_AGENT'])) ?  $_SERVER['HTTP_USER_AGENT'] : '';
         /*
          * Load request header
          */

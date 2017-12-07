@@ -17,11 +17,11 @@ class Pluf_Exception_Form extends Pluf_Exception
 	 * یک نمونه از این کلاس ایجاد می‌کند.
 	 *
 	 * @param string $message
-	 * @param string $code
+	 * @param Pluf_Form $form
 	 * @param string $previous
 	 */
 	public function __construct($message, $form, $link=null, $developerMessage=null) {
-		parent::__construct ( $message, 5000, null, 500, $link, $developerMessage);
+		parent::__construct ( $message, 4000, null, 400, $link, $developerMessage);
 		$this->data = $form->errors;
 	}
 }
