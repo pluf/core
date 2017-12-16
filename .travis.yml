@@ -30,8 +30,8 @@ install:
 script:
   - cd tests
   - php run.php
+  - ../vendor/bin/test-reporter
   - cd ..
-  - vendor/bin/test-reporter
 
 after_success:
 # Submit coverage report to Coveralls servers, see .coveralls.yml
