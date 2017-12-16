@@ -13,3 +13,4 @@ composer-setup.php
 composer.phar
 
 clover.xml
+/build/
