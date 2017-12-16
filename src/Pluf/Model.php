@@ -131,8 +131,8 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * فهرست متدها را بر اساس رابطه‌هایی که در سیستم تعریف شده است را تعیین
-     * می‌کند.
+     * Load and init the model
+     * 
      */
     function _init ()
     {
@@ -1028,6 +1028,8 @@ class Pluf_Model implements JsonSerializable
      *
      * You need to overwrite this method to have a nice display of
      * your objects in the select boxes, logs.
+     * 
+     * @return string reperesentation of the current object
      */
     function __toString ()
     {
