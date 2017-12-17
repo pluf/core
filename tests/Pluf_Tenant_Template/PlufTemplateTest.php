@@ -55,7 +55,7 @@ class PlufTenantTemplateTest extends TestCase
                                  '/../tmp/tmp.sqlite.db',
                                 'app_base' => '/testapp',
                                 'url_format' => 'simple',
-                                'db_table_prefix' => 'bank_unit_tests_',
+                                'db_table_prefix' => 'pluf_unit_tests_',
                                 'db_version' => '5.0',
                                 'db_engine' => 'SQLite',
                                 'bank_debug' => true
