@@ -21,7 +21,7 @@
  * مدل داده‌ای پیام را ایجاد می‌کند.
  * 
  * @param unknown $object
- * @return Pluf_User
+ * @return User
  */
 function Inbox_Shortcuts_messageDataFactory ($object = null)
 {

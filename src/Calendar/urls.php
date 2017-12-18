@@ -57,7 +57,7 @@ return array(
                 'method' => 'createObject',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Calendar'
@@ -78,7 +78,7 @@ return array(
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Calendar'
@@ -90,7 +90,7 @@ return array(
                 'method' => 'updateObject',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Calendar'
@@ -108,7 +108,7 @@ return array(
                 'method' => 'create',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 )
         ),
         array(
@@ -129,7 +129,7 @@ return array(
                 'method' => 'update',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 )
         ),
         array(
@@ -138,7 +138,7 @@ return array(
                 'method' => 'delete',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 )
         ),
         
@@ -178,7 +178,7 @@ return array(
                 'method' => 'createObject',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Event'
@@ -199,7 +199,7 @@ return array(
                 'method' => 'deleteObject',
                 'http-method' => 'DELETE',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Event'
@@ -211,7 +211,7 @@ return array(
                 'method' => 'updateObject',
                 'http-method' => 'POST',
                 'precond' => array(
-                        'Pluf_Precondition::ownerRequired'
+                        'User_Precondition::ownerRequired'
                 ),
                 'params' => array(
                         'model' => 'Calendar_Event'

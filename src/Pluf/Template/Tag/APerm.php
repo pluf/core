@@ -21,7 +21,7 @@ class Pluf_Template_Tag_APerm extends Pluf_Template_Tag
      * @param
      *            string Variable to get the permission
      * @param
-     *            Pluf_User
+     *            User
      * @param
      *            string Permission string
      * @param

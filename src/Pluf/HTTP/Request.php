@@ -54,7 +54,7 @@ class Pluf_HTTP_Request
     /**
      * Current user
      * 
-     * @var Pluf_User
+     * @var User
      */
     public $user = null;
     
