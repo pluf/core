@@ -911,7 +911,7 @@ class Pluf_Model implements JsonSerializable
         $this->_con->execute($req);
         if (! $raw) {
             if (false === ($id = $this->_con->getLastID())) {
-                throw new Exception($this->_con->getError());
+                throw new Pluf_Exception($this->_con->getError());
             }
             $this->_data['id'] = $id;
         }

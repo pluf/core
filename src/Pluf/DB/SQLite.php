@@ -97,7 +97,7 @@ class Pluf_DB_SQLite
     {
         $this->debug($query);
         if (false === ($cur = $this->con_id->exec($query))) {
-            throw new Exception($this->getError());
+            throw new Pluf_Exception($this->getError());
         }
         return $cur;
 

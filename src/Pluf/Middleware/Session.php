@@ -38,7 +38,6 @@ class Pluf_Middleware_Session
             }
             return false;
         }
-        $set_lang = false;
         if (isset($data['Pluf_Session_key'])) {
             $sql = new Pluf_SQL('session_key=%s', $data['Pluf_Session_key']);
             $found_session = Pluf::factory('Pluf_Session')->getList(
@@ -53,10 +52,10 @@ class Pluf_Middleware_Session
         } else {
             $request->session = $session;
         }
-        if ($set_lang and
-                 false == $request->session->getData('pluf_language', false)) {
-            $request->session->setData('pluf_language', $set_lang);
-        }
+//         if ($set_lang and
+//                  false == $request->session->getData('pluf_language', false)) {
+//             $request->session->setData('pluf_language', $set_lang);
+//         }
         if (isset($request->COOKIE[$request->session->test_cookie_name])) {
             $request->session->test_cookie = $request->COOKIE[$request->session->test_cookie_name];
         }

@@ -268,10 +268,11 @@ class Pluf_Migration
             }
         }
         // Load permissions
+        // XXX: maso, 2017: must move to user module
         if (array_key_exists('permisson', $module)) {
             $permissons = $module['permisson'];
             foreach ($permissons as $permisson) {
-                $p = new Pluf_Permission();
+                $p = new Role();
                 $p->name = $permisson['name'];
                 $p->code_name = $permisson['code_name'];
                 $p->description = $permisson['description'];

@@ -1,38 +1,17 @@
 {
-  "name": "Pluf",
-  "version": "2.0.0",
-  "title": "Pluf core module",
-  "model": [
-    "Pluf_DB_SchemaInfo",
-    "Pluf_Session",
-    "Pluf_User",
-    "Pluf_Group",
-    "Pluf_Message",
-    "Pluf_Permission",
-    "Pluf_RowPermission",
-    "Pluf_Search_Word",
-    "Pluf_Search_Occ",
-    "Pluf_Search_Stats",
-    "Pluf_Queue",
-    "Pluf_Monitor",
-    "Pluf_Tenant",
-    "Pluf_Configuration"
-  ],
-  "permisson": [
-    {
-      "name": "ownership",
-      "code_name": "owner",
-      "description": "Permission given to software owners."
-    },
-    {
-      "name": "membership",
-      "code_name": "member",
-      "description": "Permission given to software members."
-    },
-    {
-      "name": "authorized users",
-      "code_name": "authorized",
-      "description": "Permission given to users allowed to access a tenant."
-    }
-  ]
+	"name": "Pluf",
+	"version": "3.0.0",
+	"title": "Pluf core module",
+	"model": [
+		"Pluf_DB_SchemaInfo",
+		"Pluf_Session",
+		"Pluf_Search_Word",
+		"Pluf_Search_Occ",
+		"Pluf_Search_Stats",
+		"Pluf_Queue",
+		"Pluf_Monitor",
+		"Pluf_Tenant",
+		"Pluf_Configuration"
+	],
+	"permisson": []
 }
