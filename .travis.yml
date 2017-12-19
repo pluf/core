@@ -29,6 +29,7 @@ install:
   
 script:
   - php run.php
+  # CODECLIMATE_REPO_TOKEN reqired
   - vendor/bin/test-reporter
 
 after_success:

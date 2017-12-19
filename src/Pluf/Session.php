@@ -143,7 +143,7 @@ class Pluf_Session extends Pluf_Model
      * @param string $key
      * @return boolean
      */
-    public function isset($key){
+    public function containsKey($key){
         return isset($this->data[$key]);
     }
 
