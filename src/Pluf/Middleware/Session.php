@@ -4,19 +4,13 @@
  * میان افزار نشست
  *
  * 
- * Allow a session object in the request and the automatic
- * login/logout of a user if a standard authentication against the
- * Pluf_User model is performed.
+ * Allow a session object in the request.
  */
 class Pluf_Middleware_Session
 {
 
     /**
      * Process the request.
-     *
-     * When processing the request, if a session is found with
-     * Pluf_User creditentials the corresponding user is loaded into
-     * $request->user.
      *
      * FIXME: We should logout everybody when the session table is emptied.
      *
@@ -27,12 +21,8 @@ class Pluf_Middleware_Session
     function process_request (&$request)
     {
         $session = new Pluf_Session();
-        $user_model = Pluf::f('pluf_custom_user', 'Pluf_User');
-        $user = new $user_model();
         if (! isset($request->COOKIE[$session->cookie_name])) {
-            // No session is defined. We set an empty user and empty
-            // session.
-            $request->user = $user;
+            // No session is defined. We set empty session.
             $request->session = $session;
             if (isset($request->COOKIE[$request->session->test_cookie_name])) {
                 $request->session->test_cookie = $request->COOKIE[$request->session->test_cookie_name];
@@ -42,33 +32,11 @@ class Pluf_Middleware_Session
         try {
             $data = self::_decodeData($request->COOKIE[$session->cookie_name]);
         } catch (Exception $e) {
-            $request->user = $user;
             $request->session = $session;
             if (isset($request->COOKIE[$request->session->test_cookie_name])) {
                 $request->session->test_cookie = $request->COOKIE[$request->session->test_cookie_name];
             }
             return false;
-        }
-        $set_lang = false;
-        if (isset($data[$user->session_key])) {
-            // We can get the corresponding user
-            $found_user = new $user_model($data[$user->session_key]);
-            if ($found_user->id == $data[$user->session_key]) {
-                // User found!
-                $request->user = $found_user;
-                // If the last login is from 12h or more, set it to
-                // now.
-                Pluf::loadFunction('Pluf_Date_Compare');
-                if (43200 < Pluf_Date_Compare($request->user->last_login)) {
-                    $request->user->last_login = gmdate('Y-m-d H:i:s');
-                    $request->user->update();
-                }
-                $set_lang = $found_user->language;
-            } else {
-                $request->user = $user;
-            }
-        } else {
-            $request->user = $user;
         }
         if (isset($data['Pluf_Session_key'])) {
             $sql = new Pluf_SQL('session_key=%s', $data['Pluf_Session_key']);
@@ -84,10 +52,10 @@ class Pluf_Middleware_Session
         } else {
             $request->session = $session;
         }
-        if ($set_lang and
-                 false == $request->session->getData('pluf_language', false)) {
-            $request->session->setData('pluf_language', $set_lang);
-        }
+//         if ($set_lang and
+//                  false == $request->session->getData('pluf_language', false)) {
+//             $request->session->setData('pluf_language', $set_lang);
+//         }
         if (isset($request->COOKIE[$request->session->test_cookie_name])) {
             $request->session->test_cookie = $request->COOKIE[$request->session->test_cookie_name];
         }
@@ -115,9 +83,6 @@ class Pluf_Middleware_Session
                 $request->session->create();
             }
             $data = array();
-            if ($request->user->id > 0) {
-                $data[$request->user->session_key] = $request->user->id;
-            }
             $data['Pluf_Session_key'] = $request->session->session_key;
             $response->cookies[$request->session->cookie_name] = self::_encodeData(
                     $data);
@@ -171,21 +136,6 @@ class Pluf_Middleware_Session
     }
 }
 
-/**
- * Context preprocessor.
- *
- * Set the $user key.
- *
- * @param
- *            Pluf_HTTP_Request Request object
- * @return array Array to merge with the context
- */
-function Pluf_Middleware_Session_ContextPreProcessor ($request)
-{
-    return array(
-            'user' => $request->user
-    );
-}
 
 Pluf_Signal::connect('Pluf_Template_Context_Request::construct', 
         array(

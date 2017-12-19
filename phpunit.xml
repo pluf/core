@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="Pluf">
+            <directory>./tests/Pluf/</directory>
+            <directory>./tests/Pluf_Crypt/</directory>
+            <directory>./tests/Pluf_Utils/</directory>
+            <directory>./tests/Pluf_User/</directory>
+            <directory>./tests/Pluf_Dispatcher/</directory>
+            <directory>./tests/Pluf_Encoder/</directory>
+            <directory>./tests/Pluf_Tenant/</directory>
+            <directory>./tests/Pluf_Tenant_Template/</directory>
+            <directory>./tests/Pluf_Setting_Template/</directory>
+            <directory>./tests/Pluf_Config/</directory> 
+            <directory>./tests/Pluf_Config_Template/</directory> 
+            <directory>./tests/Pluf_DB/</directory>
+            <directory>./tests/Pluf_DB_Schema/</directory>
+            <directory>./tests/Pluf_Mail/</directory>
+            <directory>./tests/Pluf_Paginator/</directory>
+            <directory>./tests/Pluf_SQL/</directory>
+            <directory>./tests/Pluf_Text_Wiki/</directory>
+            <directory>./tests/Pluf_Text_HTML_Filter/</directory>
+            <directory>./tests/Pluf_Form_Field/</directory>
+            
+<!--             <directory>./Pluf_Text_LaTeX_Texvc/</directory> -->
+<!--             <directory>./Pluf_Text_LaTeX/</directory> -->
+<!--             <directory>./Pluf_Template_Compiler/</directory> -->
+<!--             <directory>./Pluf_Template/</directory> -->
+<!--             <directory>./Pluf_Model/</directory> -->
+<!--             <directory>./Pluf_Migration/</directory> -->
+<!--             <directory>./Pluf_HTTP_URL/</directory> -->
+<!--             <directory>./Pluf_HTTP_Response/</directory> -->
+<!--             <directory>./Pluf_Gettext/</directory> -->
+<!--             <directory>./Pluf_Form/</directory> -->
+        </testsuite>
+    </testsuites>
+    
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+</phpunit>

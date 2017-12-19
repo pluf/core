@@ -35,7 +35,7 @@ class Inbox_Views_System
      * @var unknown
      */
     public $messages_precond = array(
-            'Pluf_Precondition::loginRequired'
+            'User_Precondition::loginRequired'
     );
 
     /**

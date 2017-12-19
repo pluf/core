@@ -63,7 +63,7 @@ class Inbox_Message extends Pluf_Model
                         'size' => 50,
                         'verbose' => __('owner class'),
                         'help_text' => __(
-                                'For example Pluf_User or Pluf_Group.')
+                                'For example User or Group.')
                 ),
                 'title' => array(
                         'type' => 'Pluf_DB_Field_Varchar',

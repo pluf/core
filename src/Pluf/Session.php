@@ -137,6 +137,15 @@ class Pluf_Session extends Pluf_Model
             return $default;
         }
     }
+    
+    /**
+     * Check if value is set in session
+     * @param string $key
+     * @return boolean
+     */
+    public function isset($key){
+        return isset($this->data[$key]);
+    }
 
     /**
      * تمام داده‌های موجود در نشت را پاک می‌کند.

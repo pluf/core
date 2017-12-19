@@ -29,7 +29,7 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
  * یک نمونه استفاده از این کلاس در زیر آورده شده است:
  *
  * <code>
- * $model = new Pluf_Permission();
+ * $model = new Pluf_Model();
  * $pag = new Pluf_Paginator($model);
  * // Get the paginator parameters from the request
  * $pag->setFromRequest($request);

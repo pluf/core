@@ -121,7 +121,7 @@ function Pluf_Shortcuts_RenderToResponse ($tplfile, $params, $request = null)
  *            array Extra parameters (array())
  * @param
  *            string Label suffix (null)
- * @return Object Form for this model.
+ * @return Pluf_Form_Model Form for this model.
  */
 function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(), 
         $label_suffix = null)

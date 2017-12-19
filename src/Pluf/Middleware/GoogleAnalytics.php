@@ -5,7 +5,8 @@
  * 
  *  این واسط کد دنبال کردن تحلیل‌های گوگل را به تمام سیستم اضافه می‌کند.
  *  
- *  @deprecated
+ *  
+ *  @deprecated Move to the CRM package
  */
 class Pluf_Middleware_GoogleAnalytics
 {

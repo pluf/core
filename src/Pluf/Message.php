@@ -28,7 +28,7 @@
  * @author maso
  *        
  */
-class Pluf_Message extends Pluf_Model
+class User_Message extends Pluf_Model
 {
 
     function init ()
@@ -52,7 +52,7 @@ class Pluf_Message extends Pluf_Model
                 ),
                 'user' => array(
                         'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => Pluf::f('pluf_custom_user', 'Pluf_User'),
+                        'model' => Pluf::f('pluf_custom_user', 'User'),
                         'blank' => false,
                         'verbose' => __('user'),
                         'editable' => false,
