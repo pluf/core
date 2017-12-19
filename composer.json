@@ -16,9 +16,9 @@
 	],
 	"minimum-stability" : "stable",
 	"require" : {
+		"pluf/http2" : "^3.0.0",
 		"pear/mail" : "^1.3",
 		"pear/mail_mime" : "^1.10.0",
-		"pluf/http2" : "^2.1.0",
 		"guzzlehttp/guzzle" : "^6.2"
 	},
 	"require-dev" : {
