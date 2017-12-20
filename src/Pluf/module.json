@@ -12,6 +12,5 @@
 		"Pluf_Monitor",
 		"Pluf_Tenant",
 		"Pluf_Configuration"
-	],
-	"permisson": []
+	]
 }

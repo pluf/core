@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-include_once dirname(__FILE__) . '/TestModels.php';
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
  * @backupGlobals disabled
@@ -29,252 +29,301 @@ include_once dirname(__FILE__) . '/TestModels.php';
 class PlufModelTest extends TestCase
 {
 
-    protected function setUp ()
+    /**
+     * @beforeClass
+     */
+    public static function createDataBase()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
-        $m = require dirname(__FILE__) . '/relations.php';
-        $GLOBALS['_PX_models'] = array_merge($m, $GLOBALS['_PX_models']);
-        $GLOBALS['_PX_config']['pluf_use_rowpermission'] = false;
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestModel();
-        $m2 = new RelatedToTestModel();
-        $m3 = new RelatedToTestModel2();
-        $m4 = new TestModelRecurse();
-        $schema->model = $m1;
-        $schema->dropTables();
-        $schema->createTables();
-        $schema->model = $m2;
-        $schema->dropTables();
-        $schema->createTables();
-        $schema->model = $m3;
-        $schema->dropTables();
-        $schema->createTables();
-        $schema->model = $m4;
-        $schema->dropTables();
-        $schema->createTables();
+        $conf = include __DIR__ . '/../conf/mysql.conf.php';
+        $conf['installed_apps'] = array(
+            'Test'
+        );
+        Pluf::start($conf);
+        $m = new Pluf_Migration(array(
+            'Test'
+        ));
+        $m->install();
     }
 
-    protected function tearDown ()
+    /**
+     * @afterClass
+     */
+    public static function removeDatabses()
     {
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestModel();
-        $schema->model = $m1;
-        $schema->dropTables();
-        $m2 = new RelatedToTestModel();
-        $schema->model = $m2;
-        $schema->dropTables();
-        $m3 = new RelatedToTestModel2();
-        $schema->model = $m3;
-        $schema->dropTables();
-        $m4 = new TestModelRecurse();
-        $schema->model = $m4;
-        $schema->dropTables();
+        $m = new Pluf_Migration(array(
+            'Test'
+        ));
+        $m->unInstall();
     }
 
-    public function testSetModelField ()
+    /**
+     * @test
+     */
+    public function testSetModelField()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'myvalue';
         $this->assertEquals('myvalue', $model->title);
     }
 
-    public function testTestModelRecurse ()
+    /**
+     * @test
+     */
+    public function testTestModelRecurse()
     {
-        $model = new TestModelRecurse();
+        $model = new Test_ModelRecurse();
         $model->title = 'myvalue';
         $this->assertEquals('myvalue', $model->title);
         $model->create();
-        $model2 = new TestModelRecurse();
+        
+        $model2 = new Test_ModelRecurse();
         $model2->title = 'child';
         $model2->parentid = $model;
         $this->assertEquals(true, $model2->create());
+        
         $a = $model->get_children_list();
         $this->assertEquals($a[0]->title, 'child');
     }
 
-    public function testCreateTestModel ()
+    /**
+     * @test
+     */
+    public function testCreateTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $this->assertEquals(true, $model->create());
         $this->assertEquals(1, (int) $model->id);
     }
 
-    public function testGetTestModel ()
+    /**
+     * @test
+     */
+    public function testGetTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $model->create();
-        $m = new TestModel(1);
+        $m = new Test_Model(1);
         $this->assertEquals('my title', $m->title);
     }
 
-    public function testUpdateTestModel ()
+    /**
+     * @test
+     */
+    public function testUpdateTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $model->create();
-        $model = new TestModel(1);
+        $model = new Test_Model(1);
         $model->description = 'A small desc 2.';
         $this->assertEquals(true, $model->update());
         $this->assertEquals('A small desc 2.', $model->description);
     }
 
-    public function testDeleteTestModel ()
+    /**
+     * @test
+     */
+    public function testDeleteTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $model->create();
-        $this->assertEquals(1, $model->id);
+        $this->assertFalse($model->isAnonymous());
+        $id = $model->id;
         $this->assertEquals(true, $model->delete());
-        $this->assertEquals('', $model->id);
-        $this->assertEquals('', $model->title);
-        $model = new TestModel();
-        $this->assertEquals(false, $model->get(1));
+        $this->assertTrue($model->isAnonymous());
+        
+        $model = new Test_Model($id);
+        $this->assertTrue($model->isAnonymous());
     }
 
-    public function testGetListTestModel ()
+    /**
+     * @test
+     */
+    public function testGetListTestModel()
     {
         for ($i = 0; $i < 10; $i ++) {
-            $model = new TestModel();
+            $model = new Test_ModelCount();
             $model->title = 'title ' . $i;
             $model->description = 'A small desc ' . $i;
             $model->create();
         }
         $model->title = 'update to have 11 records and 10 head';
         $model->update();
-        $m = new TestModel();
+        $m = new Test_ModelCount();
         $models = $m->getList();
         $this->assertEquals(10, count($models));
         $this->assertEquals('title 0', $models[0]->title);
         $this->assertEquals('title 5', $models[5]->title);
+        
+        foreach ($models as $item) {
+            $this->assertTrue($item->delete());
+        }
     }
 
-    public function testGetCountModel ()
+    /**
+     * @test
+     */
+    public function testGetCountModel()
     {
         for ($i = 0; $i < 10; $i ++) {
-            $model = new TestModel();
+            $model = new Test_ModelCount();
             $model->title = 'title ' . $i;
             $model->description = 'A small desc ' . $i;
             $model->create();
         }
         $model->title = 'update to have 11 records and 10 head';
         $model->update();
-        $m = new TestModel();
+        $m = new Test_ModelCount();
         $this->assertEquals(10, $m->getCount());
+        
+        $models = $m->getList();
+        foreach ($models as $item) {
+            $this->assertTrue($item->delete());
+        }
     }
 
-    public function testRelatedTestModel ()
+    /**
+     * @test
+     */
+    public function testRelatedTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
         $this->assertEquals(true, $model->create());
-        $m = new RelatedToTestModel();
+        
+        $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
         $this->assertEquals(true, $m->create());
-        $rel = $model->get_relatedtotestmodel_list();
+        
+        $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals('stupid values', $rel[0]->dummy);
         $mod = $m->get_testmodel();
         $this->assertEquals('title', $mod->title);
     }
 
-    public function testLimitRelatedTestModel ()
+    /**
+     * @test
+     */
+    public function testLimitRelatedTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
         $this->assertEquals(true, $model->create());
-        $m = new RelatedToTestModel();
+        
+        $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
         $this->assertEquals(true, $m->create());
-        $m = new RelatedToTestModel();
+        
+        $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 2';
         $this->assertEquals(true, $m->create());
-        $m = new RelatedToTestModel();
+        
+        $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 3';
         $this->assertEquals(true, $m->create());
-        $rel = $model->get_relatedtotestmodel_list(
-                array(
-                        'filter' => "dummy='stupid values 2'"
-                ));
+        $rel = $model->get_test_relatedtotestmodel_list(array(
+            'filter' => "dummy='stupid values 2'"
+        ));
         $this->assertEquals('stupid values 2', $rel[0]->dummy);
         $this->assertEquals(1, count($rel));
-        $rel = $model->get_relatedtotestmodel_list();
+        $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals(3, count($rel));
     }
 
     /**
      * Test if the delete() call on a model is deleting the model
      * related through a foreignkey.
+     *
+     * @test
      */
-    public function testDeleteRelatedModels ()
+    public function testDeleteRelatedModels()
     {
-        $model = new TestModel();
+        // delete models
+        $mr = new Test_RelatedToTestModel();
+        $items = $mr->getList();
+        foreach ($items as $item) {
+            $item->delete();
+        }
+        
+        $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
         $model->create();
-        $m1 = new RelatedToTestModel();
+        
+        $m1 = new Test_RelatedToTestModel();
         $m1->testmodel = $model;
         $m1->dummy = 'stupid values';
         $m1->create();
-        $m2 = new RelatedToTestModel();
+        
+        $m2 = new Test_RelatedToTestModel();
         $m2->testmodel = $model;
         $m2->dummy = 'stupid values';
         $m2->create();
-        $m3 = new RelatedToTestModel();
+        
+        $m3 = new Test_RelatedToTestModel();
         $m3->testmodel = $model;
         $m3->dummy = 'stupid values';
         $m3->create();
-        $rel = $model->get_relatedtotestmodel_list();
+        
+        $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals(3, count($rel));
         $this->assertEquals(0, count($m2->getDeleteSideEffect()));
         $m2->delete();
-        $rel = $model->get_relatedtotestmodel_list();
+        
+        $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals(2, count($rel));
         $this->assertEquals(2, count($model->getDeleteSideEffect()));
         $model->delete();
-        $mr = new RelatedToTestModel();
+        
+        $mr = new Test_RelatedToTestModel();
         $rel = $mr->getList();
         $this->assertEquals(0, count($rel));
     }
 
-    public function testManyRelatedTestModel ()
+    /**
+     * @test
+     */
+    public function testManyRelatedTestModel()
     {
-        $tm1 = new TestModel();
+        $tm1 = new Test_Model();
         $tm1->title = 'title tm1';
         $tm1->description = 'A small desc tm1';
         $tm1->create();
-        $tm2 = new TestModel();
+        $tm2 = new Test_Model();
         $tm2->title = 'title tm2';
         $tm2->description = 'A small desc tm2';
         $tm2->create();
-        $tm3 = new TestModel();
+        $tm3 = new Test_Model();
         $tm3->title = 'title tm3';
         $tm3->description = 'A small desc tm3';
         $tm3->create();
         
-        $rm1 = new RelatedToTestModel2();
+        $rm1 = new Test_RelatedToTestModel2();
         $rm1->testmodel_1 = $tm1;
         $rm1->testmodel_2 = $tm2;
         $rm1->dummy = 'stupid values rm1';
         $rm1->create();
-        $rm2 = new RelatedToTestModel2();
+        
+        $rm2 = new Test_RelatedToTestModel2();
         $rm2->testmodel_1 = $tm1;
         $rm2->testmodel_2 = $tm2;
         $rm2->dummy = 'stupid values rm2';
         $rm2->create();
-        $rm3 = new RelatedToTestModel2();
+        
+        $rm3 = new Test_RelatedToTestModel2();
         $rm3->testmodel_1 = $tm1;
         $rm3->testmodel_2 = $tm3;
         $rm3->dummy = 'stupid values rm3';
@@ -283,88 +332,46 @@ class PlufModelTest extends TestCase
         $rel = $tm1->get_first_rttm_list();
         $this->assertEquals(3, count($rel));
         $this->assertEquals('stupid values rm1', $rel[0]->dummy);
+        
         $rel = $tm2->get_first_rttm_list();
         $this->assertEquals(0, count($rel));
+        
         $rel = $tm2->get_second_rttm_list();
         $this->assertEquals(2, count($rel));
         $this->assertEquals('stupid values rm2', $rel[1]->dummy);
+        
         $rel = $tm3->get_second_rttm_list();
         $this->assertEquals(1, count($rel));
         $this->assertEquals('stupid values rm3', $rel[0]->dummy);
+        
         $tm1bis = $rm2->get_testmodel_1();
         $this->assertEquals('title tm1', $tm1bis->title);
     }
 
-    public function testRelatedToNotCreatedTestModel ()
+    /**
+     * @test
+     */
+    public function testRelatedToNotCreatedTestModel()
     {
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m2 = new ManyToManyTwo();
-        $schema->model = $m2;
-        $this->assertEquals(true, $schema->dropTables());
-        $this->assertEquals(true, $schema->createTables());
+        $m2 = new Test_ManyToManyTwo();
         $m2->two = 'two is the best';
-        $rel = $m2->get_manytomanyone_list();
+        $rel = $m2->get_test_manytomanyone_list();
         $this->assertNotEquals(false, $rel);
         $this->assertEquals(0, count($rel));
-        $this->assertEquals(true, $schema->dropTables());
     }
 
     /**
-     * Create the tables and test if association is working.
+     * 
+     * @expectedException Exception
+     * @test
      */
-    public function testManyToManyModels ()
+    public function testExceptionOnProperty()
     {
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new ManyToManyOne();
-        $schema->model = $m1;
-        $this->assertEquals(true, $schema->dropTables());
-        $this->assertEquals(true, $schema->createTables());
-        $m1->one = 'one is the best';
-        $this->assertEquals(true, $m1->create());
-        $this->assertEquals(1, $m1->id);
-        $m2 = new ManyToManyTwo();
-        $schema->model = $m2;
-        $this->assertEquals(true, $schema->dropTables());
-        $this->assertEquals(true, $schema->createTables());
-        $m2->two = 'two is the best';
-        $this->assertEquals(true, $m2->create());
-        $m1->setAssoc($m2);
-        $m3 = new ManyToManyTwo();
-        $m3->two = 'two bis is the best';
-        $this->assertEquals(true, $m3->create());
-        $m1->setAssoc($m3);
-        $rel = $m1->get_two_list();
-        $this->assertEquals(2, count($rel));
-        $this->assertEquals('two is the best', $rel[0]->two);
-        $this->assertEquals('two bis is the best', $rel[1]->two);
-        // Has the many to many relationship is set on ManyToManyOne
-        // ManyToManyTwo is accessing the other model through the
-        // get_nameofthemodelclass_list syntax
-        $rel = $m2->get_manytomanyone_list();
-        $this->assertEquals(1, count($rel));
-        $this->assertEquals('one is the best', $rel[0]->one);
-        $m1->delAssoc($m3);
-        $rel = $m1->get_two_list();
-        $this->assertEquals(1, count($rel));
-    }
-
-    public function testExceptionOnProperty ()
-    {
-        $model = new TestModel();
+        $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
         $this->assertEquals(true, $model->create());
-        try {
-            $rel = $model->should_fail;
-            // next line should not be called
-            $this->assertEquals(true, false);
-        } catch (Exception $e) {
-            $this->assertEquals('Cannot get property "should_fail".', 
-                    $e->getMessage());
-        }
+        $rel = $model->should_fail;
     }
 }
 
-?>

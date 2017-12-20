@@ -105,6 +105,20 @@ class Pluf_Migration
         }
         return true;
     }
+    
+    /**
+     * Init app from data
+     * 
+     * @return boolean
+     */
+    public function init($tenant = null){
+        // TODO: maso, init default tenant
+        $GLOBALS['_PX_request'] = $tenant;
+        foreach ($this->apps as $app) {
+            $this->initAppFromConfig($app);
+        }
+        return true;
+    }
 
     /**
      * Uninstall the application.
@@ -115,6 +129,7 @@ class Pluf_Migration
         foreach ($apps as $app) {
             $this->installApp($app, true);
         }
+        return true;
     }
 
     /**
@@ -188,40 +203,10 @@ class Pluf_Migration
      */
     public function installApp($app, $uninstall = false)
     {
-        if ((! $uninstall && $this->installAppFromConfig($app)) || ($uninstall && $this->uninstallAppFromConfig($app))) {
-            return;
-        }
         if ($uninstall) {
-            $func = $app . '_Migrations_Install_teardown';
-        } else {
-            $func = $app . '_Migrations_Install_setup';
-        }
-        $ret = true;
-        Pluf::loadFunction($func);
-        if ($this->display) {
-            echo ($func . "\n");
-        }
-        if (! $this->dry_run) {
-            $ret = $func(); // Run the install/uninstall
-            if (! $uninstall) {
-                //
-                $this->app = $app;
-                $migrations = $this->findMigrations();
-                if (count($migrations) > 0) {
-                    $to_version = max(array_keys($migrations));
-                } else {
-                    $to_version = 0;
-                }
-                $this->setAppVersion($app, $to_version);
-            } else {
-                if ($app != 'Pluf') {
-                    // If Pluf we do not have the schema info table
-                    // anymore
-                    $this->delAppInfo($app);
-                }
-            }
-        }
-        return $ret;
+            return $this->uninstallAppFromConfig($app);
+        } 
+        return $this->installAppFromConfig($app);
     }
 
     /**
@@ -255,7 +240,7 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if($module === false){
-            return false;
+            throw new Pluf_Exception('Module file not found in path');
         }
         $db = Pluf::db();
         $schema = new Pluf_DB_Schema($db);
@@ -267,30 +252,31 @@ class Pluf_Migration
                 $schema->createTables();
             }
         }
-        // Load permissions
-        // XXX: maso, 2017: must move to user module
-        if (array_key_exists('permisson', $module)) {
-            $permissons = $module['permisson'];
-            foreach ($permissons as $permisson) {
-                $p = new Role();
-                $p->name = $permisson['name'];
-                $p->code_name = $permisson['code_name'];
-                $p->description = $permisson['description'];
-                $p->application = $module['name'];
-                $p->version = $module['version'];
-                $p->create();
-            }
-        }
-        // Load monitors
-        if (array_key_exists('monitor', $module)){
-            $monitors = $module['monitor'];
-            foreach ($monitors as $monitor) {
-                $model = new Pluf_Monitor();
-                $model->setFromFormData($monitor);
-                $model->create();
-            }
-        }
         return true;
+    }
+    
+    /**
+     * Load initial data if exist
+     * 
+     * @param string $app
+     */
+    public function initAppFromConfig($app){
+        $module = self::getModuleConfig($app);
+        if($module === false){
+            throw new Pluf_Exception('Module file not found in path');
+        }
+        
+        // Load models
+        if (array_key_exists('init', $module)) {
+            $models = $module['init'];
+            foreach ($models as $model=>$values) {
+                $p = new $model();
+                $p->setFromFormData($values);
+                if(!$p->create()){
+                    throw new Pluf_Exception('Impossible to load init modules');
+                }
+            }
+        }
     }
 
     /**
@@ -302,7 +288,7 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if($module === false){
-            return false;
+            throw new Pluf_Exception('Module file not found in path');
         }
         $db = Pluf::db();
         $schema = new Pluf_DB_Schema($db);

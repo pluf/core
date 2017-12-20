@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,13 +18,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$m = array();
-$m['RelatedToTestModel'] = array('relate_to' => array('TestModel'),);
-$m['RelatedToTestModel2'] = array('relate_to' => array('TestModel'),);
-$m['TestModelRecurse'] = array('relate_to' => array('TestModelRecurse'),);
-$m['ManyToManyOne'] = array('relate_to_many' => array('ManyToManyTwo'),);
-return $m;
+/**
+ * 
+ * @author maso
+ *
+ */
+class Test_ManyToManyTwo extends Pluf_Model
+{
 
-
-
-?>
+    function init()
+    {
+        $this->_a['table'] = 'manytomanytwo';
+        $this->_a['model'] = 'ManyToManyTwo';
+        $this->_a['cols'] = array(
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                'blank' => true
+            ), // It is automatically added.
+            'two' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 100
+            )
+        );
+        $this->_a['idx'] = array();
+        $this->_a['views'] = array();
+    }
+}
