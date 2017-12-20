@@ -20,7 +20,8 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-include_once dirname(__FILE__) . '/../Pluf_Model/TestModels.php';
+
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
  * @backupGlobals disabled
@@ -34,7 +35,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public static function initTest()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
+        Pluf::start(dirname(__FILE__) . '/../conf/sqlite.conf.php');
         if (Pluf::db()->engine != 'SQLite') {
             $this->markTestSkipped('Only to be run with the SQLite DB engine');
         }
@@ -54,7 +55,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testGenerateSchema3()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
@@ -66,11 +67,11 @@ class PlufDBSchemaSQLiteTest extends TestCase
 //          title varchar(100) default '',
 //          description text not null default ''
 //         );
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'CREATE TABLE') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'integer') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'varchar(100)') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'text') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_testmodel'], 'testmodel') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'CREATE TABLE') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'integer') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'varchar(100)') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'text') !== false);
+        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'test_model') !== false);
     }
     
     /**
@@ -78,12 +79,12 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testDeleteSchemaTestModel()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $del = $gen->getSqlDelete($model);
-        $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_testmodel', $del[0]);
+        $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_test_model', $del[0]);
     }
     
     /**
@@ -91,7 +92,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testGenerateSchema()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
@@ -119,7 +120,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testGenerateSchema2()
     {
-        $model = new TestModel();
+        $model = new Test_Model();
         $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
         $schema->model = $model;
         $this->assertEquals(true, $schema->dropTables());
