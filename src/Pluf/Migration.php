@@ -113,7 +113,10 @@ class Pluf_Migration
      */
     public function init($tenant = null){
         // TODO: maso, init default tenant
-        $GLOBALS['_PX_request'] = $tenant;
+        if(!isset($GLOBALS['_PX_request'])){
+            $GLOBALS['_PX_request'] = new Pluf_HTTP_Request('/');
+        }
+        $GLOBALS['_PX_request']->tenant= $tenant;
         foreach ($this->apps as $app) {
             $this->initAppFromConfig($app);
         }
@@ -270,10 +273,12 @@ class Pluf_Migration
         if (array_key_exists('init', $module)) {
             $models = $module['init'];
             foreach ($models as $model=>$values) {
-                $p = new $model();
-                $p->setFromFormData($values);
-                if(!$p->create()){
-                    throw new Pluf_Exception('Impossible to load init modules');
+                foreach($values as $value){
+                    $p = new $model();
+                    $p->setFromFormData($value);
+                    if(!$p->create()){
+                        throw new Pluf_Exception('Impossible to load init modules');
+                    }
                 }
             }
         }
