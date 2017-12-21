@@ -30,7 +30,19 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../apps');
  */
 class Pluf_Migration_InitTest extends TestCase
 {
-
+    
+    /**
+     * @beforeClass
+     */
+    public static function createDataBase()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['REMOTE_ADDR'] = '/';
+        
+        $GLOBALS['_PX_uniqid'] = '1234';
+    }
+    
     /**
      * @test
      */
