@@ -45,7 +45,5 @@ class Test_ManyToManyTwo extends Pluf_Model
                 'size' => 100
             )
         );
-        $this->_a['idx'] = array();
-        $this->_a['views'] = array();
     }
 }

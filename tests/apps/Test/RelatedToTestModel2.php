@@ -47,7 +47,6 @@ class Test_RelatedToTestModel2 extends Pluf_Model
                 'size' => 100
             )
         );
-        parent::init();
     }
 }
 

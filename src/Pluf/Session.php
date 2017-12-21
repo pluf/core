@@ -60,7 +60,6 @@ class Pluf_Session extends Pluf_Model
     {
         $this->_a['table'] = 'sessions';
         $this->_a['verbose'] = 'sessions';
-        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(

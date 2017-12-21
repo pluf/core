@@ -15,14 +15,10 @@ class Pluf_Middleware_TenantFromConfig
             return false;
         }
         
-        $appName = Pluf::f('tenant_default');
-        if(!isset($appName) || $appName === ''){
-            $appName = 'www';
-        }
+        $appName = Pluf::f('tenant_default', 'www');
         $app = Pluf_Tenant::bySubDomain($appName);
         if ($app) {
             $request->tenant = $app;
-            $request->application = $app;
         }
         return false;
     }

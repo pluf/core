@@ -51,6 +51,7 @@ class Test_Model extends Pluf_Model
         );
         $this->_a['idx'] = array(
             'title' => array(
+                'col' => 'title',
                 'type' => 'normal'
             )
         );
