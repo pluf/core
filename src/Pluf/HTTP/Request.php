@@ -76,9 +76,9 @@ class Pluf_HTTP_Request
         $this->FILES =& $_FILES;
         $this->query = $query;
         $this->query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
-        $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->uri = $_SERVER['REQUEST_URI'];
-        $this->remote_addr = $_SERVER['REMOTE_ADDR'];
+        $this->method = (isset($_SERVER['REQUEST_METHOD'])) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        $this->uri = (isset($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : '/';
+        $this->remote_addr = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : 'localhost';
         $this->http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
         $this->SERVER =& $_SERVER;
         $this->uid = $GLOBALS['_PX_uniqid']; 

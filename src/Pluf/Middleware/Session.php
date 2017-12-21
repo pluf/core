@@ -77,10 +77,10 @@ class Pluf_Middleware_Session
     function process_response ($request, $response)
     {
         if ($request->session->touched) {
-            if ($request->session->id > 0) {
-                $request->session->update();
-            } else {
+            if ($request->session->isAnonymous()) {
                 $request->session->create();
+            } else {
+                $request->session->update();
             }
             $data = array();
             $data['Pluf_Session_key'] = $request->session->session_key;

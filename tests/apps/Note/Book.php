@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,22 +18,21 @@
  */
 
 /**
- * ساختارهای پیام سیستم را ایجاد می‌کند
- *
- * این پیام‌ها توسط سیستم ایجاد شده و برای کاربران ارسال می‌شود. این پیام‌ها
- * تغییراتی که مربوط به داده‌ها و یا موجودیت‌های کاربر باشد صادر می‌شود و باید
- * به مرور زمان از بین برود.
- *
+ * 
  * @author maso
- *        
+ *
  */
-class User_Message extends Pluf_Model
+class Note_Book extends Pluf_Model
 {
 
+    /**
+     * {@inheritDoc}
+     * @see Pluf_Model::init()
+     */
     function init ()
     {
-        $this->_a['table'] = 'messages';
-        $this->_a['verbose'] = 'user messages';
+        $this->_a['table'] = 'note_book';
+        $this->_a['verbose'] = 'Note book';
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
@@ -44,21 +42,7 @@ class User_Message extends Pluf_Model
                         'editable' => false,
                         'readable' => true
                 ),
-                'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true,
-                        'editable' => false,
-                        'readable' => true
-                ),
-                'user' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => Pluf::f('pluf_custom_user', 'User'),
-                        'blank' => false,
-                        'verbose' => __('user'),
-                        'editable' => false,
-                        'readable' => false
-                ),
-                'message' => array(
+                'title' => array(
                         'type' => 'Pluf_DB_Field_Text',
                         'blank' => false,
                         'editable' => false,
@@ -71,24 +55,13 @@ class User_Message extends Pluf_Model
                         'readable' => true
                 )
         );
-        $this->_a['idx'] = array(
-                'message_user_idx' => array(
-                        'type' => 'normal',
-                        'col' => 'user'
-                )
-        );
     }
 
-    function __toString ()
-    {
-        return $this->message;
-    }
 
     /**
-     * پیش ذخیره را انجام می‌دهد
-     *
-     * @param $create حالت
-     *            ساخت یا به روز رسانی را تعیین می‌کند
+     * 
+     * {@inheritDoc}
+     * @see Pluf_Model::preSave()
      */
     function preSave ($create = false)
     {

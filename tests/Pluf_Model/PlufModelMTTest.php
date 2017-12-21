@@ -26,7 +26,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufModelTest extends TestCase
+class Pluf_Model_PlufModelMTTest extends TestCase
 {
 
     /**
@@ -34,15 +34,27 @@ class PlufModelTest extends TestCase
      */
     public static function createDataBase()
     {
-        $conf = include __DIR__ . '/../conf/mysql.conf.php';
+        $conf = include __DIR__ . '/../conf/mysql.mt.conf.php';
         $conf['installed_apps'] = array(
+            'Pluf',
             'Test'
         );
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
+            'Pluf',
             'Test'
         ));
         $m->install();
+        
+        // Test tenant
+        $tenant = new Pluf_Tenant();
+        $tenant->domain = 'localhost';
+        $tenant->subdomain = 'www';
+        $tenant->validate = true;
+        if (true !== $tenant->create()) {
+            throw new Pluf_Exception('Faile to create new tenant');
+        }
+        $m->init($tenant);
     }
 
     /**

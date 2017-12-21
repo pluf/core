@@ -27,65 +27,63 @@ require_once 'Pluf.php';
 class PlufTenantTemplateTest extends TestCase
 {
 
-    protected function setUp ()
+    protected function setUp()
     {
-        Pluf::start(
-                array(
-                        'test' => false,
-                        'timezone' => 'Europe/Berlin',
-                        'debug' => true,
-                        'installed_apps' => array(
-                                'Pluf'
-                        ),
-                        'tmp_folder' => dirname(__FILE__) . '/../tmp',
-                        'templates_folder' => array(
-                                dirname(__FILE__) . '/../templates'
-                        ),
-                        
-                        'template_tags' => array(
-                                'tenant' => 'Pluf_Template_Tag_Tenant'
-                        ),
-                        'pluf_use_rowpermission' => true,
-                        'mimetype' => 'text/html',
-                        'app_views' => dirname(__FILE__) . '/views.php',
-                        'db_login' => 'testpluf',
-                        'db_password' => 'testpluf',
-                        'db_server' => 'localhost',
-                        'db_database' => dirname(__FILE__) .
-                                 '/../tmp/tmp.sqlite.db',
-                                'app_base' => '/testapp',
-                                'url_format' => 'simple',
-                                'db_table_prefix' => 'pluf_unit_tests_',
-                                'db_version' => '5.0',
-                                'db_engine' => 'SQLite',
-                                'bank_debug' => true
-                ));
+        Pluf::start(array(
+            'test' => false,
+            'timezone' => 'Europe/Berlin',
+            'debug' => true,
+            'installed_apps' => array(
+                'Pluf'
+            ),
+            'tmp_folder' => dirname(__FILE__) . '/../tmp',
+            'templates_folder' => array(
+                dirname(__FILE__) . '/../templates'
+            ),
+            
+            'template_tags' => array(
+                'tenant' => 'Pluf_Template_Tag_Tenant'
+            ),
+            'pluf_use_rowpermission' => true,
+            'mimetype' => 'text/html',
+            'app_views' => dirname(__FILE__) . '/views.php',
+            'db_login' => 'testpluf',
+            'db_password' => 'testpluf',
+            'db_server' => 'localhost',
+            'db_database' => dirname(__FILE__) . '/../tmp/tmp.sqlite.db',
+            'app_base' => '/testapp',
+            'url_format' => 'simple',
+            'db_table_prefix' => 'pluf_unit_tests_',
+            'db_version' => '5.0',
+            'db_engine' => 'SQLite',
+            'bank_debug' => true
+        ));
     }
 
-    public function testId ()
+    public function testId()
     {
         $folders = array(
-                dirname(__FILE__)
+            dirname(__FILE__)
         );
         $tmpl = new Pluf_Template('tpl-id.html', $folders);
         $this->assertEquals("0", $tmpl->render());
     }
 
-    public function testTitle ()
+    public function testTitle()
     {
         $tenant = Pluf_Tenant::current();
         $folders = array(
-                dirname(__FILE__)
+            dirname(__FILE__)
         );
         $tmpl = new Pluf_Template('tpl-title.html', $folders);
         $this->assertEquals($tenant->title, $tmpl->render());
     }
 
-    public function testDomain ()
+    public function testDomain()
     {
         $tenant = Pluf_Tenant::current();
         $folders = array(
-                dirname(__FILE__)
+            dirname(__FILE__)
         );
         $tmpl = new Pluf_Template('tpl-domain.html', $folders);
         $this->assertEquals($tenant->domain, $tmpl->render());

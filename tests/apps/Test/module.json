@@ -1,0 +1,13 @@
+{
+	"name": "Test",
+	"title": "A test module with model",
+	"model": [
+		"Test_Model",
+		"Test_ModelRecurse",
+		"Test_ModelCount",
+		"Test_RelatedToTestModel",
+		"Test_RelatedToTestModel2",
+		"Test_ManyToManyOne",
+		"Test_ManyToManyTwo"
+	]
+}
