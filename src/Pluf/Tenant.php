@@ -35,8 +35,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     function init()
     {
-        $this->_a['table'] = 'pluf_tenant';
-        $this->_a['multitenant'] = false;
+        $this->_a['table'] = 'tenants';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
@@ -112,21 +111,14 @@ class Pluf_Tenant extends Pluf_Model
             )
         );
         
-        $this->_a['views'] = array(
-            'user_model_permission' => array(
-                'join' => 'LEFT JOIN ' . $this->_con->pfx . 'rowpermissions ON Pluf_Tenant.id=' . $this->_con->pfx . 'rowpermissions.model_id',
-                'select' => $this->getSelect() . ', permission',
-                'props' => array(
-                    'permission' => 'permission'
-                )
-            )
-        );
+        $this->_a['views'] = array();
     }
 
     /**
      * \brief پیش ذخیره را انجام می‌دهد
      *
-     * @param boolean $create حالت
+     * @param boolean $create
+     *            حالت
      *            ساخت یا به روز رسانی را تعیین می‌کند
      */
     function preSave($create = false)
@@ -138,75 +130,10 @@ class Pluf_Tenant extends Pluf_Model
     }
 
     /**
-     * Cache of the permissions.
-     */
-    public $_cache_perms = null;
-
-    /**
-     * تمام دسترسی‌هایی که یک مدل داده‌ای دارد را تعیین می‌کند.
-     *
-     * @param
-     *            bool Force the reload of the list of permissions (false)
-     * @return array List of permissions
-     */
-    function getAllPermissions($force = false)
-    {
-        if ($force == false and ! is_null($this->_cache_perms)) {
-            return $this->_cache_perms;
-        }
-        $this->_cache_perms = array();
-        if (Pluf::f('pluf_use_rowpermission', false) and $this->id) {
-            $growp = new Pluf_RowPermission();
-            $sql = new Pluf_SQL('owner_id=%s AND owner_class=%s', array(
-                $this->id,
-                $this->_model
-            ));
-            $perms = $growp->getList(array(
-                'filter' => $sql->gen(),
-                'view' => 'join_permission'
-            ));
-            foreach ($perms as $perm) {
-                $perm_string = $perm->application . '.' . $perm->code_name . '#' . $perm->model_class . '(' . $perm->model_id . ')';
-                if ($perm->negative) {
-                    $perm_string = '!' . $perm_string;
-                }
-                if (! in_array($perm_string, $this->_cache_perms)) {
-                    $this->_cache_perms[] = $perm_string;
-                }
-            }
-        }
-        return $this->_cache_perms;
-    }
-
-    /**
-     * تعیین گواهی برای شئی تعیین شده
-     *
-     * @param
-     *            string Permission
-     * @param
-     *            Object Object for row level permission (null)
-     * @return bool درستی اگر کاربر گواهی مورد نظر برای شئی را دارد.
-     */
-    function hasPerm($perm, $obj = null)
-    {
-        $perms = $this->getAllPermissions();
-        if (! is_null($obj)) {
-            $perm_row = $perm . '#' . $obj->_a['model'] . '(' . $obj->id . ')';
-            if (in_array('!' . $perm_row, $perms))
-                return false;
-            if (in_array($perm_row, $perms))
-                return true;
-        }
-        if (in_array($perm, $perms))
-            return true;
-        return false;
-    }
-
-    /**
      * ملک تعیین شده با زیردامنه تعیین شده را برمی‌گرداند
      *
-     * @param string $subdomain 
-     * @return Pluf_Tenant           
+     * @param string $subdomain
+     * @return Pluf_Tenant
      */
     public static function bySubDomain($subdomain)
     {
@@ -217,7 +144,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * ملک با دامنه تعیین شده را برمی‌گرداند.
      *
-     * @param string $domain            
+     * @param string $domain
      */
     public static function byDomain($domain)
     {
