@@ -40,7 +40,7 @@ function Pluf_Shortcuts_GetRequestParam ($request, $id)
  *            string Model
  * @param
  *            int Id of the model to get
- * @return Object The found object.
+ * @return Pluf_Model The found object.
  */
 function Pluf_Shortcuts_GetObjectOr404 ($object, $id)
 {

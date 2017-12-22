@@ -46,7 +46,7 @@ class Pluf_AB_Views
      *
      * The name of the view in the urls must be 'pluf_ab_dashboard'.
      */
-    public $dasboard_precond = array(array('Pluf_Precondition::hasPerm',
+    public $dasboard_precond = array(array('User_Precondition::hasPerm',
                                            'Pluf_AB.view-dashboard'));
     public function dashboard($request, $match)
     {
