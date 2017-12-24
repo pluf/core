@@ -10,7 +10,6 @@
 		"Pluf_Search_Stats",
 		"Pluf_Queue",
 		"Pluf_Monitor",
-		"Pluf_Tenant",
-		"Pluf_Configuration"
+		"Pluf_Tenant"
 	]
 }
