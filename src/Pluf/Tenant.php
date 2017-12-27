@@ -93,24 +93,26 @@ class Pluf_Tenant extends Pluf_Model
             )
         );
         
-        $this->_a['idx'] = array(
-            'tenant_domain_idx' => array(
-                'col' => 'domain',
-                'type' => 'unique', // normal, unique, fulltext, spatial
-                'index_type' => '', // hash, btree
-                'index_option' => '',
-                'algorithm_option' => '',
-                'lock_option' => ''
-            ),
-            'tenant_subdomain_idx' => array(
-                'col' => 'subdomain',
-                'type' => 'unique', // normal, unique, fulltext, spatial
-                'index_type' => '', // hash, btree
-                'index_option' => '',
-                'algorithm_option' => '',
-                'lock_option' => ''
-            )
-        );
+        // @Note: hadi - 1396-10: when define an attribute as unique => true, pluf automatically
+        // create an unique index for it (for example domain and subdomain fields). So following codes are extra.
+//         $this->_a['idx'] = array(
+//             'tenant_domain_idx' => array(
+//                 'col' => 'domain',
+//                 'type' => 'unique', // normal, unique, fulltext, spatial
+//                 'index_type' => '', // hash, btree
+//                 'index_option' => '',
+//                 'algorithm_option' => '',
+//                 'lock_option' => ''
+//             ),
+//             'tenant_subdomain_idx' => array(
+//                 'col' => 'subdomain',
+//                 'type' => 'unique', // normal, unique, fulltext, spatial
+//                 'index_type' => '', // hash, btree
+//                 'index_option' => '',
+//                 'algorithm_option' => '',
+//                 'lock_option' => ''
+//             )
+//         );
         
         $this->_a['views'] = array();
     }

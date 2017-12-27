@@ -211,12 +211,14 @@ class Pluf_DB_Schema_MySQL
                                 $this->con->pfx . $model->_a['table'], $col);
             }
             if (isset($val['unique']) and $val['unique'] == true) {
+                // Add tenant column to index if config and table are multitenant.
+                $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
                 $index[$this->con->pfx . $model->_a['table'] . '_' . $col .
                          '_unique'] = sprintf(
                                 'CREATE UNIQUE INDEX `%s` ON `%s` (%s);', 
                                 $col . '_unique_idx', 
                                 $this->con->pfx . $model->_a['table'], 
-                                Pluf_DB_Schema::quoteColumn($col, $this->con));
+                                Pluf_DB_Schema::quoteColumn($columns, $this->con));
             }
         }
         return $index;

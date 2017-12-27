@@ -965,17 +965,6 @@ class Pluf_Model implements JsonSerializable
             return false;
         }
         $this->preDelete();
-        // Drop the row level permissions if we are using them
-        if (Pluf::f('pluf_use_rowpermission', false)) {
-            $_rpt = Pluf::factory('Pluf_RowPermission')->getSqlTable();
-            $sql = new Pluf_SQL('model_class=%s AND model_id=%s', 
-                    array(
-                            $this->_a['model'],
-                            $this->_data['id']
-                    ));
-            $this->_con->execute(
-                    'DELETE FROM ' . $_rpt . ' WHERE ' . $sql->gen());
-        }
         // Find the models linking to the current one through a foreign key.
         // XXX: Hadi, 1396-03: It is better to use standard policies: 
         // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT

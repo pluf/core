@@ -34,5 +34,10 @@ interface Pluf_Middleware
      */
     public function process_request(&$request);
 
+    /**
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param Pluf_HTTP_Response $response
+     */
     public function process_response($request, $response);
 }
