@@ -21,7 +21,6 @@ class Pluf_Monitor extends Pluf_Model
     function init ()
     {
         $this->_a['table'] = 'monitors';
-        $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
                 'id' => array(
                         'type' => 'Pluf_DB_Field_Sequence',
