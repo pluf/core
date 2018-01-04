@@ -56,7 +56,8 @@ class Pluf_Tenant extends Pluf_Model
             'description' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => true,
-                'size' => 250,
+                'is_null' => true,
+                'size' => 1024,
                 'editable' => true
             ),
             'domain' => array(
