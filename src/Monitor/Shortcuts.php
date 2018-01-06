@@ -29,12 +29,12 @@ function Monitor_Shortcuts_UserLevel ($request)
     if ($user->isAnonymous() || !$user->active) {
         return 100;
     }
-    if($user->administrator){
-        return 0;
-    }
-    if($user->staff){
-        return 1;
-    }
+//     if($user->administrator){
+//         return 0;
+//     }
+//     if($user->staff){
+//         return 1;
+//     }
     if($user->hasPerm('Pluf::owner')){
         return 2;
     }
