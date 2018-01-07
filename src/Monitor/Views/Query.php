@@ -67,21 +67,21 @@ class Monitor_Views_Query
      */
     public static function redirect($path, $request){
         // XXX: maso, 2017: load backend monitor server
-        $path = Setting_Service::get('monitor.prometheus.server', 'http://localhost:9090');
-        $client = new \GuzzleHttp\Client(
-            array(
-                'base_uri' => $path
-            ));
-        $res = $client->request($request->method, '/api/v1/query' ,
-            array(
-                'stream' => false,
-                'debug' => false,
-                'headers' => $request->HEADERS,
-                'query' => $request->REQUEST
-            ));
-        if ($res->getStatusCode() != 200) {
+//         $path = Tenant_Service::get('monitor.prometheus.server', 'http://localhost:9090');
+//         $client = new \GuzzleHttp\Client(
+//             array(
+//                 'base_uri' => $path
+//             ));
+//         $res = $client->request($request->method, '/api/v1/query' ,
+//             array(
+//                 'stream' => false,
+//                 'debug' => false,
+//                 'headers' => $request->HEADERS,
+//                 'query' => $request->REQUEST
+//             ));
+//         if ($res->getStatusCode() != 200) {
             throw new Pluf_Exception('Query service is not ready');
-        }
-        return new Pluf_HTTP_Response($res->getBody());
+//         }
+//         return new Pluf_HTTP_Response($res->getBody());
     }
 }
