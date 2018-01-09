@@ -166,7 +166,7 @@ class Pluf_Views
      * @param array $match
      * @return Pluf_HTTP_Response_Json
      */
-    public static function findObject($request, $match, $p)
+    public function findObject($request, $match, $p)
     {
         $default = array(
             'listFilters' => array(),
@@ -214,7 +214,7 @@ class Pluf_Views
             $sql = $sqlMain->SAnd($sql);
         }
         $p['sql'] = $sql;
-        return self::findObject($request, $match, $p);
+        return $this->findObject($request, $match, $p);
     }
 
     /**
@@ -236,7 +236,7 @@ class Pluf_Views
      *            array Extra parameters
      * @return Pluf_HTTP_Response Response object (can be a redirect)
      */
-    public static function getObject($request, $match, $p)
+    public function getObject($request, $match, $p)
     {
         // Set the default
         $object = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getModel($p), $match['modelId']);
@@ -252,7 +252,7 @@ class Pluf_Views
      * @param array $p
      * @return Pluf_Model
      */
-    public static function getManyToOne($request, $match, $p)
+    public function getManyToOne($request, $match, $p)
     {
         // Set the default
         if (array_key_exists('modelId', $request->REQUEST)) {
