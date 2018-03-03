@@ -275,7 +275,11 @@ class Pluf_Migration
             foreach ($models as $model=>$values) {
                 foreach($values as $value){
                     $p = new $model();
-                    $p->setFromFormData($value);
+                    if (method_exists($p, 'initFromFormData')) {
+                        $p->initFromFormData($value);
+                    } else {
+                        $p->setFromFormData($value);
+                    }
                     if(!$p->create()){
                         throw new Pluf_Exception('Impossible to load init modules');
                     }

@@ -150,7 +150,11 @@ function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null,
     return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
 }
 
-
+/**
+ * Compute folder size
+ * @param string $dir
+ * @return number
+ */
 function Pluf_Shortcuts_folderSize ($dir)
 {
     $count_size = 0;

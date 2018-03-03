@@ -111,7 +111,7 @@ class Pluf_Paginator
     /**
      * Maximum number of items per page.
      */
-    public $items_per_page = 15;
+    public $items_per_page = 30;
 
     /**
      * Current page.
