@@ -519,6 +519,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            array|string Filter string or array given to getList
      * @see self::getList
+     * @return Pluf_Model|null find model
      */
     public function getOne ($p = array())
     {
