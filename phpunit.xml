@@ -2,7 +2,7 @@
 <phpunit colors="true">
     <testsuites>
         <testsuite name="Pluf">
-<!--            <directory>tests/Pluf/</directory>
+            <directory>tests/Pluf/</directory>
             <directory>tests/Pluf_Crypt/</directory>
             <directory>tests/Pluf_Utils/</directory>
             <directory>tests/Pluf_Encoder/</directory>
@@ -22,7 +22,7 @@
             <directory>tests/Pluf_Paginator/</directory>
             <directory>tests/Pluf_Text_Wiki/</directory>
             <directory>tests/Pluf_Text_HTML_Filter/</directory>
-            <directory>tests/Pluf_Form_Field/</directory>-->
+            <directory>tests/Pluf_Form_Field/</directory>
             
             <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>

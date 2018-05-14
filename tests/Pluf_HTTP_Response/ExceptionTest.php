@@ -43,24 +43,4 @@ class Pluf_HTTP_Response_ExceptionTest extends TestCase
         $e = new Exception();
         $resp = new Pluf_HTTP_Response_ServerError($e);
     }
-    
-    
-    /**
-     * Render error response
-     * @test
-     */
-    public function renderInternallErrorResponse ()
-    {
-        
-        try{
-            $e = new Exception("e1");
-            $resp = new Pluf_HTTP_Response_ServerError($e);
-            throw $e;
-        } catch (Exception $e){
-            $e2 = new Exception("e2", 10, $e);
-            echo $e2->getTraceAsString();
-        }
-
-    }
-
 }
