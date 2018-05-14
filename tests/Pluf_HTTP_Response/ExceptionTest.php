@@ -24,7 +24,7 @@ require_once 'Pluf.php';
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class FileHashCodeTest extends TestCase
+class Pluf_HTTP_Response_ExceptionTest extends TestCase
 {
 
     /**
@@ -33,34 +33,34 @@ class FileHashCodeTest extends TestCase
     public function setUp ()
     {
         // TODO:
-        $this->TestFileHashCode = md5_file(__DIR__.'/TestFile');
     }
 
     /**
      * @test
      */
-    public function testHashFunction ()
+    public function createInternallErrorResponse ()
     {
-        $response = new Pluf_HTTP_Response_File(__DIR__.'/TestFile');
-        $this->assertTrue(method_exists($response, 'hashCode'));
+        $e = new Exception();
+        $resp = new Pluf_HTTP_Response_ServerError($e);
     }
-
+    
+    
     /**
+     * Render error response
      * @test
      */
-    public function testHashFunction1 ()
+    public function renderInternallErrorResponse ()
     {
-        $response = new Pluf_HTTP_Response_File(__DIR__.'/TestFile');
-        $this->assertTrue($this->TestFileHashCode === $response->hashCode());
+        
+        try{
+            $e = new Exception("e1");
+            $resp = new Pluf_HTTP_Response_ServerError($e);
+            throw $e;
+        } catch (Exception $e){
+            $e2 = new Exception("e2", 10, $e);
+            echo $e2->getTraceAsString();
+        }
+
     }
 
-    /**
-     * @test
-     */
-    public function testHashFunction2 ()
-    {
-        $response = new Pluf_HTTP_Response_File(__DIR__.'/TestFile');
-        $this->assertTrue($this->TestFileHashCode === $response->hashCode());
-        $this->assertTrue($this->TestFileHashCode === $response->hashCode());
-    }
 }

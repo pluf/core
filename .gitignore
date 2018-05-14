@@ -14,3 +14,4 @@ composer.phar
 
 clover.xml
 /build/
+/nbproject/private/
