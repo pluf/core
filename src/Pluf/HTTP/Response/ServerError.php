@@ -35,25 +35,6 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
      * @param Pluf_HTTP_Request $request            
      */
     function __construct($exception, $mimetype = null, $request = null) {
-        $admins = Pluf::f('admins', array());
-
-        /*
-         * ارسال رایانامه برای تمام مدیران سیستم
-         */
-        if (count($admins) > 0) {
-            // FIXME: maso, 1394: Get a nice stack trace and send it by emails.
-            $stack = json_encode($exception->getTrace());
-            $subject = $exception->getMessage();
-            $subject = substr(strip_tags(nl2br($subject)), 0, 50) . '...';
-
-            // TODO: maso, 2018: send email in SIGNAL-EMITER form
-            foreach ($admins as $admin) {
-                $email = new Pluf_Mail($admin[1], $admin[1], $subject);
-                $email->addTextMessage($stack);
-                $email->sendMail();
-            }
-        }
-
         /*
          * ایجاد پیام مناسب برای کاربر
          */
@@ -76,5 +57,28 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
         }
         return;
     }
+    
+    /*
+     * XXX: maso, 2018 Send email if is requried
+     * TODO: send to dispacker
+     */
+//     function sendEmail($exception){
+//         $admins = Pluf::f('admins', array());
+//         /*
+//          * ارسال رایانامه برای تمام مدیران سیستم
+//          */
+//         if (count($admins) > 0) {
+//             // FIXME: maso, 1394: Get a nice stack trace and send it by emails.
+//             $stack = json_encode($exception->getTrace());
+//             $subject = $exception->getMessage();
+//             $subject = substr(strip_tags(nl2br($subject)), 0, 50) . '...';
+//             // TODO: maso, 2018: send email in SIGNAL-EMITER form
+//             foreach ($admins as $admin) {
+//                 $email = new Pluf_Mail($admin[1], $admin[1], $subject);
+//                 $email->addTextMessage($stack);
+//                 $email->sendMail();
+//             }
+//         }
+//     }
 
 }
