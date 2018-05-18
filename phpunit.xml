@@ -23,6 +23,8 @@
             <directory>tests/Pluf_Text_Wiki/</directory>
             <directory>tests/Pluf_Text_HTML_Filter/</directory>
             <directory>tests/Pluf_Form_Field/</directory>
+            
+            <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>
     </testsuites>
     

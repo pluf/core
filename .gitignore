@@ -1,6 +1,6 @@
-.project
-.buildpath
-.settings
+# Eclipse
+#.buildpath
+/.settings/
 
 
 # Examples
@@ -14,3 +14,6 @@ composer.phar
 
 clover.xml
 /build/
+
+# netbeans
+/nbproject/private/

@@ -106,4 +106,32 @@ class PlufFormFieldTest extends TestCase
         }
         return;
     }
+    
+    
+    /*
+     * Test boolean fields
+     */
+    public function testPlufFormFieldBoolean ()
+    {
+        $field = new Pluf_Form_Field_Boolean();
+        $true = array(
+            1,
+            'on',
+            'true',
+            'y',
+            '1'
+        );
+        $false = array(
+            '12,34.12',
+            'hi',
+            'false',
+            'trueb'
+        );
+        foreach ($true as $valid) {
+            $this->assertEquals(true, $field->clean($valid));
+        }
+        foreach ($false as $invalid) {
+            $this->assertEquals(false, $field->clean($invalid));
+        }
+    }
 }

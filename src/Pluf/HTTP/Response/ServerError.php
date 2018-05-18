@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -20,8 +21,7 @@
 /**
  * Error response
  */
-class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response
-{
+class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
 
     /**
      * یک نمونه جدید از این شئی ایجاد می‌کند
@@ -34,37 +34,28 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response
      *
      * @param Pluf_HTTP_Request $request            
      */
-    function __construct ($exception, $mimetype = null, $request = null)
-    {
-        $admins = Pluf::f('admins', array());
-        if (! ($exception instanceof Pluf_Exception)) {
-            $exception = new Pluf_HTTP_Error500('Unknown exception', 5000, 
-                    $exception);
-        }
-        
-        /*
-         * ارسال رایانامه برای تمام مدیران سیستم
-         */
-        if (count($admins) > 0) {
-            // FIXME: maso, 1394: Get a nice stack trace and send it by emails.
-            $stack = json_encode($exception->getTrace());
-            $subject = $exception->getMessage();
-            $subject = substr(strip_tags(nl2br($subject)), 0, 50) . '...';
-            foreach ($admins as $admin) {
-                $email = new Pluf_Mail($admin[1], $admin[1], $subject);
-                $email->addTextMessage($stack);
-                $email->sendMail();
-            }
-        }
-        
+    function __construct($exception, $mimetype = null, $request = null) {
         /*
          * ایجاد پیام مناسب برای کاربر
          */
         $mimetype = Pluf::f('mimetype_json', 'application/json') .
-                 '; charset=utf-8';
-        parent::__construct(json_encode($exception), $mimetype);
-        $this->status_code = $exception->getStatus();
+                '; charset=utf-8';
+        if (!($exception instanceof Pluf_Exception)) {
+            parent::__construct(json_encode(array(
+                    'code' => 5000,
+                    'status' => 500,
+//                    'link' => $this->link,
+                    'message' => $exception->getMessage(),
+//                    'data' => $this->data,
+//                    'developerMessage' => $this->developerMessage,
+                    'stack' => Pluf::f('debug', false)? $exception->getTrace() : array()
+            )), $mimetype);
+            $this->status_code = 500;
+        } else {
+            parent::__construct(json_encode($exception), $mimetype);
+            $this->status_code = $exception->getStatus();
+        }
         return;
     }
+    
 }
-
