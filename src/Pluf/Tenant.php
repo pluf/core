@@ -82,6 +82,20 @@ class Pluf_Tenant extends Pluf_Model
                 'blank' => true,
                 'editable' => false
             ),
+            'email' => array(
+                'type' => 'Pluf_DB_Field_Email',
+                'blank' => true,
+                'verbose' => 'Owner email',
+                'editable' => true,
+                'readable' => true
+            ),
+            'phone' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => true,
+                'verbose' => 'Owner phone',
+                'editable' => true,
+                'readable' => true
+            ),
             'creation_dtime' => array(
                 'type' => 'Pluf_DB_Field_Datetime',
                 'blank' => true,
