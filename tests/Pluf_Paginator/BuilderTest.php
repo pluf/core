@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 require_once dirname(__FILE__) . '/MyModel.php';
+
 /**
  * Test paginator builder
  *
@@ -28,8 +29,9 @@ require_once dirname(__FILE__) . '/MyModel.php';
  */
 class Pluf_Paginator_BuilderTest extends TestCase
 {
-    
+
     /**
+     *
      * @before
      */
     protected function setUp()
@@ -57,8 +59,9 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $schema->model = $m1;
         $schema->dropTables();
     }
-    
+
     /**
+     *
      * @test
      */
     public function testCreateSimplePaginator()
@@ -67,11 +70,12 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $pag = $builder->build();
         $this->assertTrue(isset($pag));
     }
-    
+
     /**
+     *
      * @test
      */
-    public function testWithSearchFieldsQueryPaginator()
+    public function testWithSearchFields()
     {
         $sf = array(
             'title'
@@ -80,5 +84,61 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $pag = $builder->setSearchFields($sf)->build();
         $this->assertTrue(isset($pag));
         $this->assertEquals($pag->search_fields, $sf);
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWithSearchFieldsAutomated()
+    {
+        $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
+        $pag = $builder->build();
+        $this->assertTrue(isset($pag));
+        $this->assertTrue(in_array('id', $pag->search_fields), 'Id not found in search fields');
+        $this->assertTrue(in_array('title', $pag->search_fields), 'Title not found in search fields');
+        $this->assertTrue(in_array('description', $pag->search_fields), 'Description not found in search fields');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWithSortFieldsAutomated()
+    {
+        $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
+        $pag = $builder->build();
+        $this->assertTrue(isset($pag));
+        $this->assertTrue(in_array('id', $pag->sort_fields), 'Id not found in sort fields');
+        $this->assertTrue(in_array('title', $pag->sort_fields), 'Title not found in sort fields');
+        $this->assertTrue(in_array('description', $pag->sort_fields), 'Description not found in sort fields');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testModelView()
+    {
+        $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
+        $pag = $builder->setView('test_view')->build();
+        $this->assertTrue(isset($pag));
+        $this->assertEquals('test_view', $pag->model_view, 'Id not found in sort fields');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWhereClause()
+    {
+        $sql = new Pluf_SQL('id=%s',
+            array(
+                'id' => '1'
+            ));
+        $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
+        $pag = $builder->setView('test_view')->setWhereClause($sql)->build();
+        $this->assertTrue(isset($pag));
+        $this->assertEquals($sql->gen(), $pag->forced_where, 'Where clause dose not matsh');
     }
 }

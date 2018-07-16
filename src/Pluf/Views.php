@@ -166,29 +166,29 @@ class Pluf_Views
      * @param array $match
      * @return Pluf_HTTP_Response_Json
      */
-    public function findObject($request, $match, $p)
+    public function findObject($request, $match, $p = array())
     {
-        $default = array(
-            'listFilters' => array(),
-            'listDisplay' => array(),
-            'searchFields' => array(),
-            'sortFields' => array(),
-            'sortOrder' => array(
+        // Create page
+        $builder = new Pluf_Paginator_Builder(self::CRUD_getModelInstance($p));
+        if (array_key_exists('sql', $p)) {
+            $builder->setWhereClause(new Pluf_SQL($p['sql']));
+        }
+        if (array_key_exists('listFilters', $p)) {
+            $builder->setDisplayList($p['listFilters']);
+        }
+        if (array_key_exists('searchFields', $p)) {
+            $builder->setSearchFields($p['searchFields']);
+        }
+        if (array_key_exists('sortOrder', $p)) {
+            $builder->setSortOrder($p['sortOrder']);
+        } else {
+            $builder->setSortOrder(array(
                 'id',
                 'DESC'
-            )
-        );
-        $p = array_merge($default, $p);
-        // Create page
-        $page = new Pluf_Paginator(self::CRUD_getModelInstance($p));
-        if (isset($p['sql'])) {
-            $page->forced_where = $p['sql'];
+            ));
         }
-        $page->list_filters = $p['listFilters'];
-        $page->configure($p['listDisplay'], $p['searchFields'], $p['sortFields']);
-        $page->sort_order = $p['sortOrder'];
-        $page->setFromRequest($request);
-        return $page->render_object();
+        $builder->setRequest($request);
+        return $builder->build()->render_object();
     }
 
     /**
@@ -308,13 +308,13 @@ class Pluf_Views
         $object = new $model();
         $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
-        
+
         return self::CRUD_response($request, $p, $object);
     }
 
     /**
      * Createy a many to one object
-     * 
+     *
      * @param Pluf_HTTP_Request $request
      * @param array $match
      * @param array $p
@@ -328,7 +328,7 @@ class Pluf_Views
             $parentId = $match['parentId'];
         }
         $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
-        
+
         $default = array(
             'extra_context' => array(),
             'extra_form' => array()
@@ -341,7 +341,7 @@ class Pluf_Views
         $object = $form->save(false);
         $object->{$p['parentKey']} = $parent;
         $object->create();
-        
+
         return self::CRUD_response($request, $p, $object);
     }
 
@@ -385,7 +385,7 @@ class Pluf_Views
         $object = $form->save();
         return self::CRUD_response($request, $p, $object);
     }
-    
+
     /**
      * Update many to one
      *
@@ -402,7 +402,7 @@ class Pluf_Views
             $parentId = $match['parentId'];
         }
         $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
-        
+
         $default = array(
             'extra_context' => array(),
             'extra_form' => array()
@@ -463,10 +463,10 @@ class Pluf_Views
         $object->delete();
         return self::CRUD_response($request, $p, $objectCopy);
     }
-    
+
     /**
      * Delete many to one
-     * 
+     *
      * @param Pluf_HTTP_Request $request
      * @param array $match
      * @param array $p
@@ -480,7 +480,7 @@ class Pluf_Views
             $parentId = $match['parentId'];
         }
         $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
-        
+
         $default = array(
             'extra_context' => array(),
             'extra_form' => array()

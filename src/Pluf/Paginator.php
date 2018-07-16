@@ -199,6 +199,7 @@ class Pluf_Paginator
     {
         if (is_array($list_display)) {
             $this->list_display = array();
+            // TODO: maso, 2018: replace with builder
             foreach ($list_display as $key => $col) {
                 if (! is_array($col) && ! is_null($this->model) && isset($this->model->_a['cols'][$col]['verbose'])) {
                     $this->list_display[$col] = $this->model->_a['cols'][$col]['verbose'];

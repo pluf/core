@@ -60,6 +60,9 @@ class Pluf_Paginator_MyModel extends Pluf_Model
                         'description'
                 )
         );
+        $this->_a['views'] = array(
+            'test_view' => array()
+        );
         parent::init();
     }
 }

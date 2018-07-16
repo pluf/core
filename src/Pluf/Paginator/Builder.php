@@ -55,13 +55,6 @@ class Pluf_Paginator_Builder
     private $displayFields = null;
 
     /**
-     * filter list
-     *
-     * @var array
-     */
-    private $filtersFields = null;
-
-    /**
      * The fields being searched.
      *
      * @var array
@@ -95,6 +88,13 @@ class Pluf_Paginator_Builder
      * @var Pluf_HTTP_Request
      */
     private $request = null;
+
+    /**
+     * Sort orders
+     *
+     * @var array
+     */
+    private $sortOrders = null;
 
     /**
      * Creates new instance of builder
@@ -166,22 +166,6 @@ class Pluf_Paginator_Builder
     }
 
     /**
-     * List filter.
-     *
-     * Allow the generation of filtering options for the list. If you
-     * provide a list of fields having a "choices" option, you will be
-     * able to filter on the choice values.
-     *
-     * @param array $filterFields
-     * @return Pluf_Paginator_Builder
-     */
-    public function setFilterFields($filterFields)
-    {
-        $this->filtersFields = $filterFields;
-        return $this;
-    }
-
-    /**
      * Additional where clause
      *
      * @param Pluf_SQL $sql
@@ -206,6 +190,24 @@ class Pluf_Paginator_Builder
     }
 
     /**
+     * Sets list of sort orders
+     *
+     * <code><pre>
+     * $builder
+     * ->setSortOrder(array(
+     * 'id',
+     * 'DESC'
+     * ))
+     * ->build();
+     * </pre></code>
+     */
+    public function setSortOrders($sortOrders)
+    {
+        $this->sortOrders = $sortOrders;
+        return $this;
+    }
+
+    /**
      * Build a paginator
      *
      * @return Pluf_Paginator
@@ -214,6 +216,16 @@ class Pluf_Paginator_Builder
     {
         $paginator = new Pluf_Paginator($this->model);
         $paginator->configure($this->loadDisplayFields(), $this->loadSearchFileds(), $this->loadSortFields());
+        $paginator->model_view = $this->loadModelView();
+        if (isset($this->whereClause)) {
+            $paginator->forced_where = $this->whereClause->gen();
+        }
+        if (isset($this->request)) {
+            $paginator->setFromRequest($this->request);
+        }
+        if (isset($this->sortOrders)) {
+            $paginator->sort_order = $this->sortOrders;
+        }
         return $paginator;
     }
 
@@ -227,7 +239,8 @@ class Pluf_Paginator_Builder
         if (isset($this->displayFields)) {
             return $this->displayFields;
         }
-        // TODO: maso, 2018: load from model
+        // maso, 2018: load from model
+        return $this->getVisibleFieldsName();
     }
 
     /**
@@ -240,7 +253,8 @@ class Pluf_Paginator_Builder
         if (isset($this->searchFields)) {
             return $this->searchFields;
         }
-        // TODO: maso, 2018: load from model
+        // maso, 2018: load from model
+        return $this->getVisibleFieldsName();
     }
 
     /**
@@ -253,7 +267,44 @@ class Pluf_Paginator_Builder
         if (isset($this->searchFields)) {
             return $this->searchFields;
         }
-        // TODO: maso, 2018: load from model
+        // maso, 2018: load from model
+        return $this->getVisibleFieldsName();
+    }
+
+    /**
+     * Gets all readable fields names
+     *
+     * @return array
+     */
+    private function getVisibleFieldsName()
+    {
+        if (isset($this->visibleVariablesName)) {
+            return $this->visibleVariablesName;
+        }
+        // maso, 2048: assert the condition is_null($this->model)
+        if (is_null($this->model)) {
+            throw new Pluf_Exception('Model is empty');
+        }
+        $this->visibleVariablesName = array();
+        foreach ($this->model->_a['cols'] as $key => $col) {
+            // maso, 2018: continue if is not readable
+            if (array_key_exists('readable', $col) && ! $col['readable']) {
+                continue;
+            }
+            $this->visibleVariablesName[] = $key;
+        }
+        return $this->visibleVariablesName;
+    }
+
+    /**
+     * Load model view
+     *
+     * @return string
+     */
+    private function loadModelView()
+    {
+        // TODO: maso, 2018: check if model view exist
+        return $this->modelView;
     }
 }
 
