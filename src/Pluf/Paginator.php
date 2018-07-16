@@ -19,18 +19,20 @@
 Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 
 /**
- * صفحه بند برای نمایش فهرستی از مدلهای داده
+ * Model pagination
+ *
+ * Model paginator is used to select and perform an action on part
+ * of models in the model collection.
  *
  * این صفحه بند روش‌های متفاوتی را برای تولید یک نمایش از فهرست مدلها
  * دارد که از این میان می‌تواند به روش تولید یک جدول اشاره کرد.
  * علاوه بر این، این صفحه بند آزادی عمل مناسبی را برای کاربران ایجاد
  * می‌کند تا داده‌های موجود در فهرست را به سادگی نمایش دهند.
  *
- * یک نمونه استفاده از این کلاس در زیر آورده شده است:
+ * Here is an example showes how to use the class:
  *
  * <code>
- * $model = new Pluf_Model();
- * $pag = new Pluf_Paginator($model);
+ * $pag = new Pluf_Paginator(new Pluf_Model());
  * // Get the paginator parameters from the request
  * $pag->setFromRequest($request);
  * print $pag->render();
@@ -51,7 +53,7 @@ class Pluf_Paginator
     /**
      * این مدل داده‌ای صفحه بندی خواهد شد.
      */
-    protected $model;
+    public $model;
 
     /**
      * The items being paginated.
@@ -76,7 +78,7 @@ class Pluf_Paginator
      * By using for example 'id' as field with a custom header name
      * you can create new columns in the table.
      */
-    protected $list_display = array();
+    public $list_display = array();
 
     /**
      * List filter.
@@ -90,12 +92,12 @@ class Pluf_Paginator
     /**
      * The fields being searched.
      */
-    protected $search_fields = array();
+    public $search_fields = array();
 
     /**
      * The where clause from the search.
      */
-    protected $where_clause = null;
+    public $where_clause = null;
 
     /**
      * The forced where clause on top of the search.
@@ -165,26 +167,26 @@ class Pluf_Paginator
     protected $active_list_filter = array();
 
     /**
-     * یک صفحه بند را برای مدل تعیین شده ایجاد می‌کند
+     * Creates new instance of paginator
      *
-     * @param $model مدل
-     *            داده‌ای که باید صفحه بندی شود.
-     * @param $list_display فهرست
-     *            تمام سرآیندهایی که باید نمایش داده شود.
-     * @param $search_fields فهرست
-     *            پارامترهایی که می‌تواند جستجو شود.
+     * @param Pluf_Model $model
+     *            The main pagination model
+     * @param array $list_display
+     *            fields to display
+     * @param array $search_fields
+     *            fields to search in
      *            
      * @see Pluf_Paginator#$search_fields($list_display, $search_fields=array(),
      *      $sort_fields=array())
      */
-    function __construct ($model = null, $list_display = array(), $search_fields = array())
+    function __construct($model = null, $list_display = array(), $search_fields = array())
     {
         $this->model = $model;
         $this->configure($list_display, $search_fields);
     }
 
     /**
-     * صفحه بند را تنظیم می‌کند
+     * Configure paginated list
      *
      * @param $list_display فهرست
      *            تمام سرآیندهایی که باید نمایش داده شود.
@@ -193,13 +195,12 @@ class Pluf_Paginator
      * @param $sort_fields فهرستی
      *            از داده‌ها که قابلیت مرتب شدن را دارند.
      */
-    function configure ($list_display, $search_fields = array(), $sort_fields = array())
+    function configure($list_display, $search_fields = array(), $sort_fields = array())
     {
         if (is_array($list_display)) {
             $this->list_display = array();
             foreach ($list_display as $key => $col) {
-                if (! is_array($col) && ! is_null($this->model) &&
-                         isset($this->model->_a['cols'][$col]['verbose'])) {
+                if (! is_array($col) && ! is_null($this->model) && isset($this->model->_a['cols'][$col]['verbose'])) {
                     $this->list_display[$col] = $this->model->_a['cols'][$col]['verbose'];
                 } elseif (! is_array($col)) {
                     if (is_numeric($key)) {
@@ -208,8 +209,7 @@ class Pluf_Paginator
                         $this->list_display[$key] = $col;
                     }
                 } else {
-                    if (count($col) == 2 && ! is_null($this->model) &&
-                             isset($this->model->_a['cols'][$col[0]]['verbose'])) {
+                    if (count($col) == 2 && ! is_null($this->model) && isset($this->model->_a['cols'][$col[0]]['verbose'])) {
                         $col[2] = $this->model->_a['cols'][$col[0]]['verbose'];
                     } elseif (count($col) == 2) {
                         $col[2] = $col[0];
@@ -243,7 +243,7 @@ class Pluf_Paginator
      * @param
      *            Pluf_HTTP_Request The request
      */
-    function setFromRequest ($request)
+    function setFromRequest($request)
     {
         if (isset($request->REQUEST['_px_q'])) {
             $this->search_string = $request->REQUEST['_px_q'];
@@ -252,29 +252,24 @@ class Pluf_Paginator
             $this->current_page = (int) $request->REQUEST['_px_p'];
             $this->current_page = max(1, $this->current_page);
         }
-        if (isset($request->REQUEST['_px_sk']) and
-                 in_array($request->REQUEST['_px_sk'], $this->sort_fields)) {
+        if (isset($request->REQUEST['_px_sk']) and in_array($request->REQUEST['_px_sk'], $this->sort_fields)) {
             $this->sort_order[0] = $request->REQUEST['_px_sk'];
             $this->sort_order[1] = 'ASC';
-            if (isset($request->REQUEST['_px_so']) and
-                     ($request->REQUEST['_px_so'] == 'd')) {
+            if (isset($request->REQUEST['_px_so']) and ($request->REQUEST['_px_so'] == 'd')) {
                 $this->sort_order[1] = 'DESC';
             }
         }
-        if (isset($request->REQUEST['_px_fk']) and
-                 in_array($request->REQUEST['_px_fk'], $this->list_filters) and
-                 isset($request->REQUEST['_px_fv'])) {
+        if (isset($request->REQUEST['_px_fk']) and in_array($request->REQUEST['_px_fk'], $this->list_filters) and isset($request->REQUEST['_px_fv'])) {
             // We add a forced where query
-            $sql = new Pluf_SQL($request->REQUEST['_px_fk'] . '=%s', 
-                    $request->REQUEST['_px_fv']);
+            $sql = new Pluf_SQL($request->REQUEST['_px_fk'] . '=%s', $request->REQUEST['_px_fv']);
             if (! is_null($this->forced_where)) {
                 $this->forced_where->SAnd($sql);
             } else {
                 $this->forced_where = $sql;
             }
             $this->active_list_filter = array(
-                    $request->REQUEST['_px_fk'],
-                    $request->REQUEST['_px_fv']
+                $request->REQUEST['_px_fk'],
+                $request->REQUEST['_px_fv']
             );
         }
     }
@@ -291,7 +286,7 @@ class Pluf_Paginator
      *
      * @return Array.
      */
-    function render_array ()
+    function render_array()
     {
         if (count($this->sort_order) != 2) {
             $order = null;
@@ -303,12 +298,11 @@ class Pluf_Paginator
             $order = $this->sort_order[0] . ' ' . $s;
         }
         if (! is_null($this->model)) {
-            $items = $this->model->getList(
-                    array(
-                            'view' => $this->model_view,
-                            'filter' => $this->filter(),
-                            'order' => $order
-                    ));
+            $items = $this->model->getList(array(
+                'view' => $this->model_view,
+                'filter' => $this->filter(),
+                'order' => $order
+            ));
         } else {
             $items = $this->items;
         }
@@ -334,13 +328,16 @@ class Pluf_Paginator
     }
 
     /**
-     * تمام گزینه‌های یافت شده را تعیین می‌کند
+     * Render object in a page
+     * 
+     * A page is an object with the following fields:
+     * 
      *
      * با استفاده از این فراخوانی می‌توان به فهرست تمام موجودیت‌ها دست یافت.
      *
-     * @return unknown
+     * @return array
      */
-    function render_object ()
+    function render_object()
     {
         $st = ($this->current_page - 1) * $this->items_per_page;
         if (count($this->sort_order) != 2) {
@@ -353,24 +350,22 @@ class Pluf_Paginator
             $order = $this->sort_order[0] . ' ' . $s;
         }
         if (! is_null($this->model)) {
-            $items = $this->model->getList(
-                    array(
-                            'view' => $this->model_view,
-                            'filter' => $this->filter(),
-                            'order' => $order,
-                            'start' => $st,
-                            'nb' => $this->items_per_page
-                    ));
+            $items = $this->model->getList(array(
+                'view' => $this->model_view,
+                'filter' => $this->filter(),
+                'order' => $order,
+                'start' => $st,
+                'nb' => $this->items_per_page
+            ));
         } else {
             $items = $this->items;
         }
-        
+
         if (! is_null($this->model)) {
-            $this->nb_items = $this->model->getCount(
-                    array(
-                            'view' => $this->model_view,
-                            'filter' => $this->filter()
-                    ));
+            $this->nb_items = $this->model->getCount(array(
+                'view' => $this->model_view,
+                'filter' => $this->filter()
+            ));
         } else {
             $this->nb_items = $this->items->count();
         }
@@ -379,11 +374,11 @@ class Pluf_Paginator
          * ایجاد ساختار داده‌ای نهایی
          */
         return array(
-                'items' => $items->getArrayCopy(),
-                'counts' => $items->count(),
-                'current_page' => $this->current_page,
-                'items_per_page' => $this->items_per_page,
-                'page_number' => $this->page_number
+            'items' => $items->getArrayCopy(),
+            'counts' => $items->count(),
+            'current_page' => $this->current_page,
+            'items_per_page' => $this->items_per_page,
+            'page_number' => $this->page_number
         );
     }
 
@@ -392,13 +387,12 @@ class Pluf_Paginator
      *
      * @return string The ready to use where clause.
      */
-    function filter ()
+    function filter()
     {
         if (strlen($this->where_clause) > 0) {
             return $this->where_clause;
         }
-        if (! is_null($this->forced_where) or (strlen($this->search_string) > 0 &&
-                 ! empty($this->search_fields))) {
+        if (! is_null($this->forced_where) or (strlen($this->search_string) > 0 && ! empty($this->search_fields))) {
             $lastsql = new Pluf_SQL();
             $keywords = $lastsql->keywords($this->search_string);
             foreach ($keywords as $key) {
