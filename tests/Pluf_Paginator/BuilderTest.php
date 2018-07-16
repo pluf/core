@@ -19,7 +19,7 @@
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
-
+require_once dirname(__FILE__) . '/MyModel.php';
 /**
  * Test paginator builder
  *
@@ -28,7 +28,10 @@ require_once 'Pluf.php';
  */
 class Pluf_Paginator_BuilderTest extends TestCase
 {
-
+    
+    /**
+     * @before
+     */
     protected function setUp()
     {
         Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
@@ -54,14 +57,20 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $schema->model = $m1;
         $schema->dropTables();
     }
-
+    
+    /**
+     * @test
+     */
     public function testCreateSimplePaginator()
     {
         $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
         $pag = $builder->build();
         $this->assertTrue(isset($pag));
     }
-
+    
+    /**
+     * @test
+     */
     public function testWithSearchFieldsQueryPaginator()
     {
         $sf = array(

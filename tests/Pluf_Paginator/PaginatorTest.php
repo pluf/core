@@ -20,8 +20,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-require_once dirname(__FILE__) . '/../Pluf_Form/TestFormModel.php';
-
+require_once dirname(__FILE__) . '/MyModel.php';
 /**
  *
  * @backupGlobals disabled
@@ -30,17 +29,21 @@ require_once dirname(__FILE__) . '/../Pluf_Form/TestFormModel.php';
 class Pluf_Paginator_PaginatorTest extends TestCase
 {
 
+    /**
+     *
+     * @before
+     */
     protected function setUp()
     {
         Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
+        $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
         $schema->createTables();
         for ($i = 1; $i < 11; $i ++) {
-            $m = new TestFormModel();
+            $m = new Pluf_Paginator_MyModel();
             $m->title = 'My title ' . $i;
             $m->description = 'My description ' . $i;
             $m->create();
@@ -51,14 +54,18 @@ class Pluf_Paginator_PaginatorTest extends TestCase
     {
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
+        $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
     }
 
+    /**
+     *
+     * @test
+     */
     public function testSimplePaginate()
     {
-        $pag = new Pluf_Paginator(new TestFormModel());
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $pag->action = '/permission/';
         $pag->items_per_page = 5;
         $this->assertTrue(is_array($pag->render_object()));
