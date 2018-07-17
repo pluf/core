@@ -171,7 +171,11 @@ class Pluf_Views
         // Create page
         $builder = new Pluf_Paginator_Builder(self::CRUD_getModelInstance($p));
         if (array_key_exists('sql', $p)) {
-            $builder->setWhereClause(new Pluf_SQL($p['sql']));
+            if ($p['sql'] instanceof Pluf_SQL) {
+                $builder->setWhereClause($p['sql']);
+            } else {
+                $builder->setWhereClause(new Pluf_SQL($p['sql']));
+            }
         }
         if (array_key_exists('listFilters', $p)) {
             $builder->setDisplayList($p['listFilters']);

@@ -222,7 +222,7 @@ class Pluf_Paginator_Builder
         $paginator->model_view = $this->loadModelView();
         $paginator->list_filters = $this->loadDisplayFields();
         if (isset($this->whereClause)) {
-            $paginator->forced_where = $this->whereClause->gen();
+            $paginator->forced_where = $this->whereClause;
         }
         if (isset($this->request)) {
             $paginator->setFromRequest($this->request);
