@@ -180,9 +180,9 @@ class Pluf_Views
             $builder->setSearchFields($p['searchFields']);
         }
         if (array_key_exists('sortOrder', $p)) {
-            $builder->setSortOrder($p['sortOrder']);
+            $builder->setSortOrders($p['sortOrder']);
         } else {
-            $builder->setSortOrder(array(
+            $builder->setSortOrders(array(
                 'id',
                 'DESC'
             ));
