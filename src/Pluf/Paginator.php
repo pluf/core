@@ -42,13 +42,26 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
  * به بیان دیگر تمام خصوصیت‌های مورد نیاز برای صفحه بندی داده‌ها بر اساس
  * خصوصیت‌های پیش فرض صفحه‌بند تعیین می‌شود.
  *
- * @date 1394 هدف اصلی توسعه این سیستم پیاده سازی یک بستر برای REST است
- * از این رو فرآیند تولید الگو از این کلاس کاملا حذف شده است.
+ * @date 2016 All templates and HTML generators are removed from the
+ * code. In this version just REST API is upported.
+ * @date 2018 Update the code style for more matainablity.
  *
  * @author maso <mostafa.barmshory@dpq.oc.ir>
  */
 class Pluf_Paginator
 {
+
+    public const SEARCH_QUERY_KEY = '_px_q';
+
+    public const CURRENT_PAGE_KEY = '_px_p';
+
+    public const SORT_KEY_KEY = '_px_sk';
+
+    public const SORT_ORDER_KEY = '_px_so';
+
+    public const FILTER_KEY_KEY = '_px_fk';
+
+    public const FILTER_VALUE_KEY = '_px_fv';
 
     /**
      * این مدل داده‌ای صفحه بندی خواهد شد.
@@ -57,8 +70,10 @@ class Pluf_Paginator
 
     /**
      * The items being paginated.
-     * If no model is given when creating
-     * the paginator, it will use the items to list them.
+     *
+     * If no model is given when creating the paginator, it will use the items to list them.
+     *
+     * @var array
      */
     public $items = null;
 
@@ -156,14 +171,6 @@ class Pluf_Paginator
      */
     public $sort_reverse_order = array();
 
-    /**
-     * Total number of items.
-     *
-     *
-     * Available only after the rendering of the paginator.
-     */
-    public $nb_items = 0;
-
     protected $active_list_filter = array();
 
     /**
@@ -188,11 +195,11 @@ class Pluf_Paginator
     /**
      * Configure paginated list
      *
-     * @param $list_display فهرست
+     * @param array $list_display
      *            تمام سرآیندهایی که باید نمایش داده شود.
-     * @param $search_fields فهرست
+     * @param array $search_fields
      *            پارامترهایی که می‌تواند جستجو شود.
-     * @param $sort_fields فهرستی
+     * @param array $sort_fields
      *            از داده‌ها که قابلیت مرتب شدن را دارند.
      */
     function configure($list_display, $search_fields = array(), $sort_fields = array())
@@ -228,39 +235,45 @@ class Pluf_Paginator
     }
 
     /**
-     * بر اساس تقاضای دریافت شده پارامترها را تنظیم می‌کند
+     * Load options from user request
      *
-     * این پارامترها برای ایجاد یک فهرست از داده‌ها به کار گرفته می‌شوند. تمام
-     * پارامترهای
-     * ممکن برای این کلاس عبارتند از:
+     * Here is list of all possible values
      *
-     * _px_q : Query string to search.
-     * _px_p : Current page.
-     * _px_sk : Sort key.
-     * _px_so : Sort order.
-     * _px_fk : Filter key.
-     * _px_fv : Filter value.
+     * <ul>
+     * <li>_px_q : Query string to search.</li>
+     * <li>_px_p : Current page.</li>
+     * <li>_px_sk : Sort key.</li>
+     * <li>_px_so : Sort order.</li>
+     * <li>_px_fk : Filter key.</li>
+     * <li>_px_fv : Filter value.</li>
+     * <ul>
      *
      * @param
      *            Pluf_HTTP_Request The request
      */
     function setFromRequest($request)
     {
-        if (isset($request->REQUEST['_px_q'])) {
-            $this->search_string = $request->REQUEST['_px_q'];
+        // load query
+        if (isset($request->REQUEST[self::SEARCH_QUERY_KEY])) {
+            $this->search_string = $request->REQUEST[self::SEARCH_QUERY_KEY];
         }
-        if (isset($request->REQUEST['_px_p'])) {
-            $this->current_page = (int) $request->REQUEST['_px_p'];
+        // load current page
+        if (isset($request->REQUEST[self::CURRENT_PAGE_KEY])) {
+            $this->current_page = (int) $request->REQUEST[self::CURRENT_PAGE_KEY];
             $this->current_page = max(1, $this->current_page);
         }
-        if (isset($request->REQUEST['_px_sk']) and in_array($request->REQUEST['_px_sk'], $this->sort_fields)) {
-            $this->sort_order[0] = $request->REQUEST['_px_sk'];
+
+        // Sort orders
+        if (isset($request->REQUEST[self::SORT_KEY_KEY]) && in_array($request->REQUEST[self::SORT_KEY_KEY], $this->sort_fields)) {
+            $this->sort_order[0] = $request->REQUEST[self::SORT_KEY_KEY];
             $this->sort_order[1] = 'ASC';
-            if (isset($request->REQUEST['_px_so']) and ($request->REQUEST['_px_so'] == 'd')) {
+            if (isset($request->REQUEST[self::SORT_KEY_KEY]) && ($request->REQUEST[self::SORT_ORDER_KEY] == 'd')) {
                 $this->sort_order[1] = 'DESC';
             }
         }
-        if (isset($request->REQUEST['_px_fk']) and in_array($request->REQUEST['_px_fk'], $this->list_filters) and isset($request->REQUEST['_px_fv'])) {
+
+        // load filters
+        if (isset($request->REQUEST[self::FILTER_KEY_KEY]) && in_array($request->REQUEST[self::FILTER_KEY_KEY], $this->list_filters) && isset($request->REQUEST[self::FILTER_VALUE_KEY])) {
             // We add a forced where query
             $sql = new Pluf_SQL($request->REQUEST['_px_fk'] . '=%s', $request->REQUEST['_px_fv']);
             if (! is_null($this->forced_where)) {
@@ -269,14 +282,14 @@ class Pluf_Paginator
                 $this->forced_where = $sql;
             }
             $this->active_list_filter = array(
-                $request->REQUEST['_px_fk'],
-                $request->REQUEST['_px_fv']
+                $request->REQUEST[self::FILTER_KEY_KEY],
+                $request->REQUEST[self::FILTER_VALUE_KEY]
             );
         }
     }
 
     /**
-     * ترجمه و ایجاد آرایه
+     * Creates data array from the request
      *
      * آرایه ایجاد شده هیچ محدودیتی ندارد و شامل تمام مواردی است که قبل در
      * سیستم ایجاد می‌شود.
@@ -289,88 +302,22 @@ class Pluf_Paginator
      */
     function render_array()
     {
-        if (count($this->sort_order) != 2) {
-            $order = null;
-        } else {
-            $s = $this->sort_order[1];
-            if (in_array($this->sort_order[0], $this->sort_reverse_order)) {
-                $s = ($s == 'ASC') ? 'DESC' : 'ASC';
-            }
-            $order = $this->sort_order[0] . ' ' . $s;
-        }
-        if (! is_null($this->model)) {
-            $items = $this->model->getList(array(
-                'view' => $this->model_view,
-                'filter' => $this->filter(),
-                'order' => $order
-            ));
-        } else {
-            $items = $this->items;
-        }
-        $out = array();
-        foreach ($items as $item) {
-            $idata = array();
-            if (! empty($this->list_display)) {
-                $i = 0;
-                foreach ($this->list_display as $key => $col) {
-                    if (! is_array($col)) {
-                        $idata[$key] = $item->$key;
-                    } else {
-                        $_col = $col[0];
-                        $idata[$col[0]] = $item->$_col;
-                    }
-                }
-            } else {
-                $idata = $item->id;
-            }
-            $out[] = $idata;
-        }
-        return $out;
+        $items = $this->fetchItems();
+        return $this->filterDisplayData($items);
     }
 
     /**
      * Render object in a page
-     * 
-     * A page is an object with the following fields:
-     * 
      *
-     * با استفاده از این فراخوانی می‌توان به فهرست تمام موجودیت‌ها دست یافت.
+     * A page is an object with the following fields:
      *
      * @return array
      */
     function render_object()
     {
-        $st = ($this->current_page - 1) * $this->items_per_page;
-        if (count($this->sort_order) != 2) {
-            $order = null;
-        } else {
-            $s = $this->sort_order[1];
-            if (in_array($this->sort_order[0], $this->sort_reverse_order)) {
-                $s = ($s == 'ASC') ? 'DESC' : 'ASC';
-            }
-            $order = $this->sort_order[0] . ' ' . $s;
-        }
-        if (! is_null($this->model)) {
-            $items = $this->model->getList(array(
-                'view' => $this->model_view,
-                'filter' => $this->filter(),
-                'order' => $order,
-                'start' => $st,
-                'nb' => $this->items_per_page
-            ));
-        } else {
-            $items = $this->items;
-        }
-
-        if (! is_null($this->model)) {
-            $this->nb_items = $this->model->getCount(array(
-                'view' => $this->model_view,
-                'filter' => $this->filter()
-            ));
-        } else {
-            $this->nb_items = $this->items->count();
-        }
-        $this->page_number = ceil($this->nb_items / $this->items_per_page);
+        $items = $this->fetchItems();
+        $nb_items = $this->fetchItemsCount();
+        $this->page_number = ceil($nb_items / $this->items_per_page);
         /**
          * ایجاد ساختار داده‌ای نهایی
          */
@@ -384,16 +331,55 @@ class Pluf_Paginator
     }
 
     /**
+     * Fetch itmes from DB
+     *
+     * @return array|ArrayObject
+     */
+    private function fetchItems()
+    {
+        // Load pre defined items
+        if (is_null($this->model)) {
+            return $this->items;
+        }
+
+        // fetch from DB
+        $st = ($this->current_page - 1) * $this->items_per_page;
+        return $this->model->getList(array(
+            'view' => $this->model_view,
+            'filter' => $this->getFilters(),
+            'order' => $this->getOrders(),
+            'start' => $st,
+            'nb' => $this->items_per_page
+        ));
+    }
+
+    /**
+     * Fetch count of itmes
+     *
+     * @return number of all items
+     */
+    private function fetchItemsCount()
+    {
+        if (is_null($this->model)) {
+            return $this->items->count();
+        }
+        return $this->model->getCount(array(
+            'view' => $this->model_view,
+            'filter' => $this->getFilters()
+        ));
+    }
+
+    /**
      * Generate the where clause.
      *
      * @return string The ready to use where clause.
      */
-    function filter()
+    private function getFilters()
     {
         if (strlen($this->where_clause) > 0) {
             return $this->where_clause;
         }
-        if (! is_null($this->forced_where) or (strlen($this->search_string) > 0 && ! empty($this->search_fields))) {
+        if (! is_null($this->forced_where) || (strlen($this->search_string) > 0 && ! empty($this->search_fields))) {
             $lastsql = new Pluf_SQL();
             $keywords = $lastsql->keywords($this->search_string);
             foreach ($keywords as $key) {
@@ -409,10 +395,60 @@ class Pluf_Paginator
                 $lastsql->SAnd($this->forced_where);
             }
             $this->where_clause = $lastsql->gen();
-            if (strlen($this->where_clause) == 0)
+            if (strlen($this->where_clause) == 0) {
                 $this->where_clause = null;
+            }
         }
         return $this->where_clause;
     }
+
+    /**
+     * Generates an order list and return
+     *
+     * @return NULL|string
+     */
+    private function getOrders()
+    {
+        if (count($this->sort_order) != 2) {
+            return null;
+        }
+        $s = $this->sort_order[1];
+        if (in_array($this->sort_order[0], $this->sort_reverse_order)) {
+            $s = ($s == 'ASC') ? 'DESC' : 'ASC';
+        }
+        return $this->sort_order[0] . ' ' . $s;
+    }
+
+    /**
+     * Filter all input data based on display list
+     *
+     * It the display list is empty {id} is used as default list.
+     *
+     * @param array $items
+     *            to filter
+     * @return array[]
+     */
+    private function filterDisplayData($items)
+    {
+        $out = array();
+        foreach ($items as $item) {
+            $idata = array();
+            if (! empty($this->list_display)) {
+                foreach ($this->list_display as $key => $col) {
+                    if (! is_array($col)) {
+                        $idata[$key] = $item->$key;
+                    } else {
+                        $_col = $col[0];
+                        $idata[$col[0]] = $item->$_col;
+                    }
+                }
+            } else {
+                $idata = $item->id;
+            }
+            $out[] = $idata;
+        }
+        return $out;
+    }
 }
+
 

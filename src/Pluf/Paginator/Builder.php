@@ -200,6 +200,9 @@ class Pluf_Paginator_Builder
      * ))
      * ->build();
      * </pre></code>
+     *
+     * @param array $sortOrders
+     *            list of default sort orders
      */
     public function setSortOrders($sortOrders)
     {
@@ -226,6 +229,11 @@ class Pluf_Paginator_Builder
         }
         if (isset($this->sortOrders)) {
             $paginator->sort_order = $this->sortOrders;
+        } else {
+            $paginator->sort_order = array(
+                'id',
+                'DESC'
+            );
         }
         return $paginator;
     }
