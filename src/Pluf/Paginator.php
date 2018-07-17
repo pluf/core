@@ -51,17 +51,17 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 class Pluf_Paginator
 {
 
-    public const SEARCH_QUERY_KEY = '_px_q';
+    const SEARCH_QUERY_KEY = '_px_q';
 
-    public const CURRENT_PAGE_KEY = '_px_p';
+    const CURRENT_PAGE_KEY = '_px_p';
 
-    public const SORT_KEY_KEY = '_px_sk';
+    const SORT_KEY_KEY = '_px_sk';
 
-    public const SORT_ORDER_KEY = '_px_so';
+    const SORT_ORDER_KEY = '_px_so';
 
-    public const FILTER_KEY_KEY = '_px_fk';
+    const FILTER_KEY_KEY = '_px_fk';
 
-    public const FILTER_VALUE_KEY = '_px_fv';
+    const FILTER_VALUE_KEY = '_px_fv';
 
     /**
      * این مدل داده‌ای صفحه بندی خواهد شد.
