@@ -305,9 +305,9 @@ class Pluf_Dispatcher
     /**
      *
      * @param Pluf_HTTP_Request $req
-     * @param Exception $e
+     * @param Exception $exception
      */
-    private static function logError($req, $e)
+    private static function logError($req, $exception)
     {
         // return if is not internal error
         if ($exception instanceof Pluf_Exception) {
@@ -319,12 +319,12 @@ class Pluf_Dispatcher
             // 1- Add to log
             Pluf_Log::fatal(array(
                 'query' => $req->query,
-                'error' => $e
+                'error' => $exception
             ));
             // 2- send email if error is not handled
             $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
             $email = new Pluf_Mail($from, $from, 'fatal error in system');
-            $email->addTextMessage('unsupported error in system:' . $e);
+            $email->addTextMessage('unsupported error in system:' . $exception);
             $email->sendMail();
         } catch (Exception $ex) {}
     }

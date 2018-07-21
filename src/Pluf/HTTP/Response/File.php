@@ -17,11 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Render file as response
+ *
+ * @author maso<mostafa.barmshory@gmail.com>
+ *        
+ */
 class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
 {
 
     public $delete_file = false;
 
+    /**
+     * Creates new instance of File response
+     *
+     * @param string $filepath
+     * @param string $mimetype
+     * @param boolean $delete_file
+     */
     function __construct($filepath, $mimetype = null, $delete_file = false)
     {
         parent::__construct($filepath, $mimetype);
@@ -29,10 +43,10 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
     }
 
     /**
-     * Render a response object.
+     * Render the file
      *
-     * در صورتی که منبع مورد نظر وجود نداشته باشید خطای عدم وجود منبع تولید
-     * خواهد شد.
+     * {@inheritdoc}
+     * @see Pluf_HTTP_Response::render()
      */
     function render($output_body = true)
     {
@@ -45,7 +59,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             'gzip' => false,
             'cache' => true
         ));
-        if(defined('IN_UNIT_TESTS')){
+        if (defined('IN_UNIT_TESTS')) {
             parent::render($output_body);
             return;
         }
@@ -56,7 +70,6 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
      * Genereate hash code of file
      *
      * {@inheritdoc}
-     *
      * @see Pluf_HTTP_Response::hashCode()
      */
     public function hashCode()

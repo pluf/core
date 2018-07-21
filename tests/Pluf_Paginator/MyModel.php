@@ -18,7 +18,7 @@
  */
 Pluf::loadClass('Pluf_Model');
 
-class TestFormModel extends Pluf_Model
+class Pluf_Paginator_MyModel extends Pluf_Model
 {
 
     function init ()
@@ -59,6 +59,9 @@ class TestFormModel extends Pluf_Model
                         'title',
                         'description'
                 )
+        );
+        $this->_a['views'] = array(
+            'test_view' => array()
         );
         parent::init();
     }

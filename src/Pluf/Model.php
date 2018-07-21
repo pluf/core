@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -36,17 +37,18 @@ class Pluf_Model implements JsonSerializable
      * @var array
      */
     protected $tenant_field = array(
-            'type' => 'Pluf_DB_Field_Foreignkey',
-            'model' => 'Pluf_Tenant',
-            'blank' => false,
-            'relate_name' => 'tenant',
-            'editable' => false,
-            'readable' => false
+        'type' => 'Pluf_DB_Field_Foreignkey',
+        'model' => 'Pluf_Tenant',
+        'blank' => false,
+        'relate_name' => 'tenant',
+        'editable' => false,
+        'readable' => false
     );
 
     public $_model = __CLASS__;
+
     // set it to your model name
-    
+
     /**
      * Database connection.
      */
@@ -67,12 +69,12 @@ class Pluf_Model implements JsonSerializable
      * 'verbose': The verbose name of the model.
      */
     public $_a = array(
-            'multitenant' => true,
-            'table' => 'model',
-            'model' => 'Pluf_Model',
-            'cols' => array(),
-            'idx' => array(),
-            'views' => array()
+        'multitenant' => true,
+        'table' => 'model',
+        'model' => 'Pluf_Model',
+        'cols' => array(),
+        'idx' => array(),
+        'views' => array()
     );
 
     /**
@@ -87,8 +89,9 @@ class Pluf_Model implements JsonSerializable
      * Storage cached data for methods_get
      */
     protected $_cache = array();
+
     // We should use a global cache.
-    
+
     /**
      * List of the foreign keys.
      *
@@ -101,13 +104,14 @@ class Pluf_Model implements JsonSerializable
      * method.
      */
     protected $_m = array(
-            'list' => array(), // get_*_list methods
-            'many' => array(), // many to many
-            'get' => array(), // foreign keys
-            'extra' => array()
+        'list' => array(), // get_*_list methods
+        'many' => array(), // many to many
+        'get' => array(), // foreign keys
+        'extra' => array()
     );
+
     // added by some fields
-    function __construct ($pk = null, $values = array())
+    function __construct($pk = null, $values = array())
     {
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
@@ -125,16 +129,15 @@ class Pluf_Model implements JsonSerializable
      * کلاس‌ها
      * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
      */
-    function init ()
+    function init()
     {
         // Define it yourself.
     }
 
     /**
      * Load and init the model
-     * 
      */
-    function _init ()
+    function _init()
     {
         $this->_getConnection();
         if (isset($GLOBALS['_PX_models_init_cache'][$this->_model])) {
@@ -151,58 +154,58 @@ class Pluf_Model implements JsonSerializable
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']('', $col);
             $col_lower = strtolower($col);
-            
+
             $type = 'foreignkey';
             if ($type === $field->type) {
                 $this->_m['get']['get_' . $col_lower] = array(
-                        $val['model'],
-                        $col
+                    $val['model'],
+                    $col
                 );
                 $this->_cache['fk'][$col] = $type;
                 $this->_fk[$col] = $type;
             }
-            
+
             $type = 'manytomany';
             if ($type === $field->type) {
                 $this->_m['list']['get_' . $col_lower . '_list'] = $val['model'];
                 $this->_m['many'][$val['model']] = $type;
             }
-            
+
             foreach ($field->methods as $method) {
                 $this->_m['extra'][$method[0]] = array(
-                        $col_lower,
-                        $method[1]
+                    $col_lower,
+                    $method[1]
                 );
             }
-            
+
             if (array_key_exists('default', $val)) {
                 $this->_data[$col] = $val['default'];
             } else {
                 $this->_data[$col] = '';
             }
         }
-        
+
         $this->_setupAutomaticListMethods('foreignkey');
         $this->_setupAutomaticListMethods('manytomany');
-        
+
         $GLOBALS['_PX_models_init_cache'][$this->_model] = array(
-                'cache' => $this->_cache,
-                'm' => $this->_m,
-                'a' => $this->_a,
-                'fk' => $this->_fk,
-                'data' => $this->_data
+            'cache' => $this->_cache,
+            'm' => $this->_m,
+            'a' => $this->_a,
+            'fk' => $this->_fk,
+            'data' => $this->_data
         );
     }
 
     /**
      * Retrieve key relationships of a given model.
      *
-     * @param string $model            
+     * @param string $model
      * @param string $type
      *            Relation type: 'foreignkey' or 'manytomany'.
      * @return array Key relationships.
      */
-    public function getRelationKeysToModel ($model, $type)
+    public function getRelationKeysToModel($model, $type)
     {
         $keys = array();
         foreach ($this->_a['cols'] as $col => $val) {
@@ -213,7 +216,7 @@ class Pluf_Model implements JsonSerializable
                 }
             }
         }
-        
+
         return $keys;
     }
 
@@ -225,7 +228,7 @@ class Pluf_Model implements JsonSerializable
      *            string Model
      * @return array Foreign keys
      */
-    function getForeignKeysToModel ($model)
+    function getForeignKeysToModel($model)
     {
         return $this->getRelationKeysToModel($model, 'foreignkey');
     }
@@ -237,7 +240,7 @@ class Pluf_Model implements JsonSerializable
      *
      * @return array Associative array of the data.
      */
-    function getData ()
+    function getData()
     {
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']();
@@ -258,21 +261,19 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            object Object to associate to the current object
      */
-    function setAssoc ($model)
+    function setAssoc($model)
     {
         if (! $this->delAssoc($model)) {
             return false;
         }
         $hay = array(
-                strtolower($model->_a['model']),
-                strtolower($this->_a['model'])
+            strtolower($model->_a['model']),
+            strtolower($this->_a['model'])
         );
         sort($hay);
         $table = $hay[0] . '_' . $hay[1] . '_assoc';
         $req = 'INSERT INTO ' . $this->_con->pfx . $table . "\n";
-        $req .= '(' . $this->_con->qn(strtolower($this->_a['model']) . '_id') .
-                 ', ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') .
-                 ') VALUES ' . "\n";
+        $req .= '(' . $this->_con->qn(strtolower($this->_a['model']) . '_id') . ', ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ') VALUES ' . "\n";
         $req .= '(' . $this->_toDb($this->_data['id'], 'id') . ', ';
         $req .= $this->_toDb($model->id, 'id') . ')';
         $this->_con->execute($req);
@@ -285,27 +286,23 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            object Object to associate to the current object
      */
-    function delAssoc ($model)
+    function delAssoc($model)
     {
         // check if ok to make the association
         // current model has a many to many key with $model
         // $model has a many to many key with current model
-        if (! isset($this->_m['many'][$model->_a['model']]) or
-                 strlen($this->_data['id']) == 0 or strlen($model->id) == 0) {
+        if (! isset($this->_m['many'][$model->_a['model']]) or strlen($this->_data['id']) == 0 or strlen($model->id) == 0) {
             return false;
         }
         $hay = array(
-                strtolower($model->_a['model']),
-                strtolower($this->_a['model'])
+            strtolower($model->_a['model']),
+            strtolower($this->_a['model'])
         );
         sort($hay);
         $table = $hay[0] . '_' . $hay[1] . '_assoc';
         $req = 'DELETE FROM ' . $this->_con->pfx . $table . ' WHERE' . "\n";
-        $req .= $this->_con->qn(strtolower($this->_a['model']) . '_id') . ' = ' .
-                 $this->_toDb($this->_data['id'], 'id');
-        $req .= ' AND ' .
-                 $this->_con->qn(strtolower($model->_a['model']) . '_id') . ' = ' .
-                 $this->_toDb($model->id, 'id');
+        $req .= $this->_con->qn(strtolower($this->_a['model']) . '_id') . ' = ' . $this->_toDb($this->_data['id'], 'id');
+        $req .= ' AND ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $this->_toDb($model->id, 'id');
         $this->_con->execute($req);
         return true;
     }
@@ -319,7 +316,7 @@ class Pluf_Model implements JsonSerializable
      *            array Ids of Model name
      * @return bool Success
      */
-    function batchAssoc ($model_name, $ids)
+    function batchAssoc($model_name, $ids)
     {
         $currents = $this->getRelated($model_name);
         foreach ($currents as $cur) {
@@ -337,7 +334,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * Get a database connection.
      */
-    function _getConnection ()
+    function _getConnection()
     {
         static $con = null;
         if ($this->_con !== null) {
@@ -355,7 +352,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * Get a database connection.
      */
-    function getDbConnection ()
+    function getDbConnection()
     {
         return $this->_getConnection();
     }
@@ -366,7 +363,7 @@ class Pluf_Model implements JsonSerializable
      * Avoid doing the concatenation of the prefix and the table
      * manually.
      */
-    function getSqlTable ()
+    function getSqlTable()
     {
         return $this->_con->pfx . $this->_a['table'];
     }
@@ -377,10 +374,9 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            string Property to get
      */
-    function __get ($prop)
+    function __get($prop)
     {
-        return (array_key_exists($prop, $this->_data)) ? $this->_data[$prop] : $this->__call(
-                $prop, array());
+        return (array_key_exists($prop, $this->_data)) ? $this->_data[$prop] : $this->__call($prop, array());
     }
 
     /**
@@ -391,7 +387,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            mixed Value to set
      */
-    function __set ($prop, $val)
+    function __set($prop, $val)
     {
         if (null !== $val and isset($this->_cache['fk'][$prop])) {
             $this->_data[$prop] = $val->id;
@@ -409,18 +405,17 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            array Arguments
      */
-    function __call ($method, $args)
+    function __call($method, $args)
     {
         // The foreign keys of the current object.
         if (isset($this->_m['get'][$method])) {
             if (isset($this->_cache[$method])) {
                 return $this->_cache[$method];
             } else {
-                $this->_cache[$method] = Pluf::factory(
-                        $this->_m['get'][$method][0], 
-                        $this->_data[$this->_m['get'][$method][1]]);
-                if ($this->_cache[$method]->id == '')
+                $this->_cache[$method] = Pluf::factory($this->_m['get'][$method][0], $this->_data[$this->_m['get'][$method][1]]);
+                if ($this->_cache[$method]->id == '') {
                     $this->_cache[$method] = null;
+                }
                 return $this->_cache[$method];
             }
         }
@@ -431,31 +426,26 @@ class Pluf_Model implements JsonSerializable
             } else {
                 $model = $this->_m['list'][$method];
             }
-            $args = array_merge(
-                    array(
-                            $model,
-                            $method
-                    ), $args);
-            return call_user_func_array(
-                    array(
-                            $this,
-                            'getRelated'
-                    ), $args);
+            $args = array_merge(array(
+                $model,
+                $method
+            ), $args);
+            return call_user_func_array(array(
+                $this,
+                'getRelated'
+            ), $args);
         }
         // Extra methods added by fields
         if (isset($this->_m['extra'][$method])) {
-            $args = array_merge(
-                    array(
-                            $this->_m['extra'][$method][0],
-                            $method,
-                            $this
-                    ), $args);
+            $args = array_merge(array(
+                $this->_m['extra'][$method][0],
+                $method,
+                $this
+            ), $args);
             Pluf::loadFunction($this->_m['extra'][$method][1]);
             return call_user_func_array($this->_m['extra'][$method][1], $args);
         }
-        throw new Pluf_Exception(
-                sprintf('Method "%s" not available in model.', $method, 
-                        $this->_a['model']));
+        throw new Pluf_Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
     }
 
     /**
@@ -465,20 +455,18 @@ class Pluf_Model implements JsonSerializable
      *            int Id of the item.
      * @return mixed Item or false if not found.
      */
-    function get ($id)
+    function get($id)
     {
         $req = 'SELECT * FROM ' . $this->getSqlTable() . ' WHERE ';
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            $sql = new Pluf_SQL('tenant=%s AND id=%s', 
-                    array(
-                            Pluf_Tenant::current()->id,
-                            $this->_toDb($id, 'id')
-                    ));
+            $sql = new Pluf_SQL('tenant=%s AND id=%s', array(
+                Pluf_Tenant::current()->id,
+                $this->_toDb($id, 'id')
+            ));
         } else {
-            $sql = new Pluf_SQL('id=%s',
-                    array(
-                            $this->_toDb($id, 'id')
-                    ));
+            $sql = new Pluf_SQL('id=%s', array(
+                $this->_toDb($id, 'id')
+            ));
         }
         $req .= $sql->gen();
         if (false === ($rs = $this->_con->select($req))) {
@@ -521,11 +509,11 @@ class Pluf_Model implements JsonSerializable
      * @see self::getList
      * @return Pluf_Model|null find model
      */
-    public function getOne ($p = array())
+    public function getOne($p = array())
     {
         if (! is_array($p)) {
             $p = array(
-                    'filter' => $p
+                'filter' => $p
             );
         }
         $items = $this->getList($p);
@@ -565,32 +553,31 @@ class Pluf_Model implements JsonSerializable
      * @return ArrayObject of items or through an exception if
      *         database failure
      */
-    function getList ($p = array())
+    function getList($p = array())
     {
         $default = array(
-                'view' => null,
-                'filter' => null,
-                'order' => null,
-                'start' => null,
-                'select' => null,
-                'nb' => null,
-                'count' => false
+            'view' => null,
+            'filter' => null,
+            'order' => null,
+            'start' => null,
+            'select' => null,
+            'nb' => null,
+            'count' => false
         );
         $p = array_merge($default, $p);
         if (! is_null($p['view']) && ! isset($this->_a['views'][$p['view']])) {
-            throw new Exception(
-                    sprintf(__('The view "%s" is not defined.'), $p['view']));
+            throw new Exception(sprintf(__('The view "%s" is not defined.'), $p['view']));
         }
         $query = array(
-                'select' => $this->getSelect(),
-                'from' => $this->_a['table'],
-                'join' => '',
-                'where' => '',
-                'group' => '',
-                'having' => '',
-                'order' => '',
-                'limit' => '',
-                'props' => array()
+            'select' => $this->getSelect(),
+            'from' => $this->_a['table'],
+            'join' => '',
+            'where' => '',
+            'group' => '',
+            'having' => '',
+            'order' => '',
+            'limit' => '',
+            'props' => array()
         );
         if (! is_null($p['view'])) {
             $query = array_merge($query, $this->_a['views'][$p['view']]);
@@ -611,10 +598,9 @@ class Pluf_Model implements JsonSerializable
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
             // Note: Hadi, 1395-11-26: Table should be set before tenant field.
             // It is to avoid ambiguous problem in join tables which both have tenant field.
-            $sql = new Pluf_SQL($this->getSqlTable() . '.tenant=%s', 
-                    array(
-                            Pluf_Tenant::current()->id
-                    ));
+            $sql = new Pluf_SQL($this->getSqlTable() . '.tenant=%s', array(
+                Pluf_Tenant::current()->id
+            ));
             if (strlen($query['where']) > 0) {
                 $query['where'] = ' AND ' . $query['where'];
             }
@@ -652,8 +638,7 @@ class Pluf_Model implements JsonSerializable
             $query['order'] = '';
             $query['limit'] = '';
         }
-        $req = 'SELECT ' . $query['select'] . ' FROM ' . $this->_con->pfx .
-                 $query['from'] . ' ' . $query['join'];
+        $req = 'SELECT ' . $query['select'] . ' FROM ' . $this->_con->pfx . $query['from'] . ' ' . $query['join'];
         if (strlen($query['where'])) {
             $req .= "\n" . 'WHERE ' . $query['where'];
         }
@@ -704,7 +689,7 @@ class Pluf_Model implements JsonSerializable
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
      */
-    function getCount ($p = array())
+    function getCount($p = array())
     {
         $p['count'] = true;
         $count = $this->getList($p);
@@ -729,30 +714,25 @@ class Pluf_Model implements JsonSerializable
      *            the keys
      * @return array Array of items
      */
-    function getRelated ($model, $method = null, $p = array())
+    function getRelated($model, $method = null, $p = array())
     {
         $default = array(
-                'view' => null,
-                'filter' => null,
-                'order' => null,
-                'start' => null,
-                'nb' => null,
-                'count' => false
+            'view' => null,
+            'filter' => null,
+            'order' => null,
+            'start' => null,
+            'nb' => null,
+            'count' => false
         );
         $p = array_merge($default, $p);
         if ('' == $this->_data['id']) {
             return new ArrayObject();
         }
         $m = new $model();
-        if (isset($this->_m['list'][$method]) and
-                 is_array($this->_m['list'][$method])) {
+        if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new Pluf_Exception(
-                        sprintf(
-                                __(
-                                        'No matching foreign key found in model: %s for model %s'), 
-                                $model, $this->_a['model']));
+                throw new Pluf_Exception(sprintf(__('No matching foreign key found in model: %s for model %s'), $model, $this->_a['model']));
             }
             if (! is_null($p['filter'])) {
                 if (is_array($p['filter'])) {
@@ -762,42 +742,34 @@ class Pluf_Model implements JsonSerializable
             } else {
                 $p['filter'] = '';
             }
-            $p['filter'] .= $this->_con->qn($foreignkey) . '=' .
-                     $this->_toDb($this->_data['id'], 'id');
+            $p['filter'] .= $this->_con->qn($foreignkey) . '=' . $this->_toDb($this->_data['id'], 'id');
         } else {
             // Many to many: We generate a special view that is making
             // the join
             $hay = array(
-                    strtolower(Pluf::factory($model)->_a['model']),
-                    strtolower($this->_a['model'])
+                strtolower(Pluf::factory($model)->_a['model']),
+                strtolower($this->_a['model'])
             );
             sort($hay);
             $table = $hay[0] . '_' . $hay[1] . '_assoc';
             if (isset($m->_a['views'][$p['view']])) {
                 $m->_a['views'][$p['view'] . '__manytomany__'] = $m->_a['views'][$p['view']];
-                if (! isset(
-                        $m->_a['views'][$p['view'] . '__manytomany__']['join'])) {
+                if (! isset($m->_a['views'][$p['view'] . '__manytomany__']['join'])) {
                     $m->_a['views'][$p['view'] . '__manytomany__']['join'] = '';
                 }
-                if (! isset(
-                        $m->_a['views'][$p['view'] . '__manytomany__']['where'])) {
+                if (! isset($m->_a['views'][$p['view'] . '__manytomany__']['where'])) {
                     $m->_a['views'][$p['view'] . '__manytomany__']['where'] = '';
                 }
             } else {
                 $m->_a['views']['__manytomany__'] = array(
-                        'join' => '',
-                        'where' => ''
+                    'join' => '',
+                    'where' => ''
                 );
                 $p['view'] = '';
             }
-            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' .
-                     $this->_con->pfx . $table . ' ON ' .
-                     $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' .
-                     $this->_con->pfx . $m->_a['table'] . '.id';
-            
-            $m->_a['views'][$p['view'] . '__manytomany__']['where'] = $this->_con->qn(
-                    strtolower($this->_a['model']) . '_id') . '=' .
-                     $this->_data['id'];
+            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $this->_con->pfx . $table . ' ON ' . $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' . $this->_con->pfx . $m->_a['table'] . '.id';
+
+            $m->_a['views'][$p['view'] . '__manytomany__']['where'] = $this->_con->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
             $p['view'] = $p['view'] . '__manytomany__';
         }
         return $m->getList($p);
@@ -806,7 +778,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * Generate the SQL select from the columns
      */
-    function getSelect ()
+    function getSelect()
     {
         if (isset($this->_cache['getSelect']))
             return $this->_cache['getSelect'];
@@ -814,8 +786,7 @@ class Pluf_Model implements JsonSerializable
         $table = $this->getSqlTable();
         foreach ($this->_a['cols'] as $col => $val) {
             if ($val['type'] != 'Pluf_DB_Field_Manytomany') {
-                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' .
-                         $this->_con->qn($col);
+                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' . $this->_con->qn($col);
             }
         }
         $this->_cache['getSelect'] = implode(', ', $select);
@@ -833,7 +804,7 @@ class Pluf_Model implements JsonSerializable
      *            string Where clause to update specific items. ('')
      * @return bool Success
      */
-    function update ($where = '')
+    function update($where = '')
     {
         $this->preSave();
         $req = 'UPDATE ' . $this->getSqlTable() . ' SET' . "\n";
@@ -849,8 +820,7 @@ class Pluf_Model implements JsonSerializable
                 }
                 continue;
             }
-            $fields[] = $this->_con->qn($col) . ' = ' .
-                     $this->_toDb($this->$col, $col);
+            $fields[] = $this->_con->qn($col) . ' = ' . $this->_toDb($this->$col, $col);
         }
         $req .= implode(',' . "\n", $fields);
         if (strlen($where) > 0) {
@@ -881,7 +851,7 @@ class Pluf_Model implements JsonSerializable
      *            bool Raw insert (false)
      * @return bool Success
      */
-    function create ($raw = false)
+    function create($raw = false)
     {
         if (! $raw) {
             $this->preSave(true);
@@ -930,7 +900,7 @@ class Pluf_Model implements JsonSerializable
      *
      * @return array Models deleted if deleting current model.
      */
-    function getDeleteSideEffect ()
+    function getDeleteSideEffect()
     {
         $affected = array();
         foreach ($this->_m['list'] as $method => $details) {
@@ -939,12 +909,10 @@ class Pluf_Model implements JsonSerializable
                 $related = $this->$method();
                 $affected = array_merge($affected, (array) $related);
                 foreach ($related as $rel) {
-                    if ($details[0] == $this->_a['model'] and
-                             $rel->id == $this->_data['id']) {
+                    if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
                         continue; // $rel == $this
                     }
-                    $affected = array_merge($affected, 
-                            (array) $rel->getDeleteSideEffect());
+                    $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
                 }
             }
         }
@@ -960,22 +928,21 @@ class Pluf_Model implements JsonSerializable
      *
      * FIXME: No real test of circular references. It can break.
      */
-    function delete ()
+    function delete()
     {
         if (false === $this->get($this->_data['id'])) {
             return false;
         }
         $this->preDelete();
         // Find the models linking to the current one through a foreign key.
-        // XXX: Hadi, 1396-03: It is better to use standard policies: 
+        // XXX: Hadi, 1396-03: It is better to use standard policies:
         // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
         foreach ($this->_m['list'] as $method => $details) {
             if (is_array($details)) {
                 // foreignkey
                 $related = $this->$method();
                 foreach ($related as $rel) {
-                    if ($details[0] == $this->_a['model'] and
-                             $rel->id == $this->_data['id']) {
+                    if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
                         continue; // $rel == $this
                     }
                     // We do not really control if it can be deleted
@@ -990,8 +957,7 @@ class Pluf_Model implements JsonSerializable
                 }
             }
         }
-        $req = 'DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' .
-                 $this->_toDb($this->_data['id'], 'id');
+        $req = 'DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id');
         $this->_con->execute($req);
         $this->_reset();
         return true;
@@ -1000,7 +966,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * Reset the fields to default values.
      */
-    function _reset ()
+    function _reset()
     {
         foreach ($this->_a['cols'] as $col => $val) {
             if (isset($val['default'])) {
@@ -1018,10 +984,10 @@ class Pluf_Model implements JsonSerializable
      *
      * You need to overwrite this method to have a nice display of
      * your objects in the select boxes, logs.
-     * 
+     *
      * @return string reperesentation of the current object
      */
-    function __toString ()
+    function __toString()
     {
         return $this->_a['model'] . '(' . $this->_data['id'] . ')';
     }
@@ -1031,7 +997,7 @@ class Pluf_Model implements JsonSerializable
      *
      * Just overwrite it into your model to perform custom actions.
      */
-    function restore ()
+    function restore()
     {}
 
     /**
@@ -1044,7 +1010,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            bool Create.
      */
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         // TODO: maso, 1395: بررسی داده‌های پیش فرض و به روز رسانی آنها
         //
@@ -1060,9 +1026,9 @@ class Pluf_Model implements JsonSerializable
     /**
      * فراخوانی پس از ذخیره شدن
      *
-     * @param string $create            
+     * @param string $create
      */
-    function postSave ($create = false)
+    function postSave($create = false)
     {}
 
     /**
@@ -1070,7 +1036,7 @@ class Pluf_Model implements JsonSerializable
      *
      * Just overwrite it into your model to perform custom actions.
      */
-    function preDelete ()
+    function preDelete()
     {}
 
     /**
@@ -1079,7 +1045,7 @@ class Pluf_Model implements JsonSerializable
      * این مقادیر به صورت یک آرایه به عنوان ورودی دریافت شده و بر اساس
      * آن داده‌های مورد نیاز مدل تعیین می‌شود.
      */
-    function setFromFormData ($cleaned_values)
+    function setFromFormData($cleaned_values)
     {
         foreach ($cleaned_values as $key => $val) {
             $this->_data[$key] = $val;
@@ -1094,7 +1060,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            array Definition of the view.
      */
-    function setView ($view, $def)
+    function setView($view, $def)
     {
         $this->_a['views'][$view] = $def;
     }
@@ -1108,7 +1074,7 @@ class Pluf_Model implements JsonSerializable
      *            string Column name.
      * @return string SQL ready string.
      */
-    function _toDb ($val, $col)
+    function _toDb($val, $col)
     {
         $m = $this->_con->type_cast[$this->_a['cols'][$col]['type']][1];
         return $m($val, $this->_con);
@@ -1116,17 +1082,17 @@ class Pluf_Model implements JsonSerializable
 
     /**
      * Get the value from the DB.
-     * 
+     *
      * Create DB field and returns. The field type is used as the output
      * value type.
-     * 
+     *
      * @param
      *            mixed Value.
      * @param
      *            string Column name.
      * @return mixed Value.
      */
-    function _fromDb ($val, $col)
+    function _fromDb($val, $col)
     {
         $m = $this->_con->type_cast[$this->_a['cols'][$col]['type']][0];
         return ($m == 'Pluf_DB_IdentityFromDb') ? $val : $m($val);
@@ -1142,13 +1108,12 @@ class Pluf_Model implements JsonSerializable
      *            string Field to display the value.
      * @return mixed Display value, if not available default to the value.
      */
-    function displayVal ($col)
+    function displayVal($col)
     {
         if (! isset($this->_a['cols'][$col]['choices'])) {
             return $this->_data[$col]; // will on purposed failed if not set
         }
-        $val = array_search($this->_data[$col], 
-                $this->_a['cols'][$col]['choices']);
+        $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
         if ($val !== false) {
             return $val;
         }
@@ -1164,7 +1129,7 @@ class Pluf_Model implements JsonSerializable
      * @param string $type
      *            Relation type: 'foreignkey' or 'manytomany'.
      */
-    protected function _setupAutomaticListMethods ($type)
+    protected function _setupAutomaticListMethods($type)
     {
         $current_model = $this->_a['model'];
         if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
@@ -1181,8 +1146,8 @@ class Pluf_Model implements JsonSerializable
                     $mname = 'get_' . strtolower($mname) . '_list';
                     if ('foreignkey' === $type) {
                         $this->_m['list'][$mname] = array(
-                                $related,
-                                $fkey
+                            $related,
+                            $fkey
                         );
                     } else {
                         $this->_m['list'][$mname] = $related;
@@ -1198,7 +1163,7 @@ class Pluf_Model implements JsonSerializable
      *
      * Adds extra fields if multi-tenant is enabled
      */
-    protected function _setupMultitenantFields ()
+    protected function _setupMultitenantFields()
     {
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
             // Add key
@@ -1219,7 +1184,7 @@ class Pluf_Model implements JsonSerializable
      *
      * @return bool True if the user is anonymous.
      */
-    function isAnonymous ()
+    function isAnonymous()
     {
         return ($this->id == '' || 0 === (int) $this->id);
     }
@@ -1233,7 +1198,7 @@ class Pluf_Model implements JsonSerializable
      *
      * @return string
      */
-    public function getClass ()
+    public function getClass()
     {
         return $this->_a['model'];
     }
@@ -1243,7 +1208,7 @@ class Pluf_Model implements JsonSerializable
      *
      * @return integer id
      */
-    public function getId ()
+    public function getId()
     {
         return $this->id;
     }
@@ -1253,18 +1218,16 @@ class Pluf_Model implements JsonSerializable
      *
      * @see JsonSerializable::jsonSerialize()
      */
-    public function jsonSerialize ()
+    public function jsonSerialize()
     {
         $coded = array();
         foreach ($this->_data as $col => $val) {
             /*
              * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
              */
-            if (array_key_exists($col, $this->_a['cols']) && array_key_exists(
-                    'readable', $this->_a['cols'][$col]) &&
-                     ! $this->_a['cols'][$col]['readable'])
+            if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
                 continue;
-                /*
+            /*
              * پارامترهای بی محتوی سریال نمی‌شونن
              */
             if ($val)
@@ -1286,14 +1249,13 @@ class Pluf_Model implements JsonSerializable
  *            Array The models
  * @return bool
  */
-function Pluf_Model_InArray ($model, $array)
+function Pluf_Model_InArray($model, $array)
 {
     if ($model->id == '') {
         return false;
     }
     foreach ($array as $modelin) {
-        if ($modelin->_a['model'] == $model->_a['model'] and
-                 $modelin->id == $model->id) {
+        if ($modelin->_a['model'] == $model->_a['model'] and $modelin->id == $model->id) {
             return true;
         }
     }
@@ -1307,7 +1269,7 @@ function Pluf_Model_InArray ($model, $array)
  *            array Models with duplicates
  * @return array Models with duplicates.
  */
-function Pluf_Model_RemoveDuplicates ($array)
+function Pluf_Model_RemoveDuplicates($array)
 {
     $res = array();
     foreach ($array as $model) {

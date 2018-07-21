@@ -20,29 +20,32 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-
-require_once dirname(__FILE__).'/../Pluf_Form/TestFormModel.php';
-
-
+require_once dirname(__FILE__) . '/MyModel.php';
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufPaginatorTest extends PHPUnit_Framework_TestCase {
-    
+class Pluf_Paginator_PaginatorTest extends TestCase
+{
+
+    /**
+     *
+     * @before
+     */
     protected function setUp()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
+        $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
         $schema->createTables();
-        for ($i=1; $i<11; $i++) {
-            $m = new TestFormModel();
-            $m->title = 'My title '.$i;
-            $m->description = 'My description '.$i;
+        for ($i = 1; $i < 11; $i ++) {
+            $m = new Pluf_Paginator_MyModel();
+            $m->title = 'My title ' . $i;
+            $m->description = 'My description ' . $i;
             $m->create();
         }
     }
@@ -51,21 +54,21 @@ class PlufPaginatorTest extends PHPUnit_Framework_TestCase {
     {
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
+        $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
     }
 
+    /**
+     *
+     * @test
+     */
     public function testSimplePaginate()
     {
-//         $model = new TestFormModel();
-//         $pag = Pluf::factory('Pluf_Paginator', $model);
-//         $pag->action = '/permission/'; 
-//         $pag->items_per_page = 5;
-//         $render = file_get_contents(dirname(__FILE__).'/rendersimplepaginate.html');
-//         $this->assertEquals($render, $pag->render());
-//         $this->assertEquals($pag->page_number, 2);
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $pag->action = '/permission/';
+        $pag->items_per_page = 5;
+        $this->assertTrue(is_array($pag->render_object()));
+        $this->assertTrue(array_key_exists('items', $pag->render_object()));
     }
 }
-
-?>
