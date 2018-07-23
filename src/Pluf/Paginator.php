@@ -171,8 +171,6 @@ class Pluf_Paginator
      */
     public $sort_reverse_order = array();
 
-    protected $active_list_filter = array();
-
     /**
      * Creates new instance of paginator
      *
@@ -478,7 +476,7 @@ class Pluf_Paginator
     }
 
     /*
-     * Load sort option from 
+     * Load sort option from
      */
     private function loadSortOptions($request)
     {
@@ -521,25 +519,36 @@ class Pluf_Paginator
      */
     private function loadFilterOptions($request)
     {
-        // load filters
-        if(! array_key_exists(self::FILTER_KEY_KEY, $request->REQUEST)){
+        // check filter option
+        if (! array_key_exists(self::FILTER_KEY_KEY, $request->REQUEST)) {
             return;
         }
-        
-        $key = $request->REQUEST[self::FILTER_KEY_KEY];
-        $val = $request->REQUEST[self::FILTER_VALUE_KEY];
-        if (in_array($key, $this->list_filters) && isset($val)) {
-            // We add a forced where query
-            $sql = new Pluf_SQL($key . '=%s', $val);
-            if (! is_null($this->forced_where)) {
-                $this->forced_where->SAnd($sql);
-            } else {
-                $this->forced_where = $sql;
-            }
-            $this->active_list_filter = array(
-                $request->REQUEST[self::FILTER_KEY_KEY],
-                $request->REQUEST[self::FILTER_VALUE_KEY]
+
+        $keys = $request->REQUEST[self::FILTER_KEY_KEY];
+        $vals = $request->REQUEST[self::FILTER_VALUE_KEY];
+        // convert to array
+
+        if (! is_array($keys)) {
+            $keys = array(
+                $keys
             );
+            $vals = array(
+                $vals
+            );
+        }
+
+        for ($i = 0; $i < sizeof($keys); $i ++) {
+            $key = $keys[$i];
+            $val = $vals[$i];
+            if (in_array($key, $this->list_filters) && isset($val)) {
+                // We add a forced where query
+                $sql = new Pluf_SQL($key . '=%s', $val);
+                if (! is_null($this->forced_where)) {
+                    $this->forced_where->SAnd($sql);
+                } else {
+                    $this->forced_where = $sql;
+                }
+            }
         }
     }
 }
