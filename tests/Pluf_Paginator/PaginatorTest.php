@@ -373,4 +373,54 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $item2->delete();
     }
     
+    
+    /**
+     * Test same filter keys
+     *
+     * @test
+     */
+    public function testSetFromRequestSameFilter()
+    {
+        $item1 = new Pluf_Paginator_MyModel();
+        $item1->title = 'a';
+        $item1->description = 'description';
+        $item1->create();
+        
+        $item2 = new Pluf_Paginator_MyModel();
+        $item2->title = 'b';
+        $item2->description = 'description';
+        $item2->create();
+        
+        $_REQUEST = array(
+            '_px_fk' => array(
+                'id',
+                'id'
+            ),
+            '_px_fv' => array(
+                $item1->id,
+                $item2->id
+            )
+        );
+        $request = new Pluf_HTTP_Request('/test');
+        
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+        
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+        $this->assertTrue(sizeof($result['items']) === 2);
+        
+        $item1->delete();
+        $item2->delete();
+    }
+    
 }

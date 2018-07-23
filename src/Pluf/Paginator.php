@@ -537,17 +537,37 @@ class Pluf_Paginator
             );
         }
 
+        // categorize filters
+        $categories = array();
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
             $val = $vals[$i];
-            if (in_array($key, $this->list_filters) && isset($val)) {
-                // We add a forced where query
-                $sql = new Pluf_SQL($key . '=%s', $val);
-                if (! is_null($this->forced_where)) {
-                    $this->forced_where->SAnd($sql);
-                } else {
-                    $this->forced_where = $sql;
-                }
+            if (! in_array($key, $this->list_filters) || ! isset($val)) {
+                continue;
+            }
+            if (array_key_exists($key, $categories)) {
+                $categories[$key][] = $val;
+            } else {
+                $categories[$key] = array(
+                    $val
+                );
+            }
+        }
+
+        // filter to query
+        foreach ($categories as $key => $vals) {
+            if (sizeof($vals) > 1) {
+                $sql = new Pluf_SQL($key . ' in (%s)', array(
+                    $vals
+                ));
+            } else {
+                $sql = new Pluf_SQL($key . '=%s', $vals[0]);
+            }
+            // We add a forced where query
+            if (! is_null($this->forced_where)) {
+                $this->forced_where->SAnd($sql);
+            } else {
+                $this->forced_where = $sql;
             }
         }
     }
