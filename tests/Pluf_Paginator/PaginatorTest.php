@@ -21,6 +21,7 @@ use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 require_once dirname(__FILE__) . '/MyModel.php';
+
 /**
  *
  * @backupGlobals disabled
@@ -60,15 +61,299 @@ class Pluf_Paginator_PaginatorTest extends TestCase
     }
 
     /**
+     * Test simple pagination
      *
      * @test
      */
     public function testSimplePaginate()
     {
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
-        $pag->action = '/permission/';
         $pag->items_per_page = 5;
         $this->assertTrue(is_array($pag->render_object()));
         $this->assertTrue(array_key_exists('items', $pag->render_object()));
+    }
+
+    /**
+     * Test single sort order
+     *
+     * @test
+     */
+    public function testSingleSortPaginate()
+    {
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->sort_order = array(
+            'id',
+            'ASC'
+        );
+
+        $this->assertTrue(is_array($pag->render_object()));
+        $this->assertTrue(array_key_exists('items', $pag->render_object()));
+    }
+
+    /**
+     * Test multi sort order
+     *
+     * @test
+     */
+    public function testMultiSortPaginate()
+    {
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->sort_order = array(
+            array(
+                'id',
+                'ASC'
+            ),
+            array(
+                'title',
+                'ASC'
+            )
+        );
+
+        $this->assertTrue(is_array($pag->render_object()));
+        $this->assertTrue(array_key_exists('items', $pag->render_object()));
+    }
+
+    /**
+     * Test multi sort order
+     *
+     * @test
+     */
+    public function testSortOrderFunctionPaginate()
+    {
+        $item1 = new Pluf_Paginator_MyModel();
+        $item1->title = 'a';
+        $item1->description = 'description';
+        $item1->create();
+
+        $item2 = new Pluf_Paginator_MyModel();
+        $item2->title = 'b';
+        $item2->description = 'description';
+        $item2->create();
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+
+        $pag->sort_order = array(
+            array(
+                'id',
+                'ASC'
+            )
+        );
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+        // check order
+        for ($i = 1; $i < sizeof($result['items']); $i ++) {
+            $a = $result['items'][$i];
+            $b = $result['items'][$i - 1];
+            $this->assertTrue($a->id > $b->id);
+        }
+
+        $pag->sort_order = array(
+            array(
+                'id',
+                'DESC'
+            )
+        );
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+        // check order
+        for ($i = 1; $i < sizeof($result['items']); $i ++) {
+            $a = $result['items'][$i];
+            $b = $result['items'][$i - 1];
+            $this->assertFalse($a->id > $b->id);
+        }
+
+        $item1->delete();
+        $item2->delete();
+    }
+
+    /**
+     * Load from request
+     *
+     * @test
+     */
+    public function testSetFromRequestSort()
+    {
+        $_REQUEST = array(
+            '_px_sk' => 'id',
+            '_px_so' => 'd'
+        );
+        $request = new Pluf_HTTP_Request('/test');
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+    }
+
+    /**
+     * Load from request with multi sort
+     *
+     * @test
+     */
+    public function testSetFromRequestMultiSort()
+    {
+        $_REQUEST = array(
+            '_px_sk' => array(
+                'id',
+                'title'
+            ),
+            '_px_so' => array(
+                'd',
+                'a'
+            )
+        );
+        $request = new Pluf_HTTP_Request('/test');
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+    }
+
+    /**
+     * Test filter from request
+     *
+     * @test
+     */
+    public function testSetFromRequestFilter()
+    {
+        $_REQUEST = array(
+            '_px_fk' => 'id',
+            '_px_fv' => '1'
+        );
+        $request = new Pluf_HTTP_Request('/test');
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+    }
+
+    /**
+     * Test multi filter from request
+     *
+     * @test
+     */
+    public function testSetFromRequestMultiFilter()
+    {
+        $_REQUEST = array(
+            '_px_fk' => array(
+                'id',
+                'title'
+            ),
+            '_px_fv' => array(
+                'i',
+                'a'
+            )
+        );
+        $request = new Pluf_HTTP_Request('/test');
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+    }
+
+    /**
+     * Test filter function
+     *
+     * @test
+     */
+    public function testSetFromRequestFilterFunction()
+    {
+        $item1 = new Pluf_Paginator_MyModel();
+        $item1->title = 'a';
+        $item1->description = 'description';
+        $item1->create();
+
+        $_REQUEST = array(
+            '_px_fk' => 'id',
+            '_px_fv' => $item1->id
+        );
+        $request = new Pluf_HTTP_Request('/test');
+
+        $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
+        $fields = array(
+            'id',
+            'title',
+            'description'
+        );
+        $pag->configure($fields, $fields);
+        $pag->list_filters = $fields;
+        $pag->items_per_page = 5;
+        $pag->setFromRequest($request);
+
+        $result = $pag->render_object();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(array_key_exists('items', $result));
+        $this->assertTrue(sizeof($result['items']) === 1);
+
+        $item1->delete();
     }
 }
