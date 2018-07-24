@@ -185,11 +185,6 @@ class Pluf_Views
         }
         if (array_key_exists('sortOrder', $p)) {
             $builder->setSortOrders($p['sortOrder']);
-        } else {
-            $builder->setSortOrders(array(
-                'id',
-                'DESC'
-            ));
         }
         $builder->setRequest($request);
         return $builder->build()->render_object();

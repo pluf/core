@@ -667,8 +667,9 @@ class Pluf_Model implements JsonSerializable
         foreach ($rs as $row) {
             $this->_reset();
             foreach ($this->_a['cols'] as $col => $val) {
-                if (isset($row[$col]))
+                if (isset($row[$col])){
                     $this->_data[$col] = $this->_fromDb($row[$col], $col);
+                }
             }
             // FIXME: The associated properties need to be converted too.
             foreach ($query['props'] as $prop => $key) {
@@ -1228,7 +1229,7 @@ class Pluf_Model implements JsonSerializable
             if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
                 continue;
             /*
-             * پارامترهای بی محتوی سریال نمی‌شونن
+             * If parameter ins null, zero, empty, ... we will not encode
              */
             if ($val)
                 $coded[$col] = $val;

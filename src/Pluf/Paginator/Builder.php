@@ -229,11 +229,6 @@ class Pluf_Paginator_Builder
         }
         if (isset($this->sortOrders)) {
             $paginator->sort_order = $this->sortOrders;
-        } else {
-            $paginator->sort_order = array(
-                'id',
-                'DESC'
-            );
         }
         return $paginator;
     }

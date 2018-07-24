@@ -171,8 +171,6 @@ class Pluf_Paginator
      */
     public $sort_reverse_order = array();
 
-    protected $active_list_filter = array();
-
     /**
      * Creates new instance of paginator
      *
@@ -263,29 +261,9 @@ class Pluf_Paginator
             $this->current_page = max(1, $this->current_page);
         }
 
-        // Sort orders
-        if (isset($request->REQUEST[self::SORT_KEY_KEY]) && in_array($request->REQUEST[self::SORT_KEY_KEY], $this->sort_fields)) {
-            $this->sort_order[0] = $request->REQUEST[self::SORT_KEY_KEY];
-            $this->sort_order[1] = 'ASC';
-            if (isset($request->REQUEST[self::SORT_KEY_KEY]) && ($request->REQUEST[self::SORT_ORDER_KEY] == 'd')) {
-                $this->sort_order[1] = 'DESC';
-            }
-        }
-
-        // load filters
-        if (isset($request->REQUEST[self::FILTER_KEY_KEY]) && in_array($request->REQUEST[self::FILTER_KEY_KEY], $this->list_filters) && isset($request->REQUEST[self::FILTER_VALUE_KEY])) {
-            // We add a forced where query
-            $sql = new Pluf_SQL($request->REQUEST['_px_fk'] . '=%s', $request->REQUEST['_px_fv']);
-            if (! is_null($this->forced_where)) {
-                $this->forced_where->SAnd($sql);
-            } else {
-                $this->forced_where = $sql;
-            }
-            $this->active_list_filter = array(
-                $request->REQUEST[self::FILTER_KEY_KEY],
-                $request->REQUEST[self::FILTER_VALUE_KEY]
-            );
-        }
+        // Load options
+        $this->loadSortOptions($request);
+        $this->loadFilterOptions($request);
     }
 
     /**
@@ -405,18 +383,65 @@ class Pluf_Paginator
     /**
      * Generates an order list and return
      *
+     * All sort options will be loaded form $this->sort_order.
+     *
+     * You can set soert order as follow
+     *
+     * ```
+     * $pag->sort_order = array(
+     * 'param',
+     * 'DESC'
+     * );
+     * ```
+     * The result value is
+     *
+     * param DESC
+     *
+     * For moltiple options:
+     *
+     *
+     * ```
+     * $pag->sort_order = array(
+     * array(
+     * 'param1',
+     * 'DESC'
+     * ),
+     * array(
+     * 'param2',
+     * 'ASC'
+     * )
+     * );
+     * ```
+     *
+     * The result value is
+     *
+     * param1 DESC, param2 ASC
+     *
+     * @see #sort_order
      * @return NULL|string
      */
     private function getOrders()
     {
-        if (count($this->sort_order) != 2) {
+        // Convert a single sort option into the multiple
+        if (sizeof($this->sort_order) == 0) {
             return null;
         }
-        $s = $this->sort_order[1];
-        if (in_array($this->sort_order[0], $this->sort_reverse_order)) {
-            $s = ($s == 'ASC') ? 'DESC' : 'ASC';
+        if (! is_array($this->sort_order[0])) {
+            $this->sort_order = array(
+                $this->sort_order
+            );
         }
-        return $this->sort_order[0] . ' ' . $s;
+
+        $sort = array();
+        for ($i = 0; $i < sizeof($this->sort_order); $i ++) {
+            $order = $this->sort_order[$i];
+            $s = $order[1];
+            if (in_array($order[0], $this->sort_reverse_order)) {
+                $s = ($s == 'ASC') ? 'DESC' : 'ASC';
+            }
+            $sort[] = $order[0] . ' ' . $s;
+        }
+        return $sort;
     }
 
     /**
@@ -448,6 +473,102 @@ class Pluf_Paginator
             $out[] = $idata;
         }
         return $out;
+    }
+
+    /*
+     * Load sort option from
+     */
+    private function loadSortOptions($request)
+    {
+        if (! isset($request->REQUEST[self::SORT_KEY_KEY])) {
+            $this->sort_order = array();
+            return;
+        }
+        // Sort orders
+        $keys = $request->REQUEST[self::SORT_KEY_KEY];
+        $vals = $request->REQUEST[self::SORT_ORDER_KEY];
+
+        if (! is_array($keys)) {
+            $keys = array(
+                $keys
+            );
+            $vals = array(
+                $vals
+            );
+        }
+
+        $this->sort_order = array();
+        for ($i = 0; $i < sizeof($keys); $i ++) {
+            $key = $keys[$i];
+            if (in_array($key, $this->sort_fields)) {
+                $order = 'ASC';
+                if ($vals[$i] === 'd') {
+                    $order = 'DESC';
+                }
+                $this->sort_order[] = array(
+                    $key,
+                    $order
+                );
+            }
+        }
+    }
+
+    /*
+     * Load filters
+     */
+    private function loadFilterOptions($request)
+    {
+        // check filter option
+        if (! array_key_exists(self::FILTER_KEY_KEY, $request->REQUEST)) {
+            return;
+        }
+
+        $keys = $request->REQUEST[self::FILTER_KEY_KEY];
+        $vals = $request->REQUEST[self::FILTER_VALUE_KEY];
+        // convert to array
+
+        if (! is_array($keys)) {
+            $keys = array(
+                $keys
+            );
+            $vals = array(
+                $vals
+            );
+        }
+
+        // categorize filters
+        $categories = array();
+        for ($i = 0; $i < sizeof($keys); $i ++) {
+            $key = $keys[$i];
+            $val = $vals[$i];
+            if (! in_array($key, $this->list_filters) || ! isset($val)) {
+                continue;
+            }
+            if (array_key_exists($key, $categories)) {
+                $categories[$key][] = $val;
+            } else {
+                $categories[$key] = array(
+                    $val
+                );
+            }
+        }
+
+        // filter to query
+        foreach ($categories as $key => $vals) {
+            if (sizeof($vals) > 1) {
+                $sql = new Pluf_SQL($key . ' in (%s)', array(
+                    $vals
+                ));
+            } else {
+                $sql = new Pluf_SQL($key . '=%s', $vals[0]);
+            }
+            // We add a forced where query
+            if (! is_null($this->forced_where)) {
+                $this->forced_where->SAnd($sql);
+            } else {
+                $this->forced_where = $sql;
+            }
+        }
     }
 }
 
