@@ -423,23 +423,23 @@ class Pluf_Paginator
     private function getOrders()
     {
         // Convert a single sort option into the multiple
-        if (sizeof($this->sort_order) > 0 && (! is_array($this->sort_order[0]))) {
+        if (sizeof($this->sort_order) == 0) {
+            return null;
+        }
+        if (! is_array($this->sort_order[0])) {
             $this->sort_order = array(
                 $this->sort_order
             );
         }
 
-        $sort = '';
+        $sort = array();
         for ($i = 0; $i < sizeof($this->sort_order); $i ++) {
             $order = $this->sort_order[$i];
             $s = $order[1];
             if (in_array($order[0], $this->sort_reverse_order)) {
                 $s = ($s == 'ASC') ? 'DESC' : 'ASC';
             }
-            $sort = $order[0] . ' ' . $s;
-            if ($i < sizeof($this->sort_order) - 1) {
-                $sort = $sort . ', ';
-            }
+            $sort[] = $order[0] . ' ' . $s;
         }
         return $sort;
     }
@@ -500,10 +500,9 @@ class Pluf_Paginator
         $this->sort_order = array();
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
-            $order = $vals[$i];
             if (in_array($key, $this->sort_fields)) {
                 $order = 'ASC';
-                if ($order == 'd') {
+                if ($vals[$i] === 'd') {
                     $order = 'DESC';
                 }
                 $this->sort_order[] = array(

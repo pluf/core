@@ -667,8 +667,9 @@ class Pluf_Model implements JsonSerializable
         foreach ($rs as $row) {
             $this->_reset();
             foreach ($this->_a['cols'] as $col => $val) {
-                if (isset($row[$col]))
+                if (isset($row[$col])){
                     $this->_data[$col] = $this->_fromDb($row[$col], $col);
+                }
             }
             // FIXME: The associated properties need to be converted too.
             foreach ($query['props'] as $prop => $key) {
