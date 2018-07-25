@@ -183,8 +183,8 @@ class Pluf_Views
         if (array_key_exists('searchFields', $p)) {
             $builder->setSearchFields($p['searchFields']);
         }
-        if (array_key_exists('sortOrder', $p)) {
-            $builder->setSortOrders($p['sortOrder']);
+        if (array_key_exists('sortFields', $p)) {
+            $builder->setSortFields($p['sortFields']);
         }
         $builder->setRequest($request);
         return $builder->build()->render_object();
