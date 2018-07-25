@@ -311,7 +311,7 @@ class Pluf_Dispatcher
     {
         // return if is not internal error
         if ($exception instanceof Pluf_Exception) {
-            if($exception->status !== 500) {
+            if($exception->getStatus() !== 500) {
                 return;
             }
         }
