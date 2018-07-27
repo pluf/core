@@ -32,7 +32,7 @@ class PlufFormTest extends TestCase
     protected function setUp ()
     {
         $this->markTestSkipped('Need to rewrite the form handling.');
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
         $m1 = new TestFormModel();

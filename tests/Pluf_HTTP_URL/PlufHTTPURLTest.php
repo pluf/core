@@ -29,7 +29,7 @@ class PlufHTTPURLTest extends TestCase {
     
     protected function setUp()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
         Pluf::loadFunction('Pluf_HTTP_URL_buildReverseUrl');
         Pluf::loadFunction('Pluf_HTTP_URL_reverse');
         $d = new Pluf_Dispatcher();

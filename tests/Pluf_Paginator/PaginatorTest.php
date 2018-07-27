@@ -36,7 +36,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
      */
     protected function setUp()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
         $m1 = new Pluf_Paginator_MyModel();

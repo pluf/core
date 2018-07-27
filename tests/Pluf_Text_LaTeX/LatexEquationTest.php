@@ -31,7 +31,7 @@ class LatexEquationTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
         @mkdir($this->output);
     }
 

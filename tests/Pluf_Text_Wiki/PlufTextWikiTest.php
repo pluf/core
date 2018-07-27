@@ -32,7 +32,7 @@ class PlufTextWikiTest extends TestCase
      */
     public static function initTest ()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
     }
 
     /**
