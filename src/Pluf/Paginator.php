@@ -364,7 +364,8 @@ class Pluf_Paginator
                 $sql = new Pluf_SQL();
                 foreach ($this->search_fields as $field) {
                     $sqlor = new Pluf_SQL();
-                    $sqlor->Q($field . ' LIKE %s', '%' . $key . '%');
+//                     $sqlor->Q($field . ' LIKE %s', '%' . $key . '%');
+                    $sqlor->Q('CAST(`'.$field . '` AS CHAR) LIKE %s', '%' . $key . '%');
                     $sql->SOr($sqlor);
                 }
                 $lastsql->SAnd($sql);
