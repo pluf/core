@@ -112,8 +112,8 @@ function Pluf_DB_defaultTypecast ()
                     'Pluf_DB_IdentityToDb'
             ),
             'Pluf_DB_Field_Float' => array(
-                    'Pluf_DB_IdentityFromDb',
-                    'Pluf_DB_IdentityToDb'
+                    'Pluf_DB_FloatFromDb',
+                    'Pluf_DB_FloatToDb'
             ),
             'Pluf_DB_Field_Foreignkey' => array(
                     'Pluf_DB_IntegerFromDb',
@@ -240,6 +240,16 @@ function Pluf_DB_IntegerFromDb ($val)
 function Pluf_DB_IntegerToDb ($val, $db)
 {
     return (null === $val) ? 'NULL' : (string) (int) $val;
+}
+
+function Pluf_DB_FloatFromDb ($val)
+{
+    return (null === $val) ? null : (float) $val;
+}
+
+function Pluf_DB_FloatToDb ($val, $db)
+{
+    return (null === $val) ? 'NULL' : (string) (float) $val;
 }
 
 function Pluf_DB_PasswordToDb ($val, $db)
