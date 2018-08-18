@@ -175,3 +175,31 @@ function Pluf_Shortcuts_folderSize ($dir)
     }
     return $count_size;
 }
+
+/**
+ * Returns association table name (without prefix) for given models.
+ *
+ * @param string $modelName1 name of model (of type Pluf_Model)
+ * @param string $modelName2 name of model (of type Pluf_Model)
+ * @return string name of association table for given modeles.
+ */
+function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
+    $hay = array(
+        strtolower($modelName1),
+        strtolower($modelName2)
+    );
+    sort($hay);
+    $table = $hay[0] . '_' . $hay[1] . '_assoc';
+    return $table;
+}
+
+/**
+ * Returns column name for given model as foreign key in an association table.
+ *
+ * @param string $modelName name of model (of type Pluf_Model)
+ * @return string column name for given model as foreign key in an association table.
+ */
+function Pluf_Shortcuts_GetForeignKeyName($modelName){
+    return strtolower($modelName) . '_id';
+}
+
