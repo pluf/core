@@ -27,6 +27,7 @@ class Pluf_HTTP_Request
 {
     public $POST = array();
     public $GET = array();
+    public $PUT = array();
     public $REQUEST = array();
     public $COOKIE = array();
     public $FILES = array();
@@ -54,7 +55,7 @@ class Pluf_HTTP_Request
     /**
      * Current user
      * 
-     * @var User
+     * @var User_Account
      */
     public $user = null;
     
@@ -85,6 +86,17 @@ class Pluf_HTTP_Request
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
         $this->https = isset($_SERVER['HTTPS']);
         $this->agent = (isset($_SERVER['HTTP_USER_AGENT'])) ?  $_SERVER['HTTP_USER_AGENT'] : '';
+        
+        /*
+         * Load PUT parameters and merge with POST
+         */
+        if($this->method == 'PUT') {
+            $put_vars = array();
+            parse_str(file_get_contents("php://input"),$put_vars);
+            $this->PUT = $put_vars;
+            $this->POST = array_merge($this->POST, $put_vars);
+            $this->REQUEST = array_merge($this->REQUEST, $put_vars);
+        }
         /*
          * Load request header
          */
