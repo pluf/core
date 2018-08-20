@@ -136,15 +136,17 @@ class Pluf_Dispatcher
      */
     public static function match($req, $firstpass = true)
     {
-        // پیدا کردن و اجرای نمایش مناسب
+        // Search for appropriate controller
         $views = $GLOBALS['_PX_views'];
         $to_match = $req->query;
         $n = count($views);
         $i = 0;
+        // بررسی کنترلرها و پیدا کردن کنترلر مناسب بر اساس انتطباق با مسیر
         while ($i < $n) {
             $ctl = $views[$i];
             // maso, 1394: بررسی متد لایه کنترل
             if (isset($ctl['http-method'])) {
+                // hadi, 1397: Check if http method is supported
                 $methods = $ctl['http-method'];
                 if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array($methods) && ! in_array($req->method, $methods))) {
                     $i ++;
