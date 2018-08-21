@@ -26,6 +26,9 @@
             
             <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>
+        <testsuite name="GraphQl">
+            <directory>tests/Pluf_Graphql_Compiler/</directory>
+		</testsuite>
     </testsuites>
     
     <filter>

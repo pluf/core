@@ -64,7 +64,9 @@ class Pluf_Paginator
     const FILTER_VALUE_KEY = '_px_fv';
 
     /**
-     * این مدل داده‌ای صفحه بندی خواهد شد.
+     * Data model of the items
+     * 
+     * @var Pluf_Model
      */
     public $model;
 
