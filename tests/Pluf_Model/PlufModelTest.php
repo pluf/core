@@ -34,7 +34,7 @@ class PlufModelTest extends TestCase
      */
     public static function createDataBase()
     {
-        $conf = include __DIR__ . '/../conf/mysql.conf.php';
+        $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
             'Test'
         );
@@ -78,7 +78,7 @@ class PlufModelTest extends TestCase
         
         $model2 = new Test_ModelRecurse();
         $model2->title = 'child';
-        $model2->parentid = $model;
+        $model2->parent_id = $model;
         $this->assertEquals(true, $model2->create());
         
         $a = $model->get_children_list();

@@ -19,7 +19,7 @@
 $m = array();
 $m['Test_ModelRecurse'] = array(
     'relate_to' => array(
-        'Test_Model'
+        'Test_ModelRecurse',
     )
 );
 $m['Test_RelatedToTestModel'] = array(
