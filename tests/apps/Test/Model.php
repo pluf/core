@@ -55,7 +55,7 @@ class Test_Model extends Pluf_Model
                 'type' => 'normal'
             )
         );
-        
+
         $this->_a['views'] = array(
             'simple' => array(
                 'select' => 'testmodel_id, title, description'

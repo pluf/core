@@ -31,6 +31,8 @@ class Pluf_Graphql_Compiler
 
     private $itemType;
 
+    private $compiledTypes;
+
     /**
      * Creates new instance
      *
@@ -52,12 +54,15 @@ class Pluf_Graphql_Compiler
      */
     public function write($className, $outputFile)
     {
+        $this->compiledTypes = array();
         $renderCode = '';
         if ($this->rootType === 'Pluf_Paginator') {
-            $renderCode .= '$itemType =' . $this->createModelType($this->rootType);
+            $renderCode .= $this->createModelType($this->itemType);
+            $renderCode .= '$itemType =' . $this->getNameOf($this->itemType) . ';';
             $renderCode .= '$rootType =' . $this->createPaginatorType();
         } else {
-            $renderCode .= '$rootType =' . $this->createModelType($this->rootType);
+            $renderCode .= $this->createModelType($this->rootType);
+            $renderCode .= '$rootType =' . $this->getNameOf($this->rootType) . ';';
         }
         $this->_write($className, $outputFile, $renderCode);
     }
@@ -81,14 +86,16 @@ use GraphQL\Type\Schema;
  */
 class ' . $className;
         $schema_content .= ' { 
-    public static function render($rootValue, $query) {
+    public function render($rootValue, $query) {
         // render code
         ' . $renderCode . '
         try {
-            $schema = new Schema($rootType);
-            $result = GraphQL::executeQuery($rootType, $query, $rootValue);
+            $schema = new Schema([
+                \'query\' => new ObjectType($rootType)
+            ]);
+            $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
-        } catch( Exception $e) {
+        } catch (Exception $e) {
             throw new Pluf_Exception_BadRequest($e->getMessage());
         }
     }
@@ -116,21 +123,142 @@ class ' . $className;
     private static function createPaginatorType()
     {
         return '[
-            \'counts\' =>  Type::int(),
-            \'current_page\' => Type::int(),
-            \'items_per_page\' => Type::int(),
-            \'page_number\' => Type::int(),
-            \'items\' => Type::listOf($itemType),
+            \'counts\' => [
+                \'type\' => Type::int(),
+                \'resolve\' => function ($root) {
+                    return $root->counts;
+                }
+            ],
+            \'current_page\' => [
+                \'type\' => Type::int(),
+                \'resolve\' => function ($root) {
+                    return $root->current_page;
+                }
+            ],
+            \'items_per_page\' => [
+                \'type\' => Type::int(),
+                \'resolve\' => function ($root) {
+                    return $root->items_per_page;
+                }
+            ],
+            \'page_number\' => [
+                \'type\' => Type::int(),
+                \'resolve\' => function ($root) {
+                    return $root->page_number;
+                }
+            ],
+            \'items\' => [
+                \'type\' => Type::listOf($itemType),
+                \'resolve\' => function ($root) {
+                    return $root->items;
+                }
+            ],
         ];';
     }
 
-    private static function createModelType($type)
+    /**
+     *
+     * @param string $type
+     *            model name
+     * @return string
+     */
+    private function createModelType($type)
     {
-        $result = '[
-            \'id\' =>  Type::id(),
+        if (array_key_exists($type, $this->compiledTypes)) {
+            // type is compiled before
+            return '';
+        }
+        $result = $this->getNameOf($type);
+
+        $model = new $type();
+        $name = $model->_a['model'];
+        if (array_key_exists('graphqlName', $model->_a)) {
+            $name = $model->_a['graphqlName'];
+        }
+        $result .= ' = [
+            \'name\' => \'' . $name . '\',
+            \'fields\' => ' . $this->compileFields($model) . ',
         ];';
 
+        // Compile other types
         return $result;
+    }
+
+    private function getNameOf($type)
+    {
+        return '$' . $type;
+    }
+
+    private function compileFields($model)
+    {
+        $cols = $model->_a['cols'];
+        $fields = '[
+                    // List of basic fields';
+        foreach ($cols as $key => $field) {
+            // Check if it is graphqlField
+            if (array_key_exists('graphqlField', $field)) {
+                if (! $field['graphqlField']) {
+                    continue;
+                }
+            }
+
+            // set field name
+            $name = $key;
+            if (array_key_exists('graphqlName', $field)) {
+                $name = $field['graphqlName'];
+            }
+
+            $fields .= '
+                    //' . $key . ': ' .  str_replace(array("\r\n", "\n", "\r"), "", print_r($field, true)) . '
+                    \'' . $name . '\' => [
+                        ' . $this->compileField($key, $field) . '
+                    ],';
+        }
+        $fields .= ']';
+        return $fields;
+    }
+
+    private function compileField($key, $field)
+    {
+        $res = '\'type\' => ';
+        // set type
+        switch ($field['type']) {
+            case 'Pluf_DB_Field_Sequence':
+                $res .= 'Type::id(),';
+                break;
+            case 'Pluf_DB_Field_Date':
+            case 'Pluf_DB_Field_Datetime':
+            case 'Pluf_DB_Field_Email':
+            case 'Pluf_DB_Field_File':
+            case 'Pluf_DB_Field_Serialized':
+            case 'Pluf_DB_Field_Slug':
+            case 'Pluf_DB_Field_Text':
+            case 'Pluf_DB_Field_Varchar':
+                $res .= 'Type::string(),';
+                break;
+            case 'Pluf_DB_Field_Integer':
+                $res .= 'Type::int(),';
+                break;
+            case 'Pluf_DB_Field_Float':
+                $res .= 'Type::int(),';
+                break;
+            case 'Pluf_DB_Field_Boolean':
+                $res .= 'Type::boolean(),';
+                break;
+
+            case 'Pluf_DB_Field_Foreignkey':
+            case 'Pluf_DB_Field_Manytomany':
+            default:
+                // TODO: Unsupported type
+                return '';
+        }
+
+        // for primetives
+        $res .= '
+                        \'resolve\' => function ($root) {
+                            return $root->' . $key . ';
+                        },';
+        return $res;
     }
 }
 

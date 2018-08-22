@@ -30,15 +30,15 @@
 		<nature>org.eclipse.php.core.PHPNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1507309234957</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-vendor</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
+<!-- 	<filteredResources> -->
+<!-- 		<filter> -->
+<!-- 			<id>1507309234957</id> -->
+<!-- 			<name></name> -->
+<!-- 			<type>10</type> -->
+<!-- 			<matcher> -->
+<!-- 				<id>org.eclipse.ui.ide.multiFilter</id> -->
+<!-- 				<arguments>1.0-name-matches-false-false-vendor</arguments> -->
+<!-- 			</matcher> -->
+<!-- 		</filter> -->
+<!-- 	</filteredResources> -->
 </projectDescription>
