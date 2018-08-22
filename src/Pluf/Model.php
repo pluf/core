@@ -163,6 +163,10 @@ class Pluf_Model implements JsonSerializable
                 );
                 $this->_cache['fk'][$col] = $type;
                 $this->_fk[$col] = $type;
+
+                if (array_key_exists('name', $val)) {
+                    $this->_m['get']['get_' . $val['name']] = $this->_m['get']['get_' . $col_lower];
+                }
             }
 
             $type = 'manytomany';
@@ -667,7 +671,7 @@ class Pluf_Model implements JsonSerializable
         foreach ($rs as $row) {
             $this->_reset();
             foreach ($this->_a['cols'] as $col => $val) {
-                if (isset($row[$col])){
+                if (isset($row[$col])) {
                     $this->_data[$col] = $this->_fromDb($row[$col], $col);
                 }
             }

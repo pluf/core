@@ -53,11 +53,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
             // model item
             'Test_Model' => null,
             'Test_ModelRecurse' => null,
-            'Test_ModelCount' => null,
-            'Test_RelatedToTestModel' => null,
-            'Test_RelatedToTestModel2' => null,
-            'Test_ManyToManyOne' => null,
-            'Test_ManyToManyTwo' => null
+            'Test_ModelCount' => null
         ];
         foreach ($types as $rootType => $itemType) {
             $class_name = 'Pluf_GraphQl_TestRender_' . rand();

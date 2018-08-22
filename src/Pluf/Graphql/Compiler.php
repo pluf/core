@@ -87,11 +87,13 @@ use GraphQL\Type\Schema;
 class ' . $className;
         $schema_content .= ' { 
     public function render($rootValue, $query) {
+        // render object types variables
+        $' . implode("= null, $", $this->compiledTypes) . '= null;
         // render code
         ' . $renderCode . '
         try {
             $schema = new Schema([
-                \'query\' => new ObjectType($rootType)
+                \'query\' => $rootType
             ]);
             $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
@@ -122,38 +124,43 @@ class ' . $className;
 
     private static function createPaginatorType()
     {
-        return '[
-            \'counts\' => [
-                \'type\' => Type::int(),
-                \'resolve\' => function ($root) {
-                    return $root->counts;
-                }
-            ],
-            \'current_page\' => [
-                \'type\' => Type::int(),
-                \'resolve\' => function ($root) {
-                    return $root->current_page;
-                }
-            ],
-            \'items_per_page\' => [
-                \'type\' => Type::int(),
-                \'resolve\' => function ($root) {
-                    return $root->items_per_page;
-                }
-            ],
-            \'page_number\' => [
-                \'type\' => Type::int(),
-                \'resolve\' => function ($root) {
-                    return $root->page_number;
-                }
-            ],
-            \'items\' => [
-                \'type\' => Type::listOf($itemType),
-                \'resolve\' => function ($root) {
-                    return $root->items;
-                }
-            ],
-        ];';
+        return 'new ObjectType([
+            \'name\' => \'Pluf_paginator\',
+            \'fields\' => function () use (&$itemType){
+                return [
+                    \'counts\' => [
+                        \'type\' => Type::int(),
+                        \'resolve\' => function ($root) {
+                            return $root->counts;
+                        }
+                    ],
+                    \'current_page\' => [
+                        \'type\' => Type::int(),
+                        \'resolve\' => function ($root) {
+                            return $root->current_page;
+                        }
+                    ],
+                    \'items_per_page\' => [
+                        \'type\' => Type::int(),
+                        \'resolve\' => function ($root) {
+                            return $root->items_per_page;
+                        }
+                    ],
+                    \'page_number\' => [
+                        \'type\' => Type::int(),
+                        \'resolve\' => function ($root) {
+                            return $root->page_number;
+                        }
+                    ],
+                    \'items\' => [
+                        \'type\' => Type::listOf($itemType),
+                        \'resolve\' => function ($root) {
+                            return $root->items;
+                        }
+                    ],
+                ];
+            }
+        ]);';
     }
 
     /**
@@ -164,24 +171,42 @@ class ' . $className;
      */
     private function createModelType($type)
     {
-        if (array_key_exists($type, $this->compiledTypes)) {
+        if (in_array($type, $this->compiledTypes)) {
             // type is compiled before
             return '';
         }
-        $result = $this->getNameOf($type);
+        array_push($this->compiledTypes, $type);
 
         $model = new $type();
         $name = $model->_a['model'];
         if (array_key_exists('graphqlName', $model->_a)) {
             $name = $model->_a['graphqlName'];
         }
-        $result .= ' = [
-            \'name\' => \'' . $name . '\',
-            \'fields\' => ' . $this->compileFields($model) . ',
-        ];';
 
-        // Compile other types
-        return $result;
+        $result = '';
+
+        $cols = $model->_a['cols'];
+        $preModels = [];
+        foreach ($cols as $key => $field) {
+            $fieldType = $field['type'];
+            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+                $result .= $this->createModelType($field['model']);
+                array_push($preModels, '&' . $this->getNameOf($field['model']));
+            }
+        }
+
+        $requiredModel = '';
+        if (sizeof($preModels) > 0) {
+            $requiredModel = 'use (' . implode(', ', $preModels) . ')';
+        }
+
+        return $result . ' //
+        ' . $this->getNameOf($type) . ' = new ObjectType([
+            \'name\' => \'' . $name . '\',
+            \'fields\' => function () ' . $requiredModel . '{
+                return ' . $this->compileFields($model) . ';
+            }
+        ]);';
     }
 
     private function getNameOf($type)
@@ -209,7 +234,11 @@ class ' . $className;
             }
 
             $fields .= '
-                    //' . $key . ': ' .  str_replace(array("\r\n", "\n", "\r"), "", print_r($field, true)) . '
+                    //' . $key . ': ' . str_replace(array(
+                "\r\n",
+                "\n",
+                "\r"
+            ), "", print_r($field, true)) . '
                     \'' . $name . '\' => [
                         ' . $this->compileField($key, $field) . '
                     ],';
@@ -220,11 +249,10 @@ class ' . $className;
 
     private function compileField($key, $field)
     {
-        $res = '\'type\' => ';
         // set type
         switch ($field['type']) {
             case 'Pluf_DB_Field_Sequence':
-                $res .= 'Type::id(),';
+                $res = 'Type::id()';
                 break;
             case 'Pluf_DB_Field_Date':
             case 'Pluf_DB_Field_Datetime':
@@ -234,32 +262,59 @@ class ' . $className;
             case 'Pluf_DB_Field_Slug':
             case 'Pluf_DB_Field_Text':
             case 'Pluf_DB_Field_Varchar':
-                $res .= 'Type::string(),';
+                $res = 'Type::string()';
                 break;
             case 'Pluf_DB_Field_Integer':
-                $res .= 'Type::int(),';
+                $res = 'Type::int()';
                 break;
             case 'Pluf_DB_Field_Float':
-                $res .= 'Type::int(),';
+                $res = 'Type::float()';
                 break;
             case 'Pluf_DB_Field_Boolean':
-                $res .= 'Type::boolean(),';
+                $res = 'Type::boolean()';
                 break;
 
             case 'Pluf_DB_Field_Foreignkey':
+                return $this->compileFieldForeignkey($key, $field);
             case 'Pluf_DB_Field_Manytomany':
+                return $this->compileFieldManytomany($key, $field);
             default:
                 // TODO: Unsupported type
                 return '';
         }
 
         // for primetives
-        $res .= '
+        return '\'type\' => ' . $res . ',
                         \'resolve\' => function ($root) {
                             return $root->' . $key . ';
                         },';
+    }
+
+    private function compileFieldForeignkey($key, $field)
+    {
+        $res = '\'type\' => Type::int(),
+                            \'resolve\' => function ($root) {
+                                return $root->' . $key . ';
+                            },';
+        if (array_key_exists('graphqlName', $field)) {
+            $name = $field['graphqlName'];
+            $type = $this->getNameOf($field['model']);
+
+            $functionNmae = $key;
+            if (array_key_exists('name', $field)) {
+                $functionName = $field['name'];
+            }
+            $res .= '
+                            \'type\' => ' . $type . ',
+                            \'resolve\' => function ($root) {
+                                return $root->get_' . $functionName . '();
+                            },';
+        }
         return $res;
     }
+
+    private function compileFieldManytomany()
+    {}
 }
 
 
