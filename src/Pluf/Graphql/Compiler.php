@@ -288,7 +288,7 @@ class ' . $className . ' {
                     $res .= '
                     //Foreinkey list-' . $this->fieldComment($fkey, []) . '
                     \'' . $name . '\' => [
-                            \'type\' => ' . $this->getNameOf($related) . ',
+                            \'type\' => Type::listOf(' . $this->getNameOf($related) . '),
                             \'resolve\' => function ($root) {
                                 return $root->get_' . $name . '_list();
                             },

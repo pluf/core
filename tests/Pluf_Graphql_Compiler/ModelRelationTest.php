@@ -63,7 +63,7 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
      *
      * @test
      */
-    public function testRenderAndRun()
+    public function testForeignkeyRenderAndRun()
     {
         // create data
         $model = new Test_ModelRecurse();
@@ -72,9 +72,14 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $model->create();
 
         $model2 = new Test_ModelRecurse();
-        $model2->title = 'child';
+        $model2->title = 'child 1';
         $model2->parent_id = $model;
         $this->assertEquals(true, $model2->create());
+
+        $model3 = new Test_ModelRecurse();
+        $model3->title = 'child 2';
+        $model3->parent_id = $model;
+        $this->assertEquals(true, $model3->create());
 
         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
         $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
@@ -98,6 +103,20 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
 
         $parnet = $result['parent'];
         $this->assertEquals($parnet['id'], $model->id);
+
+        
+        $rootValue = new Test_ModelRecurse($model->id);
+        $result = $compiler->render($rootValue, '{id, title, children{id, title, parent_id, parent{id}}}');
+        $this->assertFalse(array_key_exists('errors', $result));
+        $result = $result['data'];
+        $this->assertTrue(array_key_exists('children', $result));
+        $children = $result['children'];
+        $this->assertEquals(sizeof($children), 2);
+        foreach ($children as $child){
+            $this->assertTrue(array_key_exists('parent_id', $child));
+            $this->assertTrue(array_key_exists('parent', $child));
+        }
+        
     }
 }
 

@@ -250,6 +250,7 @@ class Pluf_Model implements JsonSerializable
             $field = new $val['type']();
             if ($field->type == 'manytomany') {
                 $this->_data[$col] = array();
+                // XXX: maso, 2018: do not load many to many relation if is not required
                 $method = 'get_' . strtolower($col) . '_list';
                 foreach ($this->$method() as $item) {
                     $this->_data[$col][] = $item->id;
