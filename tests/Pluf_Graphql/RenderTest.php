@@ -27,7 +27,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class Pluf_Graphql_Compiler_PaginatorTest extends TestCase
+class Pluf_Graphql_RenderTest extends TestCase
 {
 
     /**
@@ -63,38 +63,45 @@ class Pluf_Graphql_Compiler_PaginatorTest extends TestCase
      *
      * @test
      */
-    public function testRenderPaginatorAndLoad()
+    public function testRenderAndRun()
     {
-        $types = [
-            // Paginated list
-            'Pluf_Paginator' => 'Test_Model',
-            'Pluf_Paginator' => 'Test_ModelRecurse',
-            'Pluf_Paginator' => 'Test_ModelCount',
-            'Pluf_Paginator' => 'Test_RelatedToTestModel',
-            'Pluf_Paginator' => 'Test_RelatedToTestModel2',
-            'Pluf_Paginator' => 'Test_ManyToManyOne',
-            'Pluf_Paginator' => 'Test_ManyToManyTwo'
-        ];
-        foreach ($types as $rootType => $itemType) {
-            $class_name = 'Pluf_GraphQl_TestRender_' . rand();
-            $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
-            if (file_exists($filename)) {
-                unlink($filename);
-            }
-            $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
-            $compiler->write($class_name, $filename);
-            $this->assertTrue(file_exists($filename));
+        $rootValue = new Test_Model();
+        $rootValue->id = 1;
+        $rootValue->title = 'title';
+        $rootValue->description = 'description';
 
-            include $filename;
-            class_exists($class_name);
+        $gl = new Pluf_Graphql();
+        $result = $gl->render($rootValue, '{id, title, description}');
+        $this->assertTrue(array_key_exists('id', $result));
+        $this->assertTrue(array_key_exists('title', $result));
+        $this->assertTrue(array_key_exists('description', $result));
+    }
 
-            $builder = new Pluf_Paginator_Builder(new Test_Model());
-            $rootValue = $builder->build();
+    /**
+     *
+     * @test
+     */
+    public function testRenderAndRunNonDebug()
+    {
+        $rootValue = new Test_Model();
+        $rootValue->id = 1;
+        $rootValue->title = 'title';
+        $rootValue->description = 'description';
 
-            $compiler = new $class_name();
-            $result = $compiler->render($rootValue, '{items{id}}');
-            $this->assertFalse(array_key_exists('errors', $result));
-            $this->assertTrue(array_key_exists('data', $result));
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['installed_apps'] = array(
+            'Pluf',
+            'Test'
+        );
+        $conf['debug'] = false;
+        Pluf::start($conf);
+
+        for ($i = 0; $i < 2; $i ++) {
+            $gl = new Pluf_Graphql();
+            $result = $gl->render($rootValue, '{id, title, description}');
+            $this->assertTrue(array_key_exists('id', $result));
+            $this->assertTrue(array_key_exists('title', $result));
+            $this->assertTrue(array_key_exists('description', $result));
         }
     }
 }

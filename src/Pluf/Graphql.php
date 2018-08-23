@@ -27,9 +27,7 @@
 class Pluf_Graphql
 {
 
-    public $compiled_schema = null;
-
-    public $class = null;
+    private $cache = null;
 
     /**
      * Creates new instance of the engine
@@ -64,64 +62,50 @@ class Pluf_Graphql
      *
      * @param $c Object
      *            Context.
+     * @param $rootValue string
+     *            GraphQl query for example {id, items{id}}
+     * @return
      */
-    function render($c)
+    function render($c, $query)
     {
-        $schema = 'Pluf_Schema';
-
         // 1. root type
         $rootType = get_class($c);
-        $schema = $schema . '_' . $rootType;
+        $itemType = null;
+        $schema = 'Pluf_GraphQl_Schema_' . $rootType;
         if ($c instanceof Pluf_Paginator) {
             $itemType = get_class($c->model);
             $schema = $schema . '_' . $itemType;
         }
 
-        // load schema
-        if (! class_exists($schema, false)) {
-            $compiled_schema = $this->cache . '/' . $schema . '.phps';
-            if (! file_exists($compiled_schema) or Pluf::f('debug')) {
-                $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
-                $compiler->write($compiled_schema);
-            }
-            include $compiled_schema;
-        }
+        // 2. load schema
+        $this->loadSchema($schema, $rootType, $itemType);
 
         // render result
-        ob_start();
-        try {
-            call_user_func(array(
-                $this->class,
-                'render'
-            ), $c);
-        } catch (Exception $e) {
-            ob_clean();
-            throw $e;
-        }
-        $result = ob_get_contents();
-        ob_end_clean();
-
-        return $result;
+        return $this->generateResult($schema, $c, $query);
     }
 
-    /**
-     * Get the full name of the compiled schema.
-     *
-     * Ends with .phps to prevent execution from outside if the cache folder
-     * is not secured but to still have the syntax higlightings by the tools
-     * for debugging.
-     *
-     * @return array of Full path to the compiled template and the key of the cache
-     */
-    function getCompiledTemplateName()
+    private function loadSchema($schema, $rootType, $itemType)
     {
-        // The compiled template not only depends on the file but also
-        // on the cache path in which it can be found.
-        $_tmp = md5($this->cache . $this->rootType);
-        return array(
-            'Pluf_Schema_' . $_tmp,
-            $this->cache . '/Pluf_Schema-' . $_tmp . '.phps'
-        );
+        if (class_exists($schema, false)) {
+            return;
+        }
+        $compiled_schema = $this->cache . '/' . $schema . '.phps';
+        if (! file_exists($compiled_schema) or Pluf::f('debug')) {
+            $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
+            $compiler->write($schema, $compiled_schema);
+        }
+        include $compiled_schema;
+    }
+
+    private function generateResult($schema, $c, $query)
+    {
+        $compiler = new $schema();
+        $result = $compiler->render($c, $query);
+        if (array_key_exists('errors', $result)) {
+            // TODO: maso, 2018: build a valid message
+            throw new Pluf_Exception('Fail to run GraphQl query.');
+        }
+        return $result['data'];
     }
 }
 

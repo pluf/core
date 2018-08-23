@@ -32,15 +32,31 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
 
     /**
      *
-     * @before
+     * @beforeClass
      */
-    public function setUpTest()
+    public static function installApplication1()
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
+            'Pluf',
             'Test'
         );
         Pluf::start($conf);
+        $m = new Pluf_Migration($conf['installed_apps']);
+        $m->install();
+    }
+    
+    /**
+     *
+     * @afterClass
+     */
+    public static function removeDatabses1()
+    {
+        $m = new Pluf_Migration(array(
+            'Pluf',
+            'Test'
+        ));
+        $m->unInstall();
     }
 
     /**
