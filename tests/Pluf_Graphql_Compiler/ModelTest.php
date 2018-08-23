@@ -34,7 +34,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
      *
      * @before
      */
-    public function setUp()
+    public function setUpTest()
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(

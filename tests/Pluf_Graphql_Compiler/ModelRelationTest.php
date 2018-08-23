@@ -32,9 +32,9 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
 
     /**
      *
-     * @before
+     * @beforeClass
      */
-    public function installApplication()
+    public static function installApplication1()
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
@@ -50,7 +50,7 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
      *
      * @afterClass
      */
-    public static function removeDatabses()
+    public static function removeDatabses1()
     {
         $m = new Pluf_Migration(array(
             'Pluf',
@@ -104,7 +104,6 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $parnet = $result['parent'];
         $this->assertEquals($parnet['id'], $model->id);
 
-        
         $rootValue = new Test_ModelRecurse($model->id);
         $result = $compiler->render($rootValue, '{id, title, children{id, title, parent_id, parent{id}}}');
         $this->assertFalse(array_key_exists('errors', $result));
@@ -112,11 +111,56 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $this->assertTrue(array_key_exists('children', $result));
         $children = $result['children'];
         $this->assertEquals(sizeof($children), 2);
-        foreach ($children as $child){
+        foreach ($children as $child) {
             $this->assertTrue(array_key_exists('parent_id', $child));
             $this->assertTrue(array_key_exists('parent', $child));
         }
-        
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testManyToManyRenderAndRun()
+    {
+        // create data
+        $model = new Test_ManyToManyOne();
+        $model->one = 'One item ';
+        $this->assertTrue($model->create());
+
+        $model2 = new Test_ManyToManyTwo();
+        $model2->two = 'Two item';
+        $this->assertEquals(true, $model2->create());
+
+        $model->setAssoc($model2);
+
+        $class_name = 'Pluf_GraphQl_Model_ManyToMany_' . rand();
+        $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+        $compiler = new Pluf_Graphql_Compiler('Test_ManyToManyOne');
+        $compiler->write($class_name, $filename);
+        $this->assertTrue(file_exists($filename));
+        include $filename;
+
+        $rootValue = new Test_ManyToManyOne($model->id);
+
+        // get all
+        $compiler = new $class_name();
+        $result = $compiler->render($rootValue, '{id, twos{id}}');
+        $this->assertFalse(array_key_exists('errors', $result));
+
+        $result = $result['data'];
+        $this->assertTrue(array_key_exists('twos', $result));
+
+        $parnet = $result['twos'][0];
+        $this->assertEquals($parnet['id'], $model->id);
+
+        //
+        $result = $compiler->render($rootValue, '{id, twos{id, ones{id}}}');
+        $this->assertFalse(array_key_exists('errors', $result));
+        $this->assertEquals($result['data']['twos'][0]['ones'][0]['id'], $rootValue->id);
     }
 }
 

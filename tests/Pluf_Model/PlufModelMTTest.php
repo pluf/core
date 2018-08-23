@@ -384,7 +384,7 @@ class Pluf_Model_PlufModelMTTest extends TestCase
     {
         $m2 = new Test_ManyToManyTwo();
         $m2->two = 'two is the best';
-        $rel = $m2->get_test_manytomanyone_list();
+        $rel = $m2->get_ones_list();
         $this->assertNotEquals(false, $rel);
         $this->assertEquals(0, count($rel));
     }

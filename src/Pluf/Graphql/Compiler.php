@@ -222,6 +222,7 @@ class ' . $className . ' {
                     ' . $this->compileBasicFields($cols) . '
                     // relations: forenkey 
                     ' . $this->compileRelationFields('foreignkey', $model) . '
+                    ' . $this->compileRelationFields('manytomany', $model) . '
                 ]';
         return $fields;
     }
@@ -239,8 +240,14 @@ class ' . $className . ' {
 
             // Foreignkey
             $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+            if ($fieldType === 'Pluf_DB_Field_Foreignkey') {
                 $fields .= $this->compileFieldForeignkey($key, $field);
+                continue;
+            }
+
+            // ManyToMany
+            if ($fieldType === 'Pluf_DB_Field_Manytomany') {
+                $fields .= $this->compileFieldManytomany($key, $field);
                 continue;
             }
 
@@ -371,6 +378,37 @@ class ' . $className . ' {
         return $res;
     }
 
+    
+    private function compileFieldManytomany($key, $field){
+        // type
+        $type = $this->getNameOf($field['model']);
+        // function
+        $functionName = $key;
+        if (array_key_exists('name', $field)) {
+            $functionName = $field['name'];
+        }
+        // name
+        $name = $key;
+        if (array_key_exists('graphqlName', $field)) {
+            $name = $field['graphqlName'];
+        }
+        /*
+         * TODO: maso, 2018: support for pagination in list function
+         * XXX: maso, 2018: check for security access
+         * 
+         * if(parent is accessable) then 
+         *      All children are too
+         */ 
+        return '
+                    //Foreinkey value-' . $this->fieldComment($key, $field) . '
+                    \'' . $name . '\' => [
+                            \'type\' => Type::listOf(' . $type . '),
+                            \'resolve\' => function ($root) {
+                                return $root->get_' . $functionName . '_list();
+                            },
+                    ],';
+    }
+    
     private function fieldComment($key, $field)
     {
         return $key . ': ' . str_replace([

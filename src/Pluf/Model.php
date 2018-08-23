@@ -163,7 +163,10 @@ class Pluf_Model implements JsonSerializable
                 );
                 $this->_cache['fk'][$col] = $type;
                 $this->_fk[$col] = $type;
-
+                /*
+                 * TODO: maso, 2018: this model will replace the old one in the
+                 * next major version
+                 */
                 if (array_key_exists('name', $val)) {
                     $this->_m['get']['get_' . $val['name']] = $this->_m['get']['get_' . $col_lower];
                 }
@@ -173,6 +176,13 @@ class Pluf_Model implements JsonSerializable
             if ($type === $field->type) {
                 $this->_m['list']['get_' . $col_lower . '_list'] = $val['model'];
                 $this->_m['many'][$val['model']] = $type;
+                /*
+                 * TODO: maso, 2018: this model will replace the old one in the
+                 * next major version
+                 */
+                if (array_key_exists('name', $val)) {
+                    $this->_m['list']['get_' . $val['name'] . '_list'] = $val['model'];
+                }
             }
 
             foreach ($field->methods as $method) {

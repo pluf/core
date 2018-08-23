@@ -34,10 +34,11 @@ class Test_ManyToManyOne extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Sequence',
                 'blank' => true
             ), // It is automatically added.
-            'two' => array(
+            'twos' => array(
                 'type' => 'Pluf_DB_Field_Manytomany',
                 'blank' => true,
-                'model' => 'Test_ManyToManyTwo'
+                'model' => 'Test_ManyToManyTwo',
+                'relate_name' => 'ones'
             ),
             'one' => array(
                 'type' => 'Pluf_DB_Field_Varchar',

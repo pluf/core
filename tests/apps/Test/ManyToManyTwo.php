@@ -33,7 +33,8 @@ class Test_ManyToManyTwo extends Pluf_Model
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
                 'blank' => true
-            ), // It is automatically added.
+            ), 
+            // It is automatically added.
 //             'two' => array(
 //                 'type' => 'Pluf_DB_Field_Manytomany',
 //                 'blank' => true,
