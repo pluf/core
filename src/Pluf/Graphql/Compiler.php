@@ -84,11 +84,14 @@ use GraphQL\Type\Schema;
 /**
  * Render class of GraphQl
  */
-class ' . $className;
-        $schema_content .= ' { 
+class ' . $className . ' { 
     public function render($rootValue, $query) {
-        // render object types variables
-        $' . implode("= null, $", $this->compiledTypes) . '= null;
+        // render object types variables';
+        foreach ($this->compiledTypes as $item) {
+            $schema_content .= '
+         $' . $item . ' = null;';
+        }
+        $schema_content .= '
         // render code
         ' . $renderCode . '
         try {
@@ -183,30 +186,27 @@ class ' . $className;
             $name = $model->_a['graphqlName'];
         }
 
-        $result = '';
-
-        $cols = $model->_a['cols'];
-        $preModels = [];
-        foreach ($cols as $key => $field) {
-            $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
-                $result .= $this->createModelType($field['model']);
-                array_push($preModels, '&' . $this->getNameOf($field['model']));
-            }
-        }
-
+        $preModels = $this->getRelatedModels($model);
         $requiredModel = '';
         if (sizeof($preModels) > 0) {
-            $requiredModel = 'use (' . implode(', ', $preModels) . ')';
+            $requiredModel = 'use (&$' . implode(', &$', $preModels) . ')';
         }
 
-        return $result . ' //
+        // compile the model
+        $result = ' //
         ' . $this->getNameOf($type) . ' = new ObjectType([
             \'name\' => \'' . $name . '\',
             \'fields\' => function () ' . $requiredModel . '{
                 return ' . $this->compileFields($model) . ';
             }
         ]);';
+
+        // compile related models
+        foreach ($preModels as $typeName) {
+            $result .= $this->createModelType($typeName);
+        }
+
+        return $result;
     }
 
     private function getNameOf($type)
@@ -218,13 +218,30 @@ class ' . $className;
     {
         $cols = $model->_a['cols'];
         $fields = '[
-                    // List of basic fields';
+                    // List of basic fields
+                    ' . $this->compileBasicFields($cols) . '
+                    // relations: forenkey 
+                    ' . $this->compileRelationFields('foreignkey', $model) . '
+                ]';
+        return $fields;
+    }
+
+    private function compileBasicFields($cols)
+    {
+        $fields = '';
         foreach ($cols as $key => $field) {
             // Check if it is graphqlField
             if (array_key_exists('graphqlField', $field)) {
                 if (! $field['graphqlField']) {
                     continue;
                 }
+            }
+
+            // Foreignkey
+            $fieldType = $field['type'];
+            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+                $fields .= $this->compileFieldForeignkey($key, $field);
+                continue;
             }
 
             // set field name
@@ -234,17 +251,52 @@ class ' . $className;
             }
 
             $fields .= '
-                    //' . $key . ': ' . str_replace(array(
-                "\r\n",
-                "\n",
-                "\r"
-            ), "", print_r($field, true)) . '
+                    //' . $this->fieldComment($key, $field) . '
                     \'' . $name . '\' => [
                         ' . $this->compileField($key, $field) . '
                     ],';
         }
-        $fields .= ']';
         return $fields;
+    }
+
+    /**
+     * Compile and add OneToMany or ManyToMany relations
+     *
+     * These relations are created automatically and ther is no related field
+     * in the model definitions.
+     *
+     * @param string $type
+     *            Relation type: 'foreignkey' or 'manytomany'.
+     * @param Pluf_Model $mainModel
+     *            main model wihch is the target of compile
+     */
+    private function compileRelationFields($type, $mainModel)
+    {
+        $res = '';
+        $current_model = $mainModel->_a['model'];
+        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
+            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
+            foreach ($relations as $related) {
+                if ($related != $current_model) {
+                    $model = new $related();
+                } else {
+                    $model = clone $mainModel;
+                }
+                $fkeys = $model->getRelationKeysToModel($current_model, $type);
+                foreach ($fkeys as $fkey => $val) {
+                    $name = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                    $res .= '
+                    //Foreinkey list-' . $this->fieldComment($fkey, []) . '
+                    \'' . $name . '\' => [
+                            \'type\' => ' . $this->getNameOf($related) . ',
+                            \'resolve\' => function ($root) {
+                                return $root->get_' . $name . '_list();
+                            },
+                    ],';
+                }
+            }
+        }
+        return $res;
     }
 
     private function compileField($key, $field)
@@ -275,11 +327,10 @@ class ' . $className;
                 break;
 
             case 'Pluf_DB_Field_Foreignkey':
-                return $this->compileFieldForeignkey($key, $field);
             case 'Pluf_DB_Field_Manytomany':
-                return $this->compileFieldManytomany($key, $field);
+                return '';
             default:
-                // TODO: Unsupported type
+                // TODO: Unsupported type exceptions
                 return '';
         }
 
@@ -292,29 +343,75 @@ class ' . $className;
 
     private function compileFieldForeignkey($key, $field)
     {
-        $res = '\'type\' => Type::int(),
+        $res = '
+                    //Foreinkey value-' . $this->fieldComment($key, $field) . '
+                    \'' . $key . '\' => [
+                            \'type\' => Type::int(),
                             \'resolve\' => function ($root) {
                                 return $root->' . $key . ';
-                            },';
+                            },
+                    ],';
         if (array_key_exists('graphqlName', $field)) {
             $name = $field['graphqlName'];
             $type = $this->getNameOf($field['model']);
 
-            $functionNmae = $key;
+            $functionName = $key;
             if (array_key_exists('name', $field)) {
                 $functionName = $field['name'];
             }
             $res .= '
+                    //Foreinkey object-' . $this->fieldComment($key, $field) . '
+                    \'' . $name . '\' => [
                             \'type\' => ' . $type . ',
                             \'resolve\' => function ($root) {
                                 return $root->get_' . $functionName . '();
-                            },';
+                            },
+                    ],';
         }
         return $res;
     }
 
-    private function compileFieldManytomany()
-    {}
+    private function fieldComment($key, $field)
+    {
+        return $key . ': ' . str_replace([
+            "\r\n",
+            "\n",
+            "\r"
+        ], "", print_r($field, true));
+    }
+
+    private function getRelatedModels($model)
+    {
+        $cols = $model->_a['cols'];
+        $preModels = [];
+        foreach ($cols as $field) {
+            $fieldType = $field['type'];
+            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+                if (! in_array($field['model'], $preModels)) {
+                    array_push($preModels, $field['model']);
+                }
+            }
+        }
+
+        $current_model = $model->_a['model'];
+
+        $types = [
+            'foreignkey',
+            'manytomany'
+        ];
+        foreach ($types as $type) {
+            if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
+                $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
+                foreach ($relations as $related) {
+                    if (! in_array($related, $preModels)) {
+                        array_push($preModels, $related);
+                    }
+                }
+            }
+        }
+
+        return $preModels;
+    }
 }
 
 
