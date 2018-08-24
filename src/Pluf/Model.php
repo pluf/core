@@ -42,7 +42,8 @@ class Pluf_Model implements JsonSerializable
         'blank' => false,
         'relate_name' => 'tenant',
         'editable' => false,
-        'readable' => false
+        'readable' => false,
+        'graphql_field' => false
     );
 
     public $_model = __CLASS__;
