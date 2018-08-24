@@ -272,7 +272,7 @@ class Pluf_Dispatcher
             return $response;
         }
         // apply graphql
-        if (array_key_exiarray_key_exists('graphql', $_REQUEST)) {
+        if (array_key_exists('graphql', $_REQUEST)) {
             $gl = new Pluf_Graphql();
             $response = $gl->render($response, $_REQUEST['graphql']);
         }
@@ -286,6 +286,9 @@ class Pluf_Dispatcher
         $mime = $http->negotiateMimeType($contentType, $contentType[0]);
         if ($mime === false) {
             throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
+        }
+        if($response instanceof Pluf_Paginator){
+            $response = $response->render_object();
         }
         switch ($mime) {
             case 'application/json':

@@ -134,7 +134,7 @@ class ' . $className . ' {
                     \'counts\' => [
                         \'type\' => Type::int(),
                         \'resolve\' => function ($root) {
-                            return $root->counts;
+                            return $root->fetchItemsCount();
                         }
                     ],
                     \'current_page\' => [
@@ -158,7 +158,7 @@ class ' . $className . ' {
                     \'items\' => [
                         \'type\' => Type::listOf($itemType),
                         \'resolve\' => function ($root) {
-                            return $root->items;
+                            return $root->fetchItems();
                         }
                     ],
                 ];
@@ -182,8 +182,8 @@ class ' . $className . ' {
 
         $model = new $type();
         $name = $model->_a['model'];
-        if (array_key_exists('graphqlName', $model->_a)) {
-            $name = $model->_a['graphqlName'];
+        if (array_key_exists('graphql_name', $model->_a)) {
+            $name = $model->_a['graphql_name'];
         }
 
         $preModels = $this->getRelatedModels($model);
@@ -231,9 +231,9 @@ class ' . $className . ' {
     {
         $fields = '';
         foreach ($cols as $key => $field) {
-            // Check if it is graphqlField
-            if (array_key_exists('graphqlField', $field)) {
-                if (! $field['graphqlField']) {
+            // Check if it is graphql_field
+            if (array_key_exists('graphql_field', $field)) {
+                if (! $field['graphql_field']) {
                     continue;
                 }
             }
@@ -253,8 +253,8 @@ class ' . $className . ' {
 
             // set field name
             $name = $key;
-            if (array_key_exists('graphqlName', $field)) {
-                $name = $field['graphqlName'];
+            if (array_key_exists('graphql_name', $field)) {
+                $name = $field['graphql_name'];
             }
 
             $fields .= '
@@ -358,8 +358,8 @@ class ' . $className . ' {
                                 return $root->' . $key . ';
                             },
                     ],';
-        if (array_key_exists('graphqlName', $field)) {
-            $name = $field['graphqlName'];
+        if (array_key_exists('graphql_name', $field)) {
+            $name = $field['graphql_name'];
             $type = $this->getNameOf($field['model']);
 
             $functionName = $key;
@@ -389,8 +389,8 @@ class ' . $className . ' {
         }
         // name
         $name = $key;
-        if (array_key_exists('graphqlName', $field)) {
-            $name = $field['graphqlName'];
+        if (array_key_exists('graphql_name', $field)) {
+            $name = $field['graphql_name'];
         }
         /*
          * TODO: maso, 2018: support for pagination in list function

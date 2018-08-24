@@ -44,7 +44,7 @@ class Test_ModelRecurse extends Pluf_Model
                 // name in this class
                 'name' => 'parent',
                 // name in graphql
-                'graphqlName' => 'parent'
+                'graphql_name' => 'parent'
             )
         );
         $this->_a['idx'] = array();

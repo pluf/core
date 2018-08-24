@@ -315,7 +315,7 @@ class Pluf_Paginator
      *
      * @return array|ArrayObject
      */
-    private function fetchItems()
+    public function fetchItems()
     {
         // Load pre defined items
         if (is_null($this->model)) {
@@ -338,7 +338,7 @@ class Pluf_Paginator
      *
      * @return number of all items
      */
-    private function fetchItemsCount()
+    public function fetchItemsCount()
     {
         if (is_null($this->model)) {
             return $this->items->count();

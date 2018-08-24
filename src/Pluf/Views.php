@@ -187,7 +187,7 @@ class Pluf_Views
             $builder->setSortFields($p['sortFields']);
         }
         $builder->setRequest($request);
-        return $builder->build()->render_object();
+        return $builder->build();
     }
 
     /**
