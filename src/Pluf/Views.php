@@ -160,6 +160,26 @@ class Pluf_Views
     }
 
     /**
+     * Checks if one to many relation exist between two entity
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param Pluf_Model $parent
+     * @param Pluf_Model $object
+     * @param array $p parameters
+     * @throws Pluf_HTTP_Error404 if relation does not exist
+     */
+    private static function CRUD_assertManyToOneRelation($parent, $object, $p)
+    {
+        if (! isset($p['parentKey'])) {
+            throw new Exception('The parentKey was not provided in the parameters.');
+        }
+        $key = $p['parentKey'];
+        if ($object->__get($key) !== $parent->id) {
+            throw new Pluf_HTTP_Error404('Invalid relation');
+        }
+    }
+
+    /**
      * List objects (Part of the CRUD series).
      *
      * @param Pluf_HTTP_Request $request
@@ -267,6 +287,7 @@ class Pluf_Views
         }
         $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
         // TODO: maso, 2017: assert relation
+        self::CRUD_assertManyToOneRelation($parent, $object, $p);
         self::CRUD_checkPreconditions($request, $p, $object);
         return self::CRUD_response($request, $p, $object);
     }
@@ -411,6 +432,7 @@ class Pluf_Views
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         // TODO: maso, 2017: check relateion
+        self::CRUD_assertManyToOneRelation($parent, $object, $p);
         self::CRUD_checkPreconditions($request, $p, $object);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
@@ -489,6 +511,7 @@ class Pluf_Views
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         // TODO: maso, 2017: check relateion
+        self::CRUD_assertManyToOneRelation($parent, $object, $p);
         $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         $objectCopy->id = 0;
         self::CRUD_checkPreconditions($request, $p, $object);
