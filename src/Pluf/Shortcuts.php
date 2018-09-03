@@ -203,3 +203,23 @@ function Pluf_Shortcuts_GetForeignKeyName($modelName){
     return strtolower($modelName) . '_id';
 }
 
+
+/**
+ * Returns list count for given request.
+ *
+ * If count is not set in request or count is more than a threshold (50) returns a default value (50).
+ *
+ * @param Pluf_HTTP_Request $request
+ * @return number
+ */
+function Pluf_Shortcuts_GetListCount($request)
+{
+    $count = 50;
+    if (array_key_exists('_px_ps', $request->GET)) {
+        $count = $request->GET['_px_ps'];
+        if ($count == 0 || $count > 50) {
+            $count = 50;
+        }
+    }
+    return $count;
+}
