@@ -135,8 +135,34 @@ class Pluf_Views
         return $object;
     }
 
-    // TODO: maso, 2017: document
-    private static function CRUD_checkPreconditions($request, $p, $object, $child = null)
+    /**
+     * Call determined preconditions in the $p and check if preconditions are statisfied.
+     * Preconditions could be determined in the $p array as 'precond' feild.
+     * 
+     * A precondition is a function which is called in some situations before some actions.
+     * Here is an example to define preconditions in $p:
+     * 
+     *     $p = array(
+     *         'precond' => array(
+     *             'My_Precondition_Class::precondFunc', 
+     *             'My_Precondition_Class::precondFunc2'
+     *         )
+     *     );
+     * 
+     * Value of 'precond' could be array or a single item.
+     * 
+     * Each precondition function will be called with three argument respectively as following:
+     * - $request: Pluf_HTTp_Request
+     * - $object: Pluf_Model
+     * - $parent: Pluf_Model, which is a parent of $object model
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $p
+     * @param Pluf_Model $object
+     * @param Pluf_Model $parent
+     * @throws Pluf_Exception
+     */
+    private static function CRUD_checkPreconditions($request, $p, $object, $parent = null)
     {
         if (! isset($p['precond'])) {
             return;
@@ -151,7 +177,7 @@ class Pluf_Views
             $res = call_user_func_array(explode('::', $precond), array(
                 $request,
                 $object,
-                $child
+                $parent
             ));
             if ($res !== true) {
                 throw new Pluf_Exception('CRUD precondition is not satisfied.');
@@ -288,7 +314,7 @@ class Pluf_Views
         $parent = Pluf_Shortcuts_GetObjectOr404(self::CRUD_getParentModel($p), $parentId);
         // TODO: maso, 2017: assert relation
         self::CRUD_assertManyToOneRelation($parent, $object, $p);
-        self::CRUD_checkPreconditions($request, $p, $object);
+        self::CRUD_checkPreconditions($request, $p, $object, $parent);
         return self::CRUD_response($request, $p, $object);
     }
 
@@ -433,7 +459,7 @@ class Pluf_Views
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         // TODO: maso, 2017: check relateion
         self::CRUD_assertManyToOneRelation($parent, $object, $p);
-        self::CRUD_checkPreconditions($request, $p, $object);
+        self::CRUD_checkPreconditions($request, $p, $object, $parent);
         $form = Pluf_Shortcuts_GetFormForUpdateModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
         return self::CRUD_response($request, $p, $object);
@@ -514,7 +540,7 @@ class Pluf_Views
         self::CRUD_assertManyToOneRelation($parent, $object, $p);
         $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         $objectCopy->id = 0;
-        self::CRUD_checkPreconditions($request, $p, $object);
+        self::CRUD_checkPreconditions($request, $p, $object, $parent);
         $object->delete();
         return self::CRUD_response($request, $p, $objectCopy);
     }
