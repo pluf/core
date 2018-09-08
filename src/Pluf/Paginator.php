@@ -558,12 +558,19 @@ class Pluf_Paginator
 
         // filter to query
         foreach ($categories as $key => $vals) {
-            if (sizeof($vals) > 1) {
-                $sql = new Pluf_SQL($key . ' in (%s)', array(
-                    $vals
-                ));
-            } else {
-                $sql = new Pluf_SQL($key . '=%s', $vals[0]);
+            // GeoSpacial feilds
+            $feild = $this->model->_a['cols'][$key];
+            if(strcmp($feild['type'], 'Pluf_DB_Field_Geometry') === 0){
+                $str = "Contains(GeometryFromText('".implode("'),".$key.") OR Contains(GeometryFromText('", $vals). "'),".$key.")";
+                $sql = new Pluf_SQL($str);
+            }else{ // Regular feilds
+                if (sizeof($vals) > 1) {
+                    $sql = new Pluf_SQL($key . ' IN (%s)', array(
+                        $vals
+                    ));
+                } else {
+                    $sql = new Pluf_SQL($key . '=%s', $vals[0]);
+                }
             }
             // We add a forced where query
             if (! is_null($this->forced_where)) {

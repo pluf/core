@@ -1,4 +1,5 @@
 <?php
+geoPHP::load();
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -151,6 +152,10 @@ function Pluf_DB_defaultTypecast ()
                     'Pluf_DB_CompressedFromDb',
                     'Pluf_DB_CompressedToDb'
             ),
+            'Pluf_DB_Field_Geometry' => array(
+                    'Pluf_DB_GeometryFromDb',
+                    'Pluf_DB_GeometryToDb'
+            ),
     );
     
     // Load extra types
@@ -272,3 +277,45 @@ function Pluf_DB_SlugToDB ($val, $db)
 {
     return $db->esc(Pluf_DB_Field_Slug::slugify($val));
 }
+
+/**
+ *
+ * @param Object $val
+ * @return string
+ */
+function Pluf_DB_GeometryFromDb ($val)
+{
+    /*
+     * maso, 1395: convert $val (from BLOB) to WKT
+     *
+     * 1- SRID
+     * 2- WKB
+     *
+     * See:
+     * https://dev.mysql.com/doc/refman/5.7/en/gis-data-formats.html#gis-internal-format
+     */
+    if($val == null)
+        return null;
+        $data = unpack("lsrid/H*wkb", $val);
+        $wkb_reader = new WKB();
+        $geometry = $wkb_reader->read($data['wkb'], TRUE);
+        $wkt_writer = new WKT();
+        $wkt = $wkt_writer->write($geometry);
+        return $wkt;
+}
+
+/**
+ * Convert text to geometry
+ *
+ * @param unknown $val
+ * @param unknown $db
+ * @return string
+ */
+function Pluf_DB_GeometryToDb ($val, $db)
+{
+    // TODO: hadi 1397-06-16: Here $val should be encoded
+    return (null === $val) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
+}
+
+
+

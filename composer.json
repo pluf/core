@@ -20,7 +20,8 @@
 		"pear/mail" : "^1.3",
 		"pear/mail_mime" : "^1.10.0",
 		"guzzlehttp/guzzle" : "^6.2",
-		"webonyx/graphql-php" : "^0.12.5"
+		"webonyx/graphql-php" : "^0.12.5",
+		"phayes/geophp" : "^1.2"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "5.7.14",
