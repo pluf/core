@@ -65,7 +65,7 @@ class Pluf_Paginator
 
     /**
      * Data model of the items
-     * 
+     *
      * @var Pluf_Model
      */
     public $model;
@@ -366,8 +366,8 @@ class Pluf_Paginator
                 $sql = new Pluf_SQL();
                 foreach ($this->search_fields as $field) {
                     $sqlor = new Pluf_SQL();
-//                     $sqlor->Q($field . ' LIKE %s', '%' . $key . '%');
-                    $sqlor->Q('CAST(`'.$field . '` AS CHAR) LIKE %s', '%' . $key . '%');
+                    // $sqlor->Q($field . ' LIKE %s', '%' . $key . '%');
+                    $sqlor->Q('CAST(`' . $field . '` AS CHAR) LIKE %s', '%' . $key . '%');
                     $sql->SOr($sqlor);
                 }
                 $lastsql->SAnd($sql);
@@ -503,6 +503,8 @@ class Pluf_Paginator
         $this->sort_order = array();
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
+            // Check if order key has a valid name
+            Pluf_Precondition::assertKeyIsValid($key);
             if (in_array($key, $this->sort_fields)) {
                 $order = 'ASC';
                 if ($vals[$i] === 'd') {
@@ -543,6 +545,8 @@ class Pluf_Paginator
         $categories = array();
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
+            // Check if order key has a valid name
+            Pluf_Precondition::assertKeyIsValid($key);
             $val = $vals[$i];
             if (! in_array($key, $this->list_filters) || ! isset($val)) {
                 continue;
@@ -560,10 +564,10 @@ class Pluf_Paginator
         foreach ($categories as $key => $vals) {
             // GeoSpacial feilds
             $feild = $this->model->_a['cols'][$key];
-            if(strcmp($feild['type'], 'Pluf_DB_Field_Geometry') === 0){
-                $str = "Contains(GeometryFromText('".implode("'),".$key.") OR Contains(GeometryFromText('", $vals). "'),".$key.")";
+            if (strcmp($feild['type'], 'Pluf_DB_Field_Geometry') === 0) {
+                $str = "Contains(GeometryFromText('" . implode("')," . $key . ") OR Contains(GeometryFromText('", $vals) . "')," . $key . ")";
                 $sql = new Pluf_SQL($str);
-            }else{ // Regular feilds
+            } else { // Regular feilds
                 if (sizeof($vals) > 1) {
                     $sql = new Pluf_SQL($key . ' IN (%s)', array(
                         $vals

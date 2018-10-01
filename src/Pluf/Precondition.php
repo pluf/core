@@ -45,5 +45,19 @@ class Pluf_Precondition
         }
         return true;
     }
+    
+    /**
+     * Checks if given name is matched with patterin [a-zA-Z_][0-9a-zA-Z_]*
+     * 
+     * Throws bad request exception if given name does not match.
+     * 
+     * @param string $name
+     * @throws Pluf_Exception_BadRequest
+     */
+    public static function assertKeyIsValid($name){
+        if(preg_match('/^[a-zA-Z_][0-9a-zA-Z_]*$/', $name) !== 1){
+            throw new Pluf_Exception_BadRequest('Invalid parameter: <' . $name . '>');
+        }
+    }
 
 }
