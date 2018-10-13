@@ -36,7 +36,7 @@ class Pluf_Form_Widget_CheckboxInput extends Pluf_Form_Widget_Input
      */
     public function valueFromFormData($name, $data)
     {
-        if (!isset($data[$name]) or false === $data[$name] or 'false' == $data[$name]
+        if (!isset($data[$name]) or false === $data[$name] or 'false' === $data[$name]
             or (string)$data[$name] === '0' or $data[$name] == '') {
             return false;
         }

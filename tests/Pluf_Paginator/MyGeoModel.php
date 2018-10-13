@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,30 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+Pluf::loadClass('Pluf_Model');
 
-/**
- * 
- * @author maso
- *
- */
-class Test_ManyToManyTwo extends Pluf_Model
+class Pluf_Paginator_MyGeoModel extends Pluf_Model
 {
-
+    
     function init()
     {
-        $this->_a['table'] = 'manytomanytwo';
-        $this->_a['model'] = 'ManyToManyTwo';
+        $this->_a['table'] = 'testforgeomodels';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
                 'blank' => true
             ), // It is automatically added.
-            'two' => array(
+            'title' => array(
                 'type' => 'Pluf_DB_Field_Varchar',
                 'blank' => false,
-                'size' => 100
+                'size' => 100,
+                'verbose' => 'Title of the item'
+            ),
+            'location' => array(
+                'type' => 'Pluf_DB_Field_Geometry',
+                'blank' => true,
+                'is_null' => false,
+                'editable' => false,
+                'readable' => true
             )
         );
-        $this->_a['views'] = array();
     }
+    
+    
 }
+
+

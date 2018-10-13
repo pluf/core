@@ -42,7 +42,8 @@ class Pluf_Model implements JsonSerializable
         'blank' => false,
         'relate_name' => 'tenant',
         'editable' => false,
-        'readable' => false
+        'readable' => false,
+        'graphql_field' => false
     );
 
     public $_model = __CLASS__;
@@ -163,12 +164,26 @@ class Pluf_Model implements JsonSerializable
                 );
                 $this->_cache['fk'][$col] = $type;
                 $this->_fk[$col] = $type;
+                /*
+                 * TODO: maso, 2018: this model will replace the old one in the
+                 * next major version
+                 */
+                if (array_key_exists('name', $val)) {
+                    $this->_m['get']['get_' . $val['name']] = $this->_m['get']['get_' . $col_lower];
+                }
             }
 
             $type = 'manytomany';
             if ($type === $field->type) {
                 $this->_m['list']['get_' . $col_lower . '_list'] = $val['model'];
                 $this->_m['many'][$val['model']] = $type;
+                /*
+                 * TODO: maso, 2018: this model will replace the old one in the
+                 * next major version
+                 */
+                if (array_key_exists('name', $val)) {
+                    $this->_m['list']['get_' . $val['name'] . '_list'] = $val['model'];
+                }
             }
 
             foreach ($field->methods as $method) {
@@ -246,6 +261,7 @@ class Pluf_Model implements JsonSerializable
             $field = new $val['type']();
             if ($field->type == 'manytomany') {
                 $this->_data[$col] = array();
+                // XXX: maso, 2018: do not load many to many relation if is not required
                 $method = 'get_' . strtolower($col) . '_list';
                 foreach ($this->$method() as $item) {
                     $this->_data[$col][] = $item->id;
@@ -667,7 +683,7 @@ class Pluf_Model implements JsonSerializable
         foreach ($rs as $row) {
             $this->_reset();
             foreach ($this->_a['cols'] as $col => $val) {
-                if (isset($row[$col])){
+                if (isset($row[$col])) {
                     $this->_data[$col] = $this->_fromDb($row[$col], $col);
                 }
             }

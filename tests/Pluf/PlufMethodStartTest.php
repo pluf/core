@@ -21,6 +21,7 @@ use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -28,19 +29,24 @@ class PlufMethodStartTest extends TestCase
 {
 
     /**
+     *
      * @before
      */
-    public function setUp ()
+    public function setUp()
     {}
 
     /**
      *
      * @test
      */
-    public function testStart ()
+    public function testStart()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/pluf.config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
         $this->assertEquals(true, isset($GLOBALS['_PX_config']));
+
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['test'] = false;
+        Pluf::start($conf);
         $this->assertEquals(false, $GLOBALS['_PX_config']['test']);
     }
 }

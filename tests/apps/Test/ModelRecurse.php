@@ -34,11 +34,17 @@ class Test_ModelRecurse extends Pluf_Model
                 'blank' => false,
                 'size' => 100
             ),
-            'parentid' => array(
+            // name in db
+            'parent_id' => array(
                 'type' => 'Pluf_DB_Field_Foreignkey',
                 'blank' => true,
                 'model' => 'Test_ModelRecurse',
-                'relate_name' => 'children'
+                // name in parent
+                'relate_name' => 'children',
+                // name in this class
+                'name' => 'parent',
+                // name in graphql
+                'graphql_name' => 'parent'
             )
         );
         $this->_a['idx'] = array();

@@ -16,7 +16,6 @@
             <directory>tests/Pluf_DB_Schema/</directory>
             <directory>tests/Pluf_SQL/</directory>
             <directory>tests/Pluf_Model/</directory>
-            <directory>tests/Pluf_Paginator/</directory>
         </testsuite>
         <testsuite name="View">
             <directory>tests/Pluf_Dispatcher/</directory>
@@ -27,6 +26,10 @@
             
             <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>
+        <testsuite name="GraphQl">
+            <directory>tests/Pluf_Graphql_Compiler/</directory>
+            <directory>tests/Pluf_Graphql/</directory>
+		</testsuite>
     </testsuites>
     
     <filter>

@@ -28,12 +28,13 @@ class Test_ManyToManyTwo extends Pluf_Model
 
     function init()
     {
-        $this->_a['table'] = 'manytomanytwo';
+        $this->_a['table'] = 'test_manytomanytwo';
         $this->_a['cols'] = array(
             'id' => array(
                 'type' => 'Pluf_DB_Field_Sequence',
                 'blank' => true
-            ), // It is automatically added.
+            ), 
+            // It is automatically added.
 //             'two' => array(
 //                 'type' => 'Pluf_DB_Field_Manytomany',
 //                 'blank' => true,

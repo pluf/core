@@ -175,3 +175,51 @@ function Pluf_Shortcuts_folderSize ($dir)
     }
     return $count_size;
 }
+
+/**
+ * Returns association table name (without prefix) for given models.
+ *
+ * @param string $modelName1 name of model (of type Pluf_Model)
+ * @param string $modelName2 name of model (of type Pluf_Model)
+ * @return string name of association table for given modeles.
+ */
+function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
+    $hay = array(
+        strtolower($modelName1),
+        strtolower($modelName2)
+    );
+    sort($hay);
+    $table = $hay[0] . '_' . $hay[1] . '_assoc';
+    return $table;
+}
+
+/**
+ * Returns column name for given model as foreign key in an association table.
+ *
+ * @param string $modelName name of model (of type Pluf_Model)
+ * @return string column name for given model as foreign key in an association table.
+ */
+function Pluf_Shortcuts_GetForeignKeyName($modelName){
+    return strtolower($modelName) . '_id';
+}
+
+
+/**
+ * Returns list count for given request.
+ *
+ * If count is not set in request or count is more than a threshold (50) returns a default value (50).
+ *
+ * @param Pluf_HTTP_Request $request
+ * @return number
+ */
+function Pluf_Shortcuts_GetListCount($request)
+{
+    $count = 50;
+    if (array_key_exists('_px_ps', $request->GET)) {
+        $count = $request->GET['_px_ps'];
+        if ($count == 0 || $count > 50) {
+            $count = 50;
+        }
+    }
+    return $count;
+}

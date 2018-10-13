@@ -268,8 +268,8 @@ class Pluf_Paginator_Builder
      */
     private function loadSortFields()
     {
-        if (isset($this->searchFields)) {
-            return $this->searchFields;
+        if (isset($this->sortFields)) {
+            return $this->sortFields;
         }
         // maso, 2018: load from model
         return $this->getVisibleFieldsName();

@@ -136,15 +136,17 @@ class Pluf_Dispatcher
      */
     public static function match($req, $firstpass = true)
     {
-        // پیدا کردن و اجرای نمایش مناسب
+        // Search for appropriate controller
         $views = $GLOBALS['_PX_views'];
         $to_match = $req->query;
         $n = count($views);
         $i = 0;
+        // بررسی کنترلرها و پیدا کردن کنترلر مناسب بر اساس انتطباق با مسیر
         while ($i < $n) {
             $ctl = $views[$i];
             // maso, 1394: بررسی متد لایه کنترل
             if (isset($ctl['http-method'])) {
+                // hadi, 1397: Check if http method is supported
                 $methods = $ctl['http-method'];
                 if ((! is_array($methods) && $ctl['http-method'] !== $req->method) || (is_array($methods) && ! in_array($req->method, $methods))) {
                     $i ++;
@@ -165,7 +167,7 @@ class Pluf_Dispatcher
             }
             $i ++;
         }
-        
+
         // XXX: maso, 1395: این قسمت از کد رو نمی‌دونم چی کار داره می‌کنه
         if ($firstpass and substr($req->query, - 1) != '/') {
             $req->query .= '/';
@@ -265,9 +267,17 @@ class Pluf_Dispatcher
 
     private static function toResponse($response)
     {
+        // Check old result
         if ($response instanceof Pluf_HTTP_Response) {
             return $response;
         }
+        // apply graphql
+        if (array_key_exists('graphql', $_REQUEST)) {
+            $gl = new Pluf_Graphql();
+            $response = $gl->render($response, $_REQUEST['graphql']);
+        }
+
+        // convert to response
         $http = new HTTP2();
         $contentType = array(
             'application/json',
@@ -276,6 +286,9 @@ class Pluf_Dispatcher
         $mime = $http->negotiateMimeType($contentType, $contentType[0]);
         if ($mime === false) {
             throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
+        }
+        if($response instanceof Pluf_Paginator){
+            $response = $response->render_object();
         }
         switch ($mime) {
             case 'application/json':
@@ -311,7 +324,7 @@ class Pluf_Dispatcher
     {
         // return if is not internal error
         if ($exception instanceof Pluf_Exception) {
-            if($exception->status !== 500) {
+            if ($exception->getStatus() !== 500) {
                 return;
             }
         }

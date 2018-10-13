@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -70,7 +71,7 @@ class Pluf_Migration
     /**
      * < Display on the console what is done.
      */
-    
+
     /**
      * Create a new migration.
      *
@@ -105,18 +106,19 @@ class Pluf_Migration
         }
         return true;
     }
-    
+
     /**
      * Init app from data
-     * 
+     *
      * @return boolean
      */
-    public function init($tenant = null){
+    public function init($tenant = null)
+    {
         // TODO: maso, init default tenant
-        if(!isset($GLOBALS['_PX_request'])){
+        if (! isset($GLOBALS['_PX_request'])) {
             $GLOBALS['_PX_request'] = new Pluf_HTTP_Request('/');
         }
-        $GLOBALS['_PX_request']->tenant= $tenant;
+        $GLOBALS['_PX_request']->tenant = $tenant;
         foreach ($this->apps as $app) {
             $this->initAppFromConfig($app);
         }
@@ -208,7 +210,7 @@ class Pluf_Migration
     {
         if ($uninstall) {
             return $this->uninstallAppFromConfig($app);
-        } 
+        }
         return $this->installAppFromConfig($app);
     }
 
@@ -242,7 +244,7 @@ class Pluf_Migration
     public function installAppFromConfig($app)
     {
         $module = self::getModuleConfig($app);
-        if($module === false){
+        if ($module === false) {
             throw new Pluf_Exception('Module file not found in path');
         }
         $db = Pluf::db();
@@ -257,32 +259,50 @@ class Pluf_Migration
         }
         return true;
     }
-    
+
     /**
      * Load initial data if exist
-     * 
+     *
      * @param string $app
      */
-    public function initAppFromConfig($app){
+    public function initAppFromConfig($app)
+    {
         $module = self::getModuleConfig($app);
-        if($module === false){
+        if ($module === false) {
             throw new Pluf_Exception('Module file not found in path');
         }
-        
+
         // Load models
         if (array_key_exists('init', $module)) {
             $models = $module['init'];
-            foreach ($models as $model=>$values) {
-                foreach($values as $value){
+            foreach ($models as $model => $values) {
+                foreach ($values as $value) {
                     $p = new $model();
                     if (method_exists($p, 'initFromFormData')) {
                         $p->initFromFormData($value);
                     } else {
                         $p->setFromFormData($value);
                     }
-                    if(!$p->create()){
-                        throw new Pluf_Exception('Impossible to load init modules');
+                    if (! $p->create()) {
+                        throw new Pluf_Exception('Impossible to load init modules: ' . $model);
                     }
+                }
+            }
+        }
+
+        // Init Releations
+        if (array_key_exists('init_assoc', $module)) {
+            $relations = $module['init_assoc'];
+            foreach ($relations as $models => $relates) {
+                $model = explode('|', $models);
+                $model0 = trim($model[0]);
+                $model1 = trim($model[1]);
+                $p0 = new $model0();
+                $p1 = new $model1();
+                foreach ($relates as $rel) {
+                    $p0 = $p0->getOne($rel['from']);
+                    $p1 = $p1->getOne($rel['to']);
+                    $p0->setAssoc($p1);
                 }
             }
         }
@@ -296,7 +316,7 @@ class Pluf_Migration
     public function uninstallAppFromConfig($app)
     {
         $module = self::getModuleConfig($app);
-        if($module === false){
+        if ($module === false) {
             throw new Pluf_Exception('Module file not found in path');
         }
         $db = Pluf::db();

@@ -28,7 +28,7 @@ class PlufEncoderTest extends TestCase {
     
     protected function setUp()
     {
-        Pluf::start(dirname(__FILE__).'/../conf/pluf.config.php');
+        Pluf::start(__DIR__. '/../conf/config.php');
     }
 
     protected function tearDown()
