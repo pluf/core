@@ -300,6 +300,7 @@ function Pluf_DB_GeometryFromDb ($val)
         $data = unpack("lsrid/H*wkb", $val);
         $wkb_reader = new WKB();
         $geometry = $wkb_reader->read($data['wkb'], TRUE);
+        // $geometry = geoPHP::load($data['wkb'], 'wkb');
         $wkt_writer = new WKT();
         $wkt = $wkt_writer->write($geometry);
         return $wkt;
