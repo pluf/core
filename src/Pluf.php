@@ -213,7 +213,7 @@ class Pluf
         if (! file_exists(stream_resolve_include_path($file))) {
             return;
         }
-        include $file;
+        include_once  $file;
         if (class_exists($class, false) || interface_exists($class, false)) {
             return;
         }
