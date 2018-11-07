@@ -1,5 +1,4 @@
 <?php
-geoPHP::load();
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -285,6 +284,8 @@ function Pluf_DB_SlugToDB ($val, $db)
  */
 function Pluf_DB_GeometryFromDb ($val)
 {
+    // TODO: maso, 2018: check if we need to use geoPHP::load to load data
+    // SEE: https://github.com/phayes/geoPHP
     /*
      * maso, 1395: convert $val (from BLOB) to WKT
      *
@@ -313,6 +314,8 @@ function Pluf_DB_GeometryFromDb ($val)
  */
 function Pluf_DB_GeometryToDb ($val, $db)
 {
+    // TODO: maso, 2018: check if we need to use geoPHP::load to load data
+    // SEE: https://github.com/phayes/geoPHP
     // TODO: hadi 1397-06-16: Here $val should be encoded
     return (null === $val) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
 }
