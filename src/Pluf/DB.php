@@ -1,5 +1,4 @@
 <?php
-geoPHP::load();
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -285,6 +284,8 @@ function Pluf_DB_SlugToDB ($val, $db)
  */
 function Pluf_DB_GeometryFromDb ($val)
 {
+    // TODO: maso, 2018: check if we need to use geoPHP::load to load data
+    // SEE: https://github.com/phayes/geoPHP
     /*
      * maso, 1395: convert $val (from BLOB) to WKT
      *
@@ -299,6 +300,7 @@ function Pluf_DB_GeometryFromDb ($val)
         $data = unpack("lsrid/H*wkb", $val);
         $wkb_reader = new WKB();
         $geometry = $wkb_reader->read($data['wkb'], TRUE);
+        // $geometry = geoPHP::load($data['wkb'], 'wkb');
         $wkt_writer = new WKT();
         $wkt = $wkt_writer->write($geometry);
         return $wkt;
@@ -313,6 +315,8 @@ function Pluf_DB_GeometryFromDb ($val)
  */
 function Pluf_DB_GeometryToDb ($val, $db)
 {
+    // TODO: maso, 2018: check if we need to use geoPHP::load to load data
+    // SEE: https://github.com/phayes/geoPHP
     // TODO: hadi 1397-06-16: Here $val should be encoded
     return (null === $val) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
 }

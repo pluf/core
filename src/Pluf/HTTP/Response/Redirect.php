@@ -23,7 +23,7 @@ class Pluf_HTTP_Response_Redirect extends Pluf_HTTP_Response
      * Redirect response to a given URL.
      *
      * @param string URL
-     * @paran int Redirect code (302) or 301 for permanent
+     * @param int Redirect code (302) or 301 for permanent
      */
     function __construct($url, $code=302)
     {
