@@ -352,6 +352,11 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = new $model();
+        // Read body of request
+        // $entityBody = file_get_contents('php://input', 'r');
+        // Check if body is a json array
+        // Convert each item to an object model by using Form
+        // Save models
         $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save();
 

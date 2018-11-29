@@ -321,6 +321,7 @@ class ' . $className . ' {
             case 'Pluf_DB_Field_Slug':
             case 'Pluf_DB_Field_Text':
             case 'Pluf_DB_Field_Varchar':
+            case 'Pluf_DB_Field_Geometry':
                 $res = 'Type::string()';
                 break;
             case 'Pluf_DB_Field_Integer':
