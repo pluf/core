@@ -197,6 +197,8 @@ class Pluf_Form_Field
         $field = clone ($this);
         $field->multiple = false;
         reset($value);
+        // XXX: hadi 1397-09: The each() function is deprecated from PHP 7.2
+        // Ref: http://php.net/manual/en/function.each.php
         while (list ($i, $val) = each($value)) {
             $value[$i] = $field->clean($val);
         }
