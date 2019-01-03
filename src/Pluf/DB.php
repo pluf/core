@@ -298,9 +298,7 @@ function Pluf_DB_GeometryFromDb ($val)
     if($val == null)
         return null;
         $data = unpack("lsrid/H*wkb", $val);
-        $wkb_reader = new WKB();
-        $geometry = $wkb_reader->read($data['wkb'], TRUE);
-        // $geometry = geoPHP::load($data['wkb'], 'wkb');
+        $geometry = geoPHP::load($data['wkb'], 'wkb', TRUE);
         $wkt_writer = new WKT();
         $wkt = $wkt_writer->write($geometry);
         return $wkt;
@@ -318,7 +316,7 @@ function Pluf_DB_GeometryToDb ($val, $db)
     // TODO: maso, 2018: check if we need to use geoPHP::load to load data
     // SEE: https://github.com/phayes/geoPHP
     // TODO: hadi 1397-06-16: Here $val should be encoded
-    return (null === $val) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
+    return (null === $val || empty($val)) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
 }
 
 
