@@ -1252,6 +1252,53 @@ class Pluf_Model implements JsonSerializable
         }
         return $coded;
     }
+
+    public function getName()
+    {
+        return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass();
+    }
+
+    public function getSchema()
+    {
+        $mainInfo = array(
+            "type" => $this->getClass(),
+            "unit" => null,
+            "name" => $this->getName(),
+            "title" => $this->getName(),
+            "description" => null,
+            "defaultValue" => null,
+            "required" => false,
+            "visible" => false,
+            "editable" => false,
+            "priority" => 0,
+            "validators" => [],
+            "tags" => [],
+            "children" => []
+        );
+        foreach ($this->_a['cols'] as $name => $field){
+            $fieldInfo = $this->getFieldInfo($name, $field);
+            array_push($mainInfo['children'], $fieldInfo);        
+        }
+        return $mainInfo;
+    }
+    
+    private function getFieldInfo($name, $field){
+        return array(
+            "type" => (new $field['type']())->type,
+            "unit" => null,
+            "name" => $name,
+            "title" => $name,
+            "description" => null,
+            "defaultValue" => array_key_exists('default', $field) ? $field['default'] : null,
+            "required" => array_key_exists('is_null', $field) ? $field['is_null'] : true,
+            "visible" => array_key_exists('readable', $field) ? $field['readable'] : true,
+            "editable" => array_key_exists('editable', $field) ? $field['editable'] : false,
+            "priority" => 0,
+            "validators" => [],
+            "tags" => [],
+            "children" => []
+        );
+    }
 }
 
 /**
