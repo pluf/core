@@ -549,4 +549,12 @@ class Pluf_Views
         $object->delete();
         return self::CRUD_response($request, $p, $objectCopy);
     }
+    
+    public function getSchema($request, $match, $p){
+        $model = self::CRUD_getModel($p);
+        $obj = new $model();
+        return $obj->getSchema();
+    }
 }
+
+
