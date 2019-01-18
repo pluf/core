@@ -16,7 +16,7 @@
 	],
 	"minimum-stability" : "stable",
 	"require" : {
-		"pluf/http2" : "5.0.x",
+		"pluf/http2" : "5.1.x",
 		"pear/mail" : "^1.3",
 		"pear/mail_mime" : "^1.10.0",
 		"guzzlehttp/guzzle" : "^6.2",
