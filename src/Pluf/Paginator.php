@@ -55,6 +55,8 @@ class Pluf_Paginator
 
     const CURRENT_PAGE_KEY = '_px_p';
 
+    const PAGE_SIZE_KEY = '_px_ps';
+
     const SORT_KEY_KEY = '_px_sk';
 
     const SORT_ORDER_KEY = '_px_so';
@@ -261,6 +263,10 @@ class Pluf_Paginator
         if (isset($request->REQUEST[self::CURRENT_PAGE_KEY])) {
             $this->current_page = (int) $request->REQUEST[self::CURRENT_PAGE_KEY];
             $this->current_page = max(1, $this->current_page);
+        }
+        if (isset($request->REQUEST[self::PAGE_SIZE_KEY])) {
+            $this->items_per_page = (int) $request->REQUEST[self::PAGE_SIZE_KEY];
+            $this->items_per_page = min(500, $this->items_per_page);
         }
 
         // Load options
