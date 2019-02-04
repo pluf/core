@@ -82,6 +82,15 @@ class Pluf_Paginator
     public $items = null;
 
     /**
+     * Total number of items matched with this pagination
+     *
+     * If any parameters of the pagination is changed value of this field is not valid yet.
+     *
+     * @var integer
+     */
+    private $count = - 1;
+
+    /**
      * The fields being shown.
      *
      * If no fields are given, the __toString representation of the
@@ -142,7 +151,7 @@ class Pluf_Paginator
     /**
      * Number of pages.
      */
-    public $page_number = 1;
+    private $page_number = - 1;
 
     /**
      * Search string.
@@ -330,13 +339,14 @@ class Pluf_Paginator
 
         // fetch from DB
         $st = ($this->current_page - 1) * $this->items_per_page;
-        return $this->model->getList(array(
+        $this->items = $this->model->getList(array(
             'view' => $this->model_view,
             'filter' => $this->getFilters(),
             'order' => $this->getOrders(),
             'start' => $st,
             'nb' => $this->items_per_page
         ));
+        return $this->items;
     }
 
     /**
@@ -349,10 +359,23 @@ class Pluf_Paginator
         if (is_null($this->model)) {
             return $this->items->count();
         }
-        return $this->model->getCount(array(
+        $this->count = $this->model->getCount(array(
             'view' => $this->model_view,
             'filter' => $this->getFilters()
         ));
+        return $this->count;
+    }
+
+    public function getNumberOfPages()
+    {
+        if ($this->items == null) {
+            $this->fetchItems();
+        }
+        if ($this->count == - 1) {
+            $this->fetchItemsCount();
+        }
+        $this->page_number = ceil($this->count / $this->items_per_page);
+        return $this->page_number;
     }
 
     /**
