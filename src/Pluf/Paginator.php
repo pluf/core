@@ -55,6 +55,8 @@ class Pluf_Paginator
 
     const CURRENT_PAGE_KEY = '_px_p';
 
+    const PAGE_SIZE_KEY = '_px_ps';
+
     const SORT_KEY_KEY = '_px_sk';
 
     const SORT_ORDER_KEY = '_px_so';
@@ -78,6 +80,15 @@ class Pluf_Paginator
      * @var array
      */
     public $items = null;
+
+    /**
+     * Total number of items matched with this pagination
+     *
+     * If any parameters of the pagination is changed value of this field is not valid yet.
+     *
+     * @var integer
+     */
+    private $count = - 1;
 
     /**
      * The fields being shown.
@@ -140,7 +151,7 @@ class Pluf_Paginator
     /**
      * Number of pages.
      */
-    public $page_number = 1;
+    private $page_number = - 1;
 
     /**
      * Search string.
@@ -262,6 +273,10 @@ class Pluf_Paginator
             $this->current_page = (int) $request->REQUEST[self::CURRENT_PAGE_KEY];
             $this->current_page = max(1, $this->current_page);
         }
+        if (isset($request->REQUEST[self::PAGE_SIZE_KEY])) {
+            $this->items_per_page = (int) $request->REQUEST[self::PAGE_SIZE_KEY];
+            $this->items_per_page = min(500, $this->items_per_page);
+        }
 
         // Load options
         $this->loadSortOptions($request);
@@ -324,13 +339,14 @@ class Pluf_Paginator
 
         // fetch from DB
         $st = ($this->current_page - 1) * $this->items_per_page;
-        return $this->model->getList(array(
+        $this->items = $this->model->getList(array(
             'view' => $this->model_view,
             'filter' => $this->getFilters(),
             'order' => $this->getOrders(),
             'start' => $st,
             'nb' => $this->items_per_page
         ));
+        return $this->items;
     }
 
     /**
@@ -343,10 +359,23 @@ class Pluf_Paginator
         if (is_null($this->model)) {
             return $this->items->count();
         }
-        return $this->model->getCount(array(
+        $this->count = $this->model->getCount(array(
             'view' => $this->model_view,
             'filter' => $this->getFilters()
         ));
+        return $this->count;
+    }
+
+    public function getNumberOfPages()
+    {
+        if ($this->items == null) {
+            $this->fetchItems();
+        }
+        if ($this->count == - 1) {
+            $this->fetchItemsCount();
+        }
+        $this->page_number = ceil($this->count / $this->items_per_page);
+        return $this->page_number;
     }
 
     /**

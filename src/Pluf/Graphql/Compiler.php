@@ -152,7 +152,7 @@ class ' . $className . ' {
                     \'page_number\' => [
                         \'type\' => Type::int(),
                         \'resolve\' => function ($root) {
-                            return $root->page_number;
+                            return $root->getNumberOfPages();
                         }
                     ],
                     \'items\' => [
