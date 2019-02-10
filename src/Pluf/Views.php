@@ -233,6 +233,9 @@ class Pluf_Views
         if (array_key_exists('sortFields', $p)) {
             $builder->setSortFields($p['sortFields']);
         }
+        if (array_key_exists('view', $p)) {
+            $builder->setView($p['view']);
+        }
         $builder->setRequest($request);
         return $builder->build();
     }
