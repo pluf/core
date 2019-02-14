@@ -138,24 +138,24 @@ class Pluf_Views
     /**
      * Call determined preconditions in the $p and check if preconditions are statisfied.
      * Preconditions could be determined in the $p array as 'precond' feild.
-     * 
+     *
      * A precondition is a function which is called in some situations before some actions.
      * Here is an example to define preconditions in $p:
-     * 
-     *     $p = array(
-     *         'precond' => array(
-     *             'My_Precondition_Class::precondFunc', 
-     *             'My_Precondition_Class::precondFunc2'
-     *         )
-     *     );
-     * 
+     *
+     * $p = array(
+     * 'precond' => array(
+     * 'My_Precondition_Class::precondFunc',
+     * 'My_Precondition_Class::precondFunc2'
+     * )
+     * );
+     *
      * Value of 'precond' could be array or a single item.
-     * 
+     *
      * Each precondition function will be called with three argument respectively as following:
      * - $request: Pluf_HTTp_Request
      * - $object: Pluf_Model
      * - $parent: Pluf_Model, which is a parent of $object model
-     * 
+     *
      * @param Pluf_HTTP_Request $request
      * @param array $p
      * @param Pluf_Model $object
@@ -191,7 +191,8 @@ class Pluf_Views
      * @param Pluf_HTTP_Request $request
      * @param Pluf_Model $parent
      * @param Pluf_Model $object
-     * @param array $p parameters
+     * @param array $p
+     *            parameters
      * @throws Pluf_HTTP_Error404 if relation does not exist
      */
     private static function CRUD_assertManyToOneRelation($parent, $object, $p)
@@ -231,6 +232,9 @@ class Pluf_Views
         }
         if (array_key_exists('sortFields', $p)) {
             $builder->setSortFields($p['sortFields']);
+        }
+        if (array_key_exists('view', $p)) {
+            $builder->setView($p['view']);
         }
         $builder->setRequest($request);
         return $builder->build();
@@ -492,6 +496,12 @@ class Pluf_Views
      * 'extra_context' - Array of key/values to be added to the
      * context (array())
      *
+     * Other extra parameters may be as follow:
+     *
+     * 'permanently' - if is exist and its value is false the object will not be deleted permanently and
+     * only the `deleted` field of that will be set to true. Note that this option assumes that the removing
+     * object has a feild named `deleted`
+     *
      * @param Pluf_HTTP_Request $request
      *            object
      * @param array $match
@@ -509,9 +519,14 @@ class Pluf_Views
         // Set the default
         $model = self::CRUD_getModel($p);
         $object = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
+        self::CRUD_checkPreconditions($request, $p, $object);
+        if (array_key_exists('permanently', $p) && $p['permanently'] === false) {
+            $object->deleted = true;
+            $object->update();
+            return $object;
+        }
         $objectCopy = Pluf_Shortcuts_GetObjectOr404($model, $match['modelId']);
         $objectCopy->id = 0;
-        self::CRUD_checkPreconditions($request, $p, $object);
         $object->delete();
         return self::CRUD_response($request, $p, $objectCopy);
     }
@@ -549,8 +564,9 @@ class Pluf_Views
         $object->delete();
         return self::CRUD_response($request, $p, $objectCopy);
     }
-    
-    public function getSchema($request, $match, $p){
+
+    public function getSchema($request, $match, $p)
+    {
         $model = self::CRUD_getModel($p);
         $obj = new $model();
         return $obj->getSchema();
