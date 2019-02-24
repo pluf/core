@@ -573,6 +573,7 @@ class Pluf_Model implements JsonSerializable
     {
         $default = array(
             'view' => null,
+            'group' => null,
             'filter' => null,
             'order' => null,
             'start' => null,
@@ -600,6 +601,9 @@ class Pluf_Model implements JsonSerializable
         }
         if (! is_null($p['select'])) {
             $query['select'] = $p['select'];
+        }
+        if (! is_null($p['group'])) {
+            $query['group'] = $p['group'];
         }
         if (! is_null($p['filter'])) {
             if (is_array($p['filter'])) {

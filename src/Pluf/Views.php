@@ -211,7 +211,7 @@ class Pluf_Views
      *
      * @param Pluf_HTTP_Request $request
      * @param array $match
-     * @return Pluf_HTTP_Response_Json
+     * @return Pluf_Paginator
      */
     public function findObject($request, $match, $p = array())
     {
@@ -248,7 +248,7 @@ class Pluf_Views
      *
      * @param Pluf_HTTP_Request $request
      * @param array $match
-     * @return Pluf_HTTP_Response_Json
+     * @return Pluf_Paginator
      */
     public function findManyToOne($request, $match, $p)
     {

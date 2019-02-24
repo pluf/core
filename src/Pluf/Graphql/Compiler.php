@@ -237,6 +237,11 @@ class ' . $className . ' {
                     continue;
                 }
             }
+            if(array_key_exists('readable', $field)){
+                if(!$field['readable']){
+                    continue;
+                }
+            }
 
             // Foreignkey
             $fieldType = $field['type'];
