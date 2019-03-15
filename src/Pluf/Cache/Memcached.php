@@ -19,7 +19,7 @@
  */
 
 /**
- * کش مبتنی بر حافظه را ایجاد می‌کند
+ * Cache in memory
  *
  * A special 'cache_memcached_keyprefix' can be set to use one
  * memcached for different applications and avoid conflict.

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -18,7 +19,11 @@
  */
 
 /**
- * کش مبتنی بر APC
+ * APC cache
+ *
+ * Warning: This extension is considered unmaintained and dead. However, 
+ * the source code for this extension is still available within PECL 
+ * GIT here: http://git.php.net/?p=pecl/caching/apc.git.
  *
  * You need APC installed on your server for this cache system to
  * work. You can install APC with <code>$ sudo pecl install apc</code>
@@ -41,67 +46,72 @@
  * @see http://www.php.net/gzdeflate
  * @see http://www.php.net/gzinflate
  */
-class Pluf_Cache_Apc extends Pluf_Cache {
-	/**
-	 * پیشوندی که به تمام کلیدهای کش اضافه می‌شود.
-	 * این کلید در تنظیم‌های
-	 * سیستم تعیین می‌شود.
-	 */
-	private $keyprefix = '';
-	
-	/**
-	 * فشرده کردن داده‌ها را تعیین می‌کند.
-	 * در صورتی که فشرده سازی فعال شود
-	 * یک مقدار سربار محاسباتی داریم اما حجم استفاده شده کاهش پیدا می‌کنه.
-	 */
-	private $compress = false;
-	
-	/**
-	 * یک نمونه جدید از این کلاس ایجاد می‌کند
-	 *
-	 * نمونه ایجاد شده با استفاده از تنظیم‌هایی که در تنظیم‌های سرور تعیین شده\
-	 * است مقدار دهی و راه اندازی می‌شود.
-	 */
-	public function __construct() {
-		$this->keyprefix = Pluf::f ( 'cache_apc_keyprefix', '' );
-		$this->compress = Pluf::f ( 'cache_apc_compress', false );
-	}
-	
-	/**
-	 * یک مقدار را در کش قرار می‌دهد
-	 *
-	 * @param
-	 *        	string Key کلیدی که برای ذخیره سازی استفاده می‌شود
-	 * @param
-	 *        	mixed Value مقداری که باید کش شود
-	 * @param
-	 *        	int Timeout زمان انقضا را بر اساس ثانیه تعیین می‌کند
-	 * @return bool حالت موفقیت انجام این عمل را تعیین می‌کند.
-	 */
-	public function set($key, $value, $timeout = null) {
-		if ($timeout == null)
-			$timeout = Pluf::f ( 'cache_timeout', 300 );
-		$value = serialize ( $value );
-		if ($this->compress)
-			$value = gzdeflate ( $value, 9 );
-		return apc_store ( $this->keyprefix . $key, $value, $timeout );
-	}
-	
-	/**
-	 * Get value from the cache.
-	 *
-	 * @param
-	 *        	string Key to get the information
-	 * @param
-	 *        	mixed Default value to return if cache miss (null)
-	 * @return mixed Stored value or default
-	 */
-	public function get($key, $default = null) {
-		$value = apc_fetch ( $this->keyprefix . $key );
-		if ($value === FALSE)
-			return $default;
-		if ($this->compress)
-			$value = gzinflate ( $value );
-		return unserialize ( $value );
-	}
+class Pluf_Cache_Apc extends Pluf_Cache
+{
+
+    /**
+     * پیشوندی که به تمام کلیدهای کش اضافه می‌شود.
+     * این کلید در تنظیم‌های
+     * سیستم تعیین می‌شود.
+     */
+    private $keyprefix = '';
+
+    /**
+     * فشرده کردن داده‌ها را تعیین می‌کند.
+     * در صورتی که فشرده سازی فعال شود
+     * یک مقدار سربار محاسباتی داریم اما حجم استفاده شده کاهش پیدا می‌کنه.
+     */
+    private $compress = false;
+
+    /**
+     * یک نمونه جدید از این کلاس ایجاد می‌کند
+     *
+     * نمونه ایجاد شده با استفاده از تنظیم‌هایی که در تنظیم‌های سرور تعیین شده\
+     * است مقدار دهی و راه اندازی می‌شود.
+     */
+    public function __construct()
+    {
+        $this->keyprefix = Pluf::f('cache_apc_keyprefix', '');
+        $this->compress = Pluf::f('cache_apc_compress', false);
+    }
+
+    /**
+     * یک مقدار را در کش قرار می‌دهد
+     *
+     * @param
+     *            string Key کلیدی که برای ذخیره سازی استفاده می‌شود
+     * @param
+     *            mixed Value مقداری که باید کش شود
+     * @param
+     *            int Timeout زمان انقضا را بر اساس ثانیه تعیین می‌کند
+     * @return bool حالت موفقیت انجام این عمل را تعیین می‌کند.
+     */
+    public function set($key, $value, $timeout = null)
+    {
+        if ($timeout == null)
+            $timeout = Pluf::f('cache_timeout', 300);
+        $value = serialize($value);
+        if ($this->compress)
+            $value = gzdeflate($value, 9);
+        return apc_store($this->keyprefix . $key, $value, $timeout);
+    }
+
+    /**
+     * Get value from the cache.
+     *
+     * @param
+     *            string Key to get the information
+     * @param
+     *            mixed Default value to return if cache miss (null)
+     * @return mixed Stored value or default
+     */
+    public function get($key, $default = null)
+    {
+        $value = apc_fetch($this->keyprefix . $key);
+        if ($value === FALSE)
+            return $default;
+        if ($this->compress)
+            $value = gzinflate($value);
+        return unserialize($value);
+    }
 }

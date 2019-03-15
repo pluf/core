@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true">
     <testsuites>
-         <testsuite name="Dispatch">
-            <directory>tests/Dispatch/</directory>
+         <testsuite name="Basics">
+<!--             <directory>tests/Dispatch/</directory> -->
+            <directory>tests/Cache/</directory>
          </testsuite>
 <!--         <testsuite name="Pluf"> -->
 <!--             <directory>tests/Pluf/</directory> -->
