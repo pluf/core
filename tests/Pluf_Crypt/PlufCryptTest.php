@@ -50,4 +50,3 @@ class PlufCryptTest extends TestCase
     }
 }
 
-?>
