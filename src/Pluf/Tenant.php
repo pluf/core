@@ -202,10 +202,19 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function storagePath()
     {
-        $tenant = self::current();
-        if ($tenant->isAnonymous()) {
+        return self::current() 
+            ->getStoragePath();
+    }
+    
+    /**
+     * Gets tenant storage path
+     *
+     * @return path of the storage
+     */
+    public function getStoragePath() {
+        if ($this->isAnonymous()) {
             return Pluf::f('upload_path');
         }
-        return Pluf::f('upload_path') . '/' . $tenant->id;
+        return Pluf::f('upload_path') . '/' . $this->id;
     }
 }
