@@ -103,7 +103,7 @@ class Pluf_Graphql
         $result = $compiler->render($c, $query);
         if (array_key_exists('errors', $result)) {
             // TODO: maso, 2018: build a valid message
-            throw new Pluf_Exception('Fail to run GraphQl query.');
+            throw new Pluf_Exception('Fail to run GraphQl query: ' . var_dump($result));
         }
         return $result['data'];
     }
