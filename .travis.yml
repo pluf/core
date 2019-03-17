@@ -40,7 +40,8 @@ after_success:
  
 notifications:
   email:
-    - mostafabarmshory+eeqna5hwqenxwczq7lax@boards.trello.com
+#    - mostafabarmshory+eeqna5hwqenxwczq7lax@boards.trello.com
+    - ${board_token}@boards.trello.com
   on_success: never
   on_failure: always
   on_error: always
