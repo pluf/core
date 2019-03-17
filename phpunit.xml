@@ -5,7 +5,7 @@
             <directory>tests/Dispatch/</directory>
             <directory>tests/Cache/</directory>
          </testsuite>
-        <testsuite name="Pluf">
+        <testsuite name="Pluf2Suit">
             <directory>tests/Pluf/</directory>
             <directory>tests/Pluf_Crypt/</directory>
             <directory>tests/Pluf_Utils/</directory>
@@ -27,7 +27,6 @@
             <directory>tests/Pluf_Text_Wiki/</directory>
             <directory>tests/Pluf_Text_HTML_Filter/</directory>
             <directory>tests/Pluf_Form_Field/</directory>
-            
             <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>
         <testsuite name="GraphQl">
@@ -43,8 +42,5 @@
     </filter>
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
-<!--         <log type="coverage-html" target="build/logs/codeCoverage" charset="UTF-8" -->
-<!-- 	        yui="true" highlight="true" -->
-<!-- 	        lowUpperBound="50" highLowerBound="80"/> -->
     </logging>
 </phpunit>
