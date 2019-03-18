@@ -67,5 +67,8 @@ if (!mkdir($tmp_path, 0777, true)) {
     die('Failed to create temp folder...');
 }
 
+
+// Adding basics
+require_once 'Pluf.php';
 // run tests
 PHPUnit_TextUI_Command::main();

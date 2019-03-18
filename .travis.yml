@@ -37,3 +37,11 @@ after_success:
  - travis_retry php coveralls.phar -v
 # Submit coverage report to codecov.io
  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email:
+    - mostafabarmshory+eeqna5hwqenxwczq7lax@boards.trello.com
+  on_success: never
+  on_failure: always
+  on_error: always
+  
