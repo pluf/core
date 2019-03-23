@@ -19,49 +19,67 @@
  */
 
 /**
- * The request object. 
+ * The request object.
  *
  * It is given as first arguments to the view as first argument.
  */
 class Pluf_HTTP_Request
 {
+
     public $POST = array();
+
     public $GET = array();
+
     public $PUT = array();
+
     public $REQUEST = array();
+
     public $COOKIE = array();
+
     public $FILES = array();
+
     public $HEADERS = array();
+
     public $query = '';
+
     public $query_string = '';
+
     public $method = '';
+
     public $uri = '';
+
     public $view = '';
+
     public $remote_addr = '';
+
     public $http_host = '';
+
     public $SERVER = array();
+
     public $uid = '';
+
     public $time = '';
+
     public $agent = '';
-    
+
     /**
      * Protocol
-     * 
+     *
      * @see $_SERVER['HTTP_HOST']
      * @var boolean
      */
     public $https = false;
-    
+
     /**
      * Current user
-     * 
+     *
      * @var User_Account
      */
     public $user = null;
-    
+
     /**
      * Current tenant
-     * 
+     *
      * @var Pluf_Tenant
      */
     public $tenant = null;
@@ -70,11 +88,12 @@ class Pluf_HTTP_Request
     {
         $http = new Pluf_HTTP();
         $http->removeTheMagic();
-        $this->POST =& $_POST;
-        $this->GET =& $_GET;
-        $this->REQUEST =& $_REQUEST;
-        $this->COOKIE =& $_COOKIE;
-        $this->FILES =& $_FILES;
+
+        $this->POST = & $_POST;
+        $this->GET = & $_GET;
+        $this->REQUEST = & $_REQUEST;
+        $this->COOKIE = & $_COOKIE;
+        $this->FILES = & $_FILES;
         $this->query = $query;
         $this->query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
         $this->method = (isset($_SERVER['REQUEST_METHOD'])) ? $_SERVER['REQUEST_METHOD'] : 'GET';
@@ -82,18 +101,22 @@ class Pluf_HTTP_Request
         $this->path_info = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : '/';
         $this->remote_addr = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : 'localhost';
         $this->http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
-        $this->SERVER =& $_SERVER;
-        $this->uid = $GLOBALS['_PX_uniqid']; 
+        $this->SERVER = & $_SERVER;
+        $this->uid = $GLOBALS['_PX_uniqid'];
+        // request time
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
+        // XXX: maso, 2019: check the documents
+        $this->microtime = (isset($_SERVER['REQUEST_TIME_FLOAT'])) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(true);
+
         $this->https = isset($_SERVER['HTTPS']);
-        $this->agent = (isset($_SERVER['HTTP_USER_AGENT'])) ?  $_SERVER['HTTP_USER_AGENT'] : '';
-        
+        $this->agent = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
         /*
          * Load PUT parameters and merge with POST
          */
-        if($this->method == 'PUT') {
+        if ($this->method == 'PUT') {
             $put_vars = array();
-            parse_str(file_get_contents("php://input"),$put_vars);
+            parse_str(file_get_contents("php://input"), $put_vars);
             $this->PUT = $put_vars;
             $this->POST = array_merge($this->POST, $put_vars);
             $this->REQUEST = array_merge($this->REQUEST, $put_vars);
@@ -102,8 +125,44 @@ class Pluf_HTTP_Request
          * Load request header
          */
         $this->HEADERS = array();
-        if(function_exists('apache_request_headers')){
+        if (function_exists('apache_request_headers')) {
             $this->HEADERS = apache_request_headers();
         }
+    }
+
+    /**
+     * Gets time of the request
+     *
+     * NOTE: returns the current time in the number of seconds since the Unix Epoch (January 1 1970 00:00:00 GMT).
+     *
+     * @return int
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * The timestamp of the start of the request, with microsecond precision.
+     *
+     * @return float
+     */
+    public function getMicrotime() {
+        return $this->microtime;
+    }
+
+    /**
+     * Calculates the size of the request
+     *
+     * @return int size of the request
+     */
+    public function getSize() {
+        $size = 0;
+        // TODO: maso, 2019: file size
+        // Parameter size
+        $size += strlen(serialize($this->REQUEST));
+        // Header size
+        $size += strlen(serialize($this->HEADERS));
+        return $size;
     }
 }

@@ -18,7 +18,10 @@
  */
 
 /**
- * ابزارهای پایه کار با HTTP.
+ * Some basic HTTP management tools
+ *
+ * @author maso
+ *
  */
 class Pluf_HTTP
 {
