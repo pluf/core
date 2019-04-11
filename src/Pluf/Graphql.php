@@ -102,10 +102,20 @@ class Pluf_Graphql
         $compiler = new $schema();
         $result = $compiler->render($c, $query);
         if (array_key_exists('errors', $result)) {
-            // TODO: maso, 2018: build a valid message
-            throw new Pluf_Exception('Fail to run GraphQl query: ' . var_dump($result));
+            throw new Pluf_Exception('Fail to run GraphQl query: ' . $this->beautifyErrorMessage($result['errors']));
         }
         return $result['data'];
+    }
+
+    private function beautifyErrorMessage($errors)
+    {
+        // return print_r($errors, TRUE);
+        $messages = array();
+        foreach ($errors as $error) {
+            $msg = '[line: ' . $error['locations'][0]['line'] . ', column: ' . $error['locations'][0]['column'] . ': ' . $error['message'] . ']';
+            array_push($messages, $msg);
+        }
+        return implode(',', $messages);
     }
 }
 
