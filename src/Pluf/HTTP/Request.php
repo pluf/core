@@ -159,6 +159,10 @@ class Pluf_HTTP_Request
     public function getSize() {
         $size = 0;
         // TODO: maso, 2019: file size
+        // Note: hadi, 2019: base on this: https://www.geeksforgeeks.org/php-_files-array-http-file-upload-variables/
+        foreach ($this->FILES as $file){
+            $size += array_key_exists('size', $file) ? $file['size'] : 0;
+        }
         // Parameter size
         $size += strlen(serialize($this->REQUEST));
         // Header size
