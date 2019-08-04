@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
@@ -105,30 +105,21 @@ class Pluf_Tenant extends Pluf_Model
                 'type' => 'Pluf_DB_Field_Datetime',
                 'blank' => true,
                 'editable' => false
-            )
+            ),
+            /*
+             * Relations
+             */
+            'parent_id' => array(
+                'type' => 'Pluf_DB_Field_Foreignkey',
+                'model' => 'Pluf_Tenant',
+                'blank' => true,
+                'name' => 'parent',
+                'graphql_name' => 'parent',
+                'relate_name' => 'children',
+                'editable' => true,
+                'readable' => true
+            ),
         );
-        
-        // @Note: hadi - 1396-10: when define an attribute as unique => true, pluf automatically
-        // create an unique index for it (for example domain and subdomain fields). So following codes are extra.
-//         $this->_a['idx'] = array(
-//             'tenant_domain_idx' => array(
-//                 'col' => 'domain',
-//                 'type' => 'unique', // normal, unique, fulltext, spatial
-//                 'index_type' => '', // hash, btree
-//                 'index_option' => '',
-//                 'algorithm_option' => '',
-//                 'lock_option' => ''
-//             ),
-//             'tenant_subdomain_idx' => array(
-//                 'col' => 'subdomain',
-//                 'type' => 'unique', // normal, unique, fulltext, spatial
-//                 'index_type' => '', // hash, btree
-//                 'index_option' => '',
-//                 'algorithm_option' => '',
-//                 'lock_option' => ''
-//             )
-//         );
-        
         $this->_a['views'] = array();
     }
 
@@ -202,10 +193,10 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function storagePath()
     {
-        return self::current() 
+        return self::current()
             ->getStoragePath();
     }
-    
+
     /**
      * Gets tenant storage path
      *
