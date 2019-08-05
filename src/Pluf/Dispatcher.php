@@ -26,7 +26,7 @@
  * نمایش نگاشت داده می‌شود.
  *
  * @author maso
- *        
+ *
  */
 class Pluf_Dispatcher
 {
@@ -238,11 +238,11 @@ class Pluf_Dispatcher
         // Call controller method (PHP 4, 5, 7)
         $model = new $ctl['model']();
         $method = $ctl['method'];
-        if (! isset($ctl['params'])) {
-            return $model->$method($req, $match);
-        } else {
-            return $model->$method($req, $match, $ctl['params']);
+        $params = array();
+        if (isset($ctl['params'])) {
+            $params = $ctl['params'];
         }
+        return $model->$method($req, $match, $params);
     }
 
     /**
