@@ -75,12 +75,12 @@ class PlufModelTest extends TestCase
         $model->title = 'myvalue';
         $this->assertEquals('myvalue', $model->title);
         $model->create();
-        
+
         $model2 = new Test_ModelRecurse();
         $model2->title = 'child';
         $model2->parent_id = $model;
         $this->assertEquals(true, $model2->create());
-        
+
         $a = $model->get_children_list();
         $this->assertEquals($a[0]->title, 'child');
     }
@@ -138,7 +138,7 @@ class PlufModelTest extends TestCase
         $id = $model->id;
         $this->assertEquals(true, $model->delete());
         $this->assertTrue($model->isAnonymous());
-        
+
         $model = new Test_Model($id);
         $this->assertTrue($model->isAnonymous());
     }
@@ -161,7 +161,7 @@ class PlufModelTest extends TestCase
         $this->assertEquals(10, count($models));
         $this->assertEquals('title 0', $models[0]->title);
         $this->assertEquals('title 5', $models[5]->title);
-        
+
         foreach ($models as $item) {
             $this->assertTrue($item->delete());
         }
@@ -182,7 +182,7 @@ class PlufModelTest extends TestCase
         $model->update();
         $m = new Test_ModelCount();
         $this->assertEquals(10, $m->getCount());
-        
+
         $models = $m->getList();
         foreach ($models as $item) {
             $this->assertTrue($item->delete());
@@ -198,12 +198,12 @@ class PlufModelTest extends TestCase
         $model->title = 'title';
         $model->description = 'A small desc ';
         $this->assertEquals(true, $model->create());
-        
+
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
         $this->assertEquals(true, $m->create());
-        
+
         $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals('stupid values', $rel[0]->dummy);
         $mod = $m->get_testmodel();
@@ -219,17 +219,17 @@ class PlufModelTest extends TestCase
         $model->title = 'title';
         $model->description = 'A small desc ';
         $this->assertEquals(true, $model->create());
-        
+
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
         $this->assertEquals(true, $m->create());
-        
+
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 2';
         $this->assertEquals(true, $m->create());
-        
+
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 3';
@@ -241,56 +241,6 @@ class PlufModelTest extends TestCase
         $this->assertEquals(1, count($rel));
         $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals(3, count($rel));
-    }
-
-    /**
-     * Test if the delete() call on a model is deleting the model
-     * related through a foreignkey.
-     *
-     * @test
-     */
-    public function testDeleteRelatedModels()
-    {
-        // delete models
-        $mr = new Test_RelatedToTestModel();
-        $items = $mr->getList();
-        foreach ($items as $item) {
-            $item->delete();
-        }
-        
-        $model = new Test_Model();
-        $model->title = 'title';
-        $model->description = 'A small desc ';
-        $model->create();
-        
-        $m1 = new Test_RelatedToTestModel();
-        $m1->testmodel = $model;
-        $m1->dummy = 'stupid values';
-        $m1->create();
-        
-        $m2 = new Test_RelatedToTestModel();
-        $m2->testmodel = $model;
-        $m2->dummy = 'stupid values';
-        $m2->create();
-        
-        $m3 = new Test_RelatedToTestModel();
-        $m3->testmodel = $model;
-        $m3->dummy = 'stupid values';
-        $m3->create();
-        
-        $rel = $model->get_test_relatedtotestmodel_list();
-        $this->assertEquals(3, count($rel));
-        $this->assertEquals(0, count($m2->getDeleteSideEffect()));
-        $m2->delete();
-        
-        $rel = $model->get_test_relatedtotestmodel_list();
-        $this->assertEquals(2, count($rel));
-        $this->assertEquals(2, count($model->getDeleteSideEffect()));
-        $model->delete();
-        
-        $mr = new Test_RelatedToTestModel();
-        $rel = $mr->getList();
-        $this->assertEquals(0, count($rel));
     }
 
     /**
@@ -310,40 +260,40 @@ class PlufModelTest extends TestCase
         $tm3->title = 'title tm3';
         $tm3->description = 'A small desc tm3';
         $tm3->create();
-        
+
         $rm1 = new Test_RelatedToTestModel2();
         $rm1->testmodel_1 = $tm1;
         $rm1->testmodel_2 = $tm2;
         $rm1->dummy = 'stupid values rm1';
         $rm1->create();
-        
+
         $rm2 = new Test_RelatedToTestModel2();
         $rm2->testmodel_1 = $tm1;
         $rm2->testmodel_2 = $tm2;
         $rm2->dummy = 'stupid values rm2';
         $rm2->create();
-        
+
         $rm3 = new Test_RelatedToTestModel2();
         $rm3->testmodel_1 = $tm1;
         $rm3->testmodel_2 = $tm3;
         $rm3->dummy = 'stupid values rm3';
         $rm3->create();
-        
+
         $rel = $tm1->get_first_rttm_list();
         $this->assertEquals(3, count($rel));
         $this->assertEquals('stupid values rm1', $rel[0]->dummy);
-        
+
         $rel = $tm2->get_first_rttm_list();
         $this->assertEquals(0, count($rel));
-        
+
         $rel = $tm2->get_second_rttm_list();
         $this->assertEquals(2, count($rel));
         $this->assertEquals('stupid values rm2', $rel[1]->dummy);
-        
+
         $rel = $tm3->get_second_rttm_list();
         $this->assertEquals(1, count($rel));
         $this->assertEquals('stupid values rm3', $rel[0]->dummy);
-        
+
         $tm1bis = $rm2->get_testmodel_1();
         $this->assertEquals('title tm1', $tm1bis->title);
     }
@@ -362,7 +312,7 @@ class PlufModelTest extends TestCase
 
     // XXX: maso, 2018: why it must throws exception?!
 //     /**
-//      * 
+//      *
 //      * @expectedException Exception
 //      * @test
 //      */

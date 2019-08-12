@@ -271,56 +271,6 @@ class Pluf_Model_PlufModelMTTest extends TestCase
     }
 
     /**
-     * Test if the delete() call on a model is deleting the model
-     * related through a foreignkey.
-     *
-     * @test
-     */
-    public function testDeleteRelatedModels()
-    {
-        // delete models
-        $mr = new Test_RelatedToTestModel();
-        $items = $mr->getList();
-        foreach ($items as $item) {
-            $item->delete();
-        }
-
-        $model = new Test_Model();
-        $model->title = 'title';
-        $model->description = 'A small desc ';
-        $model->create();
-
-        $m1 = new Test_RelatedToTestModel();
-        $m1->testmodel = $model;
-        $m1->dummy = 'stupid values';
-        $m1->create();
-
-        $m2 = new Test_RelatedToTestModel();
-        $m2->testmodel = $model;
-        $m2->dummy = 'stupid values';
-        $m2->create();
-
-        $m3 = new Test_RelatedToTestModel();
-        $m3->testmodel = $model;
-        $m3->dummy = 'stupid values';
-        $m3->create();
-
-        $rel = $model->get_test_relatedtotestmodel_list();
-        $this->assertEquals(3, count($rel));
-        $this->assertEquals(0, count($m2->getDeleteSideEffect()));
-        $m2->delete();
-
-        $rel = $model->get_test_relatedtotestmodel_list();
-        $this->assertEquals(2, count($rel));
-        $this->assertEquals(2, count($model->getDeleteSideEffect()));
-        $model->delete();
-
-        $mr = new Test_RelatedToTestModel();
-        $rel = $mr->getList();
-        $this->assertEquals(0, count($rel));
-    }
-
-    /**
      *
      * @test
      */

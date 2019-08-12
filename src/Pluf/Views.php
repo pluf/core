@@ -67,7 +67,7 @@ class Pluf_Views
     }
 
     /**
-     * یکی از الگوها را ایجاد و آن را به عنوان نتیجه برمی‌گرداند
+     * Creates a template and returns as result
      *
      * در بسیاری از کاربردها نرم‌افزار کاربردی به صفحه‌های متفاوتی شکسته می‌شود
      * و بر اساس
@@ -126,8 +126,7 @@ class Pluf_Views
          */
         if (isset($p['template'])) {
             $context = (isset($p['extra_context'])) ? $p['extra_context'] : array();
-            $template = (isset($p['template'])) ? $p['template'] : strtolower($model) . '_confirm_delete.html';
-            $post_delete_keys = (isset($p['post_delete_redirect_keys'])) ? $p['post_delete_redirect_keys'] : array();
+            $template = $p['template'];
             return Pluf_Shortcuts_RenderToResponse($template, array_merge($context, array(
                 'object' => $object
             )), $request);
@@ -264,6 +263,18 @@ class Pluf_Views
         }
         $p['sql'] = $sql;
         return $this->findObject($request, $match, $p);
+    }
+
+    /**
+     * Clear collection list with the given query
+     *
+     * @param unknown $request
+     * @param unknown $match
+     * @param unknown $p
+     */
+    public function clearManyToOne($request, $match, $p){
+        // XXX: clean list
+        return null;
     }
 
     /**
@@ -571,6 +582,7 @@ class Pluf_Views
         $obj = new $model();
         return $obj->getSchema();
     }
+
 }
 
 

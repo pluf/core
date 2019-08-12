@@ -26,7 +26,7 @@
  * نمایش نگاشت داده می‌شود.
  *
  * @author maso
- *        
+ *
  */
 class Pluf_Dispatcher
 {
@@ -70,7 +70,7 @@ class Pluf_Dispatcher
                     self::loadControllers($controllers);
                 }
                 $response = self::match($req);
-                $response = self::toResponse($response);
+                $response = self::toResponse($response, $req);
                 if (! empty($req->response_vary_on)) {
                     $response->headers['Vary'] = $req->response_vary_on;
                 }
@@ -238,11 +238,11 @@ class Pluf_Dispatcher
         // Call controller method (PHP 4, 5, 7)
         $model = new $ctl['model']();
         $method = $ctl['method'];
-        if (! isset($ctl['params'])) {
-            return $model->$method($req, $match);
-        } else {
-            return $model->$method($req, $match, $ctl['params']);
+        $params = array();
+        if (isset($ctl['params'])) {
+            $params = $ctl['params'];
         }
+        return $model->$method($req, $match, $params);
     }
 
     /**
@@ -265,16 +265,16 @@ class Pluf_Dispatcher
         return false;
     }
 
-    private static function toResponse($response)
+    private static function toResponse($response, $request)
     {
         // Check old result
         if ($response instanceof Pluf_HTTP_Response) {
             return $response;
         }
         // apply graphql
-        if (array_key_exists('graphql', $_REQUEST)) {
+        if (array_key_exists('graphql', $request->REQUEST)) {
             $gl = new Pluf_Graphql();
-            $response = $gl->render($response, $_REQUEST['graphql']);
+            $response = $gl->render($response, $request->REQUEST['graphql']);
         }
 
         // convert to response

@@ -705,7 +705,7 @@ class Pluf_Model implements JsonSerializable
      * Get the number of items.
      *
      * @see getList() for definition of the keys
-     *     
+     *
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
@@ -944,10 +944,7 @@ class Pluf_Model implements JsonSerializable
      * Delete the current model from the database.
      *
      * If another model link to the current model through a foreign
-     * key, find it and delete it. If this model is linked to other
-     * through a many to many, delete the association.
-     *
-     * FIXME: No real test of circular references. It can break.
+     * key, the DB is responsible to mange relations.
      */
     function delete()
     {
@@ -955,31 +952,7 @@ class Pluf_Model implements JsonSerializable
             return false;
         }
         $this->preDelete();
-        // Find the models linking to the current one through a foreign key.
-        // XXX: Hadi, 1396-03: It is better to use standard policies:
-        // RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
-        foreach ($this->_m['list'] as $method => $details) {
-            if (is_array($details)) {
-                // foreignkey
-                $related = $this->$method();
-                foreach ($related as $rel) {
-                    if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
-                        continue; // $rel == $this
-                    }
-                    // We do not really control if it can be deleted
-                    // as we can find many times the same to delete.
-                    $rel->delete();
-                }
-            } else {
-                // manytomany
-                $related = $this->$method();
-                foreach ($related as $rel) {
-                    $this->delAssoc($rel);
-                }
-            }
-        }
-        $req = 'DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id');
-        $this->_con->execute($req);
+        $this->_con->execute('DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id'));
         $this->_reset();
         return true;
     }
@@ -1281,11 +1254,11 @@ class Pluf_Model implements JsonSerializable
         );
         foreach ($this->_a['cols'] as $name => $field){
             $fieldInfo = $this->getFieldInfo($name, $field);
-            array_push($mainInfo['children'], $fieldInfo);        
+            array_push($mainInfo['children'], $fieldInfo);
         }
         return $mainInfo;
     }
-    
+
     private function getFieldInfo($name, $field){
         return array(
             "type" => (new $field['type']())->type,
