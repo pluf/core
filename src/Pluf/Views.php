@@ -266,6 +266,18 @@ class Pluf_Views
     }
 
     /**
+     * Clear collection list with the given query
+     *
+     * @param unknown $request
+     * @param unknown $match
+     * @param unknown $p
+     */
+    public function clearManyToOne($request, $match, $p){
+        // XXX: clean list
+        return null;
+    }
+
+    /**
      * Access an object (Part of the CRUD series).
      *
      * کمترین پارامترهای اضافه که باید تعیین شود عبارتند از
