@@ -366,7 +366,7 @@ class Pluf_Views
         $p = array_merge($default, $p);
         // Set the default
         $model = self::CRUD_getModel($p);
-        $object = new $model();
+        $object = $model instanceof Pluf_Model ? $model : new $model();
         // Read body of request
         // $entityBody = file_get_contents('php://input', 'r');
         // Check if body is a json array
@@ -402,7 +402,7 @@ class Pluf_Views
         $p = array_merge($default, $p);
         // Set the default
         $model = self::CRUD_getModel($p);
-        $object = new $model();
+        $object = $model instanceof Pluf_Model ? $model : new $model();
         $form = Pluf_Shortcuts_GetFormForModel($object, $request->REQUEST, $p['extra_form']);
         $object = $form->save(false);
         $object->{$p['parentKey']} = $parent;
