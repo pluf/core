@@ -44,7 +44,7 @@ class Pluf
         $GLOBALS['_PX_signal'] = array();
         $GLOBALS['_PX_locale'] = array();
         Pluf::loadConfig($config);
-        date_default_timezone_set(Pluf::f('time_zone', 'Europe/Berlin'));
+        date_default_timezone_set(Pluf::f('time_zone', 'UTC'));
         mb_internal_encoding(Pluf::f('encoding', 'UTF-8'));
         mb_regex_encoding(Pluf::f('encoding', 'UTF-8'));
     }
@@ -100,7 +100,7 @@ class Pluf
             $m = array_merge_recursive($m, require $app . '/relations.php');
         }
         $GLOBALS['_PX_models'] = $m;
-        
+
         $_r = array(
             'relate_to' => array(),
             'relate_to_many' => array()
@@ -118,7 +118,7 @@ class Pluf
         $_r['foreignkey'] = $_r['relate_to'];
         $_r['manytomany'] = $_r['relate_to_many'];
         $GLOBALS['_PX_models_related'] = $_r;
-        
+
         // $GLOBALS['_PX_signal'] is automatically set by the require
         // statement and possibly in the configuration file.
         if ($usecache) {
