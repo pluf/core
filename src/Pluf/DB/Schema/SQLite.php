@@ -36,7 +36,7 @@ class Pluf_DB_Schema_SQLite
         'boolean' => 'bool',
         'date' => 'date',
         'datetime' => 'datetime',
-        'file' => 'varchar(150)',
+        'file' => 'varchar(250)',
         'manytomany' => null,
         'foreignkey' => 'integer',
         'text' => 'text',

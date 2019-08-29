@@ -36,7 +36,7 @@ class Pluf_DB_Schema_MySQL
             'boolean' => 'bool',
             'date' => 'date',
             'datetime' => 'datetime',
-            'file' => 'varchar(150)',
+            'file' => 'varchar(250)',
             'manytomany' => null,
             'foreignkey' => 'mediumint(9) unsigned',
             'text' => 'longtext',
@@ -70,7 +70,7 @@ class Pluf_DB_Schema_MySQL
             'password' => "''",
             'float' => 0.0,
             'blob' => "''",
-            
+
             // GEO types
             'point' => null,
             'geometry' => null,
@@ -82,7 +82,7 @@ class Pluf_DB_Schema_MySQL
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند.
      *
-     * @param unknown $con            
+     * @param unknown $con
      */
     function __construct ($con)
     {
@@ -104,7 +104,7 @@ class Pluf_DB_Schema_MySQL
         $cols = $model->_a['cols'];
         $manytomany = array();
         $sql = 'CREATE TABLE `' . $this->con->pfx . $model->_a['table'] . '` (';
-        
+
         foreach ($cols as $col => $val) {
             $field = new $val['type']();
             if ($field->type != 'manytomany') {
@@ -112,7 +112,7 @@ class Pluf_DB_Schema_MySQL
                 $_tmp = $this->mappings[$field->type];
                 if ($field->type == 'varchar') {
                     if (isset($val['size'])) {
-                        $_tmp = sprintf($this->mappings['varchar'], 
+                        $_tmp = sprintf($this->mappings['varchar'],
                                 $val['size']);
                     } else {
                         $_tmp = sprintf($this->mappings['varchar'], '150');
@@ -125,7 +125,7 @@ class Pluf_DB_Schema_MySQL
                     if (! isset($val['decimal_places'])) {
                         $val['decimal_places'] = 8;
                     }
-                    $_tmp = sprintf($this->mappings['float'], 
+                    $_tmp = sprintf($this->mappings['float'],
                             $val['max_digits'], $val['decimal_places']);
                 }
                 $sql .= $_tmp;
@@ -154,7 +154,7 @@ class Pluf_DB_Schema_MySQL
         }
         $sql .= 'ENGINE=' . $engine . ' DEFAULT CHARSET=utf8;';
         $tables[$this->con->pfx . $model->_a['table']] = $sql;
-        
+
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
@@ -197,8 +197,8 @@ class Pluf_DB_Schema_MySQL
                 $type = $val['type'];
             }
             $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf(
-                    'CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx, 
-                    $this->con->pfx . $model->_a['table'], 
+                    'CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx,
+                    $this->con->pfx . $model->_a['table'],
                     Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
@@ -206,8 +206,8 @@ class Pluf_DB_Schema_MySQL
             if ($field->type == 'foreignkey') {
                 $index[$this->con->pfx . $model->_a['table'] . '_' . $col .
                          '_foreignkey'] = sprintf(
-                                'CREATE INDEX `%s` ON `%s` (`%s`);', 
-                                $col . '_foreignkey_idx', 
+                                'CREATE INDEX `%s` ON `%s` (`%s`);',
+                                $col . '_foreignkey_idx',
                                 $this->con->pfx . $model->_a['table'], $col);
             }
             if (isset($val['unique']) and $val['unique'] == true) {
@@ -215,9 +215,9 @@ class Pluf_DB_Schema_MySQL
                 $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
                 $index[$this->con->pfx . $model->_a['table'] . '_' . $col .
                          '_unique'] = sprintf(
-                                'CREATE UNIQUE INDEX `%s` ON `%s` (%s);', 
-                                $col . '_unique_idx', 
-                                $this->con->pfx . $model->_a['table'], 
+                                'CREATE UNIQUE INDEX `%s` ON `%s` (%s);',
+                                $col . '_unique_idx',
+                                $this->con->pfx . $model->_a['table'],
                                 Pluf_DB_Schema::quoteColumn($columns, $this->con));
             }
         }
@@ -254,7 +254,7 @@ class Pluf_DB_Schema_MySQL
         $alter_tbl = 'ALTER TABLE ' . $table;
         $cols = $model->_a['cols'];
         $manytomany = array();
-        
+
         foreach ($cols as $col => $val) {
             $field = new $val['type']();
             // remember these for later
@@ -271,7 +271,7 @@ class Pluf_DB_Schema_MySQL
                     ON DELETE NO ACTION ON UPDATE NO ACTION';
             }
         }
-        
+
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
@@ -309,14 +309,14 @@ class Pluf_DB_Schema_MySQL
         $manytomany = array();
         $sql = 'DROP TABLE IF EXISTS `' . $this->con->pfx . $model->_a['table'] .
                  '`';
-        
+
         foreach ($cols as $col => $val) {
             $field = new $val['type']();
             if ($field->type == 'manytomany') {
                 $manytomany[] = $col;
             }
         }
-        
+
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
@@ -347,7 +347,7 @@ class Pluf_DB_Schema_MySQL
         $alter_tbl = 'ALTER TABLE ' . $table;
         $cols = $model->_a['cols'];
         $manytomany = array();
-        
+
         foreach ($cols as $col => $val) {
             $field = new $val['type']();
             // remember these for later
@@ -361,7 +361,7 @@ class Pluf_DB_Schema_MySQL
                         $table . '_' . $col . '_fkey');
             }
         }
-        
+
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
