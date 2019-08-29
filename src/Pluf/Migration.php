@@ -342,7 +342,11 @@ class Pluf_Migration
      */
     public static function getModuleConfig($app)
     {
-        if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
+
+        $moduleName ="Pluf\\" . $app . "\\Module";
+        if(class_exists($moduleName)){
+            $file = $moduleName::moduleJsonPath;
+        } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
             return false;
         }
         $myfile = fopen($file, "r") or die("Unable to open module.json!");
