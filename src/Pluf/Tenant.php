@@ -170,7 +170,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function current()
     {
-        if (! Pluf::f('multitenant', false) || ! array_key_exist('', $GLOBALS['_PX_request'])) {
+        if (! Pluf::f('multitenant', false) || ! array_key_exists('_PX_request', $GLOBALS)) {
             $tenant = new Pluf_Tenant();
             $tenant->setFromFormData(Pluf::f('multitenant_default', array(
                 'level' => 10,
