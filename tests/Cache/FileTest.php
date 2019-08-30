@@ -42,7 +42,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
      *
      * @before
      */
-    public function setUp()
+    public function setUpTest()
     {
         if(!array_key_exists('_PX_config', $GLOBALS)){
             $GLOBALS['_PX_config'] = array();
@@ -57,7 +57,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
      *
      * @after
      */
-    public function tearDown()
+    public function tearDownTest()
     {
         $GLOBALS['_PX_config'] = $this->_config;
     }
@@ -92,7 +92,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
     public function testGetUnknownKey()
     {
         $cache = Pluf_Cache::factory();
-        $this->assertNull(null, $cache->get('unknown'));
+        $this->assertNull($cache->get('unknown'));
     }
     
     /**

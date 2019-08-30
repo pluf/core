@@ -30,7 +30,7 @@ class FileHashCodeTest extends TestCase
     /**
      * @before
      */
-    public function setUp ()
+    public function setUpTest ()
     {
         // TODO:
         $this->TestFileHashCode = md5_file(__DIR__.'/TestFile');

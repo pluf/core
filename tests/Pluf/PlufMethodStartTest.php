@@ -31,8 +31,10 @@ class PlufMethodStartTest extends TestCase
      *
      * @before
      */
-    public function setUp()
-    {}
+    public function setUpTest()
+    {
+        // TODO: maso, 2019: update test
+    }
 
     /**
      *

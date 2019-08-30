@@ -26,12 +26,24 @@ require_once 'Pluf.php';
  */
 class PlufEncoderTest extends TestCase {
     
-    protected function setUp()
+    /**
+     * Undocumented function
+     *
+     * @return void
+     * @before
+     */
+    protected function setUpTest()
     {
         Pluf::start(__DIR__. '/../conf/config.php');
     }
 
-    protected function tearDown()
+    /**
+     * Undocumented function
+     *
+     * @after
+     * @return void
+     */
+    protected function tearDownTest()
     {
         putenv('PHP_TZ='.Pluf::f('timezone')); 
     }
@@ -114,5 +126,3 @@ class PlufEncoderTest extends TestCase {
 
     }
 }
-
-?>

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 
@@ -31,7 +32,7 @@ class PlufTest extends TestCase
      *
      * @before
      */
-    public function setUp()
+    public function setUpTest()
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['test-var'] = false;
@@ -86,5 +87,3 @@ class PlufTest extends TestCase
         $this->assertEquals(true, function_exists('Pluf_HTTP_handleMagicQuotes'));
     }
 }
-
-?>

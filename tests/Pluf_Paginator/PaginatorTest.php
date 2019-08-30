@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 require_once dirname(__FILE__) . '/MyModel.php';
@@ -34,16 +36,16 @@ class Pluf_Paginator_PaginatorTest extends TestCase
      *
      * @before
      */
-    protected function setUp()
+    protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
         $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
         $schema->createTables();
-        for ($i = 1; $i < 11; $i ++) {
+        for ($i = 1; $i < 11; $i++) {
             $m = new Pluf_Paginator_MyModel();
             $m->title = 'My title ' . $i;
             $m->description = 'My description ' . $i;
@@ -53,7 +55,10 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    /**
+     * @after
+     */
+    protected function tearDownTest()
     {
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);
@@ -168,7 +173,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
         // check order
-        for ($i = 1; $i < sizeof($result['items']); $i ++) {
+        for ($i = 1; $i < sizeof($result['items']); $i++) {
             $a = $result['items'][$i];
             $b = $result['items'][$i - 1];
             $this->assertTrue($a->id > $b->id);
@@ -184,7 +189,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
         // check order
-        for ($i = 1; $i < sizeof($result['items']); $i ++) {
+        for ($i = 1; $i < sizeof($result['items']); $i++) {
             $a = $result['items'][$i];
             $b = $result['items'][$i - 1];
             $this->assertFalse($a->id > $b->id);
@@ -286,7 +291,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
     }
-    
+
     /**
      * Test filter function
      *
@@ -323,9 +328,9 @@ class Pluf_Paginator_PaginatorTest extends TestCase
 
         $item1->delete();
     }
-    
-    
-    
+
+
+
     /**
      * Test multi filter from request
      *
@@ -337,12 +342,12 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $item1->title = 'a';
         $item1->description = 'description';
         $item1->create();
-        
+
         $item2 = new Pluf_Paginator_MyModel();
         $item2->title = 'b';
         $item2->description = 'description';
         $item2->create();
-        
+
         $_REQUEST = array(
             '_px_fk' => array(
                 'id',
@@ -354,7 +359,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             )
         );
         $request = new Pluf_HTTP_Request('/test');
-        
+
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
             'id',
@@ -365,17 +370,17 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->setFromRequest($request);
-        
+
         $result = $pag->render_object();
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
         $this->assertTrue(sizeof($result['items']) === 1);
-        
+
         $item1->delete();
         $item2->delete();
     }
-    
-    
+
+
     /**
      * Test same filter keys
      *
@@ -387,12 +392,12 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $item1->title = 'a';
         $item1->description = 'description';
         $item1->create();
-        
+
         $item2 = new Pluf_Paginator_MyModel();
         $item2->title = 'b';
         $item2->description = 'description';
         $item2->create();
-        
+
         $_REQUEST = array(
             '_px_fk' => array(
                 'id',
@@ -404,7 +409,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             )
         );
         $request = new Pluf_HTTP_Request('/test');
-        
+
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
             'id',
@@ -415,16 +420,16 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->setFromRequest($request);
-        
+
         $result = $pag->render_object();
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
         $this->assertTrue(sizeof($result['items']) === 2);
-        
+
         $item1->delete();
         $item2->delete();
     }
-    
+
     /**
      * Test search in items
      *
@@ -433,20 +438,20 @@ class Pluf_Paginator_PaginatorTest extends TestCase
     public function testSearchPaginate()
     {
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
-//         $fields = array(
-//             'id',
-//             'title',
-//             'description'
-//         );
-//         $pag->configure($fields, $fields);
-//         $pag->list_filters = $fields;
+        //         $fields = array(
+        //             'id',
+        //             'title',
+        //             'description'
+        //         );
+        //         $pag->configure($fields, $fields);
+        //         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->search_string = 'test';
-        
+
         $this->assertTrue(is_array($pag->render_object()));
         $this->assertTrue(array_key_exists('items', $pag->render_object()));
     }
-    
+
     /**
      * Test search function when query is set from request
      *
@@ -460,12 +465,12 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $item1->int_field = 100;
         $item1->float_field = 200.0;
         $item1->create();
-        
+
         $_REQUEST = array(
             '_px_q' => 'test'
         );
         $request = new Pluf_HTTP_Request('/test');
-        
+
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
             'id',
@@ -478,16 +483,16 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->setFromRequest($request);
-        
+
         $result = $pag->render_object();
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
         $this->assertTrue(sizeof($result['items']) === 1);
-        
+
         $item1->delete();
     }
-    
-    
+
+
     /**
      * Test filter key validation
      *
@@ -500,12 +505,12 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $item1->title = 'a';
         $item1->description = 'description';
         $item1->create();
-        
+
         $item2 = new Pluf_Paginator_MyModel();
         $item2->title = 'b';
         $item2->description = 'description';
         $item2->create();
-        
+
         $_REQUEST = array(
             '_px_fk' => array(
                 'id',
@@ -517,7 +522,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             )
         );
         $request = new Pluf_HTTP_Request('/test');
-        
+
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
             'id',
@@ -528,13 +533,13 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->setFromRequest($request);
-        
+
         $pag->render_object();
-        
+
         $item1->delete();
         $item2->delete();
     }
-    
+
     /**
      * Test sort key validation
      *
@@ -562,17 +567,17 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 'ASC'
             )
         );
-        
+
         $item1 = new Pluf_Paginator_MyModel();
         $item1->title = 'a';
         $item1->description = 'description';
         $item1->create();
-        
+
         $item2 = new Pluf_Paginator_MyModel();
         $item2->title = 'b';
         $item2->description = 'description';
         $item2->create();
-        
+
         $_REQUEST = array(
             '_px_sk' => array(
                 'id',
@@ -584,7 +589,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             )
         );
         $request = new Pluf_HTTP_Request('/test');
-        
+
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
             'id',
@@ -595,9 +600,9 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $pag->list_filters = $fields;
         $pag->items_per_page = 5;
         $pag->setFromRequest($request);
-        
+
         $pag->render_object();
-        
+
         $item1->delete();
         $item2->delete();
     }

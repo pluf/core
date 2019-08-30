@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
@@ -27,18 +29,21 @@ require_once 'Pluf.php';
 class PlufDispatcherTest extends TestCase
 {
 
-    protected function setUp ()
+
+    /**
+     * @before
+     */
+    protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
 
-    public function testAddPrefixedViews ()
+    public function testAddPrefixedViews()
     {
-//         $res = Pluf_Dispatcher::addPrefixToViewFile('/alternate', 
-//                 Pluf::f('app_views'));
-//         $this->assertEquals('#^/alternate/$#', $res[0]['regex']);
-//         $this->assertEquals('Todo_Views', $res[0]['model']);
-//         $this->assertEquals('#^/alternate/install/$#', $res[1]['regex']);
+        //         $res = Pluf_Dispatcher::addPrefixToViewFile('/alternate', 
+        //                 Pluf::f('app_views'));
+        //         $this->assertEquals('#^/alternate/$#', $res[0]['regex']);
+        //         $this->assertEquals('Todo_Views', $res[0]['model']);
+        //         $this->assertEquals('#^/alternate/install/$#', $res[1]['regex']);
     }
 }
-

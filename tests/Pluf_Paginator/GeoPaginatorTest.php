@@ -34,7 +34,7 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
      *
      * @before
      */
-    protected function setUp()
+    protected function setUpTest()
     {
         Pluf::start(__DIR__. '/../conf/config.php');
         $dbEngine = Pluf::f('db_engine');
@@ -56,7 +56,10 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    /**
+     * @after
+     */
+    protected function tearDownTest()
     {
         $db = Pluf::db();
         $schema = Pluf::factory('Pluf_DB_Schema', $db);

@@ -27,14 +27,13 @@ require_once 'Pluf.php';
  */
 class PlufSQLTest extends TestCase {
     
-    protected function setUp()
+    /**
+     * @before
+     */
+    protected function setUpTest()
     {
         Pluf::start(__DIR__. '/../conf/config.php');
         $this->db = Pluf::db();
-    }
-
-    protected function tearDown()
-    {
     }
 
     public function testSimpleSQLAnd()
@@ -104,5 +103,3 @@ class PlufSQLTest extends TestCase {
         $this->assertEquals($res, $lastsql->gen());
     }
 }
-
-?>
