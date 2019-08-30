@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 /**
  * The main class of the framework.
  * From where all start.
@@ -69,7 +70,7 @@ class Pluf
         }
         // Load the relations for each installed application. Each
         // application folder must be in the include path.
-        self::loadRelations(! Pluf::f('debug', false));
+        self::loadRelations(!Pluf::f('debug', false));
     }
 
     /**
@@ -92,13 +93,13 @@ class Pluf
         $apps = Pluf::f('installed_apps', array());
         $cache = Pluf::f('tmp_folder') . '/Pluf_relations_cache_' . md5(serialize($apps)) . '.phps';
         if ($usecache and file_exists($cache)) {
-            list ($GLOBALS['_PX_models'], $GLOBALS['_PX_models_related'], $GLOBALS['_PX_signal']) = include $cache;
+            list($GLOBALS['_PX_models'], $GLOBALS['_PX_models_related'], $GLOBALS['_PX_signal']) = include $cache;
             return;
         }
         $m = $GLOBALS['_PX_models'];
         foreach ($apps as $app) {
-            $moduleName ="Pluf\\" . $app . "\\Module";
-            if(class_exists($moduleName)){
+            $moduleName = "Pluf\\" . $app . "\\Module";
+            if (class_exists($moduleName)) {
                 // Load PSR4 modules
                 $m = array_merge_recursive($m, $moduleName::relations);
             } else {
@@ -115,7 +116,7 @@ class Pluf
         foreach ($GLOBALS['_PX_models'] as $model => $relations) {
             foreach ($relations as $type => $related) {
                 foreach ($related as $related_model) {
-                    if (! isset($_r[$type][$related_model])) {
+                    if (!isset($_r[$type][$related_model])) {
                         $_r[$type][$related_model] = array();
                     }
                     $_r[$type][$related_model][] = $model;
@@ -173,7 +174,7 @@ class Pluf
         $pfx_len = strlen($pfx);
         foreach ($GLOBALS['_PX_config'] as $key => $val) {
             if (0 === strpos($key, $pfx)) {
-                if (! $strip) {
+                if (!$strip) {
                     $ret[$key] = $val;
                 } else {
                     $ret[substr($key, $pfx_len)] = $val;
@@ -217,7 +218,7 @@ class Pluf
             return;
         }
         $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        if (! file_exists(stream_resolve_include_path($file))) {
+        if (!file_exists(stream_resolve_include_path($file))) {
             return;
         }
         include_once  $file;
@@ -251,7 +252,7 @@ class Pluf
         if (false !== ($file = Pluf::fileExists($file))) {
             include $file;
         }
-        if (! function_exists($function)) {
+        if (!function_exists($function)) {
             throw new Exception('Impossible to load the function: ' . $function);
         }
     }
@@ -278,7 +279,7 @@ class Pluf
     public static function fileExists($file)
     {
         $file = trim($file);
-        if (! $file) {
+        if (!$file) {
             return false;
         }
         // using an absolute path for the file?
@@ -297,7 +298,7 @@ class Pluf
                 if (file_exists($target)) {
                     return $target;
                 }
-            } catch (Exception $e) {}
+            } catch (Exception $e) { }
         }
         // never found it
         return false;
@@ -340,7 +341,7 @@ class Pluf
 function __($str)
 {
     $locale = (isset($GLOBALS['_PX_current_locale'])) ? $GLOBALS['_PX_current_locale'] : 'en';
-    if (! empty($GLOBALS['_PX_locale'][$locale][$str][0])) {
+    if (!empty($GLOBALS['_PX_locale'][$locale][$str][0])) {
         return $GLOBALS['_PX_locale'][$locale][$str][0];
     }
     return $str;
@@ -366,7 +367,7 @@ function _n($sing, $plur, $n)
         $pform = Pluf_Translation::getPluralForm($locale);
     }
     $index = Pluf_Translation::$pform($n);
-    if (! empty($GLOBALS['_PX_locale'][$locale][$sing . '#' . $plur][$index])) {
+    if (!empty($GLOBALS['_PX_locale'][$locale][$sing . '#' . $plur][$index])) {
         return $GLOBALS['_PX_locale'][$locale][$sing . '#' . $plur][$index];
     }
     // We have no translations or default English
@@ -382,7 +383,7 @@ function _n($sing, $plur, $n)
  * @param
  *            string Class name.
  */
-function __autoload($class_name)
+function Pluf_autoload($class_name)
 {
     try {
         Pluf::loadClass($class_name);
@@ -394,10 +395,11 @@ function __autoload($class_name)
         throw new Pluf_Exception('Class not found:' . $class_name);
     }
 }
+
 /*
  * PHP 5.x support
  */
-spl_autoload_register('__autoload');
+spl_autoload_register('Pluf_autoload');
 
 /**
  * Exception to catch the PHP errors.
@@ -428,7 +430,7 @@ function PlufErrorHandler($code, $string, $file, $line)
     if (0 == error_reporting())
         return false;
     if (E_STRICT == $code && (0 === strpos($file, Pluf::f('pear_path', '/usr/share/php/')) or false !== strripos($file, 'pear'))) // if pear in the path, ignore
-{
+    {
         return;
     }
     $exception = new PlufErrorHandlerException($string, $code);
@@ -438,7 +440,7 @@ function PlufErrorHandler($code, $string, $file, $line)
 }
 
 // Set the error handler only if not performing the unittests.
-if (! defined('IN_UNIT_TESTS')) {
+if (!defined('IN_UNIT_TESTS')) {
     set_error_handler('PlufErrorHandler', error_reporting());
 }
 
