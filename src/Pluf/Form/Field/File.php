@@ -1,25 +1,21 @@
 <?php
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 class Pluf_Form_Field_File extends Pluf_Form_Field
 {
@@ -40,10 +36,8 @@ class Pluf_Form_Field_File extends Pluf_Form_Field
         if (is_null($value) and !$this->required) {
             return ''; // no file
         } elseif (is_null($value) and $this->required) {
-            throw new Pluf_Form_Invalid(__('No files were uploaded. Please try to send the file again.'));
+            throw new Pluf_Form_Invalid('No files were uploaded. Please try to send the file again.');
         }
-        $errors = array();
-        $no_files = false;
         switch ($value['error']) {
         case UPLOAD_ERR_OK:
             break;
@@ -76,7 +70,7 @@ class Pluf_Form_Field_File extends Pluf_Form_Field
             throw new Pluf_Form_Invalid(__('An error occured when upload the file. Please try to send the file again.'));
         }
         if ($value['size'] > $this->max_size) {
-            throw new Pluf_Form_Invalid(sprintf(__('The uploaded file is to big (%1$s). Reduce the size to less than %2$s and try again.'), 
+            throw new Pluf_Form_Invalid(sprintf(__('The uploaded file is to big (%1$s). Reduce the size to less than %2$s and try again.'),
                                         Pluf_Utils::prettySize($value['size']),
                                         Pluf_Utils::prettySize($this->max_size)));
         }
@@ -86,7 +80,7 @@ class Pluf_Form_Field_File extends Pluf_Form_Field
         Pluf::loadFunction($this->move_function);
         // Should throw a Pluf_Form_Invalid exception if error or the
         // value to be stored in the database.
-        return call_user_func($this->move_function, $value, 
+        return call_user_func($this->move_function, $value,
                               $this->move_function_params);
     }
 }
@@ -98,7 +92,7 @@ class Pluf_Form_Field_File extends Pluf_Form_Field
  * matching most of the needs:
  *
  *  * 'upload_path': The path in which the uploaded file will be
- *                   stored.  
+ *                   stored.
  *  * 'upload_path_create': If set to true, try to create the
  *                          upload path if not existing.
  *
@@ -114,7 +108,7 @@ class Pluf_Form_Field_File extends Pluf_Form_Field
  * If you combine those options, you can dynamically generate the path
  * name in your form (for example date base) and let this upload
  * function create it on demand.
- * 
+ *
  * @param array Upload value of the form.
  * @param array Extra parameters. If upload_path key is set, use it. (array())
  * @return string Name relative to the upload path.
@@ -134,7 +128,7 @@ function Pluf_Form_Field_File_moveToUploadFolder($value, $params=array())
         $upload_path = $params['upload_path'];
     }
     $dest = $upload_path.'/'.$name;
-    if (isset($params['upload_path_create']) 
+    if (isset($params['upload_path_create'])
         and !is_dir(dirname($dest))) {
         if (false == @mkdir(dirname($dest), 0777, true)) {
             throw new Pluf_Form_Invalid(__('An error occured when creating the upload path. Please try to send the file again.'));
@@ -145,7 +139,7 @@ function Pluf_Form_Field_File_moveToUploadFolder($value, $params=array())
     }
     if (@!move_uploaded_file($value['tmp_name'], $dest)) {
         throw new Pluf_Form_Invalid(__('An error occured when uploading the file. Please try to send the file again.'));
-    } 
+    }
     @chmod($dest, 0666);
     return $name;
 }

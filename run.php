@@ -1,74 +1,69 @@
-<?php
+#!/usr/bin/env php
+<?php declare(strict_types=1);
 /*
- * PHPUnit
+ * This file is part of PHPUnit.
  *
- * Copyright (c) 2001-2014, Sebastian Bergmann <sebastian@phpunit.de>.
- * All rights reserved.
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in
- * the documentation and/or other materials provided with the
- * distribution.
- *
- * * Neither the name of Sebastian Bergmann nor the names of his
- * contributors may be used to endorse or promote products derived
- * from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-define('PHPUnit_MAIN_METHOD', 'PHPUnit_TextUI_Command::main');
 
-$files = array(
-    __DIR__ . '/vendor/autoload.php',
-    __DIR__ . '/../../autoload.php'
-);
+if (version_compare('7.2.0', PHP_VERSION, '>')) {
+    fwrite(
+        STDERR,
+        sprintf(
+            'This version of PHPUnit is supported on PHP 7.2, PHP 7.3, and PHP 7.4.' . PHP_EOL .
+            'You are using PHP %s (%s).' . PHP_EOL,
+            PHP_VERSION,
+            PHP_BINARY
+        )
+    );
 
-foreach ($files as $file) {
+    die(1);
+}
+
+if (!ini_get('date.timezone')) {
+    ini_set('date.timezone', 'UTC');
+}
+
+foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
-        require $file;
         define('PHPUNIT_COMPOSER_INSTALL', $file);
+
         break;
     }
 }
 
-if (! defined('PHPUNIT_COMPOSER_INSTALL')) {
-    die('You need to set up the project dependencies using the following commands:' . PHP_EOL . 'curl -s http://getcomposer.org/installer | php' . PHP_EOL . 'php composer.phar install' . PHP_EOL);
+unset($file);
+
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    fwrite(
+        STDERR,
+        'You need to set up the project dependencies using Composer:' . PHP_EOL . PHP_EOL .
+        '    composer install' . PHP_EOL . PHP_EOL .
+        'You can learn all about Composer on https://getcomposer.org/.' . PHP_EOL
+    );
+
+    die(1);
 }
 
-function deleteDir($path)
-{
-    return ! empty($path) && is_file($path) ? @unlink($path) : (array_reduce(glob($path . '/*'), function ($r, $i) {
-        return $r && deleteDir($i);
-    }, TRUE)) && @rmdir($path);
+$options = getopt('', array('prepend:'));
+
+if (isset($options['prepend'])) {
+    require $options['prepend'];
 }
+
+unset($options);
+
+require PHPUNIT_COMPOSER_INSTALL;
 
 // clean test data
+require_once 'Pluf.php';
 $tmp_path = 'tests/tmp';
-deleteDir($tmp_path);
+Pluf_FileUtil::removedir($tmp_path);
 if (!mkdir($tmp_path, 0777, true)) {
     die('Failed to create temp folder...');
 }
 
-
-// Adding basics
-require_once 'Pluf.php';
-// run tests
-PHPUnit_TextUI_Command::main();
+PHPUnit\TextUI\Command::main();

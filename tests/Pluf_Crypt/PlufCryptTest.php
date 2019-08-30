@@ -30,7 +30,7 @@ class PlufCryptTest extends TestCase
     /**
      * @before
      */
-    protected function setUp ()
+    protected function setUpTest ()
     {
         Pluf::start(__DIR__. '/../conf/config.php');
     }

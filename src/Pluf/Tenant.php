@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Data model of a tenant
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
@@ -169,7 +170,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function current()
     {
-        if (! Pluf::f('multitenant', false)) {
+        if (! Pluf::f('multitenant', false) || ! array_key_exists('_PX_request', $GLOBALS)) {
             $tenant = new Pluf_Tenant();
             $tenant->setFromFormData(Pluf::f('multitenant_default', array(
                 'level' => 10,

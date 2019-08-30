@@ -128,6 +128,8 @@ class Pluf_HTTP_Request
         if (function_exists('apache_request_headers')) {
             $this->HEADERS = apache_request_headers();
         }
+
+        $this->tenant = new Pluf_Tenant();
     }
 
     /**

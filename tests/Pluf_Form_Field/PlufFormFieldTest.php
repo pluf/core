@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
@@ -27,23 +29,27 @@ require_once 'Pluf.php';
 class PlufFormFieldTest extends TestCase
 {
 
-    protected function setUp ()
+
+    /**
+     * @before
+     */
+    protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
 
-    public function testPlufFormFieldFloat ()
+    public function testPlufFormFieldFloat()
     {
         $field = new Pluf_Form_Field_Float();
         $valids = array(
-                1234.12,
-                123.0,
-                123e+32
+            1234.12,
+            123.0,
+            123e+32
         );
         $invalids = array(
-                '12,34.12',
-                '12+3.0',
-                '123es+32'
+            '12,34.12',
+            '12+3.0',
+            '123es+32'
         );
         foreach ($valids as $valid) {
             $this->assertEquals($valid, $field->clean($valid));
@@ -52,8 +58,9 @@ class PlufFormFieldTest extends TestCase
             try {
                 $field->clean($invalid);
                 $this->fail(
-                        'An expected Exception has not been raised. Not a valid float: ' .
-                                 $invalid);
+                    'An expected Exception has not been raised. Not a valid float: ' .
+                        $invalid
+                );
             } catch (Pluf_Form_Invalid $expected) {
                 continue;
             }
@@ -61,35 +68,35 @@ class PlufFormFieldTest extends TestCase
         return;
     }
 
-    public function testPlufFormFieldEmail ()
+    public function testPlufFormFieldEmail()
     {
         $field = new Pluf_Form_Field_Email();
         $valids = array(
-                'cal@iamcalx.com',
-//                 'cal+henderson@iamcalx.com',
-//                 '"cal henderson"@iamcalx.com',
-//                 'cal@iamcalx',
-//                 'cal@[hello.com]',
-//                 'cal@[hello world.com]',
-//                 'cal@[hello\\ world.com]',
-//                 'abcdefghijklmnopqrstuvwxyz@abcdefghijklmnopqrstuvwxyz',
-//                 '"woo yay"@example.com',
-//                 '"woo@yay"@example.com',
-//                 '"woo.yay"@example.com',
-//                 '"woo\\"yay"@test.com',
-//                 'toto+yop@gmail.com',
-                'webstaff@redcross.org'
+            'cal@iamcalx.com',
+            //                 'cal+henderson@iamcalx.com',
+            //                 '"cal henderson"@iamcalx.com',
+            //                 'cal@iamcalx',
+            //                 'cal@[hello.com]',
+            //                 'cal@[hello world.com]',
+            //                 'cal@[hello\\ world.com]',
+            //                 'abcdefghijklmnopqrstuvwxyz@abcdefghijklmnopqrstuvwxyz',
+            //                 '"woo yay"@example.com',
+            //                 '"woo@yay"@example.com',
+            //                 '"woo.yay"@example.com',
+            //                 '"woo\\"yay"@test.com',
+            //                 'toto+yop@gmail.com',
+            'webstaff@redcross.org'
         );
         $invalids = array(
-                'cal henderson@iamcalx.com',
-                'cal@iamcalx com',
-                'cal@hello world.com',
-                'cal@[hello].com',
-                'cal@[hello world].com',
-                'cal@[hello\\ world].com',
-                'woo\\ yay@example.com',
-                'woo\\@yay@example.com',
-                'woo\\.yay@example.com'
+            'cal henderson@iamcalx.com',
+            'cal@iamcalx com',
+            'cal@hello world.com',
+            'cal@[hello].com',
+            'cal@[hello world].com',
+            'cal@[hello\\ world].com',
+            'woo\\ yay@example.com',
+            'woo\\@yay@example.com',
+            'woo\\.yay@example.com'
         );
         foreach ($valids as $valid) {
             $this->assertEquals($valid, $field->clean($valid));
@@ -98,20 +105,21 @@ class PlufFormFieldTest extends TestCase
             try {
                 $field->clean($invalid);
                 $this->fail(
-                        'An expected Exception has not been raised. Not a valid email: ' .
-                                 $invalid);
+                    'An expected Exception has not been raised. Not a valid email: ' .
+                        $invalid
+                );
             } catch (Pluf_Form_Invalid $expected) {
                 continue;
             }
         }
         return;
     }
-    
-    
+
+
     /*
      * Test boolean fields
      */
-    public function testPlufFormFieldBoolean ()
+    public function testPlufFormFieldBoolean()
     {
         $field = new Pluf_Form_Field_Boolean();
         $true = array(

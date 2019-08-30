@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
@@ -28,17 +30,9 @@ class Pluf_HTTP_Response_ExceptionTest extends TestCase
 {
 
     /**
-     * @before
-     */
-    public function setUp ()
-    {
-        // TODO:
-    }
-
-    /**
      * @test
      */
-    public function createInternallErrorResponse ()
+    public function createInternallErrorResponse()
     {
         $e = new Exception();
         $resp = new Pluf_HTTP_Response_ServerError($e);

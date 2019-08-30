@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
@@ -26,19 +28,10 @@ require_once 'Pluf.php';
  */
 class HashCodeTest extends TestCase
 {
-
-    /**
-     * @before
-     */
-    public function setUp ()
-    {
-        // TODO:
-    }
-
     /**
      * @test
      */
-    public function testHashFunction ()
+    public function testHashFunction()
     {
         $response = new Pluf_HTTP_Response('Hi');
         $this->assertTrue(method_exists($response, 'hashCode'));
@@ -47,7 +40,7 @@ class HashCodeTest extends TestCase
     /**
      * @test
      */
-    public function testHashFunction1 ()
+    public function testHashFunction1()
     {
         $response = new Pluf_HTTP_Response('Hi');
         $this->assertTrue(md5('Hi') === $response->hashCode());
@@ -56,7 +49,7 @@ class HashCodeTest extends TestCase
     /**
      * @test
      */
-    public function testHashFunction2 ()
+    public function testHashFunction2()
     {
         $response = new Pluf_HTTP_Response('Hi');
         $this->assertTrue(md5('Hi') === $response->hashCode());

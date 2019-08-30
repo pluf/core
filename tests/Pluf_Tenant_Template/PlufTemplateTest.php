@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
@@ -27,7 +29,13 @@ require_once 'Pluf.php';
 class PlufTenantTemplateTest extends TestCase
 {
 
-    protected function setUp()
+    /**
+     * 
+     * 
+     * @before
+     * @return void
+     */
+    protected function setUpTest()
     {
         Pluf::start(array(
             'test' => false,
@@ -40,7 +48,7 @@ class PlufTenantTemplateTest extends TestCase
             'templates_folder' => array(
                 dirname(__FILE__) . '/../templates'
             ),
-            
+
             'template_tags' => array(
                 'tenant' => 'Pluf_Template_Tag_Tenant'
             ),
@@ -89,4 +97,3 @@ class PlufTenantTemplateTest extends TestCase
         $this->assertEquals($tenant->domain, $tmpl->render());
     }
 }
-

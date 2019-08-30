@@ -29,16 +29,11 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
 
     protected $views = array();
 
-    function __construct()
-    {
-        parent::__construct('Test the dispatching.');
-    }
-
     /**
      *
      * @before
      */
-    public function setUp()
+    public function setUpTest()
     {
         $this->views = (isset($GLOBALS['_PX_views'])) ? $GLOBALS['_PX_views'] : array();
     }
@@ -47,7 +42,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
      *
      * @after
      */
-    public function tearDown()
+    public function tearDownTest()
     {
         $GLOBALS['_PX_views'] = $this->views;
     }

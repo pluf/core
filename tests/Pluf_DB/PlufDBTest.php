@@ -29,7 +29,10 @@ class PlufDBTest extends TestCase
 
     public $db;
 
-    protected function setUp ()
+    /**
+     * @before
+     */
+    public function setUpTest ()
     {
         Pluf::start(__DIR__. '/../conf/config.php');
         $this->db = &Pluf::db();

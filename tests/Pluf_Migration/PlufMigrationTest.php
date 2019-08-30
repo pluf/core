@@ -16,23 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
+
 require_once 'Pluf.php';
 
 /**
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufMigrationTest extends PHPUnit_Framework_TestCase
+class PlufMigrationTest extends TestCase
 {
 
-    protected function setUp ()
+    /**
+     * @before
+     */
+    protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
 
-    public function testMigrate ()
+    public function testMigrate()
     {
         $m = new Pluf_Migration();
         $m->dry_run = false;
@@ -40,14 +45,14 @@ class PlufMigrationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(true, $m->migrate(0));
     }
 
-    public function testMigrateDown ()
+    public function testMigrateDown()
     {
         $m = new Pluf_Migration();
         $m->dry_run = true;
         $this->assertEquals(true, $m->migrate(0));
     }
 
-    public function testMigrateUp ()
+    public function testMigrateUp()
     {
         $m = new Pluf_Migration();
         $m->dry_run = true;

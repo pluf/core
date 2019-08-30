@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Pluf_Form_Field_Email extends Pluf_Form_Field
+/**
+ * Basics of Pluf services.
+ *
+ * Services are used as general access to a module functionalities.
+ */
+class Pluf_Service
 {
-    public $widget = 'Pluf_Form_Widget_TextInput';
 
-    public function clean($value)
-    {
-        parent::clean($value);
-        if (in_array($value, $this->empty_values)) {
-            $value = '';
-        }
-        if ($value == '') {
-            return $value;
-        }
-        if (!Pluf_Utils::isValidEmail($value)) {
-            throw new Pluf_Form_Invalid(__('Enter a valid email address.'));
-        }
-        return $value;
-    }
 }
