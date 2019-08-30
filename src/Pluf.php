@@ -337,13 +337,10 @@ class Pluf
  * @param
  *            string String to be translated.
  * @return string Translated string.
+ * @deprecated
  */
 function __($str)
 {
-    $locale = (isset($GLOBALS['_PX_current_locale'])) ? $GLOBALS['_PX_current_locale'] : 'en';
-    if (!empty($GLOBALS['_PX_locale'][$locale][$str][0])) {
-        return $GLOBALS['_PX_locale'][$locale][$str][0];
-    }
     return $str;
 }
 
@@ -357,23 +354,10 @@ function __($str)
  * @param
  *            int Number of elements.
  * @return string Translated string.
+ * @deprecated
  */
 function _n($sing, $plur, $n)
 {
-    $locale = (isset($GLOBALS['_PX_current_locale'])) ? $GLOBALS['_PX_current_locale'] : 'en';
-    if (isset($GLOBALS['_PX_current_locale_plural_form'])) {
-        $pform = $GLOBALS['_PX_current_locale_plural_form'];
-    } else {
-        $pform = Pluf_Translation::getPluralForm($locale);
-    }
-    $index = Pluf_Translation::$pform($n);
-    if (!empty($GLOBALS['_PX_locale'][$locale][$sing . '#' . $plur][$index])) {
-        return $GLOBALS['_PX_locale'][$locale][$sing . '#' . $plur][$index];
-    }
-    // We have no translations or default English
-    if ($n == 1) {
-        return $sing;
-    }
     return $plur;
 }
 
