@@ -1,8 +1,6 @@
 # Eclipse
 #.buildpath
 /.settings/
-.phpunit.result.cache
-.buildpath
 
 
 # Examples

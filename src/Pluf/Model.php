@@ -117,7 +117,7 @@ class Pluf_Model implements JsonSerializable
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
         $this->_a['multitenant'] = true;
-        $this->_init();
+        $this->_init((int) $pk > 0);
         if ((int) $pk > 0) {
             $this->get($pk); // Should not have a side effect
         }

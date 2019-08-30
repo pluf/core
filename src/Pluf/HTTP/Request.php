@@ -89,11 +89,11 @@ class Pluf_HTTP_Request
         $http = new Pluf_HTTP();
         $http->removeTheMagic();
 
-        $this->POST = & $_POST;
-        $this->GET = & $_GET;
-        $this->REQUEST = & $_REQUEST;
-        $this->COOKIE = & $_COOKIE;
-        $this->FILES = & $_FILES;
+        $this->POST = &$_POST;
+        $this->GET = &$_GET;
+        $this->REQUEST = &$_REQUEST;
+        $this->COOKIE = &$_COOKIE;
+        $this->FILES = &$_FILES;
         $this->query = $query;
         $this->query_string = (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : '';
         $this->method = (isset($_SERVER['REQUEST_METHOD'])) ? $_SERVER['REQUEST_METHOD'] : 'GET';
@@ -101,7 +101,7 @@ class Pluf_HTTP_Request
         $this->path_info = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : '/';
         $this->remote_addr = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : 'localhost';
         $this->http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
-        $this->SERVER = & $_SERVER;
+        $this->SERVER = &$_SERVER;
         $this->uid = $GLOBALS['_PX_uniqid'];
         // request time
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
@@ -128,8 +128,6 @@ class Pluf_HTTP_Request
         if (function_exists('apache_request_headers')) {
             $this->HEADERS = apache_request_headers();
         }
-
-        $this->tenant = new Pluf_Tenant();
     }
 
     /**
@@ -149,7 +147,8 @@ class Pluf_HTTP_Request
      *
      * @return float
      */
-    public function getMicrotime() {
+    public function getMicrotime()
+    {
         return $this->microtime;
     }
 
@@ -158,11 +157,12 @@ class Pluf_HTTP_Request
      *
      * @return int size of the request
      */
-    public function getSize() {
+    public function getSize()
+    {
         $size = 0;
         // TODO: maso, 2019: file size
         // Note: hadi, 2019: base on this: https://www.geeksforgeeks.org/php-_files-array-http-file-upload-variables/
-        foreach ($this->FILES as $file){
+        foreach ($this->FILES as $file) {
             $size += array_key_exists('size', $file) ? $file['size'] : 0;
         }
         // Parameter size
