@@ -10,6 +10,13 @@ class Pluf_Tenant extends Pluf_Model
 {
 
     /**
+     * Current tenant
+     *
+     * @var Pluf_Tenant
+     */
+    static $currentTenant = NULL;
+
+    /**
      * یک نگاشت به صورت کلید-مقدار که تنظیمات ملک را نگه می دارد.
      * تنظیمات ملک خصوصیاتی است که توسط مالک ملک قابل تعیین است
      *
@@ -30,6 +37,7 @@ class Pluf_Tenant extends Pluf_Model
     protected $configChanged = false;
 
     /**
+     *
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
      * @see Pluf_Model::init()
@@ -119,7 +127,7 @@ class Pluf_Tenant extends Pluf_Model
                 'relate_name' => 'children',
                 'editable' => true,
                 'readable' => true
-            ),
+            )
         );
         $this->_a['views'] = array();
     }
@@ -163,6 +171,11 @@ class Pluf_Tenant extends Pluf_Model
         return $result;
     }
 
+    public static function setCurrent($tenant)
+    {
+        self::$currentTenant = $tenant;
+    }
+
     /**
      * Gets current tenant
      *
@@ -170,7 +183,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function current()
     {
-        if (! Pluf::f('multitenant', false) || ! array_key_exists('_PX_request', $GLOBALS)) {
+        if (! Pluf::f('multitenant', false)) {
             $tenant = new Pluf_Tenant();
             $tenant->setFromFormData(Pluf::f('multitenant_default', array(
                 'level' => 10,
@@ -183,8 +196,14 @@ class Pluf_Tenant extends Pluf_Model
             $tenant->id = 0;
             return $tenant;
         }
-        // load tenant from request
-        return $GLOBALS['_PX_request']->tenant;
+        if (array_key_exists('_PX_request', $GLOBALS)) {
+            // load tenant from request
+            return $GLOBALS['_PX_request']->tenant;
+        }
+        if(isset(self::$currentTenant)){
+            return self::currentTenant;
+        }
+        throw new Pluf_Exception('No tenant loaded');
     }
 
     /**
@@ -194,8 +213,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function storagePath()
     {
-        return self::current()
-            ->getStoragePath();
+        return self::current()->getStoragePath();
     }
 
     /**
@@ -203,7 +221,8 @@ class Pluf_Tenant extends Pluf_Model
      *
      * @return path of the storage
      */
-    public function getStoragePath() {
+    public function getStoragePath()
+    {
         if ($this->isAnonymous()) {
             return Pluf::f('upload_path');
         }
