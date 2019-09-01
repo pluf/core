@@ -279,9 +279,6 @@ class Pluf_Model implements JsonSerializable
      */
     function setAssoc($model)
     {
-        if (! $this->delAssoc($model)) {
-            return false;
-        }
         $hay = array(
             strtolower($model->_a['model']),
             strtolower($this->_a['model'])
