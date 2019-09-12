@@ -602,7 +602,14 @@ class Pluf_Paginator
                         $vals
                     ));
                 } else {
-                    $sql = new Pluf_SQL($key . '=%s', $vals[0]);
+                    $types = array(
+                        'Pluf_DB_Field_Boolean',
+                        'Pluf_DB_Field_Integer',
+                        'Pluf_DB_Field_Float',
+                        'Pluf_DB_Field_Sequence',
+                        'Pluf_DB_Field_Foreignkey'
+                    );
+                    $sql = in_array($feild['type'], $types) ? new Pluf_SQL("$key = $vals[0]") : new Pluf_SQL($key . '=%s', $vals[0]);
                 }
             }
             // We add a forced where query
