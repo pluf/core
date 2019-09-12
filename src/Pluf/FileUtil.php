@@ -182,7 +182,7 @@ class Pluf_FileUtil
         }
         $ext = 'mdtext php-dist h gitignore diff patch';
         $extra_ext = trim(Pluf::f('idf_extra_text_ext', ''));
-        if (! empty($extra_ext)){
+        if (! empty($extra_ext)) {
             $ext .= ' ' . $extra_ext;
         }
         $ext = array_merge(self::$supportedExtenstions, explode(' ', $ext));
@@ -230,6 +230,12 @@ class Pluf_FileUtil
         if (! extension_loaded('zip') || ! file_exists($folder)) {
             throw new Pluf_Exception("Fail to zip folder");
         }
+
+        $parentFolder = dirname($zipFilePath);
+        if (! (file_exists($parentFolder) || mkdir($parentFolder, 0777, true))) {
+            throw new Pluf_Exception("Fail to create zip file folder:" . $parentFolder);
+        }
+
         $zip = new ZipArchive();
         if (! $zip->open($zipFilePath, ZIPARCHIVE::CREATE)) {
             return false;
