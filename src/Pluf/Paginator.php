@@ -274,8 +274,11 @@ class Pluf_Paginator
             $this->current_page = max(1, $this->current_page);
         }
         if (isset($request->REQUEST[self::PAGE_SIZE_KEY])) {
-            $this->items_per_page = (int) $request->REQUEST[self::PAGE_SIZE_KEY];
-            $this->items_per_page = min(500, $this->items_per_page);
+            $temp = (int) $request->REQUEST[self::PAGE_SIZE_KEY];
+            if ($temp > 0) {
+                $this->items_per_page = $temp;
+                $this->items_per_page = min(500, $this->items_per_page);
+            }
         }
 
         // Load options
