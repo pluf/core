@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry combineaccessrules="false" kind="prj" path="/http2"/>
-	<buildpathentry kind="src" path="tests"/>
 	<buildpathentry kind="src" path="src"/>
+	<buildpathentry kind="src" path="tests"/>
+	<buildpathentry combineaccessrules="false" kind="prj" path="/http2"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 </buildpath>
