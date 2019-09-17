@@ -67,15 +67,15 @@ class Pluf_DB_Schema
     function createTables()
     {
         $sql = $this->schema->getSqlCreate($this->model);
-        foreach ($sql as $k => $query) {
+        foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Exception($this->con->getError());
+                throw new Pluf_Exception($this->con->getError());
             }
         }
         $sql = $this->schema->getSqlIndexes($this->model);
-        foreach ($sql as $k => $query) {
+        foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Exception($this->con->getError());
+                throw new Pluf_Exception($this->con->getError());
             }
         }
         return true;

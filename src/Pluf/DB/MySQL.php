@@ -122,10 +122,10 @@ class Pluf_DB_MySQL
     }
 
     /**
-     * یک دستور پایگاه داده را اجرا می‌کند.
+     * run a query
      *
      * @param String $query
-     * @throws Exception
+     * @return boolean true if is success
      */
     function execute($query)
     {

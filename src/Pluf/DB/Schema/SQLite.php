@@ -141,18 +141,17 @@ class Pluf_DB_Schema_SQLite
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $hay = array(
-                strtolower($model->_a['model']),
-                strtolower($omodel->_a['model'])
-            );
-            sort($hay);
-            $table = $hay[0] . '_' . $hay[1] . '_assoc';
-            $sql = 'CREATE TABLE ' . $this->con->pfx . $table . ' (';
-            $sql .= "\n" . strtolower($model->_a['model']) . '_id ' . $this->mappings['foreignkey'] . ' default 0,';
-            $sql .= "\n" . strtolower($omodel->_a['model']) . '_id ' . $this->mappings['foreignkey'] . ' default 0,';
-            $sql .= "\n" . 'primary key (' . strtolower($model->_a['model']) . '_id, ' . strtolower($omodel->_a['model']) . '_id)';
+            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+
+            $ra =  Pluf_ModelUtils::getAssocField($model);
+            $rb = Pluf_ModelUtils::getAssocField($omodel);
+
+            $sql = 'CREATE TABLE ' . $table . ' (';
+            $sql .= "\n" . $ra . $this->mappings['foreignkey'] . ' default 0,';
+            $sql .= "\n" . $rb . $this->mappings['foreignkey'] . ' default 0,';
+            $sql .= "\n" . 'primary key (' . $ra . ', ' . $rb .')';
             $sql .= "\n" . ');';
-            $tables[$this->con->pfx . $table] = $sql;
+            $tables[$table] = $sql;
         }
         return $tables;
     }
@@ -224,13 +223,8 @@ class Pluf_DB_Schema_SQLite
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $hay = array(
-                strtolower($model->_a['model']),
-                strtolower($omodel->_a['model'])
-            );
-            sort($hay);
-            $table = $hay[0] . '_' . $hay[1] . '_assoc';
-            $sql[] = 'DROP TABLE IF EXISTS ' . $this->con->pfx . $table;
+            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $sql[] = 'DROP TABLE IF EXISTS ' . $table;
         }
         return $sql;
     }

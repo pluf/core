@@ -123,7 +123,7 @@ function Pluf_Shortcuts_RenderToResponse ($tplfile, $params, $request = null)
  *            string Label suffix (null)
  * @return Pluf_Form_Model Form for this model.
  */
-function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(), 
+function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
         $label_suffix = null)
 {
     $extra['model'] = $model;
@@ -143,7 +143,7 @@ function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
  *            string Label suffix (null)
  * @return Object Form to update for this model.
  */
-function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null, 
+function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null,
         $extra = array(), $label_suffix = null)
 {
     $extra['model'] = $model;
@@ -166,7 +166,7 @@ function Pluf_Shortcuts_folderSize ($dir)
                 $new_foldersize = Pluf_Shortcuts_folderSize($dir . "/" .
                          $filename);
                 $count_size = $count_size + $new_foldersize;
-            } else 
+            } else
                 if (is_file($dir . "/" . $filename)) {
                     $count_size = $count_size + filesize($dir . "/" . $filename);
                     $count ++;
@@ -182,6 +182,8 @@ function Pluf_Shortcuts_folderSize ($dir)
  * @param string $modelName1 name of model (of type Pluf_Model)
  * @param string $modelName2 name of model (of type Pluf_Model)
  * @return string name of association table for given modeles.
+ *
+ * @deprecated use Pluf_ModelUtil::getAssocTable($from,$to);
  */
 function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
     $hay = array(
@@ -189,7 +191,8 @@ function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
         strtolower($modelName2)
     );
     sort($hay);
-    $table = $hay[0] . '_' . $hay[1] . '_assoc';
+    $table =  $hay[0] . '_' . $hay[1] . '_assoc';
+    $table = Pluf_ModelUtils::skipeName($table);
     return $table;
 }
 
