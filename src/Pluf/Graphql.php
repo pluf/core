@@ -71,7 +71,7 @@ class Pluf_Graphql
         // 1. root type
         $rootType = get_class($c);
         $itemType = null;
-        $schema = 'Pluf_GraphQl_Schema_' . $rootType;
+        $schema = 'Pluf_GraphQl_Schema_' . Pluf_ModelUtils::skipeName($rootType);
         if ($c instanceof Pluf_Paginator) {
             $itemType = get_class($c->model);
             $schema = $schema . '_' . $itemType;

@@ -89,7 +89,7 @@ class ' . $className . ' {
         // render object types variables';
         foreach ($this->compiledTypes as $item) {
             $schema_content .= '
-         $' . $item . ' = null;';
+         $' . Pluf_ModelUtils::skipeName($item) . ' = null;';
         }
         $schema_content .= '
         // render code
@@ -189,7 +189,11 @@ class ' . $className . ' {
         $preModels = $this->getRelatedModels($model);
         $requiredModel = '';
         if (sizeof($preModels) > 0) {
-            $requiredModel = 'use (&$' . implode(', &$', $preModels) . ')';
+            $names = array();
+            foreach ($preModels as $pm){
+                $names[] = Pluf_ModelUtils::skipeName($pm);
+            }
+            $requiredModel = 'use (&$' . implode(', &$', $names) . ')';
         }
 
         // compile the model
@@ -316,7 +320,7 @@ class ' . $className . ' {
         // set type
         switch ($field['type']) {
             case 'Pluf_DB_Field_Sequence':
-                $res = 'Type::id()';
+                $res = 'Type::int()';
                 break;
             case 'Pluf_DB_Field_Date':
             case 'Pluf_DB_Field_Datetime':
