@@ -22,7 +22,7 @@
  * Create a compilre render
  *
  * @author maso
- *        
+ *
  */
 class Pluf_Graphql_Compiler
 {
@@ -75,7 +75,7 @@ class Pluf_Graphql_Compiler
      */
     private function _write($className, $fileName, $renderCode)
     {
-        $schema_content = '<?php 
+        $schema_content = '<?php
 // Import
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
@@ -84,12 +84,12 @@ use GraphQL\Type\Schema;
 /**
  * Render class of GraphQl
  */
-class ' . $className . ' { 
+class ' . $className . ' {
     public function render($rootValue, $query) {
         // render object types variables';
         foreach ($this->compiledTypes as $item) {
             $schema_content .= '
-         $' . $item . ' = null;';
+         $' . Pluf_ModelUtils::skipeName($item) . ' = null;';
         }
         $schema_content .= '
         // render code
@@ -189,7 +189,11 @@ class ' . $className . ' {
         $preModels = $this->getRelatedModels($model);
         $requiredModel = '';
         if (sizeof($preModels) > 0) {
-            $requiredModel = 'use (&$' . implode(', &$', $preModels) . ')';
+            $names = array();
+            foreach ($preModels as $pm){
+                $names[] = Pluf_ModelUtils::skipeName($pm);
+            }
+            $requiredModel = 'use (&$' . implode(', &$', $names) . ')';
         }
 
         // compile the model
@@ -211,7 +215,7 @@ class ' . $className . ' {
 
     private function getNameOf($type)
     {
-        return '$' . $type;
+        return '$' . Pluf_ModelUtils::skipeName($type);
     }
 
     private function compileFields($model)
@@ -220,7 +224,7 @@ class ' . $className . ' {
         $fields = '[
                     // List of basic fields
                     ' . $this->compileBasicFields($cols) . '
-                    // relations: forenkey 
+                    // relations: forenkey
                     ' . $this->compileRelationFields('foreignkey', $model) . '
                     ' . $this->compileRelationFields('manytomany', $model) . '
                 ]';
@@ -316,7 +320,7 @@ class ' . $className . ' {
         // set type
         switch ($field['type']) {
             case 'Pluf_DB_Field_Sequence':
-                $res = 'Type::id()';
+                $res = 'Type::int()';
                 break;
             case 'Pluf_DB_Field_Date':
             case 'Pluf_DB_Field_Datetime':
@@ -384,7 +388,7 @@ class ' . $className . ' {
         return $res;
     }
 
-    
+
     private function compileFieldManytomany($key, $field){
         // type
         $type = $this->getNameOf($field['model']);
@@ -401,10 +405,10 @@ class ' . $className . ' {
         /*
          * TODO: maso, 2018: support for pagination in list function
          * XXX: maso, 2018: check for security access
-         * 
-         * if(parent is accessable) then 
+         *
+         * if(parent is accessable) then
          *      All children are too
-         */ 
+         */
         return '
                     //Foreinkey value-' . $this->fieldComment($key, $field) . '
                     \'' . $name . '\' => [
@@ -414,7 +418,7 @@ class ' . $className . ' {
                             },
                     ],';
     }
-    
+
     private function fieldComment($key, $field)
     {
         return $key . ': ' . str_replace([

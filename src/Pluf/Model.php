@@ -114,8 +114,11 @@ class Pluf_Model implements JsonSerializable
     // added by some fields
     function __construct($pk = null, $values = array())
     {
+
+        // -->
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
+
         $this->_a['multitenant'] = true;
         $this->_init((int) $pk > 0);
         if ((int) $pk > 0) {
@@ -279,14 +282,8 @@ class Pluf_Model implements JsonSerializable
      */
     function setAssoc($model)
     {
-        $hay = array(
-            strtolower($model->_a['model']),
-            strtolower($this->_a['model'])
-        );
-        sort($hay);
-        $table = $hay[0] . '_' . $hay[1] . '_assoc';
-        $req = 'INSERT INTO ' . $this->_con->pfx . $table . "\n";
-        $req .= '(' . $this->_con->qn(strtolower($this->_a['model']) . '_id') . ', ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ') VALUES ' . "\n";
+        $req = 'INSERT INTO ' . Pluf_ModelUtils::getAssocTable($this, $model);
+        $req .= '(' . Pluf_ModelUtils::getAssocField($this) . ', ' . Pluf_ModelUtils::getAssocField($model) . ') VALUES ' . "\n";
         $req .= '(' . $this->_toDb($this->_data['id'], 'id') . ', ';
         $req .= $this->_toDb($model->id, 'id') . ')';
         $this->_con->execute($req);
@@ -301,19 +298,8 @@ class Pluf_Model implements JsonSerializable
      */
     function delAssoc($model)
     {
-        // check if ok to make the association
-        // current model has a many to many key with $model
-        // $model has a many to many key with current model
-        if (! isset($this->_m['many'][$model->_a['model']]) or strlen($this->_data['id']) == 0 or strlen($model->id) == 0) {
-            return false;
-        }
-        $hay = array(
-            strtolower($model->_a['model']),
-            strtolower($this->_a['model'])
-        );
-        sort($hay);
-        $table = $hay[0] . '_' . $hay[1] . '_assoc';
-        $req = 'DELETE FROM ' . $this->_con->pfx . $table . ' WHERE' . "\n";
+        $table = Pluf_ModelUtils::getAssocTable($this, $model);
+        $req = 'DELETE FROM ' . $table . ' WHERE ';
         $req .= $this->_con->qn(strtolower($this->_a['model']) . '_id') . ' = ' . $this->_toDb($this->_data['id'], 'id');
         $req .= ' AND ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $this->_toDb($model->id, 'id');
         $this->_con->execute($req);
@@ -750,7 +736,7 @@ class Pluf_Model implements JsonSerializable
         if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new Pluf_Exception(sprintf(__('No matching foreign key found in model: %s for model %s'), $model, $this->_a['model']));
+                throw new Pluf_Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
             }
             if (! is_null($p['filter'])) {
                 if (is_array($p['filter'])) {
@@ -762,14 +748,7 @@ class Pluf_Model implements JsonSerializable
             }
             $p['filter'] .= $this->_con->qn($foreignkey) . '=' . $this->_toDb($this->_data['id'], 'id');
         } else {
-            // Many to many: We generate a special view that is making
-            // the join
-            $hay = array(
-                strtolower(Pluf::factory($model)->_a['model']),
-                strtolower($this->_a['model'])
-            );
-            sort($hay);
-            $table = $hay[0] . '_' . $hay[1] . '_assoc';
+            $table = Pluf_ModelUtils::getAssocTable($this, $m);
             if (isset($m->_a['views'][$p['view']])) {
                 $m->_a['views'][$p['view'] . '__manytomany__'] = $m->_a['views'][$p['view']];
                 if (! isset($m->_a['views'][$p['view'] . '__manytomany__']['join'])) {
@@ -785,7 +764,7 @@ class Pluf_Model implements JsonSerializable
                 );
                 $p['view'] = '';
             }
-            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $this->_con->pfx . $table . ' ON ' . $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' . $this->_con->pfx . $m->_a['table'] . '.id';
+            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' . $this->_con->pfx . $m->_a['table'] . '.id';
 
             $m->_a['views'][$p['view'] . '__manytomany__']['where'] = $this->_con->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
             $p['view'] = $p['view'] . '__manytomany__';
@@ -1249,14 +1228,15 @@ class Pluf_Model implements JsonSerializable
             "tags" => [],
             "children" => []
         );
-        foreach ($this->_a['cols'] as $name => $field){
+        foreach ($this->_a['cols'] as $name => $field) {
             $fieldInfo = $this->getFieldInfo($name, $field);
             array_push($mainInfo['children'], $fieldInfo);
         }
         return $mainInfo;
     }
 
-    private function getFieldInfo($name, $field){
+    private function getFieldInfo($name, $field)
+    {
         return array(
             "type" => (new $field['type']())->type,
             "unit" => null,

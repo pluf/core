@@ -583,6 +583,52 @@ class Pluf_Views
         return $obj->getSchema();
     }
 
+    /**
+     * Download a content of a ModelBinary object
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_HTTP_Response_File
+     */
+    public function downloadObjectBinary($request, $match, $p)
+    {
+        // GET data
+        $object = $this->getObject($request, $match, $p);
+        // Do
+        $response = new Pluf_HTTP_Response_File($object->getAbsloutPath(), $object->mime_type);
+        $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $object->file_name);
+        return $response;
+    }
+
+    /**
+     * Upload a file as content
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @return Pluf_ModelBinary
+     */
+    public function updateObjectBinary($request, $match, $p)
+    {
+        // Get data
+        $object = $this->getObject($request, $match, $p);
+
+        // Do action
+        if (array_key_exists('file', $request->FILES)) {
+            $extra = array(
+                'model' => $object
+            );
+            $form = new Pluf_Form_ModelBinaryUpdate(array_merge($request->REQUEST, $request->FILES), $extra);
+            $item = $form->save();
+            return $item;
+        } else {
+            $myfile = fopen($item->getAbsloutPath(), "w") or die("Unable to open file!");
+            $entityBody = file_get_contents('php://input', 'r');
+            fwrite($myfile, $entityBody);
+            fclose($myfile);
+            $item->update();
+        }
+        return $item;
+    }
 }
 
 
