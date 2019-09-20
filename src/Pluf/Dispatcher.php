@@ -213,7 +213,7 @@ class Pluf_Dispatcher
          * is true, then ok go ahead, if not then it a response so
          * return it or an exception so let it go.
          */
-        if (isset($ctl['precond'])) {
+        if (isset($ctl['precond']) && !Pluf::f('dispatcher.precond.disable', false)) {
             $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
