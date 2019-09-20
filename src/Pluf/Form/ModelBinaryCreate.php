@@ -35,7 +35,7 @@ class Pluf_Form_ModelBinaryCreate extends Pluf_Form_Model
         // Create the content
         $item = $this->model;
         $item->setFromFormData($this->cleaned_data);
-        $itemStoragePath = Pluf_Tenant::storagePath() . '/' . strtolower($this->model->_a['model']);
+        $itemStoragePath = Pluf_Tenant::storagePath() . '/' . strtolower(Pluf_ModelUtils::skipeName($this->model->_a['model']));
         if (! is_dir($itemStoragePath)) {
             if (false == @mkdir($itemStoragePath, 0777, true)) {
                 throw new Pluf_Form_Invalid('An error occured when creating the upload path. Please try to send the file again.');

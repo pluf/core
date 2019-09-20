@@ -35,7 +35,7 @@ class Pluf_Form_ModelBinaryUpdate extends Pluf_Form_Model
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
             'move_function_params' => array(
-                'upload_path' => Pluf_Tenant::storagePath() . '/' . strtolower($this->model->_a['model']),
+                'upload_path' => Pluf_Tenant::storagePath() . '/' . strtolower(Pluf_ModelUtils::skipeName($this->model->_a['model'])),
                 'file_name' => $this->model->id,
                 'upload_path_create' => true,
                 'upload_overwrite' => true
