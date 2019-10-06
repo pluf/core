@@ -43,6 +43,7 @@ class Pluf_Dispatcher
      */
     public static function dispatch($query = '', $controllers = NULL)
     {
+        $response = null;
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
