@@ -157,8 +157,8 @@ class Pluf_DB_Schema_MySQL
             $rb = Pluf_ModelUtils::getAssocField($omodel);
 
             $sql = 'CREATE TABLE `' . $table . '` (';
-            $sql .= "\n" . '`' . $ra . '` ' . $this->mappings['foreignkey'] . ' default 0,';
-            $sql .= "\n" . '`' . $rb . '` ' . $this->mappings['foreignkey'] . ' default 0,';
+            $sql .= "\n" . $ra . ' ' . $this->mappings['foreignkey'] . ' default 0,';
+            $sql .= "\n" . $rb . ' ' . $this->mappings['foreignkey'] . ' default 0,';
             $sql .= "\n" . 'PRIMARY KEY (' . $ra . ', ' . $rb . ')';
             $sql .= "\n" . ') ENGINE=InnoDB';
             $sql .= ' DEFAULT CHARSET=utf8;';
