@@ -22,6 +22,12 @@ class Pluf_ModelUtils
         return $table;
     }
 
+    public static function getTable($model) : String {
+        $table = $model->_con->pfx . $model->_a['table'];
+        $name = self::skipeName($table);
+        return $name;
+    }
+    
     public static function getAssocField($model) : String {
         $name = self::skipeName(strtolower($model->_a['model']) . '_id');
         $name = $model->_con->qn($name);
