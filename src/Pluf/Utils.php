@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -19,10 +20,9 @@
 
 /**
  * ابزارها و متدهای پرکاربرد
- * 
+ *
  * در این کلاس یک سری از متدهای پرکاربرد به صورت متدهای ایستا
  * پیاده سازی شده است.
- *
  */
 class Pluf_Utils
 {
@@ -34,11 +34,50 @@ class Pluf_Utils
      *            int Length of the random string to be generated.
      * @return string Random string
      */
-    static function getRandomString ($len = 35)
+    static function getRandomString($len = 35)
     {
         $string = '';
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyz' .
-                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*()+=-_}{[]><?/';
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyz' . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&*()+=-_}{[]><?/';
+        $lchars = strlen($chars);
+        $i = 0;
+        while ($i < $len) {
+            $string .= substr($chars, mt_rand(0, $lchars - 1), 1);
+            $i ++;
+        }
+        return $string;
+    }
+
+    /**
+     * Produces a random string contains only alphanumeric characters
+     *
+     * @param
+     *            int Length of the random string to be generated.
+     * @return string Random string
+     */
+    static function getRandomAlphanumericString($len = 35)
+    {
+        $string = '';
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lchars = strlen($chars);
+        $i = 0;
+        while ($i < $len) {
+            $string .= substr($chars, mt_rand(0, $lchars - 1), 1);
+            $i ++;
+        }
+        return $string;
+    }
+    
+    /**
+     * Produces a random string contains only numeric characters
+     *
+     * @param
+     *            int Length of the random string to be generated.
+     * @return string Random string
+     */
+    static function getRandomNumericString($len = 10)
+    {
+        $string = '';
+        $chars = '0123456789';
         $lchars = strlen($chars);
         $i = 0;
         while ($i < $len) {
@@ -58,7 +97,7 @@ class Pluf_Utils
      *            int Length of the password (8)
      * @return string Password
      */
-    static function getPassword ($len = 8)
+    static function getPassword($len = 8)
     {
         $string = '';
         $chars = '23456789abcdefghijkmnpqrstuvwxyz' . 'ABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -78,13 +117,12 @@ class Pluf_Utils
      *            string Name
      * @return string Clean name
      */
-    static function cleanFileName ($name)
+    static function cleanFileName($name)
     {
-        return mb_ereg_replace("/\015\012|\015|\012|\s|[^A-Za-z0-9\.\-\_]/", 
-                '_', $name);
+        return mb_ereg_replace("/\015\012|\015|\012|\s|[^A-Za-z0-9\.\-\_]/", '_', $name);
     }
 
-    static function prettySize ($size)
+    static function prettySize($size)
     {
         switch (strtolower(substr($size, - 1))) {
             case 'k':
@@ -98,8 +136,7 @@ class Pluf_Utils
                 break;
         }
         if ($size > (1000 * 1000 * 1000)) {
-            $mysize = sprintf('%01.2f', $size / (1000 * 1000 * 1000)) . ' ' .
-                     __('GB');
+            $mysize = sprintf('%01.2f', $size / (1000 * 1000 * 1000)) . ' ' . __('GB');
         } elseif ($size > (1000 * 1000)) {
             $mysize = sprintf('%01.2f', $size / (1000 * 1000)) . ' ' . __('MB');
         } elseif ($size >= 1000) {
@@ -126,7 +163,7 @@ class Pluf_Utils
      *            string Email
      * @return bool Is email
      */
-    static function isValidEmail ($email)
+    static function isValidEmail($email)
     {
         $email = trim($email);
         $n = explode(' ', $email);
@@ -168,7 +205,7 @@ class Pluf_Utils
         $local_part = "($dot_atom|$quoted_string|$obs_local_part)";
         $domain = "($dot_atom|$domain_literal|$obs_domain)";
         $addr_spec = "($local_part\\x40$domain)";
-        
+
         $done = 0;
         while (! $done) {
             $new = preg_replace("!$comment!", '', $email);
@@ -186,13 +223,11 @@ class Pluf_Utils
      * Only the structure is checked, no check of availability of the
      * url is performed. It is a really basic validation.
      */
-    static function isValidUrl ($url)
+    static function isValidUrl($url)
     {
-        $ip = '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.' .
-                 '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}';
+        $ip = '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.' . '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}';
         $dom = '([a-z0-9\.\-]+)';
-        return (preg_match('!^(http|https|ftp|gopher)\://(' . $ip . '|' . $dom .
-                 ')!i', $url)) ? true : false;
+        return (preg_match('!^(http|https|ftp|gopher)\://(' . $ip . '|' . $dom . ')!i', $url)) ? true : false;
     }
 
     /**
@@ -205,7 +240,7 @@ class Pluf_Utils
      *            string Separator (',')
      * @return array Items.
      */
-    static function itemsToArray ($items, $sep = ',')
+    static function itemsToArray($items, $sep = ',')
     {
         $_t = explode($sep, $items);
         $res = array();
@@ -223,7 +258,7 @@ class Pluf_Utils
      *
      * @credits dk at brightbyte dot de
      * @source http://www.php.net/manual/en/function.shell-exec.php
-     * 
+     *
      * @see proc_open
      *
      * @param
@@ -232,24 +267,24 @@ class Pluf_Utils
      *            &int Return code of the command
      * @return mixed false in case of error or output string
      */
-    public static function runExternal ($cmd, &$code)
+    public static function runExternal($cmd, &$code)
     {
         $descriptorspec = array(
-                // stdin is a pipe that the child will read from
-                0 => array(
-                        'pipe',
-                        'r'
-                ),
-                // stdout is a pipe that the child will write to
-                1 => array(
-                        'pipe',
-                        'w'
-                ),
-                // stderr is a file to write to
-                2 => array(
-                        'pipe',
-                        'w'
-                )
+            // stdin is a pipe that the child will read from
+            0 => array(
+                'pipe',
+                'r'
+            ),
+            // stdout is a pipe that the child will write to
+            1 => array(
+                'pipe',
+                'w'
+            ),
+            // stderr is a file to write to
+            2 => array(
+                'pipe',
+                'w'
+            )
         );
         $pipes = array();
         $process = proc_open($cmd, $descriptorspec, $pipes);
@@ -260,8 +295,8 @@ class Pluf_Utils
         stream_set_blocking($pipes[1], false);
         stream_set_blocking($pipes[2], false);
         $todo = array(
-                $pipes[1],
-                $pipes[2]
+            $pipes[1],
+            $pipes[2]
         );
         while (true) {
             $read = array();
@@ -294,30 +329,30 @@ class Pluf_Utils
      *
      * @link http://www.php.net/manual/en/function.base64-encode.php#63543
      */
-    public static function urlsafe_b64encode ($string)
+    public static function urlsafe_b64encode($string)
     {
         return str_replace(array(
-                '+',
-                '/',
-                '='
+            '+',
+            '/',
+            '='
         ), array(
-                '-',
-                '_',
-                ''
+            '-',
+            '_',
+            ''
         ), base64_encode($string));
     }
 
     /**
      * URL safe base 64 decoding.
      */
-    public static function urlsafe_b64decode ($string)
+    public static function urlsafe_b64decode($string)
     {
         $data = str_replace(array(
-                '-',
-                '_'
+            '-',
+            '_'
         ), array(
-                '+',
-                '/'
+            '+',
+            '/'
         ), $string);
         $mod4 = strlen($data) % 4;
         if ($mod4) {
@@ -333,14 +368,13 @@ class Pluf_Utils
      *            The array to flatten.
      * @return array
      */
-    public static function flattenArray ($array)
+    public static function flattenArray($array)
     {
         $result = array();
-        foreach (new RecursiveIteratorIterator(
-                new RecursiveArrayIterator($array)) as $value) {
+        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($array)) as $value) {
             $result[] = $value;
         }
-        
+
         return $result;
     }
 }
