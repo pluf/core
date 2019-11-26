@@ -316,6 +316,9 @@ function Pluf_DB_GeometryToDb ($val, $db)
     // TODO: maso, 2018: check if we need to use geoPHP::load to load data
     // SEE: https://github.com/phayes/geoPHP
     // TODO: hadi 1397-06-16: Here $val should be encoded
+//     if($db->engine === 'SQLite'){
+//         return (null === $val || empty($val)) ? 'NULL' : "'" . $val . "'";
+//     }
     return (null === $val || empty($val)) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
 }
 
