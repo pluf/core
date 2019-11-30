@@ -59,20 +59,38 @@ class Pluf_DB_Schema
     /**
      * Create the tables and indexes for the current model.
      *
+     * If the model is a mapped model ($model->_a['mapped'] == true) then only tables for its
+     * many to many relations will be created and table for the model will not be created.
+     *
+     * A mapped model is a model which have not a separate table. In other word, a mapped model is
+     * a specific view to another model and is not a real model.
+     *
+     * A mapped model may defines some new many to many relations which was not defined in the main model.
+     *
      * @return mixed True if success or database error.
      */
     function createTables()
     {
         $sql = $this->schema->getSqlCreate($this->model);
+        // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
+        if ($this->model->_a['mapped']) {
+            $modelTableName = $this->con->pfx . $this->model->_a['table'];
+            // remove sql to create main table
+            $sql = array_diff_key($sql, array(
+                $modelTableName => ''
+            ));
+        }
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
                 throw new Pluf_Exception($this->con->getError());
             }
         }
-        $sql = $this->schema->getSqlIndexes($this->model);
-        foreach ($sql as $query) {
-            if (false === $this->con->execute($query)) {
-                throw new Pluf_Exception($this->con->getError());
+        if (! $this->model->_a['mapped']) {
+            $sql = $this->schema->getSqlIndexes($this->model);
+            foreach ($sql as $query) {
+                if (false === $this->con->execute($query)) {
+                    throw new Pluf_Exception($this->con->getError());
+                }
             }
         }
         return true;
@@ -102,6 +120,14 @@ class Pluf_DB_Schema
     function dropTables()
     {
         $sql = $this->schema->getSqlDelete($this->model);
+        // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
+        if ($this->model->_a['mapped']) {
+            $modelTableName = $this->con->pfx . $this->model->_a['table'];
+            // remove sql to create main table
+            $sql = array_diff_key($sql, array(
+                $modelTableName => ''
+            ));
+        }
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
                 throw new Pluf_Exception($this->con->getError());

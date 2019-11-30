@@ -62,6 +62,7 @@ class Pluf_Model implements JsonSerializable
      *
      * Description of the keys:
      * 'multitenant: Determines possibility of define the model in each tenant separately
+     * 'mapped': Determines that the model is a mapped model of another model. A mapped model have not a separate table.
      * 'table': The table in which the model is stored.
      * 'model': The name of the model.
      * 'cols': The definition of the columns.
@@ -71,6 +72,7 @@ class Pluf_Model implements JsonSerializable
      */
     public $_a = array(
         'multitenant' => true,
+        'mapped' => false,
         'table' => 'model',
         'model' => 'Pluf_Model',
         'cols' => array(),
