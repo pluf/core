@@ -15,6 +15,7 @@ class Pluf_Middleware_TenantFromSubDomain
             return false;
         }
         try {
+            // TODO: hadi, 1398-09: domain should be extracted from parent tenant not from request.
             $domain = $request->http_host;
             // Remove 'www.' if exist
             $domain = preg_replace('/^www\./', '', $domain);
