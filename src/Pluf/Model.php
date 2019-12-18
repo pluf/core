@@ -201,6 +201,7 @@ class Pluf_Model implements JsonSerializable
             if (array_key_exists('default', $val)) {
                 $this->_data[$col] = $val['default'];
             } else {
+                // TODO: hadi 1398-09-27: I think we should set an appropriate default value for each type (ex 0 for numerical types and null for nullable fields).
                 $this->_data[$col] = '';
             }
         }
