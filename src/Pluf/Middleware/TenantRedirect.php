@@ -18,7 +18,7 @@ class Pluf_Middleware_TenantRedirect
         $tenantSubdomain = Pluf::f('tenant_default', 'www');
         $tenant = Pluf_Tenant::bySubDomain($tenantSubdomain);
         if ($tenant) {
-            $url = $tenant->subdomain . '.' . Pluf::f('general_domain') . '/';
+            $url = 'http://' . $tenant->domain . '/';
             $response = new Pluf_HTTP_Response_Redirect($url, 302);
             return $response;
         }
