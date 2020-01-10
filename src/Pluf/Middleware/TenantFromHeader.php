@@ -20,9 +20,11 @@ class Pluf_Middleware_TenantFromHeader
             return false;
         }
         try {
-            $app = new Pluf_Tenant($request->HEADERS['_PX_tenant']);
-            if ($app) {
-                $request->tenant = $app;
+            if(array_key_exists('_PX_tenant', $request->HEADERS)){                
+                $app = new Pluf_Tenant($request->HEADERS['_PX_tenant']);
+                if ($app) {
+                    $request->tenant = $app;
+                }
             }
         } catch (Exception $e) {
             // echo $e->getMessage();
