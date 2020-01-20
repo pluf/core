@@ -149,12 +149,19 @@ class Pluf_HTTP_Response
     function outputHeaders()
     {
         if (!defined('IN_UNIT_TESTS')) {
-            header('HTTP/1.0 '.$this->status_code.' '
-                    .$this->status_code_list[$this->status_code],
-                    true, $this->status_code);
-            foreach ($this->headers as $header => $ch) {
-                header($header.': '.$ch);
+//             header('HTTP/1.0 '.$this->status_code.' '
+//                     .$this->status_code_list[$this->status_code],
+//                     true, $this->status_code);
+//             foreach ($this->headers as $header => $ch) {
+//                 header($header.': '.$ch);
+//             }
+            /* XXX: maso, 2019: Our header is not working well */
+            $HTTP = new HTTP_Header2();
+            foreach ($this->headers as $header => $value) {
+                $HTTP->setHeader($header, $value);
             }
+            $HTTP->sendHeaders();
+            
             foreach ($this->cookies as $cookie => $data) {
                 // name, data, expiration, path, domain, secure, http only
                 $expire = (null == $data) ? time()-31536000 : time()+31536000;
