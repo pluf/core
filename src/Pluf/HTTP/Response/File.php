@@ -59,6 +59,9 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
             'gzip' => false,
             'cache' => true
         ));
+        foreach ($this->headers as $key => $value){            
+            $dl->headers[$key] = $value;
+        }
         if (defined('IN_UNIT_TESTS')) {
             parent::render($output_body);
             return;
