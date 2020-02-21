@@ -16,6 +16,11 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>org.eclipse.php.composer.core.builder.buildPathManagementBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.wst.validation.validationbuilder</name>
 			<arguments>
 			</arguments>
@@ -30,15 +35,4 @@
 		<nature>org.eclipse.php.core.PHPNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
-	<filteredResources>
-		<filter>
-			<id>1552108609539</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-true-false-vendor</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>
 </projectDescription>

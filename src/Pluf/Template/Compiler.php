@@ -110,7 +110,7 @@ class Pluf_Template_Compiler
         'capitalize' => 'ucwords',
         // Not var_export because of recursive issues.
         'debug' => 'print_r',
-        'dump' => 'Pluf_Template_varExport',
+//         'dump' => 'Pluf_Template_varExport',
         'fulldebug' => 'var_export',
         'nl2br' => 'Pluf_Template_nl2br',
         'trim' => 'trim',

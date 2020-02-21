@@ -331,59 +331,59 @@ class Pluf
     }
 }
 
-/**
- * Translate a string.
- *
- * @param
- *            string String to be translated.
- * @return string Translated string.
- * @deprecated
- */
-function __($str)
-{
-    return $str;
-}
+// /**
+//  * Translate a string.
+//  *
+//  * @param
+//  *            string String to be translated.
+//  * @return string Translated string.
+//  * @deprecated
+//  */
+// function __($str)
+// {
+//     return $str;
+// }
 
-/**
- * Translate the plural form of a string.
- *
- * @param
- *            string Singular form of the string.
- * @param
- *            string Plural form of the string.
- * @param
- *            int Number of elements.
- * @return string Translated string.
- * @deprecated
- */
-function _n($sing, $plur, $n)
-{
-    return $plur;
-}
+// /**
+//  * Translate the plural form of a string.
+//  *
+//  * @param
+//  *            string Singular form of the string.
+//  * @param
+//  *            string Plural form of the string.
+//  * @param
+//  *            int Number of elements.
+//  * @return string Translated string.
+//  * @deprecated
+//  */
+// function _n($sing, $plur, $n)
+// {
+//     return $plur;
+// }
 
-/**
- * Autoload function.
- *
- * @param
- *            string Class name.
- */
-function Pluf_autoload($class_name)
-{
-    try {
-        Pluf::loadClass($class_name);
-    } catch (Exception $e) {
-        if (Pluf::f('debug')) {
-            print $e->getMessage();
-            die();
-        }
-        throw new Pluf_Exception('Class not found:' . $class_name);
-    }
-}
+// /**
+//  * Autoload function.
+//  *
+//  * @param
+//  *            string Class name.
+//  */
+// function Pluf_autoload($class_name)
+// {
+//     try {
+//         Pluf::loadClass($class_name);
+//     } catch (Exception $e) {
+//         if (Pluf::f('debug')) {
+//             print $e->getMessage();
+//             die();
+//         }
+//         throw new Pluf_Exception('Class not found:' . $class_name);
+//     }
+// }
 
-/*
- * PHP 5.x support
- */
-spl_autoload_register('Pluf_autoload');
+// /*
+//  * PHP 5.x support
+//  */
+// spl_autoload_register('Pluf_autoload');
 
 /**
  * Exception to catch the PHP errors.
