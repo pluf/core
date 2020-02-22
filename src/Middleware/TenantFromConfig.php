@@ -1,24 +1,32 @@
 <?php
+namespace Pluf\Middleware;
+
+use Pluf\Bootstrap;
+use Pluf\Middleware;
+use Pluf\Tenant;
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromConfig
+class TenantFromConfig implements Middleware
 {
 
-    function process_request (&$request)
+    function process_request(&$request)
     {
         if (! $request->tenant->isAnonymous()) {
             return false;
         }
-        
-        $appName = Pluf::f('tenant_default', 'www');
-        $app = Pluf_Tenant::bySubDomain($appName);
+
+        $appName = Bootstrap::f('tenant_default', 'www');
+        $app = Tenant::bySubDomain($appName);
         if ($app) {
             $request->tenant = $app;
         }
         return false;
     }
+
+    public function process_response($request, $response)
+    {}
 }

@@ -1,21 +1,28 @@
 <?php
+namespace Pluf\Middleware;
+
+use Pluf\Middleware;
+use Pluf\Tenant;
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantEmpty
+class TenantEmpty implements Middleware
 {
 
-    function process_request (&$request)
+    function process_request(&$request)
     {
         if (isset($request->tenant) && (! $request->tenant->isAnonymous())) {
             return false;
         }
-        
-        $request->tenant = new Pluf_Tenant();
+
+        $request->tenant = new Tenant();
         $request->application = $request->tenant;
         return false;
     }
+
+    public function process_response($request, $response)
+    {}
 }

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
@@ -26,7 +25,7 @@ namespace Pluf;
  * my_validator($field_data, $params=array())
  * with $params an associative array of parameters.
  *
- * 
+ *
  * A validator must fail on an empty string by raising an
  * Pluf_Form_Invalid Exception or return the data in the right format
  * (string, bool, whatever).
@@ -47,7 +46,7 @@ class Pluf_Encoder
      * @param
      *            &array Reference to the form data
      */
-    function setFormData (&$form)
+    function setFormData(&$form)
     {
         $this->form = $form;
     }
@@ -55,10 +54,10 @@ class Pluf_Encoder
     /**
      * Check if could be empty or not.
      */
-    function checkEmpty ($data, $form = array(), $p = array())
+    function checkEmpty($data, $form = array(), $p = array())
     {
         if (strlen($data) == 0 and isset($p['blank']) and false == $p['blank']) {
-            throw new Pluf_Form_Invalid(__('The value must not be empty.'));
+            throw new FormInvalidException('The value must not be empty.');
         }
         return true;
     }
@@ -69,118 +68,98 @@ class Pluf_Encoder
      * Only the structure is checked, no check of availability of the
      * url is performed. It is a really basic validation.
      */
-    static function url ($url, $form = array(), $p = array())
+    static function url($url, $form = array(), $p = array())
     {
-        $ip = '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.' .
-                 '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}';
+        $ip = '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.' . '(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}';
         $dom = '([a-z0-9\.\-]+)';
-        if (preg_match('!^(http|https|ftp|gopher)\://(' . $ip . '|' . $dom .
-                 ')!i', $url)) {
+        if (preg_match('!^(http|https|ftp|gopher)\://(' . $ip . '|' . $dom . ')!i', $url)) {
             return $url;
         } else {
-            throw new Pluf_Form_Invalid(
-                    sprintf(__('The URL <em>%s</em> is not valid.'), 
-                            htmlspecialchars($url)));
+            throw new FormInvalidException(sprintf('The URL <em>%s</em> is not valid.', htmlspecialchars($url)));
         }
     }
 
-    static function varchar ($string, $form = array(), $p = array())
+    static function varchar($string, $form = array(), $p = array())
     {
         if (isset($p['size']) && strlen($string) > $p['size']) {
-            throw new Pluf_Form_Invalid(
-                    sprintf(
-                            __(
-                                    'The value should not be more than <em>%s</em> characters long.'), 
-                            $p['size']));
+            throw new FormInvalidException(sprintf('The value should not be more than <em>%s</em> characters long.', $p['size']));
         }
         return $string;
     }
 
-    static function password ($string, $form = array(), $p = array())
+    static function password($string, $form = array(), $p = array())
     {
         if (strlen($string) < 6) {
-            throw new Pluf_Form_Invalid(
-                    sprintf(
-                            __(
-                                    'The password must be at least <em>%s</em> characters long.'), 
-                            '6'));
+            throw new FormInvalidException(sprintf('The password must be at least <em>%s</em> characters long.', '6'));
         }
         return $string;
     }
 
-    static function email ($string, $form = array(), $p = array())
+    static function email($string, $form = array(), $p = array())
     {
-        if (preg_match(
-                '/^[A-Z0-9._%-][+A-Z0-9._%-]*@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', 
-                $string)) {
+        if (preg_match('/^[A-Z0-9._%-][+A-Z0-9._%-]*@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', $string)) {
             return $string;
         } else {
-            throw new Pluf_Form_Invalid(
-                    sprintf(__('The email address "%s" is not valid.'), $string));
+            throw new FormInvalidException(sprintf('The email address "%s" is not valid.', $string));
         }
     }
 
-    static function text ($string, $form = array(), $p = array())
+    static function text($string, $form = array(), $p = array())
     {
         return Pluf_Encoder::varchar($string, $form, $p);
     }
 
-    static function sequence ($id, $form = array(), $p = array())
+    static function sequence($id, $form = array(), $p = array())
     {
         return Pluf_Encoder::integer($id, $p);
     }
 
-    static function boolean ($bool, $form = array(), $p = array())
+    static function boolean($bool, $form = array(), $p = array())
     {
         if (in_array($bool, array(
-                'on',
-                'y',
-                '1',
-                1,
-                true
+            'on',
+            'y',
+            '1',
+            1,
+            true
         ))) {
             return true;
         }
         return false;
     }
 
-    static function foreignkey ($id, $form = array(), $p = array())
+    static function foreignkey($id, $form = array(), $p = array())
     {
         return Pluf_Encoder::integer($id, $p);
     }
 
-    static function integer ($int, $form = array(), $p = array())
+    static function integer($int, $form = array(), $p = array())
     {
         if (! preg_match('/[0-9]+/', $int)) {
-            throw new Pluf_Form_Invalid(__('The value must be an integer.'));
+            throw new FormInvalidException('The value must be an integer.');
         }
         return (int) $int;
     }
 
-    static function datetime ($datetime, $form = array(), $p = array())
+    static function datetime($datetime, $form = array(), $p = array())
     {
         if (false === ($stamp = strtotime($datetime))) {
-            throw new Pluf_Form_Invalid(
-                    sprintf(__('The date and time <em>%s</em> are not valid.'), 
-                            htmlspecialchars($datetime)));
+            throw new FormInvalidException(sprintf('The date and time <em>%s</em> are not valid.', htmlspecialchars($datetime)));
         }
         // convert to GMT
         return gmdate('Y-m-d H:i:s', $stamp);
     }
 
-    static function date ($date, $form = array(), $p = array())
+    static function date($date, $form = array(), $p = array())
     {
         $ymd = explode('-', $date);
-        if (count($ymd) != 3 or strlen($ymd[0]) != 4 or
-                 false === checkdate($ymd[1], $ymd[2], $ymd[0])) {
-            throw new Pluf_Form_Invalid(
-                    sprintf(__('The date <em>%s</em> is not valid.'), 
-                            htmlspecialchars($date)));
+        if (count($ymd) != 3 or strlen($ymd[0]) != 4 or false === checkdate($ymd[1], $ymd[2], $ymd[0])) {
+            throw new FormInvalidException(sprintf('The date <em>%s</em> is not valid.', htmlspecialchars($date)));
         }
         return $date;
     }
 
-    static function manytomany ($vals, $form = array(), $p = array())
+    static function manytomany($vals, $form = array(), $p = array())
     {
         $res = array();
         foreach ($vals as $val) {
@@ -189,19 +168,8 @@ class Pluf_Encoder
         return $res;
     }
 
-    static function float ($val, $form = array(), $p = array())
+    static function float($val, $form = array(), $p = array())
     {
         return (float) $val;
     }
-    
-    /*
-     * 'file' => "''",
-     * 'manytomany' => null,
-     * 'foreignkey' => 0,
-     * 'text' => "''",
-     * 'html' => "''",
-     * 'time' => 0,
-     * 'integer' => 0,
-     * );
-     */
 }

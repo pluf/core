@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
@@ -91,7 +90,7 @@ class Pluf_Migration
                 );
             }
         } else {
-            $this->apps = Pluf::f('installed_apps');
+            $this->apps = Bootstrap::f('installed_apps');
         }
     }
 
@@ -118,7 +117,7 @@ class Pluf_Migration
     {
         // TODO: maso, init default tenant
         if (! isset($GLOBALS['_PX_request'])) {
-            $GLOBALS['_PX_request'] = new Pluf_HTTP_Request('/');
+            $GLOBALS['_PX_request'] = new HTTP\Request('/');
         }
         $GLOBALS['_PX_request']->tenant = $tenant;
         foreach ($this->apps as $app) {
@@ -149,16 +148,16 @@ class Pluf_Migration
      */
     public function backup($path, $name = null)
     {
-        foreach ($this->apps as $app) {
-            $func = $app . '_Migrations_Backup_run';
-            Pluf::loadFunction($func);
-            if ($this->display) {
-                echo ($func . "\n");
-            }
-            if (! $this->dry_run) {
-                $ret = $func($path, $name);
-            }
-        }
+//         foreach ($this->apps as $app) {
+//             $func = $app . '_Migrations_Backup_run';
+//             Pluf::loadFunction($func);
+//             if ($this->display) {
+//                 echo ($func . "\n");
+//             }
+//             if (! $this->dry_run) {
+//                 $ret = $func($path, $name);
+//             }
+//         }
         return true;
     }
 
@@ -172,16 +171,16 @@ class Pluf_Migration
      */
     public function restore($path, $name)
     {
-        foreach ($this->apps as $app) {
-            $func = $app . '_Migrations_Backup_restore';
-            Pluf::loadFunction($func);
-            if ($this->display) {
-                echo ($func . "\n");
-            }
-            if (! $this->dry_run) {
-                $ret = $func($path, $name);
-            }
-        }
+//         foreach ($this->apps as $app) {
+//             $func = $app . '_Migrations_Backup_restore';
+//             Pluf::loadFunction($func);
+//             if ($this->display) {
+//                 echo ($func . "\n");
+//             }
+//             if (! $this->dry_run) {
+//                 $ret = $func($path, $name);
+//             }
+//         }
         return true;
     }
 
@@ -223,17 +222,17 @@ class Pluf_Migration
      */
     public function findMigrations()
     {
-        $migrations = array();
-        if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
-            $dir = new DirectoryIterator($mdir);
-            foreach ($dir as $file) {
-                $matches = array();
-                if (! $file->isDot() && ! $file->isDir() && preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
-                    $info = pathinfo($file->getFilename());
-                    $migrations[(int) $matches[1]] = $info['filename'];
-                }
-            }
-        }
+//         $migrations = array();
+//         if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
+//             $dir = new DirectoryIterator($mdir);
+//             foreach ($dir as $file) {
+//                 $matches = array();
+//                 if (! $file->isDot() && ! $file->isDir() && preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
+//                     $info = pathinfo($file->getFilename());
+//                     $migrations[(int) $matches[1]] = $info['filename'];
+//                 }
+//             }
+//         }
         return $migrations;
     }
 
@@ -249,8 +248,8 @@ class Pluf_Migration
         if ($module === false) {
             throw new Exception('Module file not found in path');
         }
-        $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $db = Bootstrap::db();
+        $schema = new DB\Schema($db);
         // Create modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
@@ -321,8 +320,8 @@ class Pluf_Migration
         if ($module === false) {
             throw new Exception('Module file not found in path');
         }
-        $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $db = Bootstrap::db();
+        $schema = new DB\Schema($db);
         // Delete modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
@@ -344,13 +343,8 @@ class Pluf_Migration
      */
     public static function getModuleConfig($app)
     {
-
-        $moduleName ="Pluf\\" . $app . "\\Module";
-        if(class_exists($moduleName)){
-            $file = $moduleName::moduleJsonPath;
-        } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
-            return false;
-        }
+        $moduleName = "Pluf\\" . $app . "\\Module";
+        $file = $moduleName::moduleJsonPath;
         $myfile = fopen($file, "r") or die("Unable to open module.json!");
         $json = fread($myfile, filesize($file));
         fclose($myfile);
@@ -433,7 +427,7 @@ class Pluf_Migration
             } else {
                 $func = $this->app . '_Migrations_' . $migration[1] . '_down';
             }
-            Pluf::loadFunction($func);
+            Bootstrap::loadFunction($func);
             $func(); // Real migration run
             $this->setAppVersion($this->app, $target_version);
         }
@@ -450,8 +444,8 @@ class Pluf_Migration
      */
     public function setAppVersion($app, $version)
     {
-        $gschema = new Pluf_DB_SchemaInfo();
-        $sql = new Pluf_SQL('application=%s', $app);
+        $gschema = new DB\SchemaInfo();
+        $sql = new SQL('application=%s', $app);
         $appinfo = $gschema->getList(array(
             'filter' => $sql->gen()
         ));
@@ -459,7 +453,7 @@ class Pluf_Migration
             $appinfo[0]->version = $version;
             $appinfo[0]->update();
         } else {
-            $schema = new Pluf_DB_SchemaInfo();
+            $schema = new DB\SchemaInfo();
             $schema->application = $app;
             $schema->version = $version;
             $schema->create();
@@ -476,8 +470,8 @@ class Pluf_Migration
      */
     public function delAppInfo($app)
     {
-        $gschema = new Pluf_DB_SchemaInfo();
-        $sql = new Pluf_SQL('application=%s', $app);
+        $gschema = new DB\SchemaInfo();
+        $sql = new SQL('application=%s', $app);
         $appinfo = $gschema->getList(array(
             'filter' => $sql->gen()
         ));
@@ -497,7 +491,7 @@ class Pluf_Migration
     public function getAppVersion($app)
     {
         try {
-            $db = & Pluf::db();
+            $db = Bootstrap::db();
             $res = $db->select('SELECT version FROM ' . $db->pfx . 'schema_info WHERE application=' . $db->esc($app));
             return (int) $res[0]['version'];
         } catch (Exception $e) {

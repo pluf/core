@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
@@ -40,72 +39,72 @@ namespace Pluf;
  * find that the author has been updated and index each of his
  * articles.
  */
-class Pluf_Queue extends Model
+class Queue extends Model
 {
 
-    function init ()
+    function init()
     {
-        $this->_a['verbose'] =  'message queue' ;
+        $this->_a['verbose'] = 'message queue';
         $this->_a['table'] = 'pluf_queue';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => true
-                ),
-                'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 150,
-                        'verbose' => __('model class')
-                ),
-                'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('model id')
-                ),
-                'action' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 150,
-                        'verbose' => __('action')
-                ),
-                'lock' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('lock status'),
-                        'default' => 0,
-                        'choices' => array(
-                                __('Free') => 0,
-                                __('In progress') => 1,
-                                __('Completed') => 2
-                        )
-                ),
-                'creation_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('created at')
-                ),
-                'modif_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('modified at')
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => '\Pluf\DB\Field\Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'version' => array(
+                'type' => '\Pluf\DB\Field\Integer',
+                'blank' => true
+            ),
+            'model_class' => array(
+                'type' => '\Pluf\DB\Field\Varchar',
+                'blank' => false,
+                'size' => 150,
+                'verbose' => __('model class')
+            ),
+            'model_id' => array(
+                'type' => '\Pluf\DB\Field\Integer',
+                'blank' => false,
+                'verbose' => __('model id')
+            ),
+            'action' => array(
+                'type' => '\Pluf\DB\Field\Varchar',
+                'blank' => false,
+                'size' => 150,
+                'verbose' => __('action')
+            ),
+            'lock' => array(
+                'type' => '\Pluf\DB\Field\Integer',
+                'blank' => false,
+                'verbose' => __('lock status'),
+                'default' => 0,
+                'choices' => array(
+                    __('Free') => 0,
+                    __('In progress') => 1,
+                    __('Completed') => 2
                 )
+            ),
+            'creation_dtime' => array(
+                'type' => '\Pluf\DB\Field\Datetime',
+                'blank' => true,
+                'verbose' => __('created at')
+            ),
+            'modif_dtime' => array(
+                'type' => '\Pluf\DB\Field\Datetime',
+                'blank' => true,
+                'verbose' => __('modified at')
+            )
         );
         $this->_a['idx'] = array(
-                'lock_idx' => array(
-                        'type' => 'normal',
-                        'col' => 'lock'
-                )
+            'lock_idx' => array(
+                'type' => 'normal',
+                'col' => 'lock'
+            )
         );
     }
 
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
@@ -121,9 +120,9 @@ class Pluf_Queue extends Model
      * @param
      *            string Action for the object
      */
-    public static function addTo ($object, $action = '')
+    public static function addTo($object, $action = '')
     {
-        $q = new Pluf_Queue();
+        $q = new Queue();
         $q->model_class = $object->_model;
         $q->model_id = $object->id;
         $q->lock = 0;

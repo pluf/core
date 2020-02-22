@@ -1,31 +1,35 @@
 <?php
-Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
+namespace Pluf\Middleware;
+
+use Pluf\Bootstrap;
+use Pluf\Exception;
+use Pluf\Tenant;
+use Pluf\Middleware;
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromRequestMatch
+class TenantFromRequestMatch implements Middleware
 {
 
-    function process_request (&$request)
+    function process_request(&$request)
     {
-        if (!$request->tenant->isAnonymous()) {
+        if (! $request->tenant->isAnonymous()) {
             return false;
         }
-        
-        $regexs = Pluf::f('tenant_match', array());
+
+        $regexs = Bootstrap::f('tenant_match', array());
         foreach ($regexs as $regex) {
             try {
                 $match = array();
                 if (preg_match($regex['regex'], $request->query, $match)) {
                     $app = false;
                     if ($regex['value'] == 'subdomain') {
-                        $app = Pluf_Tenant::bySubDomain(
-                                $match[$regex['value']]);
+                        $app = Tenant::bySubDomain($match[$regex['value']]);
                     } elseif ($regex['value'] == 'id') {
-                        $app = new Pluf_Tenant($match[$regex['match']]);
+                        $app = new Tenant($match[$regex['match']]);
                     }
                     if (! $app)
                         continue;
@@ -34,10 +38,13 @@ class Pluf_Middleware_TenantFromRequestMatch
                     return false;
                 }
             } catch (Exception $e) {
-//                 echo $e->getMessage();
+                // echo $e->getMessage();
             }
         }
-        
+
         return false;
     }
+
+    public function process_response($request, $response)
+    {}
 }

@@ -1,4 +1,9 @@
 <?php
+namespace Pluf\Middleware;
+
+use Pluf\Exception;
+use Pluf\Middleware;
+use Pluf\Tenant;
 
 /**
  *
@@ -6,12 +11,13 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromDomain implements Pluf_Middleware
+class TenantFromDomain implements Middleware
 {
 
     /**
-     * {@inheritDoc}
-     * @see Pluf_Middleware::process_request()
+     *
+     * {@inheritdoc}
+     * @see Middleware::process_request()
      */
     function process_request(&$request)
     {
@@ -23,24 +29,24 @@ class Pluf_Middleware_TenantFromDomain implements Pluf_Middleware
             // Remove 'www.' if exist
             $domain = preg_replace('/^www\./', '', $domain);
             // Find tenant by domain
-            $app = Pluf_Tenant::byDomain($domain);
+            $app = Tenant::byDomain($domain);
             if ($app) {
                 $request->tenant = $app;
                 $request->application = $app;
             }
         } catch (Exception $e) {
-//             echo $e->getMessage();
+            // echo $e->getMessage();
         }
         return false;
     }
-    
+
     /**
-     * {@inheritDoc}
-     * @see Pluf_Middleware::process_response()
+     *
+     * {@inheritdoc}
+     * @see Middleware::process_response()
      */
     public function process_response($request, $response)
     {
         return $response;
     }
-
 }

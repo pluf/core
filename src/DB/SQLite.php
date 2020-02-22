@@ -51,9 +51,9 @@ class SQLite
         $this->debug = $debug;
         $this->pfx = $pfx;
         $this->debug('* SQLITE OPEN');
-        $this->type_cast['Pluf_DB_Field_Compressed'] = array(
-            'Pluf_DB_CompressedFromDb',
-            'Pluf_DB_SQLite_CompressedToDb'
+        $this->type_cast['\Pluf\DB\Field\Compressed'] = array(
+            '\Pluf\DB::compressedFromDb',
+            '\Pluf\DB\SQLite::ompressedToDb'
         );
         // Connect and let the Exception be thrown in case of problem
         try {

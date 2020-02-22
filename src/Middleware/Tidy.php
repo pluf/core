@@ -1,4 +1,7 @@
 <?php
+namespace Pluf\Middleware;
+use Pluf\HTTP\Response;
+use Pluf\Bootstrap;
 
 /**
  * Tidy middleware.
@@ -26,28 +29,27 @@ class Pluf_Middleware_Tidy
      *            Pluf_HTTP_Request The request
      * @param
      *            Pluf_HTTP_Response The response
-     * @return Pluf_HTTP_Response The response
+     * @return Response The response
      */
-    function process_response ($request, $response)
+    function process_response($request, $response)
     {
-        if (! in_array($response->status_code, 
-                array(
-                        200,
-                        201,
-                        202,
-                        203,
-                        204,
-                        205,
-                        206,
-                        404,
-                        501
-                ))) {
+        if (! in_array($response->status_code, array(
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            404,
+            501
+        ))) {
             return $response;
         }
         $ok = false;
         $cts = array(
-                'text/html',
-                'application/xhtml+xml'
+            'text/html',
+            'application/xhtml+xml'
         );
         foreach ($cts as $ct) {
             if (false !== strripos($response->headers['Content-Type'], $ct)) {
@@ -61,12 +63,11 @@ class Pluf_Middleware_Tidy
         $content = escapeshellarg($response->content);
         $res = array();
         $rval = 0;
-        exec('(echo ' . $content . '| tidy -e -utf8 -q 3>&2 2>&1 1>&3) ', $res, 
-                $rval);
+        exec('(echo ' . $content . '| tidy -e -utf8 -q 3>&2 2>&1 1>&3) ', $res, $rval);
         if (empty($res)) {
             return $response;
         }
-        $only_char_encoding_issue = Pluf::f('tidy_skip_encoding_errors', true);
+        $only_char_encoding_issue = Bootstrap::f('tidy_skip_encoding_errors', true);
         foreach ($res as $line) {
             if (false === strpos($line, 'invalid character code')) {
                 $only_char_encoding_issue = false;
@@ -76,10 +77,7 @@ class Pluf_Middleware_Tidy
         if ($only_char_encoding_issue == true) {
             return $response;
         }
-        $response->content = str_replace('</body>', 
-                '<pre style="text-align: left;">' .
-                         htmlspecialchars(join("\n", $res)) . '</pre></body>', 
-                        $response->content);
+        $response->content = str_replace('</body>', '<pre style="text-align: left;">' . htmlspecialchars(join("\n", $res)) . '</pre></body>', $response->content);
         return $response;
     }
 }

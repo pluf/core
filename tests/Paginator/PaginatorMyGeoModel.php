@@ -2,7 +2,7 @@
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,41 +17,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Search;
+namespace Pluf\PlufTest\Paginator;
 
 use Pluf\Model;
 
-/**
- * Storage of the words.
- */
-class Word extends Model
+class PaginatorMyGeoModel extends Model
 {
 
     function init()
     {
-        $this->_a['verbose'] = 'word';
-        $this->_a['table'] = 'pluf_search_words';
+        $this->_a['table'] = 'testforgeomodels';
         $this->_a['cols'] = array(
-            // It is mandatory to have an "id" column.
             'id' => array(
                 'type' => '\Pluf\DB\Field\Sequence',
-                // It is automatically added.
                 'blank' => true
-            ),
-            'word' => array(
+            ), // It is automatically added.
+            'title' => array(
                 'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
-                'unique' => true,
-                'size' => 150,
-                'verbose' => __('word')
+                'size' => 100,
+                'verbose' => 'Title of the item'
+            ),
+            'location' => array(
+                'type' => 'Pluf_DB_Field_Geometry',
+                'blank' => true,
+                'is_null' => false,
+                'editable' => false,
+                'readable' => true
             )
         );
-        $this->_a['views'] = array();
-    }
-
-    function __toString()
-    {
-        return $this->word;
     }
 }
+
 

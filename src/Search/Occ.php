@@ -33,7 +33,7 @@ class Occ extends Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 // It is automatically added.
                 'blank' => true
             ),
@@ -44,23 +44,23 @@ class Occ extends Model
                 'verbose' => __('word')
             ),
             'model_class' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 150,
                 'verbose' => __('model class')
             ),
             'model_id' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
                 'verbose' => __('model id')
             ),
             'occ' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
                 'verbose' => __('occurences')
             ),
             'pondocc' => array(
-                'type' => 'Pluf_DB_Field_Float',
+                'type' => '\Pluf\DB\Field\FloatPoint',
                 'blank' => false,
                 'verbose' => __('weighted occurence')
             )

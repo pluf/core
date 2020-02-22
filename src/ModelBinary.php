@@ -17,14 +17,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
  * Binary model
  *
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
- *
+ *        
  */
 class ModelBinary extends Model
 {
@@ -39,39 +38,39 @@ class ModelBinary extends Model
         $this->_a['cols'] = array(
             // Identifier
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 'is_null' => false,
                 'editable' => false
             ),
             // Fields
             'mime_type' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'is_null' => true,
                 'size' => 64,
                 'default' => 'application/octet-stream',
                 'editable' => true
             ),
             'file_path' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'is_null' => false,
                 'size' => 250,
                 'editable' => false,
                 'readable' => false
             ),
             'file_name' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'is_null' => false,
                 'size' => 250,
                 'default' => 'unknown',
                 'editable' => false
             ),
             'file_size' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => '\Pluf\DB\Field\Integer',
                 'is_null' => false,
                 'editable' => false
             ),
             'modif_dtime' => array(
-                'type' => 'Pluf_DB_Field_Datetime',
+                'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
                 'editable' => false
             )
@@ -112,7 +111,7 @@ class ModelBinary extends Model
         // mime type (based on file name)
         $mime_type = $this->mime_type;
         if (! isset($mime_type) || $mime_type === 'application/octet-stream') {
-            $fileInfo = Pluf_FileUtil::getMimeType($this->file_name);
+            $fileInfo = FileUtil::getMimeType($this->file_name);
             $this->mime_type = $fileInfo[0];
         }
     }
@@ -143,7 +142,8 @@ class ModelBinary extends Model
     }
 
     /**
-     * مسیر کامل محتوی را تعیین می‌کند. این مسیر حاوی اسم فایل هم هست.
+     * مسیر کامل محتوی را تعیین می‌کند.
+     * این مسیر حاوی اسم فایل هم هست.
      *
      * @return string
      */

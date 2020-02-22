@@ -25,7 +25,7 @@ class Pluf_Search_ResultSet implements Iterator
 
     protected $results = array();
 
-    public function __construct ($search_res)
+    public function __construct($search_res)
     {
         $this->results = $search_res;
         reset($this->results);
@@ -34,30 +34,30 @@ class Pluf_Search_ResultSet implements Iterator
     /**
      * Get the current item.
      */
-    public function current ()
+    public function current()
     {
         $i = current($this->results);
-        $doc = Pluf::factory($i['model_class'], $i['model_id']);
+        $doc = new $i['model_class']($i['model_id']);
         $doc->_searchScore = $i['score'];
         return $doc;
     }
 
-    public function key ()
+    public function key()
     {
         return key($this->results);
     }
 
-    public function next ()
+    public function next()
     {
         next($this->results);
     }
 
-    public function rewind ()
+    public function rewind()
     {
         reset($this->results);
     }
 
-    public function valid ()
+    public function valid()
     {
         // We know that the boolean false will not be stored as a
         // field, so we can test against false to check if valid or
@@ -65,7 +65,7 @@ class Pluf_Search_ResultSet implements Iterator
         return (false !== current($this->results));
     }
 
-    public function count ()
+    public function count()
     {
         return count($this->results);
     }

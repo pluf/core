@@ -609,9 +609,9 @@ class Paginator
                 } else {
                     $types = array(
                         'Pluf_DB_Field_Boolean',
-                        'Pluf_DB_Field_Integer',
-                        'Pluf_DB_Field_Float',
-                        'Pluf_DB_Field_Sequence',
+                        '\Pluf\DB\Field\Integer',
+                        '\Pluf\DB\Field\FloatPoint',
+                        '\Pluf\DB\Field\Sequence',
                         'Pluf_DB_Field_Foreignkey'
                     );
                     $sql = in_array($feild['type'], $types) ? new SQL("$key = $vals[0]") : new SQL($key . '=%s', $vals[0]);

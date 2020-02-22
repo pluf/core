@@ -32,17 +32,17 @@ class SchemaInfo extends Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 // It is automatically added.
                 'blank' => true
             ),
             'application' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'unique' => true
             ),
             'version' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false
             )
         );

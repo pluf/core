@@ -19,10 +19,10 @@
  */
 namespace Pluf\DB\Field;
 
-
 use Pluf\DB\Field;
 
 class FloatPoint extends Field
 {
+
     public $type = 'float';
 }

@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
  * یک کلاس ساده برای کارهای رمزنگاری
  *
- * برخی از کارهای ساده و پرکاربرد رمزنگاری در این کلاس پیاده سازی شده که 
+ * برخی از کارهای ساده و پرکاربرد رمزنگاری در این کلاس پیاده سازی شده که
  * در کاربردهای متفاوت سیستم به کار گرفته شود. از این میان می‌توانیم به
  * رمز کردن و رمزگشایی از این داده‌ها اشاره کنیم.
  *
@@ -42,7 +41,7 @@ class Crypt
      * @param
      *            string The encryption key ('')
      */
-    function __construct ($key = '')
+    function __construct($key = '')
     {
         $this->key = $key;
     }
@@ -59,7 +58,7 @@ class Crypt
      *            string Encryption key ('')
      * @return string Encoded string
      */
-    function encrypt ($string, $key = '')
+    function encrypt($string, $key = '')
     {
         if ($key == '') {
             $key = $this->key;
@@ -78,13 +77,13 @@ class Crypt
         }
         $result = base64_encode($result);
         return str_replace(array(
-                '+',
-                '/',
-                '='
+            '+',
+            '/',
+            '='
         ), array(
-                '-',
-                '_',
-                '~'
+            '-',
+            '_',
+            '~'
         ), $result);
     }
 
@@ -100,7 +99,7 @@ class Crypt
      *            string Encryption key ('')
      * @return string Decoded string
      */
-    function decrypt ($string, $key = '')
+    function decrypt($string, $key = '')
     {
         if ($key == '') {
             $key = $this->key;
@@ -110,13 +109,13 @@ class Crypt
         }
         $result = '';
         $string = str_replace(array(
-                '-',
-                '_',
-                '~'
+            '-',
+            '_',
+            '~'
         ), array(
-                '+',
-                '/',
-                '='
+            '+',
+            '/',
+            '='
         ), $string);
         $string = base64_decode($string);
         $strlen = strlen($string);

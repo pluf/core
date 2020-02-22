@@ -1,4 +1,10 @@
 <?php
+namespace Pluf\Middleware;
+
+use Pluf\Exception;
+use Pluf\Middleware;
+use Pluf\Tenant;
+use Pluf\HTTP\Request;
 
 /**
  *
@@ -6,22 +12,22 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromHeader
+class TenantFromHeader implements Middleware
 {
 
     /**
      *
-     * @param Pluf_HTTP_Request $request            
+     * @param Request $request
      * @return boolean
      */
-    function process_request (&$request)
+    function process_request(&$request)
     {
         if (! $request->tenant->isAnonymous()) {
             return false;
         }
         try {
-            if(array_key_exists('_PX_tenant', $request->HEADERS)){                
-                $app = new Pluf_Tenant($request->HEADERS['_PX_tenant']);
+            if (array_key_exists('_PX_tenant', $request->HEADERS)) {
+                $app = new Tenant($request->HEADERS['_PX_tenant']);
                 if ($app) {
                     $request->tenant = $app;
                 }
@@ -31,4 +37,7 @@ class Pluf_Middleware_TenantFromHeader
         }
         return false;
     }
+
+    public function process_response($request, $response)
+    {}
 }

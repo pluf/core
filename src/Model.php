@@ -513,7 +513,7 @@ class Model implements JsonSerializable
      * @param
      *            array|string Filter string or array given to getList
      * @see self::getList
-     * @return Pluf\Model|null find model
+     * @return Model|null find model
      */
     public function getOne($p = array())
     {
@@ -1072,7 +1072,7 @@ class Model implements JsonSerializable
     function _fromDb($val, $col)
     {
         $m = $this->_con->type_cast[$this->_a['cols'][$col]['type']][0];
-        return ($m == 'Pluf_DB_IdentityFromDb') ? $val : $m($val);
+        return ($m == '\Pluf\DB::identityFromDb') ? $val : $m($val);
     }
 
     /**

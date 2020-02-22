@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
 
 /**
@@ -26,20 +25,20 @@ namespace Pluf;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-interface Pluf_Middleware
+interface Middleware
 {
 
     /**
      *
-     * @param Pluf_HTTP_Request $request
+     * @param HTTP\Request $request
      * @return boolean false if ther is no problem otherwize ther is an error
      */
     public function process_request(&$request);
 
     /**
-     * 
-     * @param Pluf_HTTP_Request $request
-     * @param Pluf_HTTP_Response $response
+     *
+     * @param HTTP\Request $request
+     * @param HTTP\Response $response
      */
     public function process_response($request, $response);
 }

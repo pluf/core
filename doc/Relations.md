@@ -8,13 +8,13 @@ function init()
         $this->_a['table'] = 'user_accounts';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 'is_null' => true,
                 'editable' => false,
                 'readable' => true
             ),
             'login' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'is_null' => false,
                 'unique' => true,
                 'size' => 50,

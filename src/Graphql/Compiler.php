@@ -18,9 +18,9 @@
  */
 namespace Pluf\Graphql;
 
+use Pluf\Exception;
 use Pluf\ModelUtils;
 use Pluf\Model;
-use Pluf\Exception;
 
 /**
  * Create a compilre render
@@ -105,7 +105,7 @@ class ' . $className . ' {
             $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
         } catch (Exception $e) {
-            throw new Exception_BadRequest($e->getMessage());
+            throw new BadRequestException($e->getMessage());
         }
     }
 }
@@ -323,24 +323,24 @@ class ' . $className . ' {
     {
         // set type
         switch ($field['type']) {
-            case 'Pluf_DB_Field_Sequence':
+            case '\Pluf\DB\Field\Sequence':
                 $res = 'Type::int()';
                 break;
             case 'Pluf_DB_Field_Date':
-            case 'Pluf_DB_Field_Datetime':
+            case '\Pluf\DB\Field\Datetime':
             case 'Pluf_DB_Field_Email':
             case 'Pluf_DB_Field_File':
             case 'Pluf_DB_Field_Serialized':
             case 'Pluf_DB_Field_Slug':
-            case 'Pluf_DB_Field_Text':
-            case 'Pluf_DB_Field_Varchar':
+            case '\Pluf\DB\Field\Text':
+            case '\Pluf\DB\Field\Varchar':
             case 'Pluf_DB_Field_Geometry':
                 $res = 'Type::string()';
                 break;
-            case 'Pluf_DB_Field_Integer':
+            case '\Pluf\DB\Field\Integer':
                 $res = 'Type::int()';
                 break;
-            case 'Pluf_DB_Field_Float':
+            case '\Pluf\DB\Field\FloatPoint':
                 $res = 'Type::float()';
                 break;
             case 'Pluf_DB_Field_Boolean':

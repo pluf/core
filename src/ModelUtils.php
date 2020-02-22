@@ -1,8 +1,6 @@
 <?php
 namespace Pluf;
 
-use Pluf\Form\UpdateModel;
-
 class ModelUtils
 {
 
@@ -78,6 +76,6 @@ class ModelUtils
         $extra = array(
             'model' => $model
         );
-        return new UpdateModel($data, $extra, null);
+        return new Form\FormModelUpdate($data, $extra, null);
     }
 }

@@ -86,68 +86,68 @@ class DB
         // Default system type
         $defTypes = array(
             '\Pluf\DB\Field\Boolean' => array(
-                'Pluf_DB_BooleanFromDb',
-                'Pluf_DB_BooleanToDb'
+                '\Pluf\DB::booleanFromDb',
+                '\Pluf\DB::booleanToDb'
             ),
             '\Pluf\DB\Field\Date' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
             '\Pluf\DB\Field\Datetime' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
             '\Pluf\DB\Field\Email' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
             '\Pluf\DB\Field\File' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
-            '\Pluf\DB\Field\Float' => array(
-                'Pluf_DB_FloatFromDb',
-                'Pluf_DB_FloatToDb'
+            '\Pluf\DB\Field\FloatPoint' => array(
+                '\Pluf\DB::floatFromDb',
+                '\Pluf\DB::floatToDb'
             ),
             '\Pluf\DB\Field\Foreignkey' => array(
-                'Pluf_DB_IntegerFromDb',
-                'Pluf_DB_IntegerToDb'
+                '\Pluf\DB::integerFromDb',
+                '\Pluf\DB::integerToDb'
             ),
             '\Pluf\DB\Field\Integer' => array(
-                'Pluf_DB_IntegerFromDb',
-                'Pluf_DB_IntegerToDb'
+                '\Pluf\DB::integerFromDb',
+                '\Pluf\DB::integerToDb'
             ),
             '\Pluf\DB\Field\Password' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_PasswordToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::passwordToDb'
             ),
             '\Pluf\DB\Field\Sequence' => array(
-                'Pluf_DB_IntegerFromDb',
-                'Pluf_DB_IntegerToDb'
+                '\Pluf\DB::integerFromDb',
+                '\Pluf\DB::integerToDb'
             ),
             '\Pluf\DB\Field\Slug' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_SlugToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::slugToDb'
             ),
             '\Pluf\DB\Field\Text' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
             '\Pluf\DB\Field\Varchar' => array(
-                'Pluf_DB_IdentityFromDb',
-                'Pluf_DB_IdentityToDb'
+                '\Pluf\DB::identityFromDb',
+                '\Pluf\DB::identityToDb'
             ),
             '\Pluf\DB\Field\Serialized' => array(
-                'Pluf_DB_SerializedFromDb',
-                'Pluf_DB_SerializedToDb'
+                '\Pluf\DB::serializedFromDb',
+                '\Pluf\DB::serializedToDb'
             ),
             '\Pluf\DB\Field\Compressed' => array(
-                'Pluf_DB_CompressedFromDb',
-                'Pluf_DB_CompressedToDb'
+                '\Pluf\DB::compressedFromDb',
+                '\Pluf\DB::compressedToDb'
             ),
             '\Pluf\DB\Field\Geometry' => array(
-                'Pluf_DB_GeometryFromDb',
-                'Pluf_DB_GeometryToDb'
+                '\Pluf\DB::geometryFromDb',
+                '\Pluf\DB::geometryToDb'
             )
         );
 
@@ -163,7 +163,7 @@ class DB
      *            mixed Value
      * @return mixed Value
      */
-    public static function Pluf_DB_IdentityFromDb($val)
+    public static function identityFromDb($val)
     {
         return $val;
     }
@@ -177,7 +177,7 @@ class DB
      *            object Database handler.
      * @return string Ready to use for SQL.
      */
-    public static function Pluf_DB_IdentityToDb($val, $db)
+    public static function identityToDb($val, $db)
     {
         if (null === $val) {
             return 'NULL';
@@ -185,7 +185,7 @@ class DB
         return $db->esc($val);
     }
 
-    public static function Pluf_DB_SerializedFromDb($val)
+    public static function serializedFromDb($val)
     {
         if ($val) {
             return unserialize($val);
@@ -193,7 +193,7 @@ class DB
         return $val;
     }
 
-    public static function Pluf_DB_SerializedToDb($val, $db)
+    public static function serializedToDb($val, $db)
     {
         if (null === $val) {
             return 'NULL';
@@ -201,17 +201,17 @@ class DB
         return $db->esc(serialize($val));
     }
 
-    public static function Pluf_DB_CompressedFromDb($val)
+    public static function compressedFromDb($val)
     {
         return ($val) ? gzinflate($val) : $val;
     }
 
-    public static function Pluf_DB_CompressedToDb($val, $db)
+    public static function compressedToDb($val, $db)
     {
         return (null === $val) ? 'NULL' : $db->esc(gzdeflate($val, 9));
     }
 
-    public static function Pluf_DB_BooleanFromDb($val)
+    public static function booleanFromDb($val)
     {
         if ($val) {
             return true;
@@ -219,7 +219,7 @@ class DB
         return false;
     }
 
-    public static function Pluf_DB_BooleanToDb($val, $db)
+    public static function booleanToDb($val, $db)
     {
         if (null === $val) {
             return 'NULL';
@@ -230,27 +230,27 @@ class DB
         return $db->esc('0');
     }
 
-    public static function Pluf_DB_IntegerFromDb($val)
+    public static function integerFromDb($val)
     {
         return (null === $val) ? null : (int) $val;
     }
 
-    public static function Pluf_DB_IntegerToDb($val, $db)
+    public static function integerToDb($val, $db)
     {
         return (null === $val) ? 'NULL' : (string) (int) $val;
     }
 
-    public static function Pluf_DB_FloatFromDb($val)
+    public static function floatFromDb($val)
     {
         return (null === $val) ? null : (float) $val;
     }
 
-    public static function Pluf_DB_FloatToDb($val, $db)
+    public static function floatToDb($val, $db)
     {
         return (null === $val) ? 'NULL' : (string) (float) $val;
     }
 
-    public static function Pluf_DB_PasswordToDb($val, $db)
+    public static function passwordToDb($val, $db)
     {
         $exp = explode(':', $val);
         if (in_array($exp[0], array(
@@ -265,7 +265,7 @@ class DB
         return $db->esc('sha1:' . $salt . ':' . sha1($salt . $val));
     }
 
-    public static function Pluf_DB_SlugToDB($val, $db)
+    public static function slugToDB($val, $db)
     {
         return $db->esc(DB\Field\Slug::slugify($val));
     }
@@ -275,7 +275,7 @@ class DB
      * @param Object $val
      * @return string
      */
-    public static function GeometryFromDb($val)
+    public static function geometryFromDb($val)
     {
         // TODO: maso, 2018: check if we need to use geoPHP::load to load data
         // SEE: https://github.com/phayes/geoPHP
@@ -300,7 +300,7 @@ class DB
     /**
      * Convert text to geometry
      */
-    public static function GeometryToDb($val, $db)
+    public static function geometryToDb($val, $db)
     {
         // TODO: maso, 2018: check if we need to use geoPHP::load to load data
         // SEE: https://github.com/phayes/geoPHP

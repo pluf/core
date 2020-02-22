@@ -19,10 +19,8 @@
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\HTTP\Response;
-use Pluf\HTTP\Response\Redirect;
 use Pluf\HTTP\URL;
-
-use Pluf\DoesNotExistException;
+use Pluf\HTTP\Response\Redirect;
 
 class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
 {
@@ -101,6 +99,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
     /**
      *
      * @test
+     * @expectedException \Pluf\DoesNotExistException
      */
     public function testSimpleNotfound()
     {

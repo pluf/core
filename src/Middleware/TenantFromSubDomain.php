@@ -1,4 +1,9 @@
 <?php
+namespace Pluf\Middleware;
+
+use Pluf\Exception;
+use Pluf\Middleware;
+use Pluf\Tenant;
 
 /**
  *
@@ -6,7 +11,7 @@
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class Pluf_Middleware_TenantFromSubDomain
+class TenantFromSubDomain implements Middleware
 {
 
     function process_request(&$request)
@@ -20,17 +25,17 @@ class Pluf_Middleware_TenantFromSubDomain
             // Remove 'www.' if exist
             $domain = preg_replace('/^www\./', '', $domain);
             // Extract subdomain
-            $subdomain = Pluf_Middleware_TenantFromSubDomain::extract_subdomains($domain);
+            $subdomain = TenantFromSubDomain::extract_subdomains($domain);
             // پیدا کردن ملک با زیر دامنه داده شده
-            $app = Pluf_Tenant::bySubDomain($subdomain);
+            $app = Tenant::bySubDomain($subdomain);
             if ($app) {
                 $request->tenant = $app;
                 $request->application = $app;
             }
         } catch (Exception $e) {
-//             echo $e->getMessage();
+            // echo $e->getMessage();
         }
-        
+
         return false;
     }
 
@@ -39,20 +44,17 @@ class Pluf_Middleware_TenantFromSubDomain
      * Note: hadi, 1395: برای استخراج زیر دامنه یا زیردامنه‌ها از یک آدرس از دو متد زیر استفاده کرده‌ایم.
      * خوبی این روش این است که برای پسوندهای چند بخشی مثل co.ir و مانند آن نیز تا حد قابل قبولی کار می‌کند.
      * البته ایراداتی هم دارد. برای اطاعات بیشتر به پیوند زیر مراجعه شود:
-     * 
+     *
      * http://stackoverflow.com/a/12372310
-     * 
+     *
      * پسوندهای قابل قبول برای دامنه‌های عمومی اینترنتی در پیوند زیر قابل مشاهده است:
      * https://publicsuffix.org/list/
-     * 
-     ******************************************************************************************************
+     *
+     * *****************************************************************************************************
      */
-    
+
     /**
      * دامنه اصلی را از رشته داده شده استخراج می‌کند
-     *
-     * @param unknown $str            
-     * @return unknown
      */
     private static function extract_domain($str)
     {
@@ -66,15 +68,16 @@ class Pluf_Middleware_TenantFromSubDomain
 
     /**
      * زیر دامنه یا زیردامنه‌ها را از رشته داده شده استخراج می‌کند.
-     *
-     * @param unknown $str            
      */
     private static function extract_subdomains($str)
     {
-        $dom = Pluf_Middleware_TenantFromSubDomain::extract_domain($str);
-        
+        $dom = TenantFromSubDomain::extract_domain($str);
+
         $subdomains = rtrim(strstr($str, $dom, true), '.');
-        
+
         return $subdomains;
     }
+
+    public function process_response($request, $response)
+    {}
 }

@@ -1,13 +1,14 @@
 <?php
 namespace Pluf\Template\Tag;
 
+use Pluf\Template\Tag;
 
-class Pluf_Template_Tag_RmediaUrl extends \Pluf\Template\Tag
+class RmediaUrl extends Tag
 {
 
-    function start ($var, $file = '')
+    function start($var, $file = '')
     {
-        $this->context->set($var, Pluf_Template_Tag_MediaUrl::url($file));
+        $this->context->set($var, MediaUrl::url($file));
     }
 }
 

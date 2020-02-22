@@ -49,29 +49,29 @@ class Tenant extends Model
         $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 'blank' => true,
                 'editable' => false
             ),
             'level' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => '\Pluf\DB\Field\Integer',
                 'blank' => true,
                 'editable' => false
             ),
             'title' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => true,
                 'size' => 100
             ),
             'description' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => true,
                 'is_null' => true,
                 'size' => 1024,
                 'editable' => true
             ),
             'domain' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => true,
                 'is_null' => true,
                 'unique' => true,
@@ -79,7 +79,7 @@ class Tenant extends Model
                 'editable' => true
             ),
             'subdomain' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'is_null' => false,
                 'unique' => true,
@@ -100,19 +100,19 @@ class Tenant extends Model
                 'readable' => true
             ),
             'phone' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => true,
                 'verbose' => 'Owner phone',
                 'editable' => true,
                 'readable' => true
             ),
             'creation_dtime' => array(
-                'type' => 'Pluf_DB_Field_Datetime',
+                'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
                 'editable' => false
             ),
             'modif_dtime' => array(
-                'type' => 'Pluf_DB_Field_Datetime',
+                'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
                 'editable' => false
             ),

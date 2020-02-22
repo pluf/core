@@ -16,35 +16,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\PlufTest\Crypto;
+
+use PHPUnit\Framework\TestCase;
+use Pluf\Bootstrap;
+use Pluf\Crypt;
 
 /**
- * Migration script.
+ *
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
  */
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
-require 'Pluf.php';
-
-function usage ()
+class PlufCryptTest extends TestCase
 {
-    echo 'Usage examples:' . "\n" .
-             ' Extract all:      extracttemplates.php path/to/config.php path/to/outpudir' .
-             "\n";
-}
 
-function debug ($what)
-{
-    global $debug;
-    if ($debug) {
-        echo ($what . "\n");
+    /**
+     *
+     * @before
+     */
+    protected function setUpTest()
+    {
+        Bootstrap::start(__DIR__ . '/../conf/config.php');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testEncrypt()
+    {
+        $crypt = new Crypt('mykeyasdkjhsdkfjsdhfksjdh');
+        $a = $crypt->encrypt('Thisisalongemail.name@longemailcompany.domain.com');
+        $this->assertEquals($crypt->decrypt($a), 'Thisisalongemail.name@longemailcompany.domain.com');
     }
 }
 
-if ($argc !== 3) {
-    usage();
-    die();
-}
-$conf = $argv[1];
-$outputdir = $argv[2];
-Pluf::start($conf);
-$generator = new Pluf_Translation_Generator();
-$generator->generate($outputdir);
-echo 'Done', "\n";

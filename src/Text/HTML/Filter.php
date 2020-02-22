@@ -1,25 +1,28 @@
 <?php
+
 /* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
-# ***** BEGIN LICENSE BLOCK *****
-# This file is part of Plume Framework, a simple PHP Application Framework.
-# Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
-#
-# Plume Framework is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation; either version 2.1 of the License, or
-# (at your option) any later version.
-#
-# Plume Framework is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-#
-# ***** END LICENSE BLOCK ***** */
+ * # ***** BEGIN LICENSE BLOCK *****
+ * # This file is part of Plume Framework, a simple PHP Application Framework.
+ * # Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
+ * #
+ * # Plume Framework is free software; you can redistribute it and/or modify
+ * # it under the terms of the GNU Lesser General Public License as published by
+ * # the Free Software Foundation; either version 2.1 of the License, or
+ * # (at your option) any later version.
+ * #
+ * # Plume Framework is distributed in the hope that it will be useful,
+ * # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * # GNU Lesser General Public License for more details.
+ * #
+ * # You should have received a copy of the GNU Lesser General Public License
+ * # along with this program; if not, write to the Free Software
+ * # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ * #
+ * # ***** END LICENSE BLOCK *****
+ */
+namespace Pluf\Text\HTML;
 
 /**
  * A PHP HTML filtering library
@@ -29,7 +32,7 @@
  * http://iamcal.com/publish/articles/php/processing_html/
  * http://iamcal.com/publish/articles/php/processing_html_part_2/
  *
- * By Cal Henderson <cal@iamcal.com> 
+ * By Cal Henderson <cal@iamcal.com>
  *
  * This code is licensed under a Creative Commons
  * Attribution-ShareAlike 2.5 License
@@ -37,63 +40,75 @@
  *
  * Thanks to Jang Kim for adding support for single quoted attributes.
  *
- * TODO: Add HTML check from: 
- *  http://simonwillison.net/2003/Feb/23/safeHtmlChecker/
+ * TODO: Add HTML check from:
+ * http://simonwillison.net/2003/Feb/23/safeHtmlChecker/
  */
-class Pluf_Text_HTML_Filter 
+class Filter
 {
+
     public $tag_counts = array();
 
     /**
      * tags and attributes that are allowed
      */
     public $allowed = array(
-                            'a' => array('href', 'target'),
-                            'b' => array(),
-                            'img' => array('src', 'width', 'height', 'alt'),
-                            );
+        'a' => array(
+            'href',
+            'target'
+        ),
+        'b' => array(),
+        'img' => array(
+            'src',
+            'width',
+            'height',
+            'alt'
+        )
+    );
 
     /**
-     * tags which should always be self-closing (e.g. "<img />")
+     * tags which should always be self-closing (e.g.
+     * "<img />")
      */
     public $no_close = array(
-                             'img',
-                             );
+        'img'
+    );
 
     /**
      * tags which must always have seperate opening and closing tags
-     * (e.g. "<b></b>")
+     * (e.g.
+     * "<b></b>")
      */
     public $always_close = array(
-                                 'a',
-                                 'b',
-                                 );
+        'a',
+        'b'
+    );
 
     /**
      * attributes which should be checked for valid protocols
      */
     public $protocol_attributes = array(
-                                        'src',
-                                        'href',
-                                        );
+        'src',
+        'href'
+    );
 
     /**
      * protocols which are allowed
      */
     public $allowed_protocols = array(
-                                      'http',
-                                      'ftp',
-                                      'mailto',
-                                      );
+        'http',
+        'ftp',
+        'mailto'
+    );
 
     /**
      * tags which should be removed if they contain no content
-     * (e.g. "<b></b>" or "<b />")
+     * (e.g.
+     * "<b></b>" or "<b />")
      */
     public $remove_blanks = array(
-                                  'a',
-                                  'b',
-                                  );
+        'a',
+        'b'
+    );
 
     /**
      * should we remove comments?
@@ -126,11 +141,11 @@ class Pluf_Text_HTML_Filter
     public $allow_hexadecimal_entities = 1;
 
     public $allowed_entities = array(
-                                     'amp',
-                                     'gt',
-                                     'lt',
-                                     'quot',
-                                     );
+        'amp',
+        'gt',
+        'lt',
+        'quot'
+    );
 
     function go($data)
     {
@@ -167,22 +182,20 @@ class Pluf_Text_HTML_Filter
             // be used in the next pass of the regexp)
             $data = str_replace('<>', '', $data);
         }
-        //echo "::".HtmlSpecialChars($data)."<br />\n";
+        // echo "::".HtmlSpecialChars($data)."<br />\n";
         return $data;
     }
 
     function check_tags($data)
     {
-        $data = preg_replace("/<(.*?)>/se", "\$this->process_tag(\$this->StripSingle('\\1'))",	$data);
+        $data = preg_replace("/<(.*?)>/se", "\$this->process_tag(\$this->StripSingle('\\1'))", $data);
         foreach (array_keys($this->tag_counts) as $tag) {
-            for ($i=0; $i<$this->tag_counts[$tag]; $i++) {
+            for ($i = 0; $i < $this->tag_counts[$tag]; $i ++) {
                 $data .= "</$tag>";
             }
         }
         return $data;
     }
-
-
 
     function process_tag($data)
     {
@@ -190,10 +203,10 @@ class Pluf_Text_HTML_Filter
         if (preg_match("/^\/([a-z0-9]+)/si", $data, $matches)) {
             $name = StrToLower($matches[1]);
             if (in_array($name, array_keys($this->allowed))) {
-                if (!in_array($name, $this->no_close)) {
+                if (! in_array($name, $this->no_close)) {
                     if (isset($this->tag_counts[$name]) and $this->tag_counts[$name]) {
-                        $this->tag_counts[$name]--;
-                        return '</'.$name.'>';
+                        $this->tag_counts[$name] --;
+                        return '</' . $name . '>';
                     }
                 }
             } else {
@@ -207,9 +220,9 @@ class Pluf_Text_HTML_Filter
             $ending = $matches[3];
             if (in_array($name, array_keys($this->allowed))) {
                 $params = "";
-                preg_match_all("/([a-z0-9]+)=([\"'])(.*?)\\2/si", $body, $matches_2, PREG_SET_ORDER);		// <foo a="b" />
-                preg_match_all("/([a-z0-9]+)(=)([^\"\s']+)/si", $body, $matches_1, PREG_SET_ORDER);		// <foo a=b />
-                preg_match_all("/([a-z0-9]+)=([\"'])([^\"']*?)\s*$/si", $body, $matches_3, PREG_SET_ORDER);	// <foo a="b />
+                preg_match_all("/([a-z0-9]+)=([\"'])(.*?)\\2/si", $body, $matches_2, PREG_SET_ORDER); // <foo a="b" />
+                preg_match_all("/([a-z0-9]+)(=)([^\"\s']+)/si", $body, $matches_1, PREG_SET_ORDER); // <foo a=b />
+                preg_match_all("/([a-z0-9]+)=([\"'])([^\"']*?)\s*$/si", $body, $matches_3, PREG_SET_ORDER); // <foo a="b />
                 $matches = array_merge($matches_1, $matches_2, $matches_3);
                 foreach ($matches as $match) {
                     $pname = StrToLower($match[1]);
@@ -227,9 +240,9 @@ class Pluf_Text_HTML_Filter
                 if (in_array($name, $this->always_close)) {
                     $ending = '';
                 }
-                if (!$ending) {
+                if (! $ending) {
                     if (isset($this->tag_counts[$name])) {
-                        $this->tag_counts[$name]++;
+                        $this->tag_counts[$name] ++;
                     } else {
                         $this->tag_counts[$name] = 1;
                     }
@@ -237,7 +250,7 @@ class Pluf_Text_HTML_Filter
                 if ($ending) {
                     $ending = ' /';
                 }
-                return '<'.$name.$params.$ending.'>';
+                return '<' . $name . $params . $ending . '>';
             } else {
                 return '';
             }
@@ -247,7 +260,7 @@ class Pluf_Text_HTML_Filter
             if ($this->strip_comments) {
                 return '';
             } else {
-                return '<'.$data.'>';
+                return '<' . $data . '>';
             }
         }
         // garbage, ignore it
@@ -258,16 +271,16 @@ class Pluf_Text_HTML_Filter
     {
         $data = $this->decode_entities($data);
         if (preg_match("/^([^:]+)\:/si", $data, $matches)) {
-            if (!in_array($matches[1], $this->allowed_protocols)) {
-                $data = '#'.substr($data, strlen($matches[1])+1);
+            if (! in_array($matches[1], $this->allowed_protocols)) {
+                $data = '#' . substr($data, strlen($matches[1]) + 1);
             }
         }
         return $data;
     }
 
-    function process_remove_blanks($data) 
+    function process_remove_blanks($data)
     {
-        foreach($this->remove_blanks as $tag) {
+        foreach ($this->remove_blanks as $tag) {
             $data = preg_replace("/<{$tag}(\s[^>]*)?><\\/{$tag}>/", '', $data);
             $data = preg_replace("/<{$tag}(\s[^>]*)?\\/>/", '', $data);
         }
@@ -278,48 +291,28 @@ class Pluf_Text_HTML_Filter
     {
         $data_notags = Strip_Tags($data);
         $data_notags = preg_replace('/[^a-zA-Z]/', '', $data_notags);
-        if (strlen($data_notags)<5) {
+        if (strlen($data_notags) < 5) {
             return $data;
         }
         if (preg_match('/[a-z]/', $data_notags)) {
             return $data;
         }
-        return preg_replace(
-                            "/(>|^)([^<]+?)(<|$)/se",
-                            "\$this->StripSingle('\\1').".
-                            "\$this->fix_case_inner(\$this->StripSingle('\\2')).".
-                            "\$this->StripSingle('\\3')",
-                            $data
-                            );
+        return preg_replace("/(>|^)([^<]+?)(<|$)/se", "\$this->StripSingle('\\1')." . "\$this->fix_case_inner(\$this->StripSingle('\\2'))." . "\$this->StripSingle('\\3')", $data);
     }
 
     function fix_case_inner($data)
     {
         $data = StrToLower($data);
-        $data = preg_replace(
-                             '/(^|[^\w\s\';,\\-])(\s*)([a-z])/e',
-                             "\$this->StripSingle('\\1\\2').StrToUpper(\$this->StripSingle('\\3'))",
-                             $data
-                             );
+        $data = preg_replace('/(^|[^\w\s\';,\\-])(\s*)([a-z])/e', "\$this->StripSingle('\\1\\2').StrToUpper(\$this->StripSingle('\\3'))", $data);
         return $data;
     }
 
     function validate_entities($data)
     {
         // validate entities throughout the string
-        $data = preg_replace(
-                             '!&([^&;]*)(?=(;|&|$))!e',
-                             "\$this->check_entity(\$this->StripSingle('\\1'), \$this->StripSingle('\\2'))",
-                             $data
-                             );
-        // validate quotes outside of tags 
-        $data = preg_replace(
-                             "/(>|^)([^<]+?)(<|$)/se",
-                             "\$this->StripSingle('\\1').".
-                             "str_replace('\"', '&quot;', \$this->StripSingle('\\2')).".
-                             "\$this->StripSingle('\\3')",
-                             $data
-                             );
+        $data = preg_replace('!&([^&;]*)(?=(;|&|$))!e', "\$this->check_entity(\$this->StripSingle('\\1'), \$this->StripSingle('\\2'))", $data);
+        // validate quotes outside of tags
+        $data = preg_replace("/(>|^)([^<]+?)(<|$)/se", "\$this->StripSingle('\\1')." . "str_replace('\"', '&quot;', \$this->StripSingle('\\2'))." . "\$this->StripSingle('\\3')", $data);
         return $data;
     }
 
@@ -327,16 +320,17 @@ class Pluf_Text_HTML_Filter
     {
         if (';' === $term) {
             if ($this->is_valid_entity($preamble)) {
-                return '&'.$preamble;
+                return '&' . $preamble;
             }
         }
-        return '&amp;'.$preamble;
+        return '&amp;' . $preamble;
     }
 
     /**
      * Determines if the string provided is a valid entity.
      *
-     * @param string $entity String to test against.
+     * @param string $entity
+     *            String to test against.
      * @return boolean
      */
     function is_valid_entity($entity)
@@ -363,7 +357,8 @@ class Pluf_Text_HTML_Filter
     /**
      * Determines if the data provided is not a control character.
      *
-     * @param string|int $data Data to test against like "64" or "x40".
+     * @param string|int $data
+     *            Data to test against like "64" or "x40".
      * @return boolean
      */
     function not_control_caracter($data)
@@ -382,9 +377,18 @@ class Pluf_Text_HTML_Filter
     // don't get stray quotes/brackets inside strings
     function decode_entities($data)
     {
-        $data = preg_replace_callback('!(&)#(\d+);?!', array($this, 'decode_dec_entity'), $data);
-        $data = preg_replace_callback('!(&)#x([0-9a-f]+);?!i', array($this, 'decode_hex_entity'), $data);
-        $data = preg_replace_callback('!(%)([0-9a-f]{2});?!i', array($this, 'decode_hex_entity'), $data);
+        $data = preg_replace_callback('!(&)#(\d+);?!', array(
+            $this,
+            'decode_dec_entity'
+        ), $data);
+        $data = preg_replace_callback('!(&)#x([0-9a-f]+);?!i', array(
+            $this,
+            'decode_hex_entity'
+        ), $data);
+        $data = preg_replace_callback('!(%)([0-9a-f]{2});?!i', array(
+            $this,
+            'decode_hex_entity'
+        ), $data);
         $data = $this->validate_entities($data);
         return $data;
     }
@@ -401,17 +405,29 @@ class Pluf_Text_HTML_Filter
 
     function decode_num_entity($orig_type, $d)
     {
-        if ($d < 0) { $d = 32; } // space
-        // don't mess with huigh chars
+        if ($d < 0) {
+            $d = 32;
+        } // space
+          // don't mess with huigh chars
         if ($this->not_control_caracter($d)) {
-            if ($orig_type == '%') { return '%'.dechex($d); }
-            if ($orig_type == '&') { return "&#$d;"; }
+            if ($orig_type == '%') {
+                return '%' . dechex($d);
+            }
+            if ($orig_type == '&') {
+                return "&#$d;";
+            }
         }
         return HtmlSpecialChars(chr($d));
     }
 
     function StripSingle($data)
     {
-        return str_replace(array('\\"', "\\0"), array('"', chr(0)), $data);
+        return str_replace(array(
+            '\\"',
+            "\\0"
+        ), array(
+            '"',
+            chr(0)
+        ), $data);
     }
 }

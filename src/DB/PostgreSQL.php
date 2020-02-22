@@ -77,7 +77,7 @@ class Pluf_DB_PostgreSQL
         $this->type_cast = DB::defaultTypecast();
         $this->type_cast['Pluf_DB_Field_Boolean'] = array(
             'Pluf_DB_PostgreSQL_BooleanFromDb',
-            'Pluf_DB_BooleanToDb'
+            '\Pluf\DB::ooleanToDb'
         );
         $this->type_cast['Pluf_DB_Field_Compressed'] = array(
             'Pluf_DB_PostgreSQL_CompressedFromDb',
