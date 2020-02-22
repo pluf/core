@@ -19,7 +19,7 @@
 namespace Pluf;
 
 /**
- * کلاس کلی کش کردن
+ * Cach Controller class
  *
  * مهم‌ترین نیاز در سیستم‌ها کش کردن داده‌هایی است که با استفاده از پردازش
  * در سیستم ایجاد می‌شوند. این کار باعث بهبود کارایی سیستم خواهد شد. این
@@ -66,7 +66,7 @@ namespace Pluf;
  *
  * @see http://www.php.net/serialize
  */
-class Cache
+abstract class Cache
 {
 
     /**
@@ -79,10 +79,10 @@ class Cache
         if (false === ($engine = Bootstrap::f('cache_engine', false))) {
             throw new SettingException('"cache_engine" setting not defined.');
         }
-        if (! isset($GLOBALS['_PX_\Pluf\Cache-' . $engine])) {
-            $GLOBALS['_PX_\Pluf\Cache-' . $engine] = new $engine();
+        if (! isset($GLOBALS['_PX_Pluf_Cache-' . $engine])) {
+            $GLOBALS['_PX_Pluf_Cache-' . $engine] = new $engine();
         }
-        return $GLOBALS['_PX_\Pluf\Cache-' . $engine];
+        return $GLOBALS['_PX_Pluf_Cache-' . $engine];
     }
 
     /**
@@ -96,8 +96,7 @@ class Cache
      *            int Timeout in seconds (null)
      * @return bool Success
      */
-    public function set($key, $value, $timeout = null)
-    {}
+    public abstract function set(string $key, $value, $timeout = null): bool;
 
     /**
      * Get value from the cache.
@@ -109,6 +108,5 @@ class Cache
      * @param
      *            mixed Stored value or default
      */
-    public function get($key, $default = null)
-    {}
+    public abstract function get(string $key, $default = null);
 }

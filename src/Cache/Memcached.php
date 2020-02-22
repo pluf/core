@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Cache;
+
+use Pluf\Bootstrap;
 
 /**
  * Cache in memory
@@ -35,22 +38,20 @@
  * $cfg['cache_memcached_compress'] = 0; (or MEMCACHE_COMPRESSED)
  * </pre>
  */
-class \Pluf\Cache_Memcached extends \Pluf\Cache
+class Memcached extends \Pluf\Cache
 {
 
     private $memcache = null;
 
     private $keyprefix = '';
 
-    public function __construct ()
+    public function __construct()
     {
-        $this->memcache = memcache_connect(
-                Pluf::f('cache_memcached_server', 'localhost'), 
-                Pluf::f('cache_memcached_port', 11211));
+        $this->memcache = memcache_connect(Bootstrap::f('cache_memcached_server', 'localhost'), Bootstrap::f('cache_memcached_port', 11211));
         if (false === $this->memcache) {
             $this->memcache = null;
         }
-        $this->keyprefix = Pluf::f('cache_memcached_keyprefix', '');
+        $this->keyprefix = Bootstrap::f('cache_memcached_keyprefix', '');
     }
 
     /**
@@ -64,13 +65,12 @@ class \Pluf\Cache_Memcached extends \Pluf\Cache
      *            int Timeout in seconds (null)
      * @return bool Success
      */
-    public function set ($key, $value, $timeout = null)
+    public function set(string $key, $value, $timeout = null): bool
     {
         if ($this->memcache) {
             if ($timeout == null)
-                $timeout = Pluf::f('cache_timeout', 300);
-            $this->memcache->set($this->keyprefix . $key, serialize($value), 
-                    Pluf::f('cache_memcached_compress', 0), $timeout);
+                $timeout = Bootstrap::f('cache_timeout', 300);
+            $this->memcache->set($this->keyprefix . $key, serialize($value), Bootstrap::f('cache_memcached_compress', 0), $timeout);
         }
     }
 
@@ -84,7 +84,7 @@ class \Pluf\Cache_Memcached extends \Pluf\Cache
      * @param
      *            mixed Stored value or default
      */
-    public function get ($key, $default = null)
+    public function get(string $key, $default = null)
     {
         if ($this->memcache) {
             $val = $this->memcache->get($this->keyprefix . $key);

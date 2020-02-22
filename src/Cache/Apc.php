@@ -17,12 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Cache;
+
+use Pluf\Bootstrap;
 
 /**
  * APC cache
  *
- * Warning: This extension is considered unmaintained and dead. However, 
- * the source code for this extension is still available within PECL 
+ * Warning: This extension is considered unmaintained and dead. However,
+ * the source code for this extension is still available within PECL
  * GIT here: http://git.php.net/?p=pecl/caching/apc.git.
  *
  * You need APC installed on your server for this cache system to
@@ -46,7 +49,7 @@
  * @see http://www.php.net/gzdeflate
  * @see http://www.php.net/gzinflate
  */
-class \Pluf\Cache_Apc extends \Pluf\Cache
+class Apc extends \Pluf\Cache
 {
 
     /**
@@ -71,8 +74,8 @@ class \Pluf\Cache_Apc extends \Pluf\Cache
      */
     public function __construct()
     {
-        $this->keyprefix = Pluf::f('cache_apc_keyprefix', '');
-        $this->compress = Pluf::f('cache_apc_compress', false);
+        $this->keyprefix = Bootstrap::f('cache_apc_keyprefix', '');
+        $this->compress = Bootstrap::f('cache_apc_compress', false);
     }
 
     /**
@@ -86,10 +89,10 @@ class \Pluf\Cache_Apc extends \Pluf\Cache
      *            int Timeout زمان انقضا را بر اساس ثانیه تعیین می‌کند
      * @return bool حالت موفقیت انجام این عمل را تعیین می‌کند.
      */
-    public function set($key, $value, $timeout = null)
+    public function set(string $key, $value, $timeout = null): bool
     {
         if ($timeout == null)
-            $timeout = Pluf::f('cache_timeout', 300);
+            $timeout = Bootstrap::f('cache_timeout', 300);
         $value = serialize($value);
         if ($this->compress)
             $value = gzdeflate($value, 9);
@@ -105,7 +108,7 @@ class \Pluf\Cache_Apc extends \Pluf\Cache
      *            mixed Default value to return if cache miss (null)
      * @return mixed Stored value or default
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $value = apc_fetch($this->keyprefix . $key);
         if ($value === FALSE)
