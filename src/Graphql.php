@@ -17,8 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
+
+use Pluf\Graphql\Compiler;
 
 /**
  * Render a result based on GraphQl
@@ -26,7 +27,7 @@ namespace Pluf;
  * @author maso<mostafa.barmshory@dpq.co.ir>
  * @since 4.0.0
  */
-class Pluf_Graphql
+class Graphql
 {
 
     private $cache = null;
@@ -53,7 +54,7 @@ class Pluf_Graphql
     function __construct($cache = null)
     {
         if (null == $cache) {
-            $this->cache = Pluf::f('tmp_folder');
+            $this->cache = Bootstrap::f('tmp_folder');
         } else {
             $this->cache = $cache;
         }
@@ -74,7 +75,7 @@ class Pluf_Graphql
         $rootType = get_class($c);
         $itemType = null;
         $schema = 'Pluf_GraphQl_Schema_' . ModelUtils::skipeName($rootType);
-        if ($c instanceof Pluf_Paginator) {
+        if ($c instanceof Paginator) {
             $itemType = get_class($c->model);
             $schema = $schema . '_' . $itemType;
         }
@@ -92,8 +93,8 @@ class Pluf_Graphql
             return;
         }
         $compiled_schema = $this->cache . '/' . $schema . '.phps';
-        if (! file_exists($compiled_schema) or Pluf::f('debug')) {
-            $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
+        if (! file_exists($compiled_schema) or Bootstrap::f('debug')) {
+            $compiler = new Compiler($rootType, $itemType);
             $compiler->write($schema, $compiled_schema);
         }
         include $compiled_schema;

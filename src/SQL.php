@@ -18,7 +18,6 @@
  */
 namespace Pluf;
 
-use Pluf;
 
 /**
  * Generate the WHERE SQL clause in an easy and SQL proof way.
@@ -37,7 +36,7 @@ class SQL
      */
     function __construct($base = '', $args = array())
     {
-        $this->db = Pluf::db();
+        $this->db = Bootstrap::db();
         if (strlen($base) > 0) {
             $this->Q($base, $args);
         }

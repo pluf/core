@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB;
+
+use Pluf\DB;
+use Pluf\Exception;
 
 /**
  * PostgreSQL connection class
@@ -55,7 +58,7 @@ class Pluf_DB_PostgreSQL
      * Used by the model to convert the values from and to the
      * database.
      *
-     * @see Pluf_DB
+     * @see DB
      */
     public $type_cast = array();
 
@@ -71,8 +74,7 @@ class Pluf_DB_PostgreSQL
 
     function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
     {
-        Pluf::loadFunction('Pluf_DB_defaultTypecast');
-        $this->type_cast = Pluf_DB_defaultTypecast();
+        $this->type_cast = DB::defaultTypecast();
         $this->type_cast['Pluf_DB_Field_Boolean'] = array(
             'Pluf_DB_PostgreSQL_BooleanFromDb',
             'Pluf_DB_BooleanToDb'

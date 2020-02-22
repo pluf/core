@@ -1,12 +1,33 @@
 <?php
 
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace Pluf\DB\Field;
+
+use Pluf\DB\Field;
+
 /**
  * Geometry value
  *
  * @author maso
- *
+ *        
  */
-class Pluf_DB_Field_Geometry extends Pluf_DB_Field
+class Geometry extends Field
 {
 
     public $type = 'geometry';
@@ -15,11 +36,11 @@ class Pluf_DB_Field_Geometry extends Pluf_DB_Field
 
     /**
      * Gets form field
-     * 
-     * {@inheritDoc}
-     * @see Pluf_DB_Field::formField()
+     *
+     * {@inheritdoc}
+     * @see Field::formField()
      */
-    function formField ($def, $form_field = 'Pluf_Form_Field_Geometry')
+    function formField($def, $form_field = 'Pluf_Form_Field_Geometry')
     {
         return parent::formField($def, $form_field);
     }

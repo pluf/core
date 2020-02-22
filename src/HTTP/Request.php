@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP;
+
+use Pluf\Model;
 
 /**
  * The request object.
  *
  * It is given as first arguments to the view as first argument.
  */
-class Pluf_HTTP_Request
+class Request
 {
 
     public $POST = array();
@@ -73,20 +76,20 @@ class Pluf_HTTP_Request
     /**
      * Current user
      *
-     * @var User_Account
+     * @var Model
      */
     public $user = null;
 
     /**
      * Current tenant
      *
-     * @var Pluf_Tenant
+     * @var \Pluf\Tenant
      */
     public $tenant = null;
 
     function __construct($query)
     {
-        $http = new Pluf_HTTP();
+        $http = new \Pluf\HTTP();
         $http->removeTheMagic();
 
         $this->POST = &$_POST;

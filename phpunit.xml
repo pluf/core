@@ -7,8 +7,8 @@
     <testsuites>
          <testsuite name="Basics">
             <directory>tests/Pluf/</directory>
-<!--             <directory>tests/Dispatch/</directory> -->
-<!--             <directory>tests/Cache/</directory> -->
+            <directory>tests/Dispatch/</directory>
+            <directory>tests/Cache/</directory>
          </testsuite>
 <!--         <testsuite name="Pluf2Suit"> -->
 <!--             <directory>tests/Pluf/</directory> -->
@@ -26,14 +26,14 @@
 <!--             <directory>tests/Pluf_SQL/</directory> -->
 <!--             <directory>tests/Model/</directory> -->
 <!--         </testsuite> -->
-<!--         <testsuite name="View"> -->
+        <testsuite name="View">
 <!--             <directory>tests/Pluf_Dispatcher/</directory> -->
 <!--             <directory>tests/Pluf_Paginator/</directory> -->
 <!--             <directory>tests/Pluf_Text_Wiki/</directory> -->
 <!--             <directory>tests/Pluf_Text_HTML_Filter/</directory> -->
-<!--             <directory>tests/Pluf_Form_Field/</directory> -->
+            <directory>tests/Form/</directory>
 <!--             <directory>tests/Pluf_HTTP_Response</directory> -->
-<!--         </testsuite> -->
+        </testsuite>
 <!--         <testsuite name="GraphQl"> -->
 <!--             <directory>tests/Pluf_Graphql_Compiler/</directory> -->
 <!--             <directory>tests/Pluf_Graphql/</directory> -->

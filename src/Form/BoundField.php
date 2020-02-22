@@ -16,10 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf\Form;
 
 use Pluf\Template\SafeString;
+use Pluf\Bootstrap;
+use Pluf\Text;
 
 /**
  * A class to store field, widget and data.
@@ -28,12 +29,19 @@ use Pluf\Template\SafeString;
  */
 class BoundField
 {
+
     public $form = null;
+
     public $field = null;
+
     public $name = null;
+
     public $html_name = null;
+
     public $label = null;
+
     public $help_text = null;
+
     public $errors = array();
 
     public function __construct($form, $field, $name)
@@ -43,7 +51,7 @@ class BoundField
         $this->name = $name;
         $this->html_name = $this->form->addPrefix($name);
         if ($this->field->label == '') {
-            $this->label = mb_ereg_replace('/\_/', '/ /', mb_ucfirst($name));
+            $this->label = mb_ereg_replace('/\_/', '/ /', Text::upperCaseFirst($name));
         } else {
             $this->label = $this->field->label;
         }
@@ -53,17 +61,16 @@ class BoundField
         }
     }
 
-    public function render_w($widget=null, $attrs=array())
+    public function render_w($widget = null, $attrs = array())
     {
         if ($widget === null) {
             $widget = $this->field->widget;
         }
         $id = $this->autoId();
-        if ($id and !array_key_exists('id', $attrs) 
-            and !array_key_exists('id', $widget->attrs)) {
+        if ($id and ! array_key_exists('id', $attrs) and ! array_key_exists('id', $widget->attrs)) {
             $attrs['id'] = $id;
         }
-        if (!$this->form->is_bound) {
+        if (! $this->form->is_bound) {
             $data = $this->form->initial($this->name);
         } else {
             $data = $this->field->widget->valueFromFormData($this->html_name, $this->form->data);
@@ -72,38 +79,40 @@ class BoundField
     }
 
     /**
-     * Returns the HTML of the label tag.  Wraps the given contents in
+     * Returns the HTML of the label tag.
+     * Wraps the given contents in
      * a <label>, if the field has an ID attribute. Does not
      * HTML-escape the contents. If contents aren't given, uses the
      * field's HTML-escaped label. If attrs are given, they're used as
      * HTML attributes on the <label> tag.
      *
-     * @param string Content of the label, will not be escaped (null).
-     * @param array Extra attributes.
+     * @param
+     *            string Content of the label, will not be escaped (null).
+     * @param
+     *            array Extra attributes.
      * @return string HTML of the label.
      */
-    public function labelTag($contents=null, $attrs=array())
+    public function labelTag($contents = null, $attrs = array())
     {
         $contents = ($contents) ? $contents : htmlspecialchars($this->label);
         $widget = $this->field->widget;
         $id = (isset($widget->attrs['id'])) ? $widget->attrs['id'] : $this->autoId();
         $_tmp = array();
-        foreach ($attrs as $attr=>$val) {
-            $_tmp[] = $attr.'="'.$val.'"';
+        foreach ($attrs as $attr => $val) {
+            $_tmp[] = $attr . '="' . $val . '"';
         }
         if (count($_tmp)) {
-            $attrs = ' '.implode(' ', $_tmp);
+            $attrs = ' ' . implode(' ', $_tmp);
         } else {
             $attrs = '';
-        } 
-        return new SafeString(sprintf('<label for="%s"%s>%s</label>',
-                                                    $widget->idForLabel($id), $attrs, $contents), true);
+        }
+        return new SafeString(sprintf('<label for="%s"%s>%s</label>', $widget->idForLabel($id), $attrs, $contents), true);
     }
-
 
     /**
      * Calculates and returns the ID attribute for this BoundField, if
-     * the associated Form has specified auto_id. Returns an empty
+     * the associated Form has specified auto_id.
+     * Returns an empty
      * string otherwise.
      *
      * @return string Id or empty string if no auto id defined.
@@ -124,7 +133,7 @@ class BoundField
      */
     public function fieldErrors()
     {
-        Pluf::loadFunction('Pluf_Form_renderErrorsAsHTML');
+        Bootstrap::loadFunction('Pluf_Form_renderErrorsAsHTML');
         return new SafeString(Pluf_Form_renderErrorsAsHTML($this->errors), true);
     }
 
@@ -133,24 +142,22 @@ class BoundField
      */
     public function __get($prop)
     {
-        if (!in_array($prop, array('labelTag', 'fieldErrors', 'render_w'))) {
+        if (! in_array($prop, array(
+            'labelTag',
+            'fieldErrors',
+            'render_w'
+        ))) {
             return $this->$prop;
         }
         return $this->$prop();
     }
-
 
     /**
      * Render as string.
      */
     public function __toString()
     {
-        return (string)$this->render_w();
+        return (string) $this->render_w();
     }
 }
 
-if (!function_exists('mb_ucfirst')) {
-    function mb_ucfirst($str) {
-        return mb_strtoupper(mb_substr($str, 0, 1)).mb_substr($str, 1);
-    }
-}

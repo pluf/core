@@ -1,12 +1,13 @@
 <?php
+namespace Pluf;
 
 /**
  * Default not found exception
- * 
- * @author webpich.com
  *
+ * @author maso
+ *        
  */
-class Exception_DoesNotExist extends Exception
+class DoesNotExistException extends Exception
 {
 
     public function __construct($message = null, $previous = null, $link = null, $developerMessage = null)

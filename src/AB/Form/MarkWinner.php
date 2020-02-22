@@ -34,7 +34,7 @@ class Pluf_AB_Form_MarkWinner extends Pluf_Form
 
     public function initFields($extra=array())
     {
-        $this->fields['test'] = new Pluf_Form_Field_Varchar(
+        $this->fields['test'] = new \Pluf\Form\Field\Varchar(
                                         array('required' => true)
                                                             );
         $this->fields['alt'] = new Pluf_Form_Field_Integer(

@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Form;
+namespace Pluf\Form\Field;
 
+use Pluf\Form\Field;
 use Pluf\FormInvalidException;
 
-class FieldFloat extends Field
+class FloatPoint extends Field
 {
 
     public $widget = 'Pluf_Form_Widget_TextInput';

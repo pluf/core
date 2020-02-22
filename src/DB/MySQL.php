@@ -17,11 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB;
+
+use Pluf\Bootstrap;
+use Pluf\Exception;
 
 /**
  * MySQL connection
  */
-class Pluf_DB_MySQL
+class MySQL
 {
 
     public $con_id;
@@ -43,7 +47,7 @@ class Pluf_DB_MySQL
 
     function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
     {
-        Pluf::loadFunction('Pluf_DB_defaultTypecast');
+        Bootstrap::loadFunction('Pluf_DB_defaultTypecast');
         $this->type_cast = Pluf_DB_defaultTypecast();
         $this->debug('* MYSQL CONNECT');
         $this->con_id = mysqli_connect($server, $user, $pwd);
@@ -156,7 +160,7 @@ class Pluf_DB_MySQL
         } else {
             return mysqli_error();
         }
-        if (Pluf::f('debug', false)) {
+        if (Bootstrap::f('debug', false)) {
             $message = $message . ' - ' . $this->lastquery;
         }
         return $message;
@@ -177,7 +181,7 @@ class Pluf_DB_MySQL
     /**
      * خطای مناسب با حالت سیستم ایجاد می‌کند.
      *
-     * @throws Exception
+     * @throws Exception::
      */
     function throwError()
     {
@@ -221,7 +225,7 @@ class Pluf_DB_MySQL
      */
     function begin()
     {
-        if (Pluf::f('db_mysql_transaction', false)) {
+        if (Bootstrap::f('db_mysql_transaction', false)) {
             $this->execute('BEGIN');
         }
     }
@@ -231,7 +235,7 @@ class Pluf_DB_MySQL
      */
     function commit()
     {
-        if (Pluf::f('db_mysql_transaction', false)) {
+        if (Bootstrap::f('db_mysql_transaction', false)) {
             $this->execute('COMMIT');
         }
     }
@@ -241,7 +245,7 @@ class Pluf_DB_MySQL
      */
     function rollback()
     {
-        if (Pluf::f('db_mysql_transaction', false)) {
+        if (Bootstrap::f('db_mysql_transaction', false)) {
             $this->execute('ROLLBACK');
         }
     }

@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Field;
 
-class Pluf_DB_Field_Text extends Pluf_DB_Field
+use Pluf\DB\Field;
+
+class Text extends Field
 {
 
     public $type = 'text';
 
-    function formField($def, $form_field = 'Pluf_Form_Field_Varchar')
+    function formField($def, $form_field = '\Pluf\Form\Field\Varchar')
     {
         if (! isset($def['widget'])) {
             $def['widget'] = 'Pluf_Form_Widget_TextareaInput';

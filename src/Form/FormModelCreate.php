@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -19,14 +18,15 @@
  */
 namespace Pluf\Form;
 
+use Pluf\Form;
+use Pluf\FormException;
+
 /**
- * Dynamic form validation class to update a model data.
+ * Dynamic form validation class.
  *
- * This class is used to generate a form for updating data of a given model.
- *
- * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
+ * This class is used to generate a form for a given model.
  */
-class UpdateModel extends Model
+class FormModelCreate extends Form
 {
 
     /**
@@ -49,15 +49,11 @@ class UpdateModel extends Model
         foreach ($cols as $name => $def) {
             $db_field = new $def['type']('', $name);
             $def = array_merge(array(
+                'blank' => true,
                 'verbose' => $name,
                 'help_text' => '',
                 'editable' => true
-            ), $def, 
-                // @note: hadi, all fields are optional to update,
-                // so this attribute is added to all fields.
-                array(
-                    'blank' => true
-                ));
+            ), $def);
             if ($def['editable']) {
                 // The 'model_instance' and 'name' are used by the
                 // ManyToMany field.
@@ -68,5 +64,27 @@ class UpdateModel extends Model
                 }
             }
         }
+    }
+
+    /**
+     * Saves or updates the model in the database.
+     *
+     * @param
+     *            bool Commit in the database or not. If not, the object
+     *            is returned but not saved in the database.
+     * @return Object Model with data set from the form.
+     */
+    function save($commit = true)
+    {
+        if ($this->isValid()) {
+            $this->model->setFromFormData($this->cleaned_data);
+            if ($commit && $this->model->id) {
+                $this->model->update();
+            } elseif ($commit) {
+                $this->model->create();
+            }
+            return $this->model;
+        }
+        throw new FormException('Cannot save the model from an invalid form.', $this);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Pluf\Template;
 
 use Pluf\Bootstrap;
@@ -11,12 +10,12 @@ use Pluf\Exception;
  * to be run by the Template class.
  *
  * Compiler dataflow
- * 
+ *
  * The important elements of the compiler are the include extends
  * block and superblock directives. They cannot be handled in a linear
  * way like the rest of the elements, they are more like nodes.
  *
- * 
+ *
  * @credit Copyright (C) 2006 Laurent Jouanneau.
  */
 class Compiler
@@ -116,7 +115,7 @@ class Compiler
         'capitalize' => 'ucwords',
         // Not var_export because of recursive issues.
         'debug' => 'print_r',
-//         'dump' => 'Pluf_Template_varExport',
+        // 'dump' => 'Pluf_Template_varExport',
         'fulldebug' => 'var_export',
         'nl2br' => 'Pluf_Template_nl2br',
         'trim' => 'trim',
@@ -595,7 +594,7 @@ class Compiler
                     $name = substr($name, 1);
                 }
                 // Here we should allow custom blocks.
-                
+
                 // Here we start the template tag calls at the template tag
                 // {tag ...} is not a block, so it must be a function.
                 if (! isset($this->_allowedTags[$name])) {
@@ -643,7 +642,9 @@ class Compiler
      * tous : T_VARIABLE, @locale@
      *
      */
-    function _parseFinal($string, $allowed = array(), $exceptchar = array(';'), $getAsArray = false)
+    function _parseFinal($string, $allowed = array(), $exceptchar = array(
+        ';'
+    ), $getAsArray = false)
     {
         $tokens = token_get_all('<?php ' . $string . '?>');
         $result = '';
@@ -654,7 +655,7 @@ class Compiler
         $f_key = '';
         $f_val = '';
         $results = array();
-        
+
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
         if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1]) && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);

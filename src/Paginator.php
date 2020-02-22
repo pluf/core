@@ -394,12 +394,12 @@ class Paginator
             return $this->where_clause;
         }
         if (! is_null($this->forced_where) || (strlen($this->search_string) > 0 && ! empty($this->search_fields))) {
-            $lastsql = new Pluf_SQL();
+            $lastsql = new SQL();
             $keywords = $lastsql->keywords($this->search_string);
             foreach ($keywords as $key) {
-                $sql = new Pluf_SQL();
+                $sql = new SQL();
                 foreach ($this->search_fields as $field) {
-                    $sqlor = new Pluf_SQL();
+                    $sqlor = new SQL();
                     // $sqlor->Q($field . ' LIKE %s', '%' . $key . '%');
                     $sqlor->Q('CAST(`' . $field . '` AS CHAR) LIKE %s', '%' . $key . '%');
                     $sql->SOr($sqlor);
@@ -538,7 +538,7 @@ class Paginator
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
             // Check if order key has a valid name
-            Pluf_Precondition::assertKeyIsValid($key);
+            Precondition::assertKeyIsValid($key);
             if (in_array($key, $this->sort_fields)) {
                 $order = 'ASC';
                 if ($vals[$i] === 'd') {
@@ -580,7 +580,7 @@ class Paginator
         for ($i = 0; $i < sizeof($keys); $i ++) {
             $key = $keys[$i];
             // Check if order key has a valid name
-            Pluf_Precondition::assertKeyIsValid($key);
+            Precondition::assertKeyIsValid($key);
             $val = $vals[$i];
             if (! in_array($key, $this->list_filters) || ! isset($val)) {
                 continue;
@@ -600,10 +600,10 @@ class Paginator
             $feild = $this->model->_a['cols'][$key];
             if (strcmp($feild['type'], 'Pluf_DB_Field_Geometry') === 0) {
                 $str = "Contains(GeometryFromText('" . implode("')," . $key . ") OR Contains(GeometryFromText('", $vals) . "')," . $key . ")";
-                $sql = new Pluf_SQL($str);
+                $sql = new SQL($str);
             } else { // Regular feilds
                 if (sizeof($vals) > 1) {
-                    $sql = new Pluf_SQL($key . ' IN (%s)', array(
+                    $sql = new SQL($key . ' IN (%s)', array(
                         $vals
                     ));
                 } else {
@@ -614,7 +614,7 @@ class Paginator
                         'Pluf_DB_Field_Sequence',
                         'Pluf_DB_Field_Foreignkey'
                     );
-                    $sql = in_array($feild['type'], $types) ? new Pluf_SQL("$key = $vals[0]") : new Pluf_SQL($key . '=%s', $vals[0]);
+                    $sql = in_array($feild['type'], $types) ? new SQL("$key = $vals[0]") : new SQL($key . '=%s', $vals[0]);
                 }
             }
             // We add a forced where query

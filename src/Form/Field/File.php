@@ -18,7 +18,6 @@
  */
 namespace Pluf\Form\Field;
 
-use Pluf;
 use Pluf\Form\Field;
 use Pluf\FormInvalidException;
 use Pluf\Utils;
@@ -82,10 +81,6 @@ class File extends Field
         if ($value['size'] > $this->max_size) {
             throw new FormInvalidException(sprintf('The uploaded file is to big (%1$s). Reduce the size to less than %2$s and try again.'), Utils::prettySize($value['size']), Utils::prettySize($this->max_size));
         }
-        // copy the file to the final destination and updated $value
-        // with the final path name. 'final_name' is relative to
-        // Pluf::f('upload_path')
-        Pluf::loadFunction($this->move_function);
         // Should throw a Pluf_Form_Invalid exception if error or the
         // value to be stored in the database.
         return call_user_func($this->move_function, $value, $this->move_function_params);

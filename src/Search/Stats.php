@@ -17,62 +17,65 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Search;
+
+use Pluf\Model;
 
 /**
  * Keep track of when a document has been last indexed and the number
  * of indexations.
  */
-class Pluf_Search_Stats extends Model
+class Stats extends Model
 {
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = 'search stats';
         $this->_a['table'] = 'pluf_search_stats';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 150,
-                        'verbose' => __('model class')
-                ),
-                'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('model id')
-                ),
-                'indexations' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('number of indexations'),
-                        'default' => 0
-                ),
-                'creation_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('created at')
-                ),
-                'modif_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
-                        'blank' => true,
-                        'verbose' => __('modified at')
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'model_class' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 150,
+                'verbose' => __('model class')
+            ),
+            'model_id' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false,
+                'verbose' => __('model id')
+            ),
+            'indexations' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false,
+                'verbose' => __('number of indexations'),
+                'default' => 0
+            ),
+            'creation_dtime' => array(
+                'type' => 'Pluf_DB_Field_Datetime',
+                'blank' => true,
+                'verbose' => __('created at')
+            ),
+            'modif_dtime' => array(
+                'type' => 'Pluf_DB_Field_Datetime',
+                'blank' => true,
+                'verbose' => __('modified at')
+            )
         );
         $this->_a['idx'] = array(
-                'model_class_id_combo_idx' => array(
-                        'type' => 'unique',
-                        'col' => 'model_class, model_id'
-                )
+            'model_class_id_combo_idx' => array(
+                'type' => 'unique',
+                'col' => 'model_class, model_id'
+            )
         );
     }
 
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');

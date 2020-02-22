@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Schema;
+
+use Pluf\ModelUtils;
+use Pluf\DB\Schema;
 
 /**
  * Generator of the schemas corresponding to a given model.
@@ -24,7 +28,7 @@
  * This class is for PostgreSQL, you can create a class on the same
  * model for another database engine.
  */
-class Pluf_DB_Schema_PostgreSQL
+class PostgreSQL
 
 {
 
@@ -151,12 +155,12 @@ class Pluf_DB_Schema_PostgreSQL
                 $unique = '';
             }
 
-            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Schema::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
+            // $field = new $val['type']();
             if (isset($val['unique']) and $val['unique'] == true) {
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($col, $this->con));
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Schema::quoteColumn($col, $this->con));
             }
         }
         return $index;
@@ -278,7 +282,7 @@ class Pluf_DB_Schema_PostgreSQL
             }
             if ($field->type == 'foreignkey') {
                 // Add the foreignkey constraints
-                $referto = new $val['model']();
+                // $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedIdentifierName($table . '_' . $col . '_fkey');
             }
         }

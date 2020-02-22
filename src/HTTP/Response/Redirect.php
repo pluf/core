@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,18 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
 
-class Pluf_HTTP_Response_Redirect extends Pluf_HTTP_Response
+class Redirect extends \Pluf\HTTP\Response
 {
+
     /**
      * Redirect response to a given URL.
      *
-     * @param string URL
-     * @param int Redirect code (302) or 301 for permanent
+     * @param
+     *            string URL
+     * @param
+     *            int Redirect code (302) or 301 for permanent
      */
-    function __construct($url, $code=302)
+    function __construct($url, $code = 302)
     {
-        $content = sprintf(__('<a href="%s">Please, click here to be redirected</a>.'), $url);
+        $content = sprintf('<a href="%s">Please, click here to be redirected</a>.', $url);
         parent::__construct($content);
         $this->headers['Location'] = $url;
         $this->status_code = $code;

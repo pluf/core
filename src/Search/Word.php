@@ -17,35 +17,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Search;
+
+use Pluf\Model;
+
 /**
  * Storage of the words.
  */
-class Pluf_Search_Word extends Model
+class Word extends Model
 {
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = 'word';
         $this->_a['table'] = 'pluf_search_words';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'word' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'unique' => true,
-                        'size' => 150,
-                        'verbose' => __('word')
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'word' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'unique' => true,
+                'size' => 150,
+                'verbose' => __('word')
+            )
         );
         $this->_a['views'] = array();
     }
 
-    function __toString ()
+    function __toString()
     {
         return $this->word;
     }

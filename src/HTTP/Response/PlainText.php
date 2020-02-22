@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Pluf_HTTP_Response_PlainText extends Pluf_HTTP_Response
+namespace Pluf\HTTP\Response;
+
+class PlainText extends \Pluf\HTTP\Response
 {
 
     /**
@@ -25,7 +27,7 @@ class Pluf_HTTP_Response_PlainText extends Pluf_HTTP_Response
      * @param
      *            mixed Values, will be encoded using json_encode
      */
-    function __construct ($data, $mimetype = 'text/plain; charset=utf-8')
+    function __construct($data, $mimetype = 'text/plain; charset=utf-8')
     {
         parent::__construct(print_r($data, true), $mimetype);
     }

@@ -73,7 +73,7 @@ class Sign
                 $is_compressed = true;
             }
         }
-        $base64d = Utils::urlsafe_b64encode($serialized);
+        $base64d = \Pluf\Utils::urlsafe_b64encode($serialized);
         if ($is_compressed) {
             $base64d = '.' . $base64d;
         }

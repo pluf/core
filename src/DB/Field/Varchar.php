@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Field;
+
+use Pluf\DB\Field;
 
 /**
  * String data type
@@ -24,7 +27,7 @@
  * @author maso
  *        
  */
-class Pluf_DB_Field_Varchar extends Pluf_DB_Field
+class Varchar extends Field
 {
 
     public $type = 'varchar';

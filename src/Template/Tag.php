@@ -1,7 +1,7 @@
 <?php
 namespace Pluf\Template;
 
-class Tag
+abstract class Tag
 {
 
     /**

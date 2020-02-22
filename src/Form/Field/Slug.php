@@ -18,9 +18,9 @@
  */
 namespace Pluf\Form\Field;
 
-use Pluf;
 use Pluf\Form\Field;
 use Pluf\FormInvalidException;
+use Pluf\Bootstrap;
 
 class Slug extends Field
 {
@@ -76,7 +76,7 @@ class Slug extends Field
         parent::clean($value);
         if ($value) {
             $value = \Pluf\DB\Field\Slug::slugify($value);
-            $len = mb_strlen($value, Pluf::f('encoding', 'UTF-8'));
+            $len = mb_strlen($value, Bootstrap::f('encoding', 'UTF-8'));
             if ($this->max_size < $len) {
                 throw new FormInvalidException(sprintf($this->_error_messages['max_size'], $this->max_size, $len));
             }

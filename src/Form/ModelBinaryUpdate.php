@@ -19,11 +19,10 @@
  */
 namespace Pluf\Form;
 
-use Pluf;
-use Pluf\Tenant;
+use Pluf\Bootstrap;
 use Pluf\FileUtil;
-use Pluf\Form\Field\File;
 use Pluf\ModelUtils;
+use Pluf\Tenant;
 
 /**
  * updates a binary model
@@ -31,16 +30,16 @@ use Pluf\ModelUtils;
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  *        
  */
-class ModelBinaryUpdate extends Model
+class ModelBinaryUpdate extends FormModelUpdate
 {
 
     public function initFields($extra = array())
     {
         parent::initFields($extra);
 
-        $this->fields['file'] = new File(array(
+        $this->fields['file'] = new Field\File(array(
             'required' => false,
-            'max_size' => Pluf::f('upload_max_size', 2097152),
+            'max_size' => Bootstrap::f('upload_max_size', 2097152),
             'move_function_params' => array(
                 'upload_path' => Tenant::storagePath() . '/' . strtolower(ModelUtils::skipeName($this->model->_a['model'])),
                 'file_name' => $this->model->id,
@@ -54,7 +53,7 @@ class ModelBinaryUpdate extends Model
      *
      * {@inheritdoc}
      *
-     * @see \Pluf\Form\Model::save()
+     * @see FormModelUpdate::save()
      */
     function save($commit = true)
     {

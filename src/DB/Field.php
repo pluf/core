@@ -1,13 +1,18 @@
 <?php
+namespace Pluf\DB;
+
+use Pluf\Text;
 
 /**
  * فیلد پیش فرض برای پایگاه داده را تعریف می‌کند.
  */
-class Pluf_DB_Field
+class Field
 {
+
     /**
-     * نوع یک فیلد برای نگاشی این فیلد به فیلدهای واقعی پایگاه داده استفاده 
-     * می‌شود. برای نمونه کلاس Pluf_DB_Schema_MySQL در یک متغیر mapping این 
+     * نوع یک فیلد برای نگاشی این فیلد به فیلدهای واقعی پایگاه داده استفاده
+     * می‌شود.
+     * برای نمونه کلاس Pluf_DB_Schema_MySQL در یک متغیر mapping این
      * نگاشت را نگهداری کرده است.
      */
     public $type = '';
@@ -35,10 +40,12 @@ class Pluf_DB_Field
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند.
      *
-     * @param mixed Value ('')
-     * @param string Column name ('')
+     * @param
+     *            mixed Value ('')
+     * @param
+     *            string Column name ('')
      */
-    function __construct($value='', $column='', $extra=array())
+    function __construct($value = '', $column = '', $extra = array())
     {
         $this->value = $value;
         $this->column = $column;
@@ -55,15 +62,18 @@ class Pluf_DB_Field
      * the need to modify another place where the mapping would be
      * performed.
      *
-     * @param array Definition of the field.
-     * @param string Form field class.
+     * @param
+     *            array Definition of the field.
+     * @param
+     *            string Form field class.
      */
-    function formField($def, $form_field='Pluf_Form_Field_Varchar')
+    function formField($def, $form_field = '\Pluf\Form\Field\Varchar')
     {
-        Pluf::loadClass('Pluf_Form_BoundField'); // To get mb_ucfirst
-        $defaults = array('required' => !$def['blank'], 
-                          'label' => mb_ucfirst($def['verbose']), 
-                          'help_text' => $def['help_text']);
+        $defaults = array(
+            'required' => ! $def['blank'],
+            'label' => Text::upperCaseFirst($def['verbose']),
+            'help_text' => $def['help_text']
+        );
         unset($def['blank'], $def['verbose'], $def['help_text']);
         if (isset($def['default'])) {
             $defaults['initial'] = $def['default'];
@@ -74,18 +84,26 @@ class Pluf_DB_Field
             if (isset($def['widget_attrs'])) {
                 $def['widget_attrs']['choices'] = $def['choices'];
             } else {
-                $def['widget_attrs'] = array('choices' => $def['choices']);
+                $def['widget_attrs'] = array(
+                    'choices' => $def['choices']
+                );
             }
         }
         foreach (array_keys($def) as $key) {
-            if (!in_array($key, array('widget', 'label', 'required', 'multiple',
-                                      'initial', 'choices', 'widget_attrs'))) {
+            if (! in_array($key, array(
+                'widget',
+                'label',
+                'required',
+                'multiple',
+                'initial',
+                'choices',
+                'widget_attrs'
+            ))) {
                 unset($def[$key]);
             }
         }
         $params = array_merge($defaults, $def);
         return new $form_field($params);
     }
-
 }
 

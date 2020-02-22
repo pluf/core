@@ -1,7 +1,8 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Field;
+
+use Pluf\DB\Field;
+use Pluf\Bootstrap;
 
 /**
  * Defines a file in the DB
  *
  * @author maso
- *
+ *        
  */
-class Pluf_DB_Field_File extends Pluf_DB_Field
+class File extends Field
 {
 
     /**
@@ -74,7 +79,7 @@ class Pluf_DB_Field_File extends Pluf_DB_Field
 function Pluf_DB_Field_File_Url($field, $method, $model, $args = null)
 {
     if (strlen($model->$field) != 0) {
-        return Pluf::f('upload_url') . '/' . $model->$field;
+        return Bootstrap::f('upload_url') . '/' . $model->$field;
     }
     return '';
 }
@@ -85,7 +90,7 @@ function Pluf_DB_Field_File_Url($field, $method, $model, $args = null)
 function Pluf_DB_Field_File_Path($field, $method, $model, $args = null)
 {
     if (strlen($model->$field) != 0) {
-        return Pluf::f('upload_path') . '/' . $model->$field;
+        return Bootstrap::f('upload_path') . '/' . $model->$field;
     }
     return '';
 }

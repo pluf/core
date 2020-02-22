@@ -1,4 +1,11 @@
 <?php
+namespace Pluf\Template\Tag;
+
+
+use Pluf\Template\Tag;
+use ArrayObject;
+use ReflectionObject;
+use InvalidArgumentException;
 
 /**
  * Template tag <code>regroup</code>.
@@ -91,12 +98,12 @@
  *
  * Based on concepts from the Django regroup template tag.
  */
-class Pluf_Template_Tag_Regroup extends Pluf_Template_Tag
+class Pluf_Template_Tag_Regroup extends Tag
 {
 
     /**
      *
-     * @see Pluf_Template_Tag::start()
+     * @see Tag::start()
      * @param mixed $data
      *            The object to group.
      * @param string $by

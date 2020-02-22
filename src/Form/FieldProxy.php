@@ -18,6 +18,8 @@
  */
 namespace Pluf\Form;
 
+use Pluf\Form\BoundField;
+
 /**
  * Field proxy to access a form field through {$form.f.fieldname} in a
  * template.

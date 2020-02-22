@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,6 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Schema;
+
+use Pluf\ModelUtils;
+use Pluf\Bootstrap;
+use Pluf\DB\Schema;
+use Pluf\Model;
 
 /**
  * Generator of the schemas corresponding to a given model.
@@ -24,7 +29,7 @@
  * This class is for MySQL, you can create a class on the same
  * model for another database engine.
  */
-class Pluf_DB_Schema_MySQL
+class MySQL
 {
 
     /**
@@ -185,7 +190,7 @@ class Pluf_DB_Schema_MySQL
             if (isset($val['type']) && strcasecmp($val['type'], 'normal') != 0) {
                 $type = $val['type'];
             }
-            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx, $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx, $this->con->pfx . $model->_a['table'], Schema::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
             $field = new $val['type']();
@@ -194,8 +199,8 @@ class Pluf_DB_Schema_MySQL
             }
             if (isset($val['unique']) and $val['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
-                $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX `%s` ON `%s` (%s);', $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($columns, $this->con));
+                $columns = (Bootstrap::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX `%s` ON `%s` (%s);', $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Schema::quoteColumn($columns, $this->con));
             }
         }
         return $index;

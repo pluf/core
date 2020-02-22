@@ -123,7 +123,7 @@ class Form implements Iterator, ArrayAccess
         $form_methods = get_class_methods($this);
         $form_vars = get_object_vars($this);
         foreach ($this->fields as $name => $field) {
-            $value = $field->widget->valueFromFormData($this->addPrefix($name), $this->data);
+            $value = $field->valueFromFormData($this->addPrefix($name), $this->data);
             try {
                 $value = $field->clean($value);
                 $this->cleaned_data[$name] = $value;

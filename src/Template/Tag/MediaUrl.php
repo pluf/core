@@ -1,21 +1,23 @@
 <?php
+namespace Pluf\Template\Tag;
 
-class Pluf_Template_Tag_MediaUrl extends Pluf_Template_Tag
+use Pluf\Bootstrap;
+use Pluf\Template\Tag;
+
+class MediaUrl extends Tag
 {
 
-    function start ($file = '')
+    function start($file = '')
     {
-        echo Pluf_Template_Tag_MediaUrl::url($file);
+        echo self::url($file);
     }
 
-    public static function url ($file = '')
+    public static function url($file = '')
     {
-        if ($file !== '' && Pluf::f('last_update_file', false) &&
-                 false !==
-                 ($last_update = Pluf::fileExists(Pluf::f('last_update_file')))) {
+        if ($file !== '' && Bootstrap::f('last_update_file', false) && false !== ($last_update = Bootstrap::fileExists(Bootstrap::f('last_update_file')))) {
             $file = $file . '?' . substr(md5(filemtime($last_update)), 0, 5);
         }
-        return Pluf::f('url_media', Pluf::f('app_base') . '/media') . $file;
+        return Bootstrap::f('url_media', Bootstrap::f('app_base') . '/media') . $file;
     }
 }
 

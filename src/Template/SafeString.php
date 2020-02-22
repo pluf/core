@@ -42,6 +42,6 @@ class SafeString
 
     public static function markSafe($string)
     {
-        return new SafeString($string, true);
+        return new \Pluf\Template\SafeString($string, true);
     }
 }

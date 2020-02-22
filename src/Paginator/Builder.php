@@ -16,7 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
+namespace Pluf\Paginator;
+
+use Pluf\SQL;
+use Pluf\HTTP\Request;
+use Pluf\Model;
+use Pluf\Paginator;
+use Pluf\Exception;
 
 /**
  * Model pagination builder
@@ -42,7 +48,7 @@ Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
  *
  * @author Pluf <info@pluf.ir>
  */
-class Pluf_Paginator_Builder
+class Builder
 {
 
     private $model = null;
@@ -71,7 +77,7 @@ class Pluf_Paginator_Builder
     /**
      * The where clause from the search.
      *
-     * @var Pluf_SQL
+     * @var SQL
      */
     private $whereClause = null;
 
@@ -85,7 +91,7 @@ class Pluf_Paginator_Builder
     /**
      * User request
      *
-     * @var Pluf_HTTP_Request
+     * @var Request
      */
     private $request = null;
 
@@ -109,8 +115,8 @@ class Pluf_Paginator_Builder
     /**
      * Load setting from request
      *
-     * @param Pluf_HTTP_Request $request
-     * @return Pluf_Paginator_Builder
+     * @param Request $request
+     * @return Builder
      */
     public function setRequest($request)
     {
@@ -145,7 +151,7 @@ class Pluf_Paginator_Builder
      * sort the list.
      *
      * @param array $sortFields
-     * @return Pluf_Paginator_Builder
+     * @return Builder
      */
     public function setSortFields($sortFields)
     {
@@ -157,7 +163,7 @@ class Pluf_Paginator_Builder
      * Which fields used to search
      *
      * @param array $searchFields
-     * @return Pluf_Paginator_Builder
+     * @return Builder
      */
     public function setSearchFields($searchFields)
     {
@@ -168,8 +174,8 @@ class Pluf_Paginator_Builder
     /**
      * Additional where clause
      *
-     * @param Pluf_SQL $sql
-     * @return Pluf_Paginator_Builder
+     * @param SQL $sql
+     * @return Builder
      */
     public function setWhereClause($sql)
     {
@@ -181,7 +187,7 @@ class Pluf_Paginator_Builder
      * Main model view
      *
      * @param string $viewName
-     * @return Pluf_Paginator_Builder
+     * @return Builder
      */
     public function setView($viewName)
     {
@@ -213,11 +219,11 @@ class Pluf_Paginator_Builder
     /**
      * Build a paginator
      *
-     * @return Pluf_Paginator
+     * @return Paginator
      */
     public function build()
     {
-        $paginator = new Pluf_Paginator($this->model);
+        $paginator = new Paginator($this->model);
         $paginator->configure($this->loadDisplayFields(), $this->loadSearchFileds(), $this->loadSortFields());
         $paginator->model_view = $this->loadModelView();
         $paginator->list_filters = $this->loadDisplayFields();
@@ -292,7 +298,7 @@ class Pluf_Paginator_Builder
         $this->visibleVariablesName = array();
         foreach ($this->model->_a['cols'] as $key => $col) {
             // hadi, 2019: continue if feild is a many to many relation
-            if($col['type']=='Pluf_DB_Field_Manytomany'){
+            if ($col['type'] == 'Pluf_DB_Field_Manytomany') {
                 continue;
             }
             // maso, 2018: continue if is not readable

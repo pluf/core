@@ -19,8 +19,8 @@
 namespace Pluf\Form\Field;
 
 use Pluf\Form\Field;
-use Pluf\Utils;
 use Pluf\FormInvalidException;
+use Pluf\Utils;
 
 class Url extends Field
 {

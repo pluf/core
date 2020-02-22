@@ -19,9 +19,9 @@
  */
 namespace Pluf\DB\Field;
 
-use Pluf;
 use Pluf\DB\Field;
 use Pluf\Text\UTF8;
+use Pluf\Bootstrap;
 
 /**
  * This field will automatically slugify its content.
@@ -59,9 +59,9 @@ class Slug extends Field
      */
     public static function slugify($value)
     {
-        $separator = Pluf::f('slug-separator', '-');
+        $separator = Bootstrap::f('slug-separator', '-');
         $value = UTF8::romanize(UTF8::deaccent($value));
-        $value = preg_replace('#[^' . $separator . '\w]#u', $separator, mb_strtolower($value, Pluf::f('encoding', 'UTF-8')));
+        $value = preg_replace('#[^' . $separator . '\w]#u', $separator, mb_strtolower($value, Bootstrap::f('encoding', 'UTF-8')));
 
         // remove redundant
         $value = preg_replace('#' . $separator . '{2,}#u', $separator, trim($value, $separator));

@@ -1,8 +1,5 @@
-<?php 
-
-
-
-namespace Pluf\Template ;
+<?php
+namespace Pluf\Template;
 
 use Pluf\Bootstrap;
 use Pluf\Template;
@@ -142,12 +139,12 @@ function dateAgo($date, $f = 'withal')
  */
 function timeAgo($date, $f = "withal")
 {
-//     Pluf::loadFunction('Pluf_Date_Easy');
+    // Pluf::loadFunction('Pluf_Date_Easy');
     $date = timeFormat($date);
     if ($f == 'withal') {
         return \Pluf\Date\easy($date, null, 2, __('now'));
     } else {
-        return  \Pluf\Date\easy($date, null, 2, __('now'), false);
+        return \Pluf\Date\easy($date, null, 2, __('now'), false);
     }
 }
 
@@ -174,7 +171,7 @@ function first($array)
     if (null === $result) {
         return '';
     }
-    
+
     return $result;
 }
 
@@ -191,6 +188,6 @@ function last($array)
     if (null === $result) {
         return '';
     }
-    
+
     return $result;
 }

@@ -23,9 +23,9 @@
  */
 namespace Pluf\Template\Context;
 
-use Pluf;
 use Pluf\Signal;
 use Pluf\Template\ContextVars;
+use Pluf\Bootstrap;
 
 /**
  * Class storing the data that are then used in the template.
@@ -33,7 +33,7 @@ use Pluf\Template\ContextVars;
  * This class automatically set the 'request' key with the current
  * request and use and add more keys based on the processors.
  */
-class Pluf_Template_Context_Request extends \Pluf\Template\Context
+class Request extends \Pluf\Template\Context
 {
 
     function __construct($request, $vars = array())
@@ -41,8 +41,8 @@ class Pluf_Template_Context_Request extends \Pluf\Template\Context
         $vars = array_merge(array(
             'request' => $request
         ), $vars);
-        foreach (Pluf::f('template_context_processors', array()) as $proc) {
-            Pluf::loadFunction($proc);
+        foreach (Bootstrap::f('template_context_processors', array()) as $proc) {
+            Bootstrap::loadFunction($proc);
             $vars = array_merge($proc($request), $vars);
         }
         $params = array(

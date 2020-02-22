@@ -198,7 +198,7 @@ class Bootstrap
      */
     public static function &db($extra = null)
     {
-        $func = self::f('db_get_connection', '\Pluf\DB\getConnection');
+        $func = self::f('db_get_connection', '\Pluf\DB::getConnection');
         $a = $func($extra);
         return $a;
     }

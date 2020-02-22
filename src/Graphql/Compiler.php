@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,14 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Graphql;
+
+use Pluf\ModelUtils;
+use Pluf\Model;
+use Pluf\Exception;
 
 /**
  * Create a compilre render
  *
  * @author maso
- *
+ *        
  */
-class Pluf_Graphql_Compiler
+class Compiler
 {
 
     private $rootType;
@@ -190,7 +194,7 @@ class ' . $className . ' {
         $requiredModel = '';
         if (sizeof($preModels) > 0) {
             $names = array();
-            foreach ($preModels as $pm){
+            foreach ($preModels as $pm) {
                 $names[] = ModelUtils::skipeName($pm);
             }
             $requiredModel = 'use (&$' . implode(', &$', $names) . ')';
@@ -241,8 +245,8 @@ class ' . $className . ' {
                     continue;
                 }
             }
-            if(array_key_exists('readable', $field)){
-                if(!$field['readable']){
+            if (array_key_exists('readable', $field)) {
+                if (! $field['readable']) {
                     continue;
                 }
             }
@@ -388,8 +392,8 @@ class ' . $className . ' {
         return $res;
     }
 
-
-    private function compileFieldManytomany($key, $field){
+    private function compileFieldManytomany($key, $field)
+    {
         // type
         $type = $this->getNameOf($field['model']);
         // function
@@ -407,7 +411,7 @@ class ' . $className . ' {
          * XXX: maso, 2018: check for security access
          *
          * if(parent is accessable) then
-         *      All children are too
+         * All children are too
          */
         return '
                     //Foreinkey value-' . $this->fieldComment($key, $field) . '

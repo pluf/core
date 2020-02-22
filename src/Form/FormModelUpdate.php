@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -16,25 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf;
+namespace Pluf\Form;
 
+use Pluf\Model;
 
 /**
- * Dynamic form validation class.
+ * Dynamic form validation class to update a model data.
  *
- * This class is used to generate a form for a given model.
+ * This class is used to generate a form for updating data of a given model.
+ *
+ * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  */
-class FormModel extends Form
+class FormModelUpdate extends Model
 {
 
     /**
      * The model for which the form applies.
-     * 
-     * 
      */
     public $model = null;
 
-    function initFields ($extra = array())
+    function initFields($extra = array())
     {
         $this->model = $extra['model'];
         if (isset($extra['fields'])) {
@@ -48,13 +50,16 @@ class FormModel extends Form
         }
         foreach ($cols as $name => $def) {
             $db_field = new $def['type']('', $name);
-            $def = array_merge(
-                    array(
-                            'blank' => true,
-                            'verbose' => $name,
-                            'help_text' => '',
-                            'editable' => true
-                    ), $def);
+            $def = array_merge(array(
+                'verbose' => $name,
+                'help_text' => '',
+                'editable' => true
+            ), $def, 
+                // @note: hadi, all fields are optional to update,
+                // so this attribute is added to all fields.
+                array(
+                    'blank' => true
+                ));
             if ($def['editable']) {
                 // The 'model_instance' and 'name' are used by the
                 // ManyToMany field.
@@ -65,28 +70,5 @@ class FormModel extends Form
                 }
             }
         }
-    }
-
-    /**
-     * Saves or updates the model in the database.
-     *
-     * @param
-     *            bool Commit in the database or not. If not, the object
-     *            is returned but not saved in the database.
-     * @return Object Model with data set from the form.
-     */
-    function save ($commit = true)
-    {
-        if ($this->isValid()) {
-            $this->model->setFromFormData($this->cleaned_data);
-            if ($commit && $this->model->id) {
-                $this->model->update();
-            } elseif ($commit) {
-                $this->model->create();
-            }
-            return $this->model;
-        }
-        throw new FormException(
-                __('Cannot save the model from an invalid form.'), $this);
     }
 }

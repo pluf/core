@@ -16,16 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Template\Tag;
+
+use Pluf\Template\Tag;
 
 /**
  * Display a tenant attribute.
  */
-class Pluf_Template_Tag_Tenant extends Pluf_Template_Tag
+class Tenant extends Tag
 {
 
-    function start ($attr = 'title')
+    function start($attr = 'title')
     {
-        $tenant = Pluf_Tenant::current();
+        $tenant = \Pluf\Tenant::current();
         echo $tenant->$attr;
     }
 }

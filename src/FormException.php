@@ -8,7 +8,7 @@ class FormException extends Exception
      * یک نمونه از این کلاس ایجاد می‌کند.
      *
      * @param string $message
-     * @param \Pluf\Form $form
+     * @param Form $form
      * @param string $previous
      */
     public function __construct($message, $form, $link = null, $developerMessage = null)

@@ -17,8 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
+
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response\ServerError;
+use Pluf\HTTP\URL;
+use Pluf\HTTP\Response;
+use Pluf\HTTP\Response\Redirect;
+use Pluf\HTTP\Response\Json;
+use Pluf\HTTP\Response\PlainText;
 
 /**
  * Dispather of pluf
@@ -28,9 +35,9 @@ namespace Pluf;
  * نمایش نگاشت داده می‌شود.
  *
  * @author maso
- *
+ *        
  */
-class Pluf_Dispatcher
+class Dispatcher
 {
 
     /**
@@ -48,11 +55,11 @@ class Pluf_Dispatcher
         $response = null;
         try {
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
-            $req = new Pluf_HTTP_Request($query);
+            $req = new Request($query);
             // Puts request in global scope
             $GLOBALS['_PX_request'] = $req;
             $middleware = array();
-            foreach (Pluf::f('middleware_classes', array()) as $mw) {
+            foreach (Bootstrap::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();
             }
             // 1- middleware process request
@@ -90,7 +97,7 @@ class Pluf_Dispatcher
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
-            self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
+            self::handleResponse($req, new ServerError($e));
             self::logError($req, $e);
         }
         /**
@@ -117,7 +124,7 @@ class Pluf_Dispatcher
             'request' => $req,
             'response' => $response
         );
-        Pluf_Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', $params);
+        \Pluf\Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', $params);
         return array(
             $req,
             $response
@@ -131,11 +138,11 @@ class Pluf_Dispatcher
      * تقاضا و لایه نمایش تعیین شده و لایه نمایش مناسب اجرا می‌شود. نتیجه این
      * فراخوانی داده‌ای است که باید برای کاربران ارسال شود.
      *
-     * @see Pluf_HTTP_URL
+     * @see URL
      *
      * @param
-     *            Pluf_HTTP_Request Request object
-     * @return Pluf_HTTP_Response Response object
+     *            Request Request object
+     * @return Response Response object
      */
     public static function match($req, $firstpass = true)
     {
@@ -176,14 +183,13 @@ class Pluf_Dispatcher
             $req->query .= '/';
             $res = self::match($req, false);
             if ($res->status_code != 404) {
-                Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
                 $name = (isset($req->view[0]['name'])) ? $req->view[0]['name'] : $req->view[0]['model'] . '::' . $req->view[0]['method'];
-                $url = Pluf_HTTP_URL_urlForView($name, array_slice($req->view[1], 1));
-                return new Pluf_HTTP_Response_Redirect($url, 301);
+                $url = URL::urlForView($name, array_slice($req->view[1], 1));
+                return new Redirect($url, 301);
             }
         }
         // نمایش مناسبی یافت نشده است
-        throw new Pluf_HTTP_Error404();
+        throw new DoesNotExistException();
     }
 
     /**
@@ -201,7 +207,7 @@ class Pluf_Dispatcher
      *            array The url definition matching the request
      * @param
      *            array The match found by preg_match
-     * @return Pluf_HTTP_Response Response object
+     * @return Response Response object
      */
     public static function send($req, $ctl, $match)
     {
@@ -216,7 +222,7 @@ class Pluf_Dispatcher
          * is true, then ok go ahead, if not then it a response so
          * return it or an exception so let it go.
          */
-        if (isset($ctl['precond']) && !Pluf::f('dispatcher.precond.disable', false)) {
+        if (isset($ctl['precond']) && ! Bootstrap::f('dispatcher.precond.disable', false)) {
             $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
@@ -271,17 +277,17 @@ class Pluf_Dispatcher
     private static function toResponse($response, $request)
     {
         // Check old result
-        if ($response instanceof Pluf_HTTP_Response) {
+        if ($response instanceof Response) {
             return $response;
         }
         // apply graphql
         if (array_key_exists('graphql', $request->REQUEST)) {
-            $gl = new Pluf_Graphql();
+            $gl = new Graphql();
             $response = $gl->render($response, $request->REQUEST['graphql']);
         }
 
         // convert to response
-        $http = new HTTP2();
+        $http = new \HTTP2();
         $contentType = array(
             'application/json',
             'text/plain'
@@ -290,15 +296,15 @@ class Pluf_Dispatcher
         if ($mime === false) {
             throw new Exception("You don't want any of the content types I have to offer\n");
         }
-        if($response instanceof Pluf_Paginator){
+        if ($response instanceof Paginator) {
             $response = $response->render_object();
         }
         switch ($mime) {
             case 'application/json':
-                $response = new Pluf_HTTP_Response_Json($response);
+                $response = new Json($response);
                 break;
             case 'text/plain':
-                $response = new Pluf_HTTP_Response_PlainText($response);
+                $response = new PlainText($response);
                 break;
         }
         return $response;
@@ -306,13 +312,13 @@ class Pluf_Dispatcher
 
     /**
      *
-     * @param Pluf_HTTP_Request $req
-     * @param Pluf_HTTP_Response $response
+     * @param Request $req
+     * @param Response $response
      */
     private static function handleResponse($req, $response)
     {
         // $response is a response
-        if (Pluf::f('pluf_runtime_header', false)) {
+        if (Bootstrap::f('pluf_runtime_header', false)) {
             $response->headers['X-Perf-Runtime'] = sprintf('%.5f', (microtime(true) - $GLOBALS['_PX_starttime']));
         }
         $response->render($req->method != 'HEAD' and ! defined('IN_UNIT_TESTS'));
@@ -320,7 +326,7 @@ class Pluf_Dispatcher
 
     /**
      *
-     * @param Pluf_HTTP_Request $req
+     * @param Request $req
      * @param Exception $exception
      */
     private static function logError($req, $exception)
@@ -333,13 +339,13 @@ class Pluf_Dispatcher
         }
         try {
             // 1- Add to log
-            Pluf_Log::fatal(array(
+            Log::fatal(array(
                 'query' => $req->query,
                 'error' => $exception
             ));
             // 2- send email if error is not handled
-            $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
-            $email = new Pluf_Mail($from, $from, 'fatal error in system');
+            $from = Bootstrap::f('general_from_email', 'info@dpq.co.ir');
+            $email = new Mail($from, $from, 'fatal error in system');
             $email->addTextMessage('unsupported error in system:' . $exception);
             $email->sendMail();
         } catch (Exception $ex) {}

@@ -17,11 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB;
+
+use Pluf\DB;
+use PDO;
+use Pluf\Exception;
 
 /**
  * SQLite connection class
  */
-class Pluf_DB_SQLite
+class SQLite
 {
 
     public $con_id;
@@ -42,8 +47,7 @@ class Pluf_DB_SQLite
 
     function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
     {
-        Pluf::loadFunction('Pluf_DB_defaultTypecast');
-        $this->type_cast = Pluf_DB_defaultTypecast();
+        $this->type_cast = DB::defaultTypecast();
         $this->debug = $debug;
         $this->pfx = $pfx;
         $this->debug('* SQLITE OPEN');
@@ -53,8 +57,8 @@ class Pluf_DB_SQLite
         );
         // Connect and let the Exception be thrown in case of problem
         try {
-            $this->con_id = new PDO('sqlite:' . $dbname);
-        } catch (PDOException $e) {
+            $this->con_id = new \PDO('sqlite:' . $dbname);
+        } catch (\PDOException $e) {
             throw $e;
         }
     }
@@ -185,12 +189,13 @@ class Pluf_DB_SQLite
     {
         return '<Pluf_DB_SQLite(' . $this->con_id . ')>';
     }
+
+    public static function CompressedToDb($val, $con)
+    {
+        if (is_null($val)) {
+            return 'NULL';
+        }
+        return 'X' . $con->esc(bin2hex(gzdeflate($val, 9)));
+    }
 }
 
-function Pluf_DB_SQLite_CompressedToDb($val, $con)
-{
-    if (is_null($val)) {
-        return 'NULL';
-    }
-    return 'X' . $con->esc(bin2hex(gzdeflate($val, 9)));
-}

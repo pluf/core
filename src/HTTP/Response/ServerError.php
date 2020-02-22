@@ -17,11 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
+
+use Pluf\HTTP\Request;
+use Pluf\Bootstrap;
+use Pluf\Exception;
 
 /**
  * Error response
  */
-class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
+class ServerError extends \Pluf\HTTP\Response
+{
 
     /**
      * یک نمونه جدید از این شئی ایجاد می‌کند
@@ -32,23 +38,23 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
      * در صورتی که خطایی رخ دهد، یک متن پیش فرض به عنوان خطای نتیجه نمایش داده
      * خواهد شد.
      *
-     * @param Pluf_HTTP_Request $request            
+     * @param Request $request
      */
-    function __construct($exception, $mimetype = null, $request = null) {
+    function __construct($exception, $mimetype = null, $request = null)
+    {
         /*
          * ایجاد پیام مناسب برای کاربر
          */
-        $mimetype = Pluf::f('mimetype_json', 'application/json') .
-                '; charset=utf-8';
-        if (!($exception instanceof Exception)) {
+        $mimetype = Bootstrap::f('mimetype_json', 'application/json') . '; charset=utf-8';
+        if (! ($exception instanceof Exception)) {
             parent::__construct(json_encode(array(
-                    'code' => 5000,
-                    'status' => 500,
-//                    'link' => $this->link,
-                    'message' => $exception->getMessage(),
-//                    'data' => $this->data,
-//                    'developerMessage' => $this->developerMessage,
-                    'stack' => Pluf::f('debug', false)? $exception->getTrace() : array()
+                'code' => 5000,
+                'status' => 500,
+                // 'link' => $this->link,
+                'message' => $exception->getMessage(),
+                // 'data' => $this->data,
+                // 'developerMessage' => $this->developerMessage,
+                'stack' => Bootstrap::f('debug', false) ? $exception->getTrace() : array()
             )), $mimetype);
             $this->status_code = 500;
         } else {
@@ -57,5 +63,4 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
         }
         return;
     }
-    
 }

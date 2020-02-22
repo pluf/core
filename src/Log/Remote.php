@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Log;
+
+use Pluf\Bootstrap;
+
 /**
  * ارسال لاگ به یک سرور دور با استفاده از متد POST.
  *
@@ -29,10 +33,10 @@
  * - 'log_remote_path' (/)
  * - 'log_remote_port' (8000)
  * - 'log_remote_headers' (array())
- *
  */
-class Pluf_Log_Remote
+class Remote
 {
+
     /**
      * Flush the stack to the remote server.
      *
@@ -41,18 +45,16 @@ class Pluf_Log_Remote
     public static function write($stack)
     {
         $payload = json_encode($stack);
-        $out = 'POST '.Pluf::f('log_remote_path', '/').' HTTP/1.1'."\r\n";
-        $out.= 'Host: '.Pluf::f('log_remote_server', 'localhost')."\r\n";
-        $out.= 'Host: localhost'."\r\n";
-        $out.= 'Content-Length: '.strlen($payload)."\r\n";
-        foreach (Pluf::f('log_remote_headers', array()) as $key=>$val) {
-            $out .= $key.': '.$val."\r\n";
+        $out = 'POST ' . Bootstrap::f('log_remote_path', '/') . ' HTTP/1.1' . "\r\n";
+        $out .= 'Host: ' . Bootstrap::f('log_remote_server', 'localhost') . "\r\n";
+        $out .= 'Host: localhost' . "\r\n";
+        $out .= 'Content-Length: ' . strlen($payload) . "\r\n";
+        foreach (Bootstrap::f('log_remote_headers', array()) as $key => $val) {
+            $out .= $key . ': ' . $val . "\r\n";
         }
-        $out.= 'Connection: Close'."\r\n\r\n";
-        $out.= $payload;
-        $fp = fsockopen(Pluf::f('log_remote_server', 'localhost'),
-                        Pluf::f('log_remote_port', 8000),
-                        $errno, $errstr, 5);
+        $out .= 'Connection: Close' . "\r\n\r\n";
+        $out .= $payload;
+        $fp = fsockopen(Bootstrap::f('log_remote_server', 'localhost'), Bootstrap::f('log_remote_port', 8000), $errno, $errstr, 5);
         fwrite($fp, $out);
         fclose($fp);
     }

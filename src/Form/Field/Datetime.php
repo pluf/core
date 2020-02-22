@@ -23,18 +23,20 @@ use Pluf\FormInvalidException;
 
 class Datetime extends Field
 {
+
     public $widget = 'Pluf_Form_Widget_DatetimeInput';
+
     public $input_formats = array(
-             '%Y-%m-%d %H:%M:%S',     // '2006-10-25 14:30:59'
-             '%Y-%m-%d %H:%M',        // '2006-10-25 14:30'
-             '%Y-%m-%d',              // '2006-10-25'
-             '%m/%d/%Y %H:%M:%S',     // '10/25/2006 14:30:59'
-             '%m/%d/%Y %H:%M',        // '10/25/2006 14:30'
-             '%m/%d/%Y',              // '10/25/2006'
-             '%m/%d/%y %H:%M:%S',     // '10/25/06 14:30:59'
-             '%m/%d/%y %H:%M',        // '10/25/06 14:30'
-             '%m/%d/%y',              // '10/25/06'
-                                  );
+        '%Y-%m-%d %H:%M:%S', // '2006-10-25 14:30:59'
+        '%Y-%m-%d %H:%M', // '2006-10-25 14:30'
+        '%Y-%m-%d', // '2006-10-25'
+        '%m/%d/%Y %H:%M:%S', // '10/25/2006 14:30:59'
+        '%m/%d/%Y %H:%M', // '10/25/2006 14:30'
+        '%m/%d/%Y', // '10/25/2006'
+        '%m/%d/%y %H:%M:%S', // '10/25/06 14:30:59'
+        '%m/%d/%y %H:%M', // '10/25/06 14:30'
+        '%m/%d/%y' // '10/25/06'
+    );
 
     public function clean($value)
     {
@@ -44,20 +46,15 @@ class Datetime extends Field
         }
         foreach ($this->input_formats as $format) {
             if (false !== ($date = strptime($value, $format))) {
-                $day   = $date['tm_mday'];
+                $day = $date['tm_mday'];
                 $month = $date['tm_mon'] + 1;
-                $year  = $date['tm_year'] + 1900;
+                $year = $date['tm_year'] + 1900;
                 // PHP's strptime has various quirks, e.g. it doesn't check
                 // gregorian dates for validity and it also allows '60' in
                 // the seconds part
-//                 var_dump($date);
+                // var_dump($date);
                 if (checkdate($month, $day, $year) && $date['tm_sec'] < 60) {
-                    $date = str_pad($year,  4, '0', STR_PAD_LEFT).'-'.
-                            str_pad($month, 2, '0', STR_PAD_LEFT).'-'.
-                            str_pad($day,   2, '0', STR_PAD_LEFT).' '.
-                            str_pad($date['tm_hour'], 2, '0', STR_PAD_LEFT).':'.
-                            str_pad($date['tm_min'],  2, '0', STR_PAD_LEFT).':'.
-                            str_pad($date['tm_sec'],  2, '0', STR_PAD_LEFT);
+                    $date = str_pad($year, 4, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($day, 2, '0', STR_PAD_LEFT) . ' ' . str_pad($date['tm_hour'], 2, '0', STR_PAD_LEFT) . ':' . str_pad($date['tm_min'], 2, '0', STR_PAD_LEFT) . ':' . str_pad($date['tm_sec'], 2, '0', STR_PAD_LEFT);
 
                     // we internally use GMT, so we convert it to a GMT date.
                     return gmdate('Y-m-d H:i:s', strtotime($date));

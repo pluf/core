@@ -17,11 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
+
+use Pluf\DoesNotExistException;
 
 /**
  * TODO: maso, 1395: document
  */
-class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
+class ResumableFile extends \Pluf\HTTP\Response
 {
 
     private $file;
@@ -39,9 +42,9 @@ class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
     function __construct($filepath, $httpRange, $fileName, $mimetype = null, $delay = 0)
     {
         parent::__construct($filepath, $mimetype);
-        
+
         if (! is_file($filepath)) {
-            throw new Exception_DoesNotExist();
+            throw new DoesNotExistException();
         }
         $this->httpRange = $httpRange;
         $this->totalSize = filesize($filepath);
@@ -76,9 +79,7 @@ class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
         $this->headers['Content-Type'] = 'application/octet-stream';
         $this->headers['Content-Transfer-Encoding'] = 'binary';
         // $this->headers ['Content-Disposition'] = sprintf ( 'attachment; filename="%s"', $this->name );
-        $this->headers['Content-Disposition'] = 'attachment; '
-            . sprintf('filename="%s"; ', rawurlencode($this->name))
-            . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
+        $this->headers['Content-Disposition'] = 'attachment; ' . sprintf('filename="%s"; ', rawurlencode($this->name)) . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
         if ($t > 0) {
             $this->status_code = 206;
             $t === 1 ? $this->pushSingle($range) : $this->pushMulti($ranges);
@@ -105,7 +106,6 @@ class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
     private function pushMulti($ranges)
     {
         $length = $start = $end = 0;
-        $output = "";
         $tl = "Content-type: application/octet-stream\r\n";
         $formatRange = "Content-range: bytes %d-%d/%d\r\n\r\n";
         foreach ($ranges as $range) {

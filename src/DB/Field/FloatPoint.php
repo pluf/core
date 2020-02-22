@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,27 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Field;
 
-/**
- * 
- * @deprecated
- */
-class Pluf_HTTP_Response_Forbidden extends Pluf_HTTP_Response
+
+use Pluf\DB\Field;
+
+class FloatPoint extends Field
 {
-    function __construct($request)
-    {
-        $content = '';
-        try {
-            $context = new Pluf_Template_Context(array('query' => $request->query));
-            $tmpl = new Pluf_Template('403.html');
-            $content = $tmpl->render($context);
-            $mimetype = null;
-        } catch (Exception $e) {
-            $mimetype = 'text/plain';
-            $content = 'You are not authorized to view this page. You do not have permission'."\n"
-                .'to view the requested directory or page using the credentials supplied.'."\n\n".'403 - Forbidden';
-        }
-        parent::__construct($content, $mimetype);
-        $this->status_code = 403;
-    }
+    public $type = 'float';
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,16 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
 
-class Pluf_HTTP_Response_Json extends Pluf_HTTP_Response
+use Pluf\Bootstrap;
+
+class Json extends \Pluf\HTTP\Response
 {
+
     /**
-     * @param mixed Values, will be encoded using json_encode
+     *
+     * @param
+     *            mixed Values, will be encoded using json_encode
      */
-    function __construct($data, $mimetype=null)
+    function __construct($data, $mimetype = null)
     {
         if (null == $mimetype) {
-            $mimetype = Pluf::f('mimetype_json', 'application/json').'; charset=utf-8';
+            $mimetype = Bootstrap::f('mimetype_json', 'application/json') . '; charset=utf-8';
         }
         parent::__construct(json_encode($data), $mimetype);
     }

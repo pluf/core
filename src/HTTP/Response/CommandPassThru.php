@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
 
 /**
  * Special response object to output the return value of a command.
@@ -24,15 +25,18 @@
  * "clean" command. The Content-Length will not be set as it is not
  * possible to predict it.
  */
-class Pluf_HTTP_Response_CommandPassThru extends Pluf_HTTP_Response
+class CommandPassThru extends \Pluf\HTTP\Response
 {
+
     /**
      * The command argument must be a safe string!
      *
-     * @param string Command to run.
-     * @param string Mimetype (null)
+     * @param
+     *            string Command to run.
+     * @param
+     *            string Mimetype (null)
      */
-    function __construct($command, $mimetype=null)
+    function __construct($command, $mimetype = null)
     {
         parent::__construct($command, $mimetype);
     }
@@ -40,7 +44,7 @@ class Pluf_HTTP_Response_CommandPassThru extends Pluf_HTTP_Response
     /**
      * Render a response object.
      */
-    function render($output_body=true)
+    function render($output_body = true)
     {
         $this->outputHeaders();
         if ($output_body) {

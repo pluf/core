@@ -17,30 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Pluf_DB_SchemaInfo extends Model
+namespace Pluf\DB;
+
+use Pluf\Model;
+
+class SchemaInfo extends Model
 {
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = 'permission';
         $this->_a['table'] = 'schema_info';
         $this->_a['multitenant'] = false;
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'application' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'unique' => true
-                ),
-                'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'application' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'unique' => true
+            ),
+            'version' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false
+            )
         );
     }
 }

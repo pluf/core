@@ -16,6 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB;
+
+use Pluf\Log;
+use Pluf\DB;
+use Pluf\Bootstrap;
 
 /**
  * Database statistics class.
@@ -24,7 +29,7 @@
  * underlying database class but keeping timing information. This is
  * very good to track your slow queries and improve your code.
  */
-class Pluf_DB_Stats
+class Stats
 {
 
     /**
@@ -32,59 +37,52 @@ class Pluf_DB_Stats
      */
     protected $_rdb = null;
 
-    public function __construct ($db)
+    public function __construct($db)
     {
         $this->_rdb = $db;
     }
 
-    public function __call ($name, $args)
+    public function __call($name, $args)
     {
         if (! in_array($name, array(
-                'execute',
-                'select'
+            'execute',
+            'select'
         ))) {
             return call_user_func_array(array(
-                    $this->_rdb,
-                    $name
-            ), $args);
-        }
-        Pluf_Log::stime('timer');
-        $res = call_user_func_array(array(
                 $this->_rdb,
                 $name
+            ), $args);
+        }
+        Log::stime('timer');
+        $res = call_user_func_array(array(
+            $this->_rdb,
+            $name
         ), $args);
-        Pluf_Log::perf(
-                array(
-                        'Pluf_DB_Stats',
-                        $this->_rdb->lastquery,
-                        Pluf_Log::etime('timer', 'total_sql')
-                ));
-        Pluf_Log::inc('sql_query');
+        Log::perf(array(
+            'Pluf_DB_Stats',
+            $this->_rdb->lastquery,
+            Log::etime('timer', 'total_sql')
+        ));
+        Log::inc('sql_query');
         return $res;
     }
 
-    public function __get ($name)
+    public function __get($name)
     {
         return $this->_rdb->$name;
     }
 
-    public function __set ($name, $value)
+    public function __set($name, $value)
     {
         return $this->_rdb->$name = $value;
     }
 }
 
-function Pluf_DB_Stats_getConnection ($extra = null)
+function Pluf_DB_Stats_getConnection($extra = null)
 {
-    if (isset($GLOBALS['_PX_db']) &&
-             (is_resource($GLOBALS['_PX_db']->con_id) or
-             is_object($GLOBALS['_PX_db']->con_id))) {
+    if (isset($GLOBALS['_PX_db']) && (is_resource($GLOBALS['_PX_db']->con_id) or is_object($GLOBALS['_PX_db']->con_id))) {
         return $GLOBALS['_PX_db'];
     }
-    $GLOBALS['_PX_db'] = new Pluf_DB_Stats(
-            Pluf_DB::get(Pluf::f('db_engine'), Pluf::f('db_server'), 
-                    Pluf::f('db_database'), Pluf::f('db_login'), 
-                    Pluf::f('db_password'), Pluf::f('db_table_prefix'), 
-                    Pluf::f('debug'), Pluf::f('db_version')));
+    $GLOBALS['_PX_db'] = new Stats(DB::get(Bootstrap::f('db_engine'), Bootstrap::f('db_server'), Bootstrap::f('db_database'), Bootstrap::f('db_login'), Bootstrap::f('db_password'), Bootstrap::f('db_table_prefix'), Bootstrap::f('debug'), Bootstrap::f('db_version')));
     return $GLOBALS['_PX_db'];
 }

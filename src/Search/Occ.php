@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -17,61 +16,64 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Search;
+
+use Pluf\Model;
 
 /**
  * Storage of the occurence of the words.
  */
-class Pluf_Search_Occ extends Model
+class Occ extends Model
 {
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = 'occurence';
         $this->_a['table'] = 'pluf_search_occs';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'word' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
-                        'model' => 'Pluf_Search_Word',
-                        'blank' => false,
-                        'verbose' => __('word')
-                ),
-                'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
-                        'blank' => false,
-                        'size' => 150,
-                        'verbose' => __('model class')
-                ),
-                'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('model id')
-                ),
-                'occ' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
-                        'blank' => false,
-                        'verbose' => __('occurences')
-                ),
-                'pondocc' => array(
-                        'type' => 'Pluf_DB_Field_Float',
-                        'blank' => false,
-                        'verbose' => __('weighted occurence')
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Pluf_DB_Field_Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'word' => array(
+                'type' => 'Pluf_DB_Field_Foreignkey',
+                'model' => 'Pluf_Search_Word',
+                'blank' => false,
+                'verbose' => __('word')
+            ),
+            'model_class' => array(
+                'type' => 'Pluf_DB_Field_Varchar',
+                'blank' => false,
+                'size' => 150,
+                'verbose' => __('model class')
+            ),
+            'model_id' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false,
+                'verbose' => __('model id')
+            ),
+            'occ' => array(
+                'type' => 'Pluf_DB_Field_Integer',
+                'blank' => false,
+                'verbose' => __('occurences')
+            ),
+            'pondocc' => array(
+                'type' => 'Pluf_DB_Field_Float',
+                'blank' => false,
+                'verbose' => __('weighted occurence')
+            )
         );
         $this->_a['idx'] = array(
-                'model_class_id_combo_word_idx' => array(
-                        'type' => 'unique',
-                        'col' => 'model_class, model_id, word'
-                )
+            'model_class_id_combo_word_idx' => array(
+                'type' => 'unique',
+                'col' => 'model_class, model_id, word'
+            )
         );
     }
 
-    function __toString ()
+    function __toString()
     {
         return $this->word;
     }

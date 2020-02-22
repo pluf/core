@@ -20,6 +20,8 @@
 namespace Pluf\Form;
 
 use Pluf\FormInvalidException;
+use Pluf\Utils;
+use Pluf\Bootstrap;
 
 /**
  * Default form field.
@@ -124,19 +126,21 @@ class Field
             if ($key !== 'widget_attrs')
                 $this->$key = $m[$key];
         }
+
+        // Widget is not supported anymore
         // Set the widget to be an instance and not the string name.
-        $widget_name = $this->widget;
-        if (isset($params['widget_attrs'])) {
-            $attrs = $params['widget_attrs'];
-        } else {
-            $attrs = array();
-        }
-        $widget = new $widget_name($attrs);
-        $attrs = $this->widgetAttrs($widget);
-        if (count($attrs)) {
-            $widget->attrs = array_merge($widget->attrs, $attrs);
-        }
-        $this->widget = $widget;
+        // $widget_name = $this->widget;
+        // if (isset($params['widget_attrs'])) {
+        // $attrs = $params['widget_attrs'];
+        // } else {
+        // $attrs = array();
+        // }
+        // $widget = new $widget_name($attrs);
+        // $attrs = $this->widgetAttrs($widget);
+        // if (count($attrs)) {
+        // $widget->attrs = array_merge($widget->attrs, $attrs);
+        // }
+        // $this->widget = $widget;
     }
 
     /**
@@ -149,10 +153,10 @@ class Field
     function clean($value)
     {
         if (! $this->multiple and $this->required and in_array($value, $this->empty_values)) {
-            throw new FormInvalidException(__('This field is required.'));
+            throw new FormInvalidException('This field is required.');
         }
         if ($this->multiple and $this->required and empty($value)) {
-            throw new FormInvalidException(__('This field is required.'));
+            throw new FormInvalidException('This field is required.');
         }
         return $value;
     }
@@ -188,7 +192,7 @@ class Field
      * a "multiple" widget, you need to perform a check on
      * $this->multiple.
      *
-     * @see FieldInteger::clean
+     * @see Field\Integer::clean
      *
      * @param
      *            array Values
@@ -218,6 +222,89 @@ class Field
     public function widgetAttrs($widget)
     {
         return array();
+    }
+
+    /**
+     * Default move function.
+     * The file name is sanitized.
+     *
+     * In the extra parameters, options can be used so that this function is
+     * matching most of the needs:
+     *
+     * * 'upload_path': The path in which the uploaded file will be
+     * stored.
+     * * 'upload_path_create': If set to true, try to create the
+     * upload path if not existing.
+     *
+     * * 'upload_overwrite': Set it to true if you want to allow overwritting.
+     *
+     * * 'file_name': Force the file name to this name and do not use the
+     * original file name. If this name contains '%s' for
+     * example 'myid-%s', '%s' will be replaced by the
+     * original filename. This can be used when for
+     * example, you want to prefix with the id of an
+     * article all the files attached to this article.
+     *
+     * If you combine those options, you can dynamically generate the path
+     * name in your form (for example date base) and let this upload
+     * function create it on demand.
+     *
+     * @param
+     *            array Upload value of the form.
+     * @param
+     *            array Extra parameters. If upload_path key is set, use it. (array())
+     * @return string Name relative to the upload path.
+     */
+    public static function moveToUploadFolder($value, $params = array())
+    {
+        $name = Utils::cleanFileName($value['name']);
+        $upload_path = Bootstrap::f('upload_path', '/tmp');
+        if (isset($params['file_name'])) {
+            if (false !== strpos($params['file_name'], '%s')) {
+                $name = sprintf($params['file_name'], $name);
+            } else {
+                $name = $params['file_name'];
+            }
+        }
+        if (isset($params['upload_path'])) {
+            $upload_path = $params['upload_path'];
+        }
+        $dest = $upload_path . '/' . $name;
+        if (isset($params['upload_path_create']) and ! is_dir(dirname($dest))) {
+            if (false == @mkdir(dirname($dest), 0777, true)) {
+                throw new FormInvalidException('An error occured when creating the upload path. Please try to send the file again.');
+            }
+        }
+        if ((! isset($params['upload_overwrite']) or $params['upload_overwrite'] == false) and file_exists($dest)) {
+            throw new FormInvalidException(sprintf('A file with the name "%s" has already been uploaded.', $name));
+        }
+        if (@! move_uploaded_file($value['tmp_name'], $dest)) {
+            throw new FormInvalidException('An error occured when uploading the file. Please try to send the file again.');
+        }
+        @chmod($dest, 0666);
+        return $name;
+    }
+
+    /**
+     * A widget can split itself in multiple input form.
+     * For example
+     * you can have a datetime value in your model and you use 2
+     * inputs one for the date and one for the time to input the
+     * value. So the widget must know how to get back the values from
+     * the submitted form.
+     *
+     * @param
+     *            string Name of the form.
+     * @param
+     *            array Submitted form data.
+     * @return mixed Value or null if not defined.
+     */
+    public function valueFromFormData($name, $data)
+    {
+        if (isset($data[$name])) {
+            return $data[$name];
+        }
+        return null;
     }
 }
 

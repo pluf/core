@@ -1,4 +1,10 @@
 <?php
+namespace Pluf\Template\Tag;
+
+use Pluf\Template\Tag;
+use InvalidArgumentException;
+use Pluf\Template;
+use Pluf\Utils;
 
 /**
  * Template tag <code>cycle</code>.
@@ -55,25 +61,24 @@
  *
  * Based on concepts from the Django cycle template tag.
  */
-class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
+class Cycle extends Tag
 {
 
     /**
      *
-     * @see Pluf_Template_Tag::start()
+     * @see Tag::start()
      * @throws InvalidArgumentException If no argument is provided.
      */
-    public function start ()
+    public function start()
     {
         $nargs = func_num_args();
         if (1 > $nargs) {
-            throw new InvalidArgumentException(
-                    '`cycle` tag requires at least one argument');
+            throw new InvalidArgumentException('`cycle` tag requires at least one argument');
         }
-        
+
         $result = '';
         list ($key, $index) = $this->_computeIndex(func_get_args());
-        
+
         switch ($nargs) {
             // (array or mixed) argument
             case 1:
@@ -84,33 +89,32 @@ class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
                     $result = $arg;
                 }
                 break;
-            
+
             // (array) arguments, (string) assign
             case 2:
                 $args = func_get_args();
                 if (is_array($args[0])) {
                     $last = array_pop($args);
                     if (is_string($last) && '' === $this->context->get($last)) {
-                        $value = Pluf_Utils::flattenArray($args[0]);
+                        $value = Utils::flattenArray($args[0]);
                         $this->context->set($last, $value);
-                        
-                        list ($assign_key, $assign_index) = $this->_computeIndex(
-                                array(
-                                        $value
-                                ));
+
+                        list ($assign_key, $assign_index) = $this->_computeIndex(array(
+                            $value
+                        ));
                         $result = $value[0];
                     }
                     break;
                 }
-            
+
             // considers all the arguments as a value to use in the cycle
             default:
-                $args = Pluf_Utils::flattenArray(func_get_args());
+                $args = Utils::flattenArray(func_get_args());
                 $result = $args[$index % count($args)];
                 break;
         }
-        
-        echo Pluf_Template::markSafe((string) $result);
+
+        echo Template::markSafe((string) $result);
     }
 
     /**
@@ -120,21 +124,19 @@ class Pluf_Template_Tag_Cycle extends Pluf_Template_Tag
      *            array
      * @return array A array of two elements: key and index.
      */
-    protected function _computeIndex ($args)
+    protected function _computeIndex($args)
     {
         if (! isset($this->context->__cycle_stack)) {
             $this->context->__cycle_stack = array();
         }
-        
+
         $key = serialize($args);
-        $this->context->__cycle_stack[$key] = (array_key_exists($key, 
-                $this->context->__cycle_stack)) ? 1 +
-                 $this->context->__cycle_stack[$key] : 0;
+        $this->context->__cycle_stack[$key] = (array_key_exists($key, $this->context->__cycle_stack)) ? 1 + $this->context->__cycle_stack[$key] : 0;
         $index = $this->context->__cycle_stack[$key];
-        
+
         return array(
-                $key,
-                $index
+            $key,
+            $index
         );
     }
 }

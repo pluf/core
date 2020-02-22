@@ -17,6 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB\Schema;
+
+use Pluf\ModelUtils;
+use Pluf\Bootstrap;
+use Pluf\DB\Schema;
 
 /**
  * Generator of the schemas corresponding to a given model.
@@ -24,7 +29,7 @@
  * This class is for SQLite, you can create a class on the same
  * model for another database engine.
  */
-class Pluf_DB_Schema_SQLite
+class SQLite
 {
 
     /**
@@ -71,7 +76,6 @@ class Pluf_DB_Schema_SQLite
         'password' => "''",
         'float' => 0.0,
         'blob' => "''",
-
 
         // NOTE: GEO types are not supported in sqlite
         'point' => "''",
@@ -143,13 +147,13 @@ class Pluf_DB_Schema_SQLite
             $omodel = new $cols[$many]['model']();
             $table = ModelUtils::getAssocTable($model, $omodel);
 
-            $ra =  ModelUtils::getAssocField($model);
+            $ra = ModelUtils::getAssocField($model);
             $rb = ModelUtils::getAssocField($omodel);
 
             $sql = 'CREATE TABLE ' . $table . ' (';
             $sql .= "\n" . $ra . $this->mappings['foreignkey'] . ' default 0,';
             $sql .= "\n" . $rb . $this->mappings['foreignkey'] . ' default 0,';
-            $sql .= "\n" . 'primary key (' . $ra . ', ' . $rb .')';
+            $sql .= "\n" . 'primary key (' . $ra . ', ' . $rb . ')';
             $sql .= "\n" . ');';
             $tables[$table] = $sql;
         }
@@ -184,17 +188,17 @@ class Pluf_DB_Schema_SQLite
                 $val['col'] = $idx;
             }
             $unique = (isset($val['type']) && ($val['type'] == 'unique')) ? 'UNIQUE ' : '';
-            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Schema::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
             $field = new $val['type']();
             if ($field->type == 'foreignkey') {
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_foreignkey'] = sprintf('CREATE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_foreignkey_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($col, $this->con));
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_foreignkey'] = sprintf('CREATE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_foreignkey_idx', $this->con->pfx . $model->_a['table'], Schema::quoteColumn($col, $this->con));
             }
             if (isset($val['unique']) and $val['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
-                $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($columns, $this->con));
+                $columns = (Bootstrap::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Schema::quoteColumn($columns, $this->con));
             }
         }
         return $index;

@@ -1,5 +1,4 @@
 <?php
-
 namespace Pluf;
 
 /*
@@ -23,7 +22,7 @@ namespace Pluf;
 /**
  * Class implementing a small search engine.
  *
- * Ideal for a small website with up to 100,000 documents. 
+ * Ideal for a small website with up to 100,000 documents.
  */
 class Pluf_Search
 {
@@ -41,11 +40,10 @@ class Pluf_Search
      *            string Query string.
      * @return array Results.
      */
-    public static function search ($query, $stemmer = 'Pluf_Text_Stemmer_Porter')
+    public static function search($query, $stemmer = 'Pluf_Text_Stemmer_Porter')
     {
-        $query = Pluf_Text::cleanString(
-                html_entity_decode($query, ENT_QUOTES, 'UTF-8'));
-        $words = Pluf_Text::tokenize($query);
+        $query = Text::cleanString(html_entity_decode($query, ENT_QUOTES, 'UTF-8'));
+        $words = Text::tokenize($query);
         if ($stemmer != null) {
             $words = self::stem($words, $stemmer);
         }
@@ -63,13 +61,13 @@ class Pluf_Search
     /**
      * Stem the words with the given stemmer.
      */
-    public static function stem ($words, $stemmer)
+    public static function stem($words, $stemmer)
     {
         $nwords = array();
         foreach ($words as $word => $occ) {
             $word = call_user_func(array(
-                    $stemmer,
-                    'stem'
+                $stemmer,
+                'stem'
             ), $word);
             if (isset($nwords[$word])) {
                 $nwords[$word] += $occ;
@@ -90,18 +88,15 @@ class Pluf_Search
      *            array Ids.
      * @return array Sorted by score, returns model_class, model_id and score.
      */
-    public static function searchDocuments ($wids)
+    public static function searchDocuments($wids)
     {
-        $db = & Pluf::db();
-        $gocc = new Pluf_Search_Occ();
+        $db = &Bootstrap::db();
+        $gocc = new Search\Occ();
         $where = array();
         foreach ($wids as $id) {
             $where[] = $db->qn('word') . '=' . (int) $id;
         }
-        $select = 'SELECT model_class, model_id, SUM(pondocc) AS score FROM ' .
-                 $gocc->getSqlTable() . ' WHERE ' . implode(' OR ', $where) .
-                 ' GROUP BY model_class, model_id HAVING COUNT(*)=' .
-                 count($wids) . ' ORDER BY score DESC';
+        $select = 'SELECT model_class, model_id, SUM(pondocc) AS score FROM ' . $gocc->getSqlTable() . ' WHERE ' . implode(' OR ', $where) . ' GROUP BY model_class, model_id HAVING COUNT(*)=' . count($wids) . ' ORDER BY score DESC';
         return $db->select($select);
     }
 
@@ -112,16 +107,16 @@ class Pluf_Search
      *            array Words
      * @return array Ids, null if no matching word.
      */
-    public static function getWordIds ($words)
+    public static function getWordIds($words)
     {
         $ids = array();
-        $gword = new Pluf_Search_Word();
+        $gword = new Search\Word();
         foreach ($words as $word) {
-            $sql = new Pluf_SQL('word=%s', array(
-                    $word
+            $sql = new SQL('word=%s', array(
+                $word
             ));
             $l = $gword->getList(array(
-                    'filter' => $sql->gen()
+                'filter' => $sql->gen()
             ));
             if ($l->count() > 0) {
                 $ids[] = $l[0]->id;
@@ -164,9 +159,9 @@ class Pluf_Search
      *            Stemmer used. ('Pluf_Text_Stemmer_Porter')
      * @return array Statistics.
      */
-    public static function index ($doc, $stemmer = 'Pluf_Text_Stemmer_Porter')
+    public static function index($doc, $stemmer = 'Pluf_Text_Stemmer_Porter')
     {
-        $words = Pluf_Text::tokenize($doc->_toIndex());
+        $words = Text::tokenize($doc->_toIndex());
         if ($stemmer != null) {
             $words = self::stem($words, $stemmer);
         }
@@ -178,15 +173,12 @@ class Pluf_Search
             $words_flat[] = $word;
         }
         // Drop the last indexation.
-        $gocc = new Pluf_Search_Occ();
-        $sql = new Pluf_SQL(
-                'DELETE FROM ' . $gocc->getSqlTable() .
-                         ' WHERE model_class=%s AND model_id=%s', 
-                        array(
-                                $doc->_model,
-                                $doc->id
-                        ));
-        $db = & Pluf::db();
+        $gocc = new Search\Occ();
+        $sql = new SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
+            $doc->_model,
+            $doc->id
+        ));
+        $db = &Bootstrap::db();
         $db->execute($sql->gen());
         // Get the ids for each word.
         $ids = self::getWordIds($words_flat);
@@ -196,7 +188,7 @@ class Pluf_Search
         $done = array();
         for ($i = 0; $i < $n; $i ++) {
             if ($ids[$i] === null) {
-                $word = new Pluf_Search_Word();
+                $word = new Search\Word();
                 $word->word = $words_flat[$i];
                 try {
                     $word->create();
@@ -205,7 +197,7 @@ class Pluf_Search
                     // most likely concurrent addition of a word, try
                     // to read it.
                     $_ids = self::getWordIds(array(
-                            $words_flat[$i]
+                        $words_flat[$i]
                     ));
                     if ($_ids[0] !== null) {
                         // if we miss it here, just forget about it
@@ -218,8 +210,8 @@ class Pluf_Search
                 continue;
             }
             $done[$ids[$i]] = true;
-            $occ = new Pluf_Search_Occ();
-            $occ->word = new Pluf_Search_Word($ids[$i]);
+            $occ = new Search\Occ();
+            $occ->word = new Search\Word($ids[$i]);
             $occ->model_class = $doc->_model;
             $occ->model_id = $doc->id;
             $occ->occ = $words[$words_flat[$i]];
@@ -227,17 +219,16 @@ class Pluf_Search
             $occ->create();
         }
         // update the stats
-        $sql = new Pluf_SQL('model_class=%s AND model_id=%s', 
-                array(
-                        $doc->_model,
-                        $doc->id
-                ));
-        $last_index = Pluf::factory('Pluf_Search_Stats')->getList(
-                array(
-                        'filter' => $sql->gen()
-                ));
+        $sql = new SQL('model_class=%s AND model_id=%s', array(
+            $doc->_model,
+            $doc->id
+        ));
+        $searchStats = new Search\Stats();
+        $last_index = $searchStats->getList(array(
+            'filter' => $sql->gen()
+        ));
         if ($last_index->count() == 0) {
-            $stats = new Pluf_Search_Stats();
+            $stats = new Search\Stats();
             $stats->model_class = $doc->_model;
             $stats->model_id = $doc->id;
             $stats->indexations = 1;
@@ -247,9 +238,9 @@ class Pluf_Search
             $last_index[0]->update();
         }
         return array(
-                'total' => $total,
-                'new' => $new_words,
-                'unique' => $n
+            'total' => $total,
+            'new' => $new_words,
+            'unique' => $n
         );
     }
 }

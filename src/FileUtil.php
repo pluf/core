@@ -1,7 +1,6 @@
 <?php
 namespace Pluf;
 
-use Pluf;
 use ZipArchive;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
@@ -98,7 +97,7 @@ class FileUtil
         static $mimes = null;
         if ($mimes == null) {
             $mimes = array();
-            $src = Pluf::f('mimetypes_db', '/etc/mime.types');
+            $src = Bootstrap::f('mimetypes_db', '/etc/mime.types');
             $filecontent = @file_get_contents($src);
             if ($filecontent !== false) {
                 $mimes = preg_split("/\015\012|\015|\012/", $filecontent);
@@ -186,7 +185,7 @@ class FileUtil
             return true;
         }
         $ext = 'mdtext php-dist h gitignore diff patch';
-        $extra_ext = trim(Pluf::f('idf_extra_text_ext', ''));
+        $extra_ext = trim(Bootstrap::f('idf_extra_text_ext', ''));
         if (! empty($extra_ext)) {
             $ext .= ' ' . $extra_ext;
         }
@@ -284,7 +283,7 @@ class FileUtil
     public static function createTempFolder($pre = '')
     {
         $key = $pre . md5(microtime() . rand(0, 123456789));
-        $folder = Pluf::f('tmp_folder', '/var/tmp') . '/' . $key;
+        $folder = Bootstrap::f('tmp_folder', '/var/tmp') . '/' . $key;
         if (! mkdir($folder, 0777, true)) {
             throw new Exception('Failed to create folder in temp');
         }

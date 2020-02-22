@@ -17,11 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\DB;
+
+use Pluf\Exception;
 
 /**
  * Create the schema of a given Model for a given database.
  */
-class Pluf_DB_Schema
+class Schema
 {
 
     /**
@@ -43,7 +46,9 @@ class Pluf_DB_Schema
     {
         $this->con = $db;
         $this->model = $model;
-        $this->schema = Pluf::factory('Pluf_DB_Schema_' . $db->engine, $db);
+        // create engine
+        $engine = '\\Pluf\\DB\Schema\\' . $db->engine;
+        $this->schema = new $engine($db);
     }
 
     /**

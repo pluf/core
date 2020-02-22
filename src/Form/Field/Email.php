@@ -19,11 +19,12 @@
 namespace Pluf\Form\Field;
 
 use Pluf\Form\Field;
-use Pluf\Utils;
 use Pluf\FormInvalidException;
+use Pluf\Utils;
 
 class Email extends Field
 {
+
     public $widget = 'Pluf_Form_Widget_TextInput';
 
     public function clean($value)
@@ -35,7 +36,7 @@ class Email extends Field
         if ($value == '') {
             return $value;
         }
-        if (!Utils::isValidEmail($value)) {
+        if (! Utils::isValidEmail($value)) {
             throw new FormInvalidException('Enter a valid email address.');
         }
         return $value;

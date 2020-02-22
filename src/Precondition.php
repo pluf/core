@@ -17,15 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf;
+
+use Pluf\HTTP\Response\Redirect;
 
 /**
  * Global system preconditions
  *
  * @author maso<mostafa.barmshory@dpq.co.ir>
  */
-class Pluf_Precondition
+class Precondition
 {
 
     /**
@@ -39,27 +40,26 @@ class Pluf_Precondition
      *            Pluf_HTTP_Request
      * @return mixed
      */
-    static public function sslRequired ($request)
+    static public function sslRequired($request)
     {
         if (empty($_SERVER['HTTPS']) or $_SERVER['HTTPS'] == 'off') {
-            return new Pluf_HTTP_Response_Redirect(
-                    'https://' . $request->http_host . $request->uri);
+            return new Redirect('https://' . $request->http_host . $request->uri);
         }
         return true;
     }
-    
+
     /**
      * Checks if given name is matched with patterin [a-zA-Z_][0-9a-zA-Z_]*
-     * 
+     *
      * Throws bad request exception if given name does not match.
-     * 
+     *
      * @param string $name
-     * @throws Exception_BadRequest
+     * @throws BadRequestException
      */
-    public static function assertKeyIsValid($name){
-        if(preg_match('/^[a-zA-Z_][0-9a-zA-Z_]*$/', $name) !== 1){
-            throw new Exception_BadRequest('Invalid parameter: <' . $name . '>');
+    public static function assertKeyIsValid($name)
+    {
+        if (preg_match('/^[a-zA-Z_][0-9a-zA-Z_]*$/', $name) !== 1) {
+            throw new BadRequestException('Invalid parameter: <' . $name . '>');
         }
     }
-
 }

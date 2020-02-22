@@ -17,12 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Pluf_DB_Field_Foreignkey extends Pluf_DB_Field
+namespace Pluf\DB\Field;
+
+use Pluf\DB\Field;
+
+class Foreignkey extends Field
 {
 
     public $type = 'foreignkey';
 
-    function formField($def, $form_field = 'Pluf_Form_Field_Varchar')
+    function formField($def, $form_field = '\Pluf\Form\Field\Varchar')
     {
         $gmodel = new $def['model']();
         $choices = array();

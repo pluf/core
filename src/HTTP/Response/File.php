@@ -17,6 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\HTTP\Response;
+
+use Pluf\HTTP\Response;
+use Pluf\DoesNotExistException;
+use Pluf\HTTP\Download2;
 
 /**
  * Render file as response
@@ -24,7 +29,7 @@
  * @author maso<mostafa.barmshory@gmail.com>
  *        
  */
-class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
+class File extends \Pluf\HTTP\Response
 {
 
     public $delete_file = false;
@@ -46,20 +51,20 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
      * Render the file
      *
      * {@inheritdoc}
-     * @see Pluf_HTTP_Response::render()
+     * @see Response::render()
      */
     function render($output_body = true)
     {
         if (! file_exists($this->content)) {
-            throw new Exception_DoesNotExist('Requested resource not found');
+            throw new DoesNotExistException('Requested resource not found');
         }
-        $dl = new HTTP_Download2(array(
+        $dl = new Download2(array(
             'file' => $this->content,
             'contenttype' => $this->headers['Content-Type'],
             'gzip' => false,
             'cache' => true
         ));
-        foreach ($this->headers as $key => $value){            
+        foreach ($this->headers as $key => $value) {
             $dl->headers[$key] = $value;
         }
         if (defined('IN_UNIT_TESTS')) {
@@ -73,7 +78,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
      * Genereate hash code of file
      *
      * {@inheritdoc}
-     * @see Pluf_HTTP_Response::hashCode()
+     * @see Response::hashCode()
      */
     public function hashCode()
     {

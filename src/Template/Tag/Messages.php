@@ -1,12 +1,15 @@
 <?php
+namespace Pluf\Template\Tag;
+
+use Pluf\Template\Tag;
 
 /**
  * Display the messages for the current user.
  */
-class Pluf_Template_Tag_Messages extends Pluf_Template_Tag
+class Messages extends Tag
 {
 
-    function start ($user)
+    function start($user)
     {
         if (is_object($user) && ! $user->isAnonymous()) {
             $messages = $user->getAndDeleteMessages();
