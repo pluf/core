@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit 
+	bootstrap="./vendor/autoload.php"
+	stopOnWarning="false"
+	verbose="true"
+	colors="true">
     <testsuites>
          <testsuite name="Basics">
             <directory>tests/Pluf/</directory>
@@ -20,7 +24,7 @@
 <!--             <directory>tests/Pluf_DB/</directory> -->
 <!--             <directory>tests/Pluf_DB_Schema/</directory> -->
 <!--             <directory>tests/Pluf_SQL/</directory> -->
-<!--             <directory>tests/Pluf_Model/</directory> -->
+<!--             <directory>tests/Model/</directory> -->
 <!--         </testsuite> -->
 <!--         <testsuite name="View"> -->
 <!--             <directory>tests/Pluf_Dispatcher/</directory> -->

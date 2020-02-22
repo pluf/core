@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
+use Pluf\Bootstrap;
 
 /**
  *
@@ -42,14 +42,36 @@ class PlufMethodStartTest extends TestCase
      */
     public function testStart()
     {
-        Pluf::start(__DIR__ . '/../conf/config.php');
+        Bootstrap::start(__DIR__ . '/../conf/config.php');
         $this->assertEquals(true, isset($GLOBALS['_PX_config']));
 
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['test'] = false;
-        Pluf::start($conf);
+        Bootstrap::start($conf);
         $this->assertEquals(false, $GLOBALS['_PX_config']['test']);
     }
-}
 
-?>
+    /**
+     *
+     * @test
+     * @expectedException \Pluf\Exception
+     */
+    public function testStartWithReadableFile()
+    {
+        Bootstrap::start(__DIR__ . '/../conf/config.php' . 'xxxxx');
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testStartWithInlineConfig()
+    {
+        Bootstrap::start(array(
+            'test' => false
+        ));
+        $this->assertEquals(true, isset($GLOBALS['_PX_config']));
+        $this->assertEquals(false, $GLOBALS['_PX_config']['test']);
+        $this->assertEquals(false, Bootstrap::f('test', true));
+    }
+}

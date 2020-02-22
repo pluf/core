@@ -16,28 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace PlufTests;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
+use Pluf\Bootstrap;
 
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
 class PlufTest extends TestCase
 {
-
-    /**
-     *
-     * @before
-     */
-    public function setUpTest()
-    {
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['test-var'] = false;
-        Pluf::start($conf);
-    }
 
     /**
      *
@@ -45,45 +30,35 @@ class PlufTest extends TestCase
      */
     public function testF()
     {
-        $this->assertEquals(Pluf::f('test-var'), false);
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['test-var'] = false;
+        Bootstrap::start($conf);
+        $this->assertEquals(Bootstrap::f('test-var'), false);
     }
 
     /**
      *
      * @test
      */
-    public function testFactory()
+    public function testPf()
     {
-        $pluf = Pluf::factory('Pluf');
-        $this->assertEquals(get_class($pluf), 'Pluf');
-    }
+        Bootstrap::start(array(
+            'a' => true,
+            'a.a' => false,
+            'a.b' => false,
+            'a.c' => false
+        ));
 
-    /**
-     *
-     * @test
-     */
-    public function testFileExists()
-    {
-        $this->assertTrue(Pluf::fileExists('Pluf.php') !== false);
-    }
+        // no strip
+        $configs = Bootstrap::pf('a.');
+        $this->assertEquals(false, $configs['a.a']);
+        $this->assertEquals(false, $configs['a.b']);
+        $this->assertEquals(false, $configs['a.c']);
 
-    /**
-     *
-     * @test
-     */
-    public function testLoadClass()
-    {
-        Pluf::loadClass('Pluf_Model');
-        $this->assertEquals(true, class_exists('Pluf_Model'));
-    }
-
-    /**
-     *
-     * @test
-     */
-    public function testLoadFunction()
-    {
-        Pluf::loadFunction('Pluf_HTTP_handleMagicQuotes');
-        $this->assertEquals(true, function_exists('Pluf_HTTP_handleMagicQuotes'));
+        // strip
+        $configs = Bootstrap::pf('a.', true);
+        $this->assertEquals(false, $configs['a']);
+        $this->assertEquals(false, $configs['b']);
+        $this->assertEquals(false, $configs['c']);
     }
 }
