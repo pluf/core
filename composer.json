@@ -47,7 +47,10 @@
 	},
 	"autoload-dev" : {
 		"psr-4" : {
-			"Pluf\\PlufTest\\" : "tests"
+			"Pluf\\PlufTest\\" : "tests/",
+			"Pluf\\Note\\" : "tests/apps/Note",
+			"Pluf\\Smallest\\" : "tests/apps/Smallest",
+			"Pluf\\Test\\" : "tests/apps/Test"
 		}
 	}
 }

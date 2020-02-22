@@ -1,0 +1,18 @@
+{
+	"name": "Note",
+	"title": "A test module with model",
+	"model": [
+		"\\Pluf\\Note\\Book",
+		"\\Pluf\\Note\\Item"
+	],
+	"init": {
+		"\\Pluf\\Note\\Book": [
+			{
+				"title": "first book"
+			},
+			{
+				"title": "second book"
+			}
+		]
+	}
+}

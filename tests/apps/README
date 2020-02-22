@@ -1,0 +1,7 @@
+Here is some exmple of Pluf extensions.
+
+Each application will be create in a namespace as follow:
+
+	Note     => \Pluf\Note
+	Smallest => \Pluf\Smallest
+	Test     => \Pluf\Test
