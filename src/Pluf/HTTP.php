@@ -33,20 +33,20 @@ class Pluf_HTTP
      */
     function removeTheMagic()
     {
-        if (get_magic_quotes_gpc()) {
-            if (!empty($_GET)) {
-                array_walk($_GET, 'Pluf_HTTP_magicStrip');
-            }
-            if (!empty($_POST)) {
-                array_walk($_POST, 'Pluf_HTTP_magicStrip');
-            }
-            if (!empty($_REQUEST)) {
-                array_walk($_REQUEST, 'Pluf_HTTP_magicStrip');
-            }
-            if (!empty($_COOKIE)) {
-                array_walk($_COOKIE, 'Pluf_HTTP_magicStrip');
-            }
-        }
+//         if (get_magic_quotes_gpc()) {
+//             if (!empty($_GET)) {
+//                 array_walk($_GET, 'Pluf_HTTP_magicStrip');
+//             }
+//             if (!empty($_POST)) {
+//                 array_walk($_POST, 'Pluf_HTTP_magicStrip');
+//             }
+//             if (!empty($_REQUEST)) {
+//                 array_walk($_REQUEST, 'Pluf_HTTP_magicStrip');
+//             }
+//             if (!empty($_COOKIE)) {
+//                 array_walk($_COOKIE, 'Pluf_HTTP_magicStrip');
+//             }
+//         }
         if (function_exists('ini_set')) {
             @ini_set('session.use_cookies', '1');
             @ini_set('session.use_only_cookies', '1');
