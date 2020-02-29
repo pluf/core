@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\PlufTest\Form;
+
 use PHPUnit\Framework\TestCase;
 use Pluf\Bootstrap;
 use Pluf\Form\FormModelCreate;
@@ -90,7 +92,7 @@ function TestFormModel_ConvertTitle($field, $item)
     return '"' . $item->$field . '"';
 }
 
-class PlufFormTest extends TestCase
+class FormTest extends TestCase
 {
 
     protected function setUp()
@@ -107,7 +109,7 @@ class PlufFormTest extends TestCase
     protected function tearDown()
     {
         $db = Bootstrap::db();
-        $schema = new Pluf\DB\Schema($db);
+        $schema = new \Pluf\DB\Schema($db);
         $m1 = new TestFormModel();
         $schema->model = $m1;
         $schema->dropTables();
@@ -138,7 +140,7 @@ class PlufFormTest extends TestCase
         $m1->title = 'What a title?';
         $m1->id = 'qwe';
         $form = new FormModelCreate($m1->getData(), array(
-            'model' => new \TestFormModel()
+            'model' => new TestFormModel()
         ));
         $this->assertTrue($form->isValid());
 
@@ -146,7 +148,7 @@ class PlufFormTest extends TestCase
         $m1->description = 'My description';
         $m1->id = 'qwe';
         $form = new FormModelCreate($m1->getData(), array(
-            'model' => new \TestFormModel()
+            'model' => new TestFormModel()
         ));
         $this->assertFalse($form->isValid());
     }

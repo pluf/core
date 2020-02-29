@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\PlufTest\Cache;
+
 use PHPUnit\Framework\TestCase;
 use Pluf\Cache;
 
-class Pluf_Tests_Cache_FileTest extends TestCase
+class FileTest extends TestCase
 {
 
     private $_config;
@@ -111,7 +113,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $this->assertTrue($success);
         $this->assertEquals($this->_arrayData, $cache->get('array'));
 
-        $obj = new stdClass();
+        $obj = new \stdClass();
         $obj->foo = 'bar';
         $obj->hello = 'world';
         $success = $cache->set('object', $obj);
@@ -119,7 +121,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $this->assertEquals($obj, $cache->get('object'));
 
         unset($obj);
-        $this->assertInstanceOf(stdClass::class, $cache->get('object'));
+        $this->assertInstanceOf(\stdClass::class, $cache->get('object'));
         $this->assertEquals('world', $cache->get('object')->hello);
     }
 }

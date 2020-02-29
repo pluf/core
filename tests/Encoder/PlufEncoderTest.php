@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\PlufTest\Encoder;
+
 use PHPUnit\Framework\TestCase;
 use Pluf\Bootstrap;
 use Pluf\FormInvalidException;
@@ -25,7 +27,7 @@ use Pluf\FormInvalidException;
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufEncoderTest extends TestCase
+class EncoderTest extends TestCase
 {
 
     /**

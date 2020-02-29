@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\PlufTest\Dispatcher;
+
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\HTTP\Response;
 use Pluf\HTTP\URL;
 use Pluf\HTTP\Response\Redirect;
 
-class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
+class DispatcherTest extends TestCase
 {
 
     protected $views = array();
@@ -80,7 +82,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                 'method' => 'hello'
             )
         );
@@ -107,7 +109,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                 'method' => 'hello'
             )
         );
@@ -128,7 +130,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                 'method' => 'hello3'
             ),
             array(
@@ -138,13 +140,13 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                         'method' => 'hello'
                     ),
                     array(
                         'regex' => '#^hello/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                         'method' => 'hello4'
                     )
                 )
@@ -156,7 +158,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                         'method' => 'hello1'
                     )
                 )
@@ -168,7 +170,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\Pluf\PlufTest\Dispatcher\DispatcherTest',
                         'method' => 'hello2'
                     )
                 )
@@ -200,10 +202,10 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
         $this->assertEquals(4, Dispatcher::match($h4));
         $this->assertInstanceOf(Redirect::class, Dispatcher::match($req2));
 
-        $this->assertEquals('/hello/world/', URL::reverse('Pluf_Tests_Dispatch_DispatcherTest::hello'));
-        $this->assertEquals('/hello1/world/', URL::reverse('Pluf_Tests_Dispatch_DispatcherTest::hello1'));
-        $this->assertEquals('/hello2/world/', URL::reverse('Pluf_Tests_Dispatch_DispatcherTest::hello2'));
-        $this->assertEquals('/hello/', URL::reverse('Pluf_Tests_Dispatch_DispatcherTest::hello3'));
-        $this->assertEquals('/hello/hello/', URL::reverse('Pluf_Tests_Dispatch_DispatcherTest::hello4'));
+        $this->assertEquals('/hello/world/', URL::reverse('\Pluf\PlufTest\Dispatcher\DispatcherTest::hello'));
+        $this->assertEquals('/hello1/world/', URL::reverse('\Pluf\PlufTest\Dispatcher\DispatcherTest::hello1'));
+        $this->assertEquals('/hello2/world/', URL::reverse('\Pluf\PlufTest\Dispatcher\DispatcherTest::hello2'));
+        $this->assertEquals('/hello/', URL::reverse('\Pluf\PlufTest\Dispatcher\DispatcherTest::hello3'));
+        $this->assertEquals('/hello/hello/', URL::reverse('\Pluf\PlufTest\Dispatcher\DispatcherTest::hello4'));
     }
 }
