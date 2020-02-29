@@ -20,7 +20,6 @@ namespace Pluf\PlufTest\Schema;
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Bootstrap;
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
  *
@@ -67,7 +66,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema3()
     {
         $model = new \Pluf\Test\Model();
-        $schema = \Pluf\DB\Schema(Bootstrap::db());
+        $schema = new \Pluf\DB\Schema(Bootstrap::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $sql = $gen->getSqlCreate($model);
@@ -90,8 +89,8 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testDeleteSchemaTestModel()
     {
-        $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $model = new \Pluf\Test\Model();
+        $schema = new \Pluf\DB\Schema(Bootstrap::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $del = $gen->getSqlDelete($model);
@@ -104,18 +103,18 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testGenerateSchema()
     {
-        $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $model = new \Pluf\Test\Model();
+        $schema = new \Pluf\DB\Schema(Bootstrap::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $this->assertEquals(true, $schema->dropTables());
         $sql = $gen->getSqlCreate($model);
         foreach ($sql as $k => $query) {
-            Pluf::db()->execute($query);
+            Bootstrap::db()->execute($query);
         }
         $sql = $gen->getSqlIndexes($model);
         foreach ($sql as $k => $query) {
-            Pluf::db()->execute($query);
+            Bootstrap::db()->execute($query);
         }
         $model->title = 'my title';
         $model->description = 'A small desc.';
@@ -123,7 +122,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
         $this->assertEquals(1, (int) $model->id);
         $del = $gen->getSqlDelete($model);
         foreach ($del as $sql) {
-            Pluf::db()->execute($sql);
+            Bootstrap::db()->execute($sql);
         }
     }
 
@@ -133,8 +132,8 @@ class PlufDBSchemaSQLiteTest extends TestCase
      */
     public function testGenerateSchema2()
     {
-        $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $model = new \Pluf\Test\Model();
+        $schema = new \Pluf\DB\Schema(Bootstrap::db());
         $schema->model = $model;
         $this->assertEquals(true, $schema->dropTables());
         $this->assertEquals(true, $schema->createTables());
