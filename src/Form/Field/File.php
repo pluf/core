@@ -53,7 +53,7 @@ class File extends Field
             case UPLOAD_ERR_OK:
                 break;
             case UPLOAD_ERR_INI_SIZE:
-                throw new FormInvalidException(sprintf(__('The uploaded file is too large. Reduce the size of the file to %s and send it again.'), Utils::prettySize(ini_get('upload_max_filesize'))));
+                throw new FormInvalidException(sprintf('The uploaded file is too large. Reduce the size of the file to %s and send it again.', Utils::prettySize(ini_get('upload_max_filesize'))));
                 break;
             case UPLOAD_ERR_FORM_SIZE:
                 throw new FormInvalidException(sprintf('The uploaded file is too large. Reduce the size of the file to %s and send it again.'), Utils::prettySize($_REQUEST['MAX_FILE_SIZE']));

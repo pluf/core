@@ -75,11 +75,11 @@ class Pluf_DB_PostgreSQL
     function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
     {
         $this->type_cast = DB::defaultTypecast();
-        $this->type_cast['Pluf_DB_Field_Boolean'] = array(
+        $this->type_cast['\Pluf\DB\Field\Boolean'] = array(
             'Pluf_DB_PostgreSQL_BooleanFromDb',
             '\Pluf\DB::ooleanToDb'
         );
-        $this->type_cast['Pluf_DB_Field_Compressed'] = array(
+        $this->type_cast['\\Pluf\\DB\\Field\\Compressed'] = array(
             'Pluf_DB_PostgreSQL_CompressedFromDb',
             'Pluf_DB_PostgreSQL_CompressedToDb'
         );

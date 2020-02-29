@@ -39,7 +39,7 @@ class PaginatorMyGeoModel extends Model
                 'verbose' => 'Title of the item'
             ),
             'location' => array(
-                'type' => 'Pluf_DB_Field_Geometry',
+                'type' => '\Pluf\DB\Field\Geometry',
                 'blank' => true,
                 'is_null' => false,
                 'editable' => false,

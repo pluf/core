@@ -41,7 +41,7 @@ class Model implements JsonSerializable
      * @var array
      */
     protected $tenant_field = array(
-        'type' => 'Pluf_DB_Field_Foreignkey',
+        'type' => '\Pluf\DB\Field\Foreignkey',
         'model' => 'Pluf_Tenant',
         'blank' => false,
         'relate_name' => 'tenant',
@@ -88,7 +88,7 @@ class Model implements JsonSerializable
      * Storage of the data.
      *
      * The object data are stored in an associative array. Each key
-     * corresponds to a column and stores a Pluf_DB_Field_* variable.
+     * corresponds to a column and stores a \\Pluf\\DB\\Field\\* variable.
      */
     protected $_data = array();
 
@@ -529,7 +529,7 @@ class Model implements JsonSerializable
         if ($items->count() == 0) {
             return null;
         }
-        throw new Exception(__('Error: More than one matching item found.'));
+        throw new Exception('Error: More than one matching item found.');
     }
 
     /**
@@ -573,7 +573,7 @@ class Model implements JsonSerializable
         );
         $p = array_merge($default, $p);
         if (! is_null($p['view']) && ! isset($this->_a['views'][$p['view']])) {
-            throw new Exception(sprintf(__('The view "%s" is not defined.'), $p['view']));
+            throw new Exception(sprintf('The view "%s" is not defined.', $p['view']));
         }
         $query = array(
             'select' => $this->getSelect(),
@@ -789,7 +789,7 @@ class Model implements JsonSerializable
         $select = array();
         $table = $this->getSqlTable();
         foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany') {
+            if ($val['type'] != '\\Pluf\\DB\\Field\\Manytomany') {
                 $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' . $this->_con->qn($col);
             }
         }

@@ -27,19 +27,19 @@ class ModelRecurse extends \Pluf\Model
         $this->_a['table'] = 'testmodelrecurse';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\\Pluf\\DB\\Field\\Sequence',
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\\Pluf\\DB\\Field\\Varchar',
                 'blank' => false,
                 'size' => 100
             ),
             // name in db
             'parent_id' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'blank' => true,
-                'model' => 'Test_ModelRecurse',
+                'model' => '\Pluf\Test\ModelRecurse',
                 // name in parent
                 'relate_name' => 'children',
                 // name in this class

@@ -43,28 +43,28 @@ class Stats extends Model
                 'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 150,
-                'verbose' => __('model class')
+                'verbose' => 'model class'
             ),
             'model_id' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('model id')
+                'verbose' => 'model id'
             ),
             'indexations' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('number of indexations'),
+                'verbose' => 'number of indexations',
                 'default' => 0
             ),
             'creation_dtime' => array(
                 'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
-                'verbose' => __('created at')
+                'verbose' => 'created at'
             ),
             'modif_dtime' => array(
                 'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
-                'verbose' => __('modified at')
+                'verbose' => 'modified at'
             )
         );
         $this->_a['idx'] = array(

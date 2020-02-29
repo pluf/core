@@ -27,23 +27,23 @@ class RelatedToTestModel2 extends \Pluf\Model
         $this->_a['table'] = 'relatedtotestmodel2';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\\Pluf\\DB\\Field\\Sequence',
                 'blank' => true
             ), // It is automatically added.
             'testmodel_1' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'blank' => false,
-                'model' => 'Test_Model',
+                'model' => '\Pluf\Test\Model',
                 'relate_name' => 'first_rttm'
             ),
             'testmodel_2' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'blank' => false,
-                'model' => 'Test_Model',
+                'model' => '\Pluf\Test\Model',
                 'relate_name' => 'second_rttm'
             ),
             'dummy' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\\Pluf\\DB\\Field\\Varchar',
                 'blank' => false,
                 'size' => 100
             )

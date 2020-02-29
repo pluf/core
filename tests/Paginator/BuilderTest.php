@@ -28,7 +28,7 @@ use Pluf\Paginator;
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class Pluf_Paginator_BuilderTest extends TestCase
+class BuilderTest extends TestCase
 {
 
     /**

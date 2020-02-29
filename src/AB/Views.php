@@ -64,7 +64,7 @@ class Pluf_AB_Views
             $form = new Form\MarkWinner($request->POST);
             if ($form->isValid()) {
                 $form->save();
-                $request->user->setMessage(__('The test has been updated.'));
+                $request->user->setMessage('The test has been updated.');
                 return new Redirect($url);
             }
         } else {
@@ -123,10 +123,10 @@ class Pluf_AB_Views
     public function funnel($request, $match)
     {
         $periods = array(
-            'yesterday' => __('Yesterday'),
-            'today' => __('Today'),
-            '7days' => __('Last 7 days'),
-            'all' => __('All time')
+            'yesterday' => 'Yesterday',
+            'today' => 'Today',
+            '7days' => 'Last 7 days',
+            'all' => 'All time'
         );
         $period = 'today';
         $nperiod = $periods[$period];

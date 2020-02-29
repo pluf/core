@@ -61,39 +61,39 @@ class Queue extends Model
                 'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 150,
-                'verbose' => __('model class')
+                'verbose' => 'model class'
             ),
             'model_id' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('model id')
+                'verbose' => 'model id'
             ),
             'action' => array(
                 'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 150,
-                'verbose' => __('action')
+                'verbose' => 'action'
             ),
             'lock' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('lock status'),
+                'verbose' => 'lock status',
                 'default' => 0,
                 'choices' => array(
-                    __('Free') => 0,
-                    __('In progress') => 1,
-                    __('Completed') => 2
+                    'Free' => 0,
+                    'In progress' => 1,
+                    'Completed' => 2
                 )
             ),
             'creation_dtime' => array(
                 'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
-                'verbose' => __('created at')
+                'verbose' => 'created at'
             ),
             'modif_dtime' => array(
                 'type' => '\Pluf\DB\Field\Datetime',
                 'blank' => true,
-                'verbose' => __('modified at')
+                'verbose' => 'modified at'
             )
         );
         $this->_a['idx'] = array(

@@ -87,13 +87,13 @@ class Tenant extends Model
                 'editable' => true
             ),
             'validate' => array(
-                'type' => 'Pluf_DB_Field_Boolean',
+                'type' => '\Pluf\DB\Field\Boolean',
                 'default' => false,
                 'blank' => true,
                 'editable' => false
             ),
             'email' => array(
-                'type' => 'Pluf_DB_Field_Email',
+                'type' => '\\Pluf\\DB\\Field\\Email',
                 'blank' => true,
                 'verbose' => 'Owner email',
                 'editable' => true,
@@ -120,7 +120,7 @@ class Tenant extends Model
              * Relations
              */
             'parent_id' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'model' => 'Pluf_Tenant',
                 'blank' => true,
                 'name' => 'parent',

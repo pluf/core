@@ -58,11 +58,11 @@ class File extends Field
         $this->methods = array(
             array(
                 strtolower($column) . '_url',
-                'Pluf_DB_Field_File_Url'
+                '\\Pluf\\DB\\Field\\File_Url'
             ),
             array(
                 strtolower($column) . '_path',
-                'Pluf_DB_Field_File_Path'
+                '\\Pluf\\DB\\Field\\File_Path'
             )
         );
     }
@@ -76,7 +76,7 @@ class File extends Field
 /**
  * Returns the url to access the file.
  */
-function Pluf_DB_Field_File_Url($field, $method, $model, $args = null)
+function \\Pluf\\DB\\Field\\File_Url($field, $method, $model, $args = null)
 {
     if (strlen($model->$field) != 0) {
         return Bootstrap::f('upload_url') . '/' . $model->$field;
@@ -87,7 +87,7 @@ function Pluf_DB_Field_File_Url($field, $method, $model, $args = null)
 /**
  * Returns the path to access the file.
  */
-function Pluf_DB_Field_File_Path($field, $method, $model, $args = null)
+function \\Pluf\\DB\\Field\\File_Path($field, $method, $model, $args = null)
 {
     if (strlen($model->$field) != 0) {
         return Bootstrap::f('upload_path') . '/' . $model->$field;

@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit 
-	bootstrap="./vendor/autoload.php"
-	stopOnWarning="false"
-	verbose="true"
-	colors="true">
-    <testsuites>
-         <testsuite name="Basics">
-            <directory>tests/Pluf/</directory>
-            <directory>tests/Dispatch/</directory>
-            <directory>tests/Cache/</directory>
-         </testsuite>
-<!--         <testsuite name="Pluf2Suit"> -->
-<!--             <directory>tests/Pluf/</directory> -->
-<!--             <directory>tests/Pluf_Crypt/</directory> -->
-<!--             <directory>tests/Pluf_Utils/</directory> -->
-<!--             <directory>tests/Pluf_Encoder/</directory> -->
-<!--             <directory>tests/Pluf_Tenant/</directory> -->
-<!--             <directory>tests/Pluf_Tenant_Template/</directory> -->
-<!--             <directory>tests/Pluf_Mail/</directory> -->
-<!--             <directory>tests/Pluf_Migration/</directory> -->
-<!-- 		</testsuite> -->
-<!--         <testsuite name="ORM"> -->
-<!--             <directory>tests/Pluf_DB/</directory> -->
-<!--             <directory>tests/Pluf_DB_Schema/</directory> -->
-<!--             <directory>tests/Pluf_SQL/</directory> -->
-<!--             <directory>tests/Model/</directory> -->
-<!--         </testsuite> -->
-        <testsuite name="View">
-<!--             <directory>tests/Pluf_Dispatcher/</directory> -->
-<!--             <directory>tests/Pluf_Paginator/</directory> -->
-<!--             <directory>tests/Pluf_Text_Wiki/</directory> -->
-<!--             <directory>tests/Pluf_Text_HTML_Filter/</directory> -->
-            <directory>tests/Form/</directory>
-<!--             <directory>tests/Pluf_HTTP_Response</directory> -->
-        </testsuite>
-<!--         <testsuite name="GraphQl"> -->
-<!--             <directory>tests/Pluf_Graphql_Compiler/</directory> -->
-<!--             <directory>tests/Pluf_Graphql/</directory> -->
-<!-- 		</testsuite> -->
-    </testsuites>
-    
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
-    <logging>
-		<log type="coverage-html" target="build/tmp/report" lowUpperBound="35" highLowerBound="70"/>
-		<log type="coverage-clover" target="build/tmp/coverage.xml"/>
-		<log type="junit" target="build/tmp/logfile.xml"/>
-    </logging>
+<phpunit bootstrap="./vendor/autoload.php" stopOnWarning="false"
+	verbose="true" colors="true">
+	<testsuites>
+		<testsuite name="Basics">
+			<directory>tests/Pluf/</directory>
+			<directory>tests/Dispatch/</directory>
+			<directory>tests/Cache/</directory>
+		</testsuite>
+		<!-- <testsuite name="Pluf2Suit"> -->
+		<!-- <directory>tests/Pluf/</directory> -->
+		<!-- <directory>tests/Pluf_Crypt/</directory> -->
+		<!-- <directory>tests/Pluf_Utils/</directory> -->
+		<!-- <directory>tests/Pluf_Encoder/</directory> -->
+		<!-- <directory>tests/Pluf_Tenant/</directory> -->
+		<!-- <directory>tests/Pluf_Tenant_Template/</directory> -->
+		<!-- <directory>tests/Pluf_Mail/</directory> -->
+		<!-- <directory>tests/Pluf_Migration/</directory> -->
+		<!-- </testsuite> -->
+		<!-- <testsuite name="ORM"> -->
+		<!-- <directory>tests/Pluf_DB/</directory> -->
+		<!-- <directory>tests/Pluf_DB_Schema/</directory> -->
+		<!-- <directory>tests/Pluf_SQL/</directory> -->
+		<!-- <directory>tests/Model/</directory> -->
+		<!-- </testsuite> -->
+		<testsuite name="View">
+			<directory>tests/Dispatcher/</directory>
+			<directory>tests/Paginator/</directory>
+			<!-- <directory>tests/Pluf_Text_Wiki/</directory> -->
+			<!-- <directory>tests/Pluf_Text_HTML_Filter/</directory> -->
+			<directory>tests/Form/</directory>
+			<!-- <directory>tests/Pluf_HTTP_Response</directory> -->
+			<directory>tests/Graphql/</directory>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">src</directory>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="build/tmp/report"
+			lowUpperBound="35" highLowerBound="70" />
+		<log type="coverage-clover" target="build/tmp/coverage.xml" />
+		<log type="junit" target="build/tmp/logfile.xml" />
+	</logging>
 </phpunit>

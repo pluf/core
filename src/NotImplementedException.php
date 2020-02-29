@@ -20,7 +20,7 @@ class NotImplementedException extends Exception
     public function __construct($message = null, $previous = null, $link = null, $developerMessage = null)
     {
         if (! isset($message) || is_null($message)) {
-            $message = __('Requested method is not implemented yet.');
+            $message = 'Requested method is not implemented yet.';
         }
         parent::__construct($message, 5051, $previous, 500, $link, $developerMessage);
     }

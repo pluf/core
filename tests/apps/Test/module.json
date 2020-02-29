@@ -2,12 +2,12 @@
 	"name": "Test",
 	"title": "A test module with model",
 	"model": [
-		"Test_Model",
-		"Test_ModelRecurse",
-		"Test_ModelCount",
-		"Test_RelatedToTestModel",
-		"Test_RelatedToTestModel2",
-		"Test_ManyToManyOne",
-		"Test_ManyToManyTwo"
+		"\\Pluf\\Test\\Model",
+		"\\Pluf\\Test\\ModelRecurse",
+		"\\Pluf\\Test\\ModelCount",
+		"\\Pluf\\Test\\RelatedToTestModel",
+		"\\Pluf\\Test\\RelatedToTestModel2",
+		"\\Pluf\\Test\\ManyToManyOne",
+		"\\Pluf\\Test\\ManyToManyTwo"
 	]
 }

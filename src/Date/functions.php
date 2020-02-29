@@ -152,9 +152,9 @@ function easy($date, $ref = null, $blocks = 2, $notime = 'now', $show = true)
     }
     if ($show) {
         if ($past) {
-            $res = sprintf(__('%s ago'), $res);
+            $res = sprintf('%s ago', $res);
         } else {
-            $res = sprintf(__('%s left'), $res);
+            $res = sprintf('%s left', $res);
         }
     }
     return $res;

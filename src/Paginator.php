@@ -598,7 +598,7 @@ class Paginator
         foreach ($categories as $key => $vals) {
             // GeoSpacial feilds
             $feild = $this->model->_a['cols'][$key];
-            if (strcmp($feild['type'], 'Pluf_DB_Field_Geometry') === 0) {
+            if (strcmp($feild['type'], '\\Pluf\\DB\\Field\\Geometry') === 0) {
                 $str = "Contains(GeometryFromText('" . implode("')," . $key . ") OR Contains(GeometryFromText('", $vals) . "')," . $key . ")";
                 $sql = new SQL($str);
             } else { // Regular feilds
@@ -608,11 +608,11 @@ class Paginator
                     ));
                 } else {
                     $types = array(
-                        'Pluf_DB_Field_Boolean',
+                        '\Pluf\DB\Field\Boolean',
                         '\Pluf\DB\Field\Integer',
                         '\Pluf\DB\Field\FloatPoint',
                         '\Pluf\DB\Field\Sequence',
-                        'Pluf_DB_Field_Foreignkey'
+                        '\Pluf\DB\Field\Foreignkey'
                     );
                     $sql = in_array($feild['type'], $types) ? new SQL("$key = $vals[0]") : new SQL($key . '=%s', $vals[0]);
                 }

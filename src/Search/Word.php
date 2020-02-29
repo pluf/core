@@ -43,7 +43,7 @@ class Word extends Model
                 'blank' => false,
                 'unique' => true,
                 'size' => 150,
-                'verbose' => __('word')
+                'verbose' => 'word'
             )
         );
         $this->_a['views'] = array();

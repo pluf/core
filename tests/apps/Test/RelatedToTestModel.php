@@ -33,16 +33,16 @@ class RelatedToTestModel extends \Pluf\Model
         $this->_a['table'] = 'relatedtotestmodel';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\\Pluf\\DB\\Field\\Sequence',
                 'blank' => true
             ), // It is automatically added.
             'testmodel' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'blank' => false,
-                'model' => 'Test_Model'
+                'model' => '\Pluf\Test\Model'
             ),
             'dummy' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\\Pluf\\DB\\Field\\Varchar',
                 'blank' => false,
                 'size' => 100
             )

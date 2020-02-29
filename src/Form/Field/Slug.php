@@ -55,11 +55,11 @@ class Slug extends Field
     public function __construct($params = array())
     {
         if (in_array($this->help_text, $this->empty_values)) {
-            $this->help_text = __('The &#8220;slug&#8221; is the URL-friendly' . ' version of the name, consisting of ' . 'letters, numbers, underscores or hyphens.');
+            $this->help_text = 'The &#8220;slug&#8221; is the URL-friendly' . ' version of the name, consisting of ' . 'letters, numbers, underscores or hyphens.';
         }
         $this->_error_messages = array(
-            'min_size' => __('Ensure this value has at most %1$d characters (it has %2$d).'),
-            'max_size' => __('Ensure this value has at least %1$d characters (it has %2$d).')
+            'min_size' => 'Ensure this value has at most %1$d characters (it has %2$d).',
+            'max_size' => 'Ensure this value has at least %1$d characters (it has %2$d).'
         );
 
         parent::__construct($params);

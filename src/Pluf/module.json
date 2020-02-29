@@ -3,12 +3,12 @@
 	"version": "4.0.0",
 	"title": "Pluf core module",
 	"model": [
-		"Pluf_DB_SchemaInfo",
-		"Pluf_Session",
-		"Pluf_Search_Word",
-		"Pluf_Search_Occ",
-		"Pluf_Search_Stats",
-		"Pluf_Queue",
-		"Pluf_Tenant"
+		"\\Pluf\\DB\\SchemaInfo",
+		"\\Pluf\\Session",
+		"\\Pluf\\Search\\Word",
+		"\\Pluf\\Search\\Occ",
+		"\\Pluf\\Search\\Stats",
+		"\\Pluf\\Queue",
+		"\\Pluf\\Tenant"
 	]
 }

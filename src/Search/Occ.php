@@ -38,31 +38,31 @@ class Occ extends Model
                 'blank' => true
             ),
             'word' => array(
-                'type' => 'Pluf_DB_Field_Foreignkey',
+                'type' => '\Pluf\DB\Field\Foreignkey',
                 'model' => 'Pluf_Search_Word',
                 'blank' => false,
-                'verbose' => __('word')
+                'verbose' => 'word'
             ),
             'model_class' => array(
                 'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 150,
-                'verbose' => __('model class')
+                'verbose' => 'model class'
             ),
             'model_id' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('model id')
+                'verbose' => 'model id'
             ),
             'occ' => array(
                 'type' => '\Pluf\DB\Field\Integer',
                 'blank' => false,
-                'verbose' => __('occurences')
+                'verbose' => 'occurences'
             ),
             'pondocc' => array(
                 'type' => '\Pluf\DB\Field\FloatPoint',
                 'blank' => false,
-                'verbose' => __('weighted occurence')
+                'verbose' => 'weighted occurence'
             )
         );
         $this->_a['idx'] = array(

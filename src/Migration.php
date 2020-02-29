@@ -44,7 +44,7 @@ namespace Pluf;
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
  */
-class Pluf_Migration
+class Migration
 {
 
     protected $app = '';
@@ -148,16 +148,16 @@ class Pluf_Migration
      */
     public function backup($path, $name = null)
     {
-//         foreach ($this->apps as $app) {
-//             $func = $app . '_Migrations_Backup_run';
-//             Pluf::loadFunction($func);
-//             if ($this->display) {
-//                 echo ($func . "\n");
-//             }
-//             if (! $this->dry_run) {
-//                 $ret = $func($path, $name);
-//             }
-//         }
+        // foreach ($this->apps as $app) {
+        // $func = $app . '_Migrations_Backup_run';
+        // Pluf::loadFunction($func);
+        // if ($this->display) {
+        // echo ($func . "\n");
+        // }
+        // if (! $this->dry_run) {
+        // $ret = $func($path, $name);
+        // }
+        // }
         return true;
     }
 
@@ -171,16 +171,16 @@ class Pluf_Migration
      */
     public function restore($path, $name)
     {
-//         foreach ($this->apps as $app) {
-//             $func = $app . '_Migrations_Backup_restore';
-//             Pluf::loadFunction($func);
-//             if ($this->display) {
-//                 echo ($func . "\n");
-//             }
-//             if (! $this->dry_run) {
-//                 $ret = $func($path, $name);
-//             }
-//         }
+        // foreach ($this->apps as $app) {
+        // $func = $app . '_Migrations_Backup_restore';
+        // Pluf::loadFunction($func);
+        // if ($this->display) {
+        // echo ($func . "\n");
+        // }
+        // if (! $this->dry_run) {
+        // $ret = $func($path, $name);
+        // }
+        // }
         return true;
     }
 
@@ -222,17 +222,17 @@ class Pluf_Migration
      */
     public function findMigrations()
     {
-//         $migrations = array();
-//         if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
-//             $dir = new DirectoryIterator($mdir);
-//             foreach ($dir as $file) {
-//                 $matches = array();
-//                 if (! $file->isDot() && ! $file->isDir() && preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
-//                     $info = pathinfo($file->getFilename());
-//                     $migrations[(int) $matches[1]] = $info['filename'];
-//                 }
-//             }
-//         }
+        // $migrations = array();
+        // if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
+        // $dir = new DirectoryIterator($mdir);
+        // foreach ($dir as $file) {
+        // $matches = array();
+        // if (! $file->isDot() && ! $file->isDir() && preg_match('#^(\d+)#', $file->getFilename(), $matches)) {
+        // $info = pathinfo($file->getFilename());
+        // $migrations[(int) $matches[1]] = $info['filename'];
+        // }
+        // }
+        // }
         return $migrations;
     }
 

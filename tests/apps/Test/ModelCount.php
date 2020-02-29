@@ -38,16 +38,16 @@ class ModelCount extends \Pluf\Model
         $this->_a['table'] = 'test_model_count';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => '\\Pluf\\DB\\Field\\Sequence',
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => '\\Pluf\\DB\\Field\\Varchar',
                 'blank' => false,
                 'size' => 100
             ),
             'description' => array(
-                'type' => 'Pluf_DB_Field_Text',
+                'type' => '\\Pluf\\DB\\Field\\Text',
                 'blank' => true
             )
         );

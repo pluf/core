@@ -1,5 +1,5 @@
 <?php
-namespace Pluf\Smallest;
+namespace Pluf\Test;
 
 class Module extends \Pluf\Module
 {
@@ -7,24 +7,24 @@ class Module extends \Pluf\Module
     const moduleJsonPath = __DIR__ . '/module.json';
 
     const relations = array(
-        'Test_ModelRecurse' => array(
+        '\Pluf\Test\ModelRecurse' => array(
             'relate_to' => array(
-                'Test_ModelRecurse'
+                '\Pluf\Test\ModelRecurse'
             )
         ),
-        'Test_RelatedToTestModel' => array(
+        '\Pluf\Test\RelatedToTestModel' => array(
             'relate_to' => array(
-                'Test_Model'
+                '\Pluf\Test\Model'
             )
         ),
-        'Test_RelatedToTestModel2' => array(
+        '\Pluf\Test\RelatedToTestModel2' => array(
             'relate_to' => array(
-                'Test_Model'
+                '\Pluf\Test\Model'
             )
         ),
-        'Test_ManyToManyOne' => array(
+        '\Pluf\Test\ManyToManyOne' => array(
             'relate_to_many' => array(
-                'Test_ManyToManyTwo'
+                '\Pluf\Test\ManyToManyTwo'
             )
         )
     );

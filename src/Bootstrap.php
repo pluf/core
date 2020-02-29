@@ -97,7 +97,7 @@ class Bootstrap
         }
         $m = $GLOBALS['_PX_models'];
         foreach ($apps as $app) {
-            $moduleName = "Pluf\\" . $app . "\\Module";
+            $moduleName = "\\Pluf\\" . $app . "\\Module";
             // Load PSR4 modules
             $m = array_merge_recursive($m, $moduleName::relations);
         }

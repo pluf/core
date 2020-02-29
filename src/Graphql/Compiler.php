@@ -253,13 +253,13 @@ class ' . $className . ' {
 
             // Foreignkey
             $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey') {
+            if ($fieldType === '\Pluf\DB\Field\Foreignkey') {
                 $fields .= $this->compileFieldForeignkey($key, $field);
                 continue;
             }
 
             // ManyToMany
-            if ($fieldType === 'Pluf_DB_Field_Manytomany') {
+            if ($fieldType === '\\Pluf\\DB\\Field\\Manytomany') {
                 $fields .= $this->compileFieldManytomany($key, $field);
                 continue;
             }
@@ -326,15 +326,15 @@ class ' . $className . ' {
             case '\Pluf\DB\Field\Sequence':
                 $res = 'Type::int()';
                 break;
-            case 'Pluf_DB_Field_Date':
+            case '\\Pluf\\DB\\Field\\Date':
             case '\Pluf\DB\Field\Datetime':
-            case 'Pluf_DB_Field_Email':
-            case 'Pluf_DB_Field_File':
-            case 'Pluf_DB_Field_Serialized':
-            case 'Pluf_DB_Field_Slug':
+            case '\\Pluf\\DB\\Field\\Email':
+            case '\\Pluf\\DB\\Field\\File':
+            case '\\Pluf\\DB\\Field\\Serialized':
+            case '\\Pluf\\DB\\Field\\Slug':
             case '\Pluf\DB\Field\Text':
             case '\Pluf\DB\Field\Varchar':
-            case 'Pluf_DB_Field_Geometry':
+            case '\\Pluf\\DB\\Field\\Geometry':
                 $res = 'Type::string()';
                 break;
             case '\Pluf\DB\Field\Integer':
@@ -343,12 +343,12 @@ class ' . $className . ' {
             case '\Pluf\DB\Field\FloatPoint':
                 $res = 'Type::float()';
                 break;
-            case 'Pluf_DB_Field_Boolean':
+            case '\Pluf\DB\Field\Boolean':
                 $res = 'Type::boolean()';
                 break;
 
-            case 'Pluf_DB_Field_Foreignkey':
-            case 'Pluf_DB_Field_Manytomany':
+            case '\Pluf\DB\Field\Foreignkey':
+            case '\\Pluf\\DB\\Field\\Manytomany':
                 return '';
             default:
                 // TODO: Unsupported type exceptions
@@ -438,7 +438,7 @@ class ' . $className . ' {
         $preModels = [];
         foreach ($cols as $field) {
             $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+            if ($fieldType === '\Pluf\DB\Field\Foreignkey' || $fieldType === '\\Pluf\\DB\\Field\\Manytomany') {
                 if (! in_array($field['model'], $preModels)) {
                     array_push($preModels, $field['model']);
                 }

@@ -285,7 +285,7 @@ class Compiler
             '_callback'
         ), $tplcontent);
         if (count($this->_blockStack)) {
-            trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
+            trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
         }
         return $result;
     }
@@ -371,7 +371,7 @@ class Compiler
     {
         // FIXME: Very small security check, could be better.
         if (strpos($file, '..') !== false) {
-            throw new Exception(sprintf(__('Template file contains invalid characters: %s'), $file));
+            throw new Exception(sprintf('Template file contains invalid characters: %s', $file));
         }
         foreach ($this->templateFolders as $folder) {
             if (file_exists($folder . '/' . $file)) {
@@ -380,14 +380,14 @@ class Compiler
             }
         }
         // File not found in all the folders.
-        throw new Exception(sprintf(__('Template file not found: %s'), $file));
+        throw new Exception(sprintf('Template file not found: %s', $file));
     }
 
     function _callback($matches)
     {
         list (, $tag, $firstcar) = $matches;
         if (! preg_match('/^\$|[\'"]|[a-zA-Z\/]$/', $firstcar)) {
-            trigger_error(sprintf(__('Invalid tag syntax: %s'), $tag), E_USER_ERROR);
+            trigger_error(sprintf('Invalid tag syntax: %s', $tag), E_USER_ERROR);
             return '';
         }
         $this->_currentTag = $tag;
@@ -405,7 +405,7 @@ class Compiler
             }
         } else {
             if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, $m)) {
-                trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), E_USER_ERROR);
+                trigger_error(sprintf('Invalid function syntax: %s', $tag), E_USER_ERROR);
                 return '';
             }
             if (count($m) == 4) {
@@ -431,7 +431,7 @@ class Compiler
         $res = $this->_parseFinal(array_shift($tok), $this->_allowedInVar);
         foreach ($tok as $modifier) {
             if (! preg_match('/^(\w+)(?:\:(.*))?$/', $modifier, $m)) {
-                trigger_error(sprintf(__('Invalid modifier syntax: (%s) %s'), $this->_currentTag, $modifier), E_USER_ERROR);
+                trigger_error(sprintf('Invalid modifier syntax: (%s) %s', $this->_currentTag, $modifier), E_USER_ERROR);
                 return '';
             }
             $targs = array(
@@ -442,7 +442,7 @@ class Compiler
             } else if (isset($this->_modifier[$m[1]])) {
                 $res = $this->_modifier[$m[1]] . '(' . $res . ')';
             } else {
-                trigger_error(sprintf(__('Unknown modifier: (%s) %s'), $this->_currentTag, $m[1]), E_USER_ERROR);
+                trigger_error(sprintf('Unknown modifier: (%s) %s', $this->_currentTag, $m[1]), E_USER_ERROR);
                 return '';
             }
             if (! in_array($this->_modifier[$m[1]], $this->_usedModifiers)) {
@@ -461,13 +461,13 @@ class Compiler
                 break;
             case 'else':
                 if (end($this->_blockStack) != 'if') {
-                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
                 }
                 $res = 'else: ';
                 break;
             case 'elseif':
                 if (end($this->_blockStack) != 'if') {
-                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
                 }
                 $res = 'elseif(' . $this->_parseFinal($args, $this->_allowedInExpr) . '):';
                 break;
@@ -496,7 +496,7 @@ class Compiler
             case '/while':
                 $short = substr($name, 1);
                 if (end($this->_blockStack) != $short) {
-                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
                 }
                 array_pop($this->_blockStack);
                 $res = 'end' . $short . '; ';
@@ -508,11 +508,11 @@ class Compiler
                 if (count($this->_literals)) {
                     $res = '?>' . array_shift($this->_literals) . '<?php ';
                 } else {
-                    trigger_error(__('End tag of a block missing: literal'), E_USER_ERROR);
+                    trigger_error('End tag of a block missing: literal', E_USER_ERROR);
                 }
                 break;
             case '/literal':
-                trigger_error(__('Start tag of a block missing: literal'), E_USER_ERROR);
+                trigger_error('Start tag of a block missing: literal', E_USER_ERROR);
                 break;
             case 'block':
                 $res = '?>' . $this->_extendBlocks[$args] . '<?php ';
@@ -542,7 +542,7 @@ class Compiler
             case '/blocktrans':
                 $short = substr($name, 1);
                 if (end($this->_blockStack) != $short) {
-                    trigger_error(sprintf(__('End tag of a block missing: %s'), end($this->_blockStack)), E_USER_ERROR);
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
                 }
                 $res = '';
                 if ($this->_transPlural) {
@@ -598,7 +598,7 @@ class Compiler
                 // Here we start the template tag calls at the template tag
                 // {tag ...} is not a block, so it must be a function.
                 if (! isset($this->_allowedTags[$name])) {
-                    trigger_error(sprintf(__('The function tag "%s" is not allowed.'), $name), E_USER_ERROR);
+                    trigger_error(sprintf('The function tag "%s" is not allowed.', $name), E_USER_ERROR);
                 }
                 $argfct = $this->_parseFinal($args, $this->_allowedAssign);
                 // $argfct is a string that can be copy/pasted in the PHP code
@@ -622,7 +622,7 @@ class Compiler
                     }
                 }
                 if ($res == '') {
-                    trigger_error(sprintf(__('The function tag "{%s ...}" is not supported.'), $oname), E_USER_ERROR);
+                    trigger_error(sprintf('The function tag "{%s ...}" is not supported.', $oname), E_USER_ERROR);
                 }
         }
         return $res;
@@ -648,12 +648,12 @@ class Compiler
     {
         $tokens = token_get_all('<?php ' . $string . '?>');
         $result = '';
-        $first = true;
+//         $first = true;
         $inDot = false;
         $firstok = array_shift($tokens);
-        $afterAs = false;
-        $f_key = '';
-        $f_val = '';
+//         $afterAs = false;
+//         $f_key = '';
+//         $f_val = '';
         $results = array();
 
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
@@ -664,13 +664,13 @@ class Compiler
         foreach ($tokens as $tok) {
             if (is_array($tok)) {
                 list ($type, $str) = $tok;
-                $first = false;
+//                 $first = false;
                 if ($type == T_CLOSE_TAG) {
                     continue;
                 }
-                if ($type == T_AS) {
-                    $afterAs = true;
-                }
+//                 if ($type == T_AS) {
+//                     $afterAs = true;
+//                 }
                 if ($type == T_STRING && $inDot) {
                     $result .= $str;
                 } elseif ($type == T_VARIABLE) {
@@ -679,12 +679,12 @@ class Compiler
                 } elseif ($type == T_WHITESPACE || in_array($type, $allowed)) {
                     $result .= $str;
                 } else {
-                    trigger_error(sprintf(__('Invalid syntax: (%s) %s.'), $this->_currentTag, $str . ' tokens' . var_export($tokens, true)), E_USER_ERROR);
+                    trigger_error(sprintf('Invalid syntax: (%s) %s.', $this->_currentTag, $str . ' tokens' . var_export($tokens, true)), E_USER_ERROR);
                     return '';
                 }
             } else {
                 if (in_array($tok, $exceptchar)) {
-                    trigger_error(sprintf(__('Invalid character: (%s) %s.'), $this->_currentTag, $tok), E_USER_ERROR);
+                    trigger_error(sprintf('Invalid character: (%s) %s.', $this->_currentTag, $tok), E_USER_ERROR);
                 } elseif ($tok == '.') {
                     $inDot = true;
                     $result .= '->';
@@ -700,7 +700,7 @@ class Compiler
                 } else {
                     $result .= $tok;
                 }
-                $first = false;
+//                 $first = false;
             }
         }
         if (! $getAsArray) {

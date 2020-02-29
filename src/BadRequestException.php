@@ -24,7 +24,7 @@ class BadRequestException extends Exception
     public function __construct($message, $link = null, $developerMessage = null)
     {
         if (! isset($message) || is_null($message)) {
-            $message = __('ِData is not valid.');
+            $message = 'ِData is not valid.';
         }
         parent::__construct($message, 4000, null, 400, $link, $developerMessage);
     }
