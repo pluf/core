@@ -32,7 +32,7 @@ namespace Pluf;
  *
  * FIXME: Escape the strings when bad strings are sent in the error message.
  */
-class Pluf_Encoder
+class Encoder
 {
 
     /**
@@ -106,12 +106,12 @@ class Pluf_Encoder
 
     static function text($string, $form = array(), $p = array())
     {
-        return Pluf_Encoder::varchar($string, $form, $p);
+        return self::varchar($string, $form, $p);
     }
 
     static function sequence($id, $form = array(), $p = array())
     {
-        return Pluf_Encoder::integer($id, $p);
+        return self::integer($id, $p);
     }
 
     static function boolean($bool, $form = array(), $p = array())
@@ -130,7 +130,7 @@ class Pluf_Encoder
 
     static function foreignkey($id, $form = array(), $p = array())
     {
-        return Pluf_Encoder::integer($id, $p);
+        return self::integer($id, $p);
     }
 
     static function integer($int, $form = array(), $p = array())
@@ -163,7 +163,7 @@ class Pluf_Encoder
     {
         $res = array();
         foreach ($vals as $val) {
-            $res[] = Pluf_Encoder::integer($val);
+            $res[] = self::integer($val);
         }
         return $res;
     }
