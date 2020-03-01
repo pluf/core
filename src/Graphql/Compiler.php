@@ -105,7 +105,8 @@ class ' . $className . ' {
             $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
         } catch (Exception $e) {
-            throw new BadRequestException($e->getMessage());
+            var_dump($e);
+            throw new \Pluf\BadRequestException(\'Fail to\');
         }
     }
 }
@@ -134,6 +135,7 @@ class ' . $className . ' {
         return 'new ObjectType([
             \'name\' => \'Pluf_paginator\',
             \'fields\' => function () use (&$itemType){
+                var_dump($itemType);
                 return [
                     \'counts\' => [
                         \'type\' => Type::int(),
@@ -259,7 +261,7 @@ class ' . $className . ' {
             }
 
             // ManyToMany
-            if ($fieldType === '\\Pluf\\DB\\Field\\Manytomany') {
+            if ($fieldType === '\Pluf\DB\Field\Manytomany') {
                 $fields .= $this->compileFieldManytomany($key, $field);
                 continue;
             }
@@ -326,15 +328,15 @@ class ' . $className . ' {
             case '\Pluf\DB\Field\Sequence':
                 $res = 'Type::int()';
                 break;
-            case '\\Pluf\\DB\\Field\\Date':
+            case '\Pluf\DB\Field\Date':
             case '\Pluf\DB\Field\Datetime':
-            case '\\Pluf\\DB\\Field\\Email':
-            case '\\Pluf\\DB\\Field\\File':
-            case '\\Pluf\\DB\\Field\\Serialized':
-            case '\\Pluf\\DB\\Field\\Slug':
+            case '\Pluf\DB\Field\Email':
+            case '\Pluf\DB\Field\File':
+            case '\Pluf\DB\Field\Serialized':
+            case '\Pluf\DB\Field\Slug':
             case '\Pluf\DB\Field\Text':
             case '\Pluf\DB\Field\Varchar':
-            case '\\Pluf\\DB\\Field\\Geometry':
+            case '\Pluf\DB\Field\Geometry':
                 $res = 'Type::string()';
                 break;
             case '\Pluf\DB\Field\Integer':
@@ -348,7 +350,7 @@ class ' . $className . ' {
                 break;
 
             case '\Pluf\DB\Field\Foreignkey':
-            case '\\Pluf\\DB\\Field\\Manytomany':
+            case '\Pluf\DB\Field\Manytomany':
                 return '';
             default:
                 // TODO: Unsupported type exceptions
@@ -438,7 +440,7 @@ class ' . $className . ' {
         $preModels = [];
         foreach ($cols as $field) {
             $fieldType = $field['type'];
-            if ($fieldType === '\Pluf\DB\Field\Foreignkey' || $fieldType === '\\Pluf\\DB\\Field\\Manytomany') {
+            if ($fieldType === '\Pluf\DB\Field\Foreignkey' || $fieldType === '\Pluf\DB\Field\Manytomany') {
                 if (! in_array($field['model'], $preModels)) {
                     array_push($preModels, $field['model']);
                 }

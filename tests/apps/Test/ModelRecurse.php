@@ -27,11 +27,11 @@ class ModelRecurse extends \Pluf\Model
         $this->_a['table'] = 'testmodelrecurse';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => '\\Pluf\\DB\\Field\\Sequence',
+                'type' => '\Pluf\DB\Field\Sequence',
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => '\\Pluf\\DB\\Field\\Varchar',
+                'type' => '\Pluf\DB\Field\Varchar',
                 'blank' => false,
                 'size' => 100
             ),

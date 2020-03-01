@@ -17,12 +17,17 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry excluding="apps/Note/|apps/Smallest/|apps/Test/" kind="src" path="tests">
+	<buildpathentry kind="src" path="tests/apps/Test">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="tests/apps/Test">
+	<buildpathentry excluding="apps/Note/|apps/Smallest/|apps/Test/|tmp/" kind="src" path="tests">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="tests/tmp">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

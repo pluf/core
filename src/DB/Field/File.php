@@ -71,27 +71,27 @@ class File extends Field
     {
         return parent::formField($def, $form_field);
     }
-}
 
-/**
- * Returns the url to access the file.
- */
-function \\Pluf\\DB\\Field\\File_Url($field, $method, $model, $args = null)
-{
-    if (strlen($model->$field) != 0) {
-        return Bootstrap::f('upload_url') . '/' . $model->$field;
+    /**
+     * Returns the url to access the file.
+     */
+    public static function url($field, $method, $model, $args = null)
+    {
+        if (strlen($model->$field) != 0) {
+            return Bootstrap::f('upload_url') . '/' . $model->$field;
+        }
+        return '';
     }
-    return '';
-}
 
-/**
- * Returns the path to access the file.
- */
-function \\Pluf\\DB\\Field\\File_Path($field, $method, $model, $args = null)
-{
-    if (strlen($model->$field) != 0) {
-        return Bootstrap::f('upload_path') . '/' . $model->$field;
+    /**
+     * Returns the path to access the file.
+     */
+    public static function path($field, $method, $model, $args = null)
+    {
+        if (strlen($model->$field) != 0) {
+            return Bootstrap::f('upload_path') . '/' . $model->$field;
+        }
+        return '';
     }
-    return '';
 }
 
