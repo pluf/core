@@ -66,8 +66,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema3()
     {
         $model = new \Pluf\Test\Model();
-        $schema = new \Pluf\DB\Schema(Bootstrap::db());
-        $schema->model = $model;
+        $schema = new \Pluf\DB\Schema(Bootstrap::db(), $model);
         $gen = $schema->getGenerator();
         $sql = $gen->getSqlCreate($model);
 
@@ -90,8 +89,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testDeleteSchemaTestModel()
     {
         $model = new \Pluf\Test\Model();
-        $schema = new \Pluf\DB\Schema(Bootstrap::db());
-        $schema->model = $model;
+        $schema = new \Pluf\DB\Schema(Bootstrap::db(), $model);
         $gen = $schema->getGenerator();
         $del = $gen->getSqlDelete($model);
         $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_test_model', $del[0]);
@@ -104,10 +102,10 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema()
     {
         $model = new \Pluf\Test\Model();
-        $schema = new \Pluf\DB\Schema(Bootstrap::db());
-        $schema->model = $model;
+        $schema = new \Pluf\DB\Schema(Bootstrap::db(), $model);
         $gen = $schema->getGenerator();
-        $this->assertEquals(true, $schema->dropTables());
+        $schema->dropTables();
+        
         $sql = $gen->getSqlCreate($model);
         foreach ($sql as $k => $query) {
             Bootstrap::db()->execute($query);
@@ -133,14 +131,14 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema2()
     {
         $model = new \Pluf\Test\Model();
-        $schema = new \Pluf\DB\Schema(Bootstrap::db());
-        $schema->model = $model;
-        $this->assertEquals(true, $schema->dropTables());
-        $this->assertEquals(true, $schema->createTables());
+        $schema = new \Pluf\DB\Schema(Bootstrap::db(), $model);
+        $schema->dropTables();
+        $schema->createTables();
+        
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $this->assertEquals(true, $model->create());
         $this->assertEquals(1, (int) $model->id);
-        $this->assertEquals(true, $schema->dropTables());
+        $schema->dropTables();
     }
 }

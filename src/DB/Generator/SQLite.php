@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB\Schema;
+namespace Pluf\DB\Generator;
 
 use Pluf\ModelUtils;
 use Pluf\Bootstrap;
@@ -29,7 +29,7 @@ use Pluf\DB\Schema;
  * This class is for SQLite, you can create a class on the same
  * model for another database engine.
  */
-class SQLite
+class SQLite extends \Pluf\DB\Generator
 {
 
     /**
@@ -83,11 +83,9 @@ class SQLite
         'polygon' => "''"
     );
 
-    private $con = null;
-
     function __construct($con)
     {
-        $this->con = $con;
+        parent::__construct($con);
     }
 
     /**
@@ -97,7 +95,7 @@ class SQLite
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    function getSqlCreate($model)
+    public function getSqlCreate($model)
     {
         $tables = array();
         $cols = $model->_a['cols'];
@@ -168,7 +166,7 @@ class SQLite
      *            Object Model
      * @return array
      */
-    function getSqlCreateConstraints($model)
+    public function getSqlCreateConstraints($model)
     {
         return array();
     }
@@ -180,7 +178,7 @@ class SQLite
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    function getSqlIndexes($model)
+    public function getSqlIndexes($model)
     {
         $index = array();
         foreach ($model->_a['idx'] as $idx => $val) {
@@ -211,7 +209,7 @@ class SQLite
      *            Object Model
      * @return string SQL string ready to execute.
      */
-    function getSqlDelete($model)
+    public function getSqlDelete($model)
     {
         $cols = $model->_a['cols'];
         $manytomany = array();
@@ -241,7 +239,7 @@ class SQLite
      *            Object Model
      * @return array
      */
-    function getSqlDeleteConstraints($model)
+    public function getSqlDeleteConstraints($model)
     {
         return array();
     }

@@ -86,7 +86,6 @@ class PaginatorMyModel extends Model
         $this->_a['views'] = array(
             'test_view' => array()
         );
-        parent::init();
     }
 
     /**

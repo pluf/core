@@ -4,18 +4,22 @@ namespace Pluf;
 class ModelUtils
 {
 
-    public static function getModelName($model): String
+    /**
+     * Generates full path to the model
+     *
+     * @param Model $model
+     * @return String
+     */
+    public static function getModelName(Model $model): String
     {
-        $modelName = $model->_a['model'];
-
-        return $modelName;
+        return '\\' . $model->getClass()->getName();
     }
 
-    public static function getAssocTable($from, $to): String
+    public static function getAssocTable(Model $from, Model $to): String
     {
         $hay = array(
-            strtolower($from->_a['model']),
-            strtolower($to->_a['model'])
+            $from->tableName,
+            $to->tableName
         );
         sort($hay);
         $table = $from->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
@@ -23,16 +27,16 @@ class ModelUtils
         return $table;
     }
 
-    public static function getTable($model): String
+    public static function getTable(Model $model): String
     {
-        $table = $model->_con->pfx . $model->_a['table'];
+        $table = $model->_con->pfx . $model->tableName;
         $name = self::skipeName($table);
         return $name;
     }
 
-    public static function getAssocField($model): String
+    public static function getAssocField(Model $model): String
     {
-        $name = self::skipeName(strtolower($model->_a['model']) . '_id');
+        $name = self::skipeName($model->tableName . '_id');
         $name = $model->_con->qn($name);
         return $name;
     }
@@ -40,7 +44,7 @@ class ModelUtils
     public static function skipeName(String $name): String
     {
         $name = str_replace('\\', '_', $name);
-        return $name;
+        return strtolower($name);
     }
 
     /**
@@ -53,12 +57,12 @@ class ModelUtils
      *            
      * @return Model Form to create the model.
      */
-    public static function getCreateForm($model, $data = null)
+    public static function getCreateForm(Model $model, Model $data = null)
     {
         $extra = array(
             'model' => $model
         );
-        return new Model($data, $extra, null);
+        return new $model($data, $extra, null);
     }
 
     /**
@@ -71,11 +75,53 @@ class ModelUtils
      *            
      * @return Object Form to update for this model.
      */
-    public static function getUpdateForm($model, $data = null)
+    public static function getUpdateForm(Model $model, Model $data = null)
     {
         $extra = array(
             'model' => $model
         );
         return new Form\FormModelUpdate($data, $extra, null);
+    }
+
+    // ----------------------------------------------------------
+    // Condidate to move to ModelUtils
+    // ----------------------------------------------------------
+
+    /**
+     * Get cached model
+     *
+     * @param \ReflectionClass $class
+     */
+    public static function getModelCache(\ReflectionClass $class)
+    {
+        $className = '\\' . $class->getName();
+        $catch = $GLOBALS['_PX_models_init_cache'];
+        if (array_key_exists($className, $catch)) {
+            return $catch[$className];
+        }
+        return null;
+    }
+
+    /**
+     * Get cached model
+     *
+     * @param \ReflectionClass $class
+     */
+    public static function putModelCache(\ReflectionClass $class, $data)
+    {
+        $className = '\\' . $class->getName();
+        $GLOBALS['_PX_models_init_cache'][$className] = $data;
+    }
+
+    public static function getModelRelations(Model $model, string $type)
+    {
+        $className = '\\' . $model->getClass()->getName();
+        $relations = $GLOBALS['_PX_models_related'][$type];
+        if (array_key_exists($className, $relations)) {
+            return $relations[$className];
+        } else {
+            \Pluf\Log::warn('No relation of  type:"' . $type . '" defined for Entity "' . $model->getClass()->getName() . '"');
+        }
+        return null;
     }
 }

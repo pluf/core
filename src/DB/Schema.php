@@ -20,6 +20,8 @@
 namespace Pluf\DB;
 
 use Pluf\Exception;
+use Pluf\Model;
+use Pluf\ModelUtils;
 
 /**
  * Create the schema of a given Model for a given database.
@@ -30,35 +32,45 @@ class Schema
     /**
      * Database connection object.
      */
-    private $con = null;
+    private ?Engine $con = null;
 
     /**
      * Model from which the schema is generated.
      */
-    public $model = null;
+    public ?Model $model = null;
 
     /**
      * Schema generator object corresponding to the database.
      */
-    public $schema = null;
+    public ?Generator $schema = null;
 
-    function __construct($db, $model = null)
+    function __construct(Engine $db, ?Model $model = null)
     {
         $this->con = $db;
         $this->model = $model;
         // create engine
-        $engine = '\\Pluf\\DB\Schema\\' . $db->engine;
-        $this->schema = new $engine($db);
+        $generatorName = '\\Pluf\\DB\Generator\\' . $db->engine;
+        $this->schema = new $generatorName($db);
     }
 
     /**
      * Get the schema generator.
      *
-     * @return object Pluf_DB_Schema_XXXX
+     * @return Generator of DB schema
      */
-    function getGenerator()
+    public function getGenerator(): Generator
     {
         return $this->schema;
+    }
+
+    /**
+     * Get the schema model.
+     *
+     * @return Generator of DB schema
+     */
+    public function getModel(): Model
+    {
+        return $this->model;
     }
 
     /**
@@ -74,12 +86,12 @@ class Schema
      *
      * @return mixed True if success or database error.
      */
-    function createTables()
+    public function createTables(): void
     {
         $sql = $this->schema->getSqlCreate($this->model);
         // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
         if ($this->model->_a['mapped']) {
-            $modelTableName = $this->con->pfx . $this->model->_a['table'];
+            $modelTableName = ModelUtils::getTable($this->model);
             // remove sql to create main table
             $sql = array_diff_key($sql, array(
                 $modelTableName => ''
@@ -98,7 +110,6 @@ class Schema
                 }
             }
         }
-        return true;
     }
 
     /**
@@ -107,7 +118,7 @@ class Schema
      *
      * @throws Exception
      */
-    function createConstraints()
+    public function createConstraints(): void
     {
         $sql = $this->schema->getSqlCreateConstraints($this->model);
         foreach ($sql as $query) {
@@ -122,12 +133,12 @@ class Schema
      *
      * @return mixed True if success or database error.
      */
-    function dropTables()
+    public function dropTables(): void
     {
         $sql = $this->schema->getSqlDelete($this->model);
         // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
         if ($this->model->_a['mapped']) {
-            $modelTableName = $this->con->pfx . $this->model->_a['table'];
+            $modelTableName = ModelUtils::getTable($this->model);
             // remove sql to create main table
             $sql = array_diff_key($sql, array(
                 $modelTableName => ''
@@ -138,7 +149,6 @@ class Schema
                 throw new Exception($this->con->getError());
             }
         }
-        return true;
     }
 
     /**
@@ -148,7 +158,7 @@ class Schema
      * @throws Exception
      * @return boolean
      */
-    function dropConstraints()
+    public function dropConstraints(): void
     {
         $sql = $this->schema->getSqlDeleteConstraints($this->model);
         foreach ($sql as $query) {
@@ -156,7 +166,6 @@ class Schema
                 throw new Exception($this->con->getError());
             }
         }
-        return true;
     }
 
     /**
@@ -171,7 +180,7 @@ class Schema
      *            Pluf_DB DB handler
      * @return string Quoted for the DB column(s)
      */
-    public static function quoteColumn($col, $db)
+    public static function quoteColumn($col, $db): string
     {
         if (false !== strpos($col, ',')) {
             $cols = explode(',', $col);

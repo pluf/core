@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,38 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Test;
-
+namespace Pluf\Log;
 
 /**
- *
- * @author maso
- *        
+ * Print log to console
  */
-class ManyToManyOne extends \Pluf\Model
+class Console
 {
 
-    function init()
+    /**
+     * Flush the stack to the remote server.
+     *
+     * @param $stack Array
+     */
+    public static function write($stack)
     {
-        $this->_a['table'] = 'test_manytomanyone';
-        $this->_a['cols'] = array(
-            'id' => array(
-                'type' => '\Pluf\DB\Field\Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'twos' => array(
-                'type' => '\Pluf\DB\Field\Manytomany',
-                'model' => '\Pluf\Test\ManyToManyTwo',
-                'blank' => true,
-                'relate_name' => 'ones'
-            ),
-            'one' => array(
-                'type' => '\Pluf\DB\Field\Varchar',
-                'blank' => false,
-                'size' => 100
-            )
-        );
-        $this->_a['idx'] = array();
-        $this->_a['views'] = array();
+        foreach ($stack as $elt) {
+            print(
+                date(DATE_ISO8601, (int) $elt[0]) . ' ' . 
+                \Pluf\Log::$reverse[$elt[1]] . ': ' . 
+                $elt[2] .
+                PHP_EOL);
+            flush();
+        }
     }
 }

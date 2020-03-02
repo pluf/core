@@ -187,7 +187,7 @@ class ' . $className . ' {
         array_push($this->compiledTypes, $type);
 
         $model = new $type();
-        $name = $model->_a['model'];
+        $name = ModelUtils::skipeName($model->getClass()->getName());
         if (array_key_exists('graphql_name', $model->_a)) {
             $name = $model->_a['graphql_name'];
         }
@@ -230,7 +230,7 @@ class ' . $className . ' {
         $fields = '[
                     // List of basic fields
                     ' . $this->compileBasicFields($cols) . '
-                    // relations: forenkey
+                    // relations
                     ' . $this->compileRelationFields('foreignkey', $model) . '
                     ' . $this->compileRelationFields('manytomany', $model) . '
                 ]';
@@ -292,21 +292,21 @@ class ' . $className . ' {
      * @param Model $mainModel
      *            main model wihch is the target of compile
      */
-    private function compileRelationFields($type, $mainModel)
+    private function compileRelationFields($type, Model $mainModel)
     {
         $res = '';
-        $current_model = $mainModel->_a['model'];
-        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
+        $current_model = '\\' . $mainModel->getClass()->getName();
+        $relations = ModelUtils::getModelRelations($mainModel, $type);
+        if (isset($relations)) {
             foreach ($relations as $related) {
                 if ($related != $current_model) {
                     $model = new $related();
                 } else {
-                    $model = clone $mainModel;
+                    $model = $mainModel;
                 }
                 $fkeys = $model->getRelationKeysToModel($current_model, $type);
                 foreach ($fkeys as $fkey => $val) {
-                    $name = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                    $name = (isset($val['relate_name'])) ? $val['relate_name'] : ModelUtils::skipeName($model->getClass()->getName());
                     $res .= '
                     //Foreinkey list-' . $this->fieldComment($fkey, []) . '
                     \'' . $name . '\' => [
@@ -390,6 +390,8 @@ class ' . $className . ' {
                                 return $root->get_' . $functionName . '();
                             },
                     ],';
+        } else {
+            \Pluf\Log::warn('No name defined fro forign key "' . $key . '"');
         }
         return $res;
     }
@@ -447,15 +449,13 @@ class ' . $className . ' {
             }
         }
 
-        $current_model = $model->_a['model'];
-
         $types = [
             'foreignkey',
             'manytomany'
         ];
         foreach ($types as $type) {
-            if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-                $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
+            $relations = ModelUtils::getModelRelations($model, $type);
+            if (isset($relations)) {
                 foreach ($relations as $related) {
                     if (! in_array($related, $preModels)) {
                         array_push($preModels, $related);

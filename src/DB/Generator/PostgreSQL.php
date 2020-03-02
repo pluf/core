@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB\Schema;
+namespace Pluf\DB\Generator;
 
 use Pluf\ModelUtils;
 use Pluf\DB\Schema;
@@ -28,7 +28,7 @@ use Pluf\DB\Schema;
  * This class is for PostgreSQL, you can create a class on the same
  * model for another database engine.
  */
-class PostgreSQL
+class PostgreSQL extends \Pluf\DB\Generator
 
 {
 
@@ -73,11 +73,10 @@ class PostgreSQL
         'blob' => "''"
     );
 
-    private $con = null;
 
     function __construct($con)
     {
-        $this->con = $con;
+        parent::__construct($con);
     }
 
     /**

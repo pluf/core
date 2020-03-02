@@ -83,7 +83,6 @@ class TestFormModel extends Model
                 'description'
             )
         );
-        parent::init();
     }
 }
 

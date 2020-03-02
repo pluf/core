@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB;
+namespace Pluf\DB\Engine;
 
 use Pluf\Bootstrap;
 use Pluf\Exception;
@@ -25,10 +25,8 @@ use Pluf\Exception;
 /**
  * MySQL connection
  */
-class MySQL
+class MySQL extends \Pluf\DB\Engine
 {
-
-    public $con_id;
 
     public $pfx = '';
 
@@ -248,11 +246,6 @@ class MySQL
         if (Bootstrap::f('db_mysql_transaction', false)) {
             $this->execute('ROLLBACK');
         }
-    }
-
-    function __toString()
-    {
-        return '<Pluf_DB_MySQL(' . $this->con_id . ')>';
     }
 }
 

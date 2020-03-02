@@ -246,7 +246,7 @@ class Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new Exception('Module file not found in path');
+            throw new Exception('Module file not found in path or not defined in Module object');
         }
         $db = Bootstrap::db();
         $schema = new DB\Schema($db);

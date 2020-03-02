@@ -21,7 +21,7 @@ namespace Pluf\Log;
 use Pluf\Bootstrap;
 
 /**
- * ارسال لاگ به یک سرور دور با استفاده از متد POST.
+ * Send log to the remote server
  *
  * Fire a POST request agains a server with the payload being the
  * content of the log. The log is serialized as JSON. It is always

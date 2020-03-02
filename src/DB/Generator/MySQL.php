@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB\Schema;
+namespace Pluf\DB\Generator;
 
 use Pluf\ModelUtils;
 use Pluf\Bootstrap;
@@ -29,7 +29,7 @@ use Pluf\Model;
  * This class is for MySQL, you can create a class on the same
  * model for another database engine.
  */
-class MySQL
+class MySQL extends \Pluf\DB\Generator
 {
 
     /**
@@ -82,7 +82,6 @@ class MySQL
         'polygon' => null
     );
 
-    private $con = null;
 
     /**
      * Creates new instance
@@ -91,7 +90,7 @@ class MySQL
      */
     function __construct($con)
     {
-        $this->con = $con;
+        parent::__construct($con);
     }
 
     /**

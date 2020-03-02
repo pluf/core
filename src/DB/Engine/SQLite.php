@@ -17,39 +17,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB;
+namespace Pluf\DB\Engine;
 
-use Pluf\DB;
 use PDO;
 use Pluf\Exception;
 
 /**
  * SQLite connection class
  */
-class SQLite
+class SQLite extends \Pluf\DB\Engine
 {
-
-    public $con_id;
-
-    public $pfx = '';
-
-    private $debug = false;
-
-    /**
-     * The last query, set with debug().
-     * Used when an error is returned.
-     */
-    public $lastquery = '';
-
-    public $engine = 'SQLite';
-
-    public $type_cast = array();
 
     function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
     {
-        $this->type_cast = DB::defaultTypecast();
-        $this->debug = $debug;
-        $this->pfx = $pfx;
+        parent::__construct($pfx, $debug);
         $this->debug('* SQLITE OPEN');
         $this->type_cast['\Pluf\DB\Field\Compressed'] = array(
             '\Pluf\DB::compressedFromDb',
@@ -59,7 +40,7 @@ class SQLite
         try {
             $this->con_id = new \PDO('sqlite:' . $dbname);
         } catch (\PDOException $e) {
-            throw $e;
+            throw new Exception('Fail to open database connection', 5000, $e);
         }
     }
 
@@ -68,39 +49,18 @@ class SQLite
      *
      * @return string Version string
      */
-    function getServerInfo()
+    public function getServerInfo()
     {
         return $this->con_id->getAttribute(PDO::ATTR_SERVER_INFO);
     }
 
-    /**
-     * Log the queries.
-     * Keep track of the last query and if in debug mode
-     * keep track of all the queries in
-     * $GLOBALS['_PX_debug_data']['sql_queries']
-     *
-     * @param
-     *            string Query to keep track
-     * @return bool true
-     */
-    function debug($query)
-    {
-        $this->lastquery = $query;
-        if (! $this->debug)
-            return true;
-        if (! isset($GLOBALS['_PX_debug_data']['sql_queries']))
-            $GLOBALS['_PX_debug_data']['sql_queries'] = array();
-        $GLOBALS['_PX_debug_data']['sql_queries'][] = $query;
-        return true;
-    }
-
-    function close()
+    public function close()
     {
         $this->con_id = null;
         return true;
     }
 
-    function select($query)
+    public function select($query)
     {
         $this->debug($query);
         if (false === ($cur = $this->con_id->query($query))) {
@@ -109,7 +69,7 @@ class SQLite
         return $cur->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function execute($query)
+    public function execute($query)
     {
         $this->debug($query);
         if (false === ($cur = $this->con_id->exec($query))) {
@@ -118,7 +78,7 @@ class SQLite
         return $cur;
     }
 
-    function getLastID()
+    public function getLastID()
     {
         $this->debug('* GET LAST ID');
         return (int) $this->con_id->lastInsertId();
@@ -130,14 +90,14 @@ class SQLite
      *
      * @return string Error string
      */
-    function getError()
+    public function getError()
     {
         $err = $this->con_id->errorInfo();
         $err[] = $this->lastquery;
         return implode(' - ', $err);
     }
 
-    function esc($str)
+    public function esc($str)
     {
         if (is_array($str)) {
             $res = array();
@@ -156,7 +116,7 @@ class SQLite
      *            string Name of the column
      * @return string Escaped name
      */
-    function qn($col)
+    public function qn($col)
     {
         return '"' . $col . '"';
     }
@@ -164,7 +124,7 @@ class SQLite
     /**
      * Start a transaction.
      */
-    function begin()
+    public function begin()
     {
         $this->execute('BEGIN');
     }
@@ -172,7 +132,7 @@ class SQLite
     /**
      * Commit a transaction.
      */
-    function commit()
+    public function commit()
     {
         $this->execute('COMMIT');
     }
@@ -180,14 +140,9 @@ class SQLite
     /**
      * Rollback a transaction.
      */
-    function rollback()
+    public function rollback()
     {
         $this->execute('ROLLBACK');
-    }
-
-    function __toString()
-    {
-        return '<Pluf_DB_SQLite(' . $this->con_id . ')>';
     }
 
     public static function CompressedToDb($val, $con)

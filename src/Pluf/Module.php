@@ -13,7 +13,12 @@ class Module extends \Pluf\Module
         '\Pluf\Search\Occ' => array(
             'relate_to' => array(
                 '\Pluf\Search\Word'
-            )
+            ),
+            'relate_to_many' => array(),
+        ),
+        '\Pluf\DB\SchemaInfo' => array(
+            'relate_to' => array(),
+            'relate_to_many' => array(),
         )
     );
 

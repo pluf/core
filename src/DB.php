@@ -20,6 +20,7 @@ namespace Pluf;
 
 use geoPHP;
 use WKT;
+
 /**
  * مدیریت پایگاه داده سیستم
  *
@@ -35,9 +36,9 @@ class DB
     /**
      * Get a database connection.
      */
-    static function get($engine, $server, $database, $login, $password, $prefix, $debug = false, $version = '')
+    static function get($engine, $server, $database, $login, $password, $prefix, $debug = false, $version = ''): \Pluf\DB\Engine
     {
-        $engine = '\\Pluf\\DB\\' . $engine;
+        $engine = '\\Pluf\\DB\\Engine\\' . $engine;
         $con = new $engine($login, $password, $server, $database, $prefix, $debug, $version);
         return $con;
     }

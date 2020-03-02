@@ -196,7 +196,7 @@ class Bootstrap
      *            mixed Extra parameters.
      * @return resource DB connection.
      */
-    public static function &db($extra = null)
+    public static function &db($extra = null) : \Pluf\DB\Engine
     {
         $func = self::f('db_get_connection', '\Pluf\DB::getConnection');
         $a = $func($extra);

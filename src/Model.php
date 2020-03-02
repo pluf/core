@@ -30,7 +30,7 @@ use ArrayObject;
  *         به عنوان نتیجه از یک مدل
  *         استفاده شود.
  */
-class Model implements JsonSerializable
+abstract class Model implements JsonSerializable
 {
 
     /**
@@ -50,7 +50,19 @@ class Model implements JsonSerializable
         'graphql_field' => false
     );
 
-    public $_model = __CLASS__;
+    /**
+     * Stores the name of the mapped table
+     *
+     * @var string
+     */
+    public ?string $tableName = null;
+
+    /**
+     * Is model multi tenant based
+     *
+     * @var bool
+     */
+    public bool $multitinant = true;
 
     // set it to your model name
 
@@ -118,49 +130,84 @@ class Model implements JsonSerializable
     );
 
     // added by some fields
-    function __construct($pk = null, $values = array())
+    function __construct(int $pk = 0, $values = array())
     {
+        $reflectionObject = new \ReflectionObject($this);
+        $this->class = $reflectionObject;
 
-        // -->
-        $this->_model = get_class($this);
-        $this->_a['model'] = $this->_model;
+        // Set default table name
+        $this->tableName = ModelUtils::skipeName($this->getClass()->getName());
 
-        $this->_a['multitenant'] = true;
-        $this->_init((int) $pk > 0);
+        $this->_init($pk > 0);
         if ((int) $pk > 0) {
             $this->get($pk); // Should not have a side effect
         }
+
+        // TODO: maso, 2020: use values
     }
 
     /**
-     * ساختار داده‌ای را ایجاد می‌کند.
+     * Data initialization by sub classes
      *
      * این فراخوانی تمام ساختارهای داده‌ای اصلی را ایجاد می‌کند. تمام زیر
      * کلاس‌ها
      * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
      */
-    function init()
-    {
-        // Define it yourself.
-    }
+    protected abstract function init();
 
     /**
      * Load and init the model
      */
-    function _init()
+    private function _init()
     {
+        // 1- Check if is cached
         $this->_getConnection();
-        if (isset($GLOBALS['_PX_models_init_cache'][$this->_model])) {
-            $init_cache = $GLOBALS['_PX_models_init_cache'][$this->_model];
-            $this->_cache = $init_cache['cache'];
-            $this->_m = $init_cache['m'];
-            $this->_a = $init_cache['a'];
-            $this->_fk = $init_cache['fk'];
-            $this->_data = $init_cache['data'];
+        $modelCache = ModelUtils::getModelCache($this->getClass());
+        if (isset($modelCache)) {
+            $this->tableName = $modelCache['tableName'];
+            $this->_cache = $modelCache['cache'];
+            $this->_m = $modelCache['m'];
+            $this->_a = $modelCache['a'];
+            $this->_fk = $modelCache['fk'];
+            $this->_data = $modelCache['data'];
             return;
         }
+
+        // 2- run subclass initialization
         $this->init();
-        $this->_setupMultitenantFields();
+        if (array_key_exists('table', $this->_a)) {
+            $this->tableName = $this->_a['table'];
+        }
+
+        // 3- setup the model
+        $this->setupMultitenantFields();
+        $this->setupFields();
+        $this->setupForeignkeyMethods();
+        $this->setupManytoManyMethods();
+
+        // 4- Save the model to cache
+        ModelUtils::putModelCache($this->getClass(), array(
+            'tableName' => $this->tableName,
+            'cache' => $this->_cache,
+            'm' => $this->_m,
+            'a' => $this->_a,
+            'fk' => $this->_fk,
+            'data' => $this->_data
+        ));
+    }
+
+    private function setupForeignkeyMethods()
+    {
+        $this->setupAutomaticListMethods('foreignkey');
+    }
+
+    private function setupManytoManyMethods()
+    {
+        $this->setupAutomaticListMethods('manytomany');
+    }
+
+    private function setupFields()
+    {
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']('', $col);
             $col_lower = strtolower($col);
@@ -209,17 +256,6 @@ class Model implements JsonSerializable
                 $this->_data[$col] = '';
             }
         }
-
-        $this->_setupAutomaticListMethods('foreignkey');
-        $this->_setupAutomaticListMethods('manytomany');
-
-        $GLOBALS['_PX_models_init_cache'][$this->_model] = array(
-            'cache' => $this->_cache,
-            'm' => $this->_m,
-            'a' => $this->_a,
-            'fk' => $this->_fk,
-            'data' => $this->_data
-        );
     }
 
     /**
@@ -303,12 +339,17 @@ class Model implements JsonSerializable
      * @param
      *            object Object to associate to the current object
      */
-    function delAssoc($model)
+    function delAssoc(Model $model)
     {
         $table = ModelUtils::getAssocTable($this, $model);
+
+        $first = ModelUtils::getAssocField(this);
+        $second = ModelUtils::getAssocField($model);
+
         $req = 'DELETE FROM ' . $table . ' WHERE ';
-        $req .= $this->_con->qn(strtolower($this->_a['model']) . '_id') . ' = ' . $this->_toDb($this->_data['id'], 'id');
-        $req .= ' AND ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $this->_toDb($model->id, 'id');
+        $req .= $first . ' = ' . $this->_toDb($this->getId(), 'id');
+        $req .= ' AND ' . $second . ' = ' . $this->_toDb($model->getId(), 'id');
+
         $this->_con->execute($req);
         return true;
     }
@@ -364,17 +405,6 @@ class Model implements JsonSerializable
     }
 
     /**
-     * Get the table of the model.
-     *
-     * Avoid doing the concatenation of the prefix and the table
-     * manually.
-     */
-    function getSqlTable()
-    {
-        return $this->_con->pfx . $this->_a['table'];
-    }
-
-    /**
      * Overloading of the get method.
      *
      * @param
@@ -418,7 +448,8 @@ class Model implements JsonSerializable
             if (isset($this->_cache[$method])) {
                 return $this->_cache[$method];
             } else {
-                $this->_cache[$method] = Bootstrap::factory($this->_m['get'][$method][0], $this->_data[$this->_m['get'][$method][1]]);
+                $className = $this->_m['get'][$method][0];
+                $this->_cache[$method] = new $className($this->_data[$this->_m['get'][$method][1]]);
                 if ($this->_cache[$method]->id == '') {
                     $this->_cache[$method] = null;
                 }
@@ -441,17 +472,19 @@ class Model implements JsonSerializable
                 'getRelated'
             ), $args);
         }
-        // Extra methods added by fields
-        if (isset($this->_m['extra'][$method])) {
-            $args = array_merge(array(
-                $this->_m['extra'][$method][0],
-                $method,
-                $this
-            ), $args);
-            Bootstrap::loadFunction($this->_m['extra'][$method][1]);
-            return call_user_func_array($this->_m['extra'][$method][1], $args);
-        }
-        throw new Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
+
+        // NOTE: extra field method is not supported anymore
+        // // Extra methods added by fields
+        // if (isset($this->_m['extra'][$method])) {
+        // $args = array_merge(array(
+        // $this->_m['extra'][$method][0],
+        // $method,
+        // $this
+        // ), $args);
+        // Bootstrap::loadFunction($this->_m['extra'][$method][1]);
+        // return call_user_func_array($this->_m['extra'][$method][1], $args);
+        // }
+        throw new Exception(sprintf('Method "%s" not available in model "%s".', $method, $this->getClass()->getName()));
     }
 
     /**
@@ -463,7 +496,7 @@ class Model implements JsonSerializable
      */
     function get($id)
     {
-        $req = 'SELECT * FROM ' . $this->getSqlTable() . ' WHERE ';
+        $req = 'SELECT * FROM ' . ModelUtils::getTable($this) . ' WHERE ';
         if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
             $sql = new SQL('tenant=%s AND id=%s', array(
                 Tenant::current()->id,
@@ -504,10 +537,11 @@ class Model implements JsonSerializable
      * Usage:
      *
      * <pre>
-     * $m = Bootstrap::factory('My_Model')->getOne(array('filter' => 'id=1'));
+     * $model = new My_Model();
+     * $m = $model->getOne(array('filter' => 'id=1'));
      * </pre>
      * <pre>
-     * $m = Bootstrap::factory('My_Model')->getOne('id=1');
+     * $m = $model->getOne('id=1');
      * </pre>
      *
      * @param
@@ -608,7 +642,7 @@ class Model implements JsonSerializable
         if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
             // Note: Hadi, 1395-11-26: Table should be set before tenant field.
             // It is to avoid ambiguous problem in join tables which both have tenant field.
-            $sql = new SQL($this->getSqlTable() . '.tenant=%s', array(
+            $sql = new SQL(ModelUtils::getTable($this) . '.tenant=%s', array(
                 Tenant::current()->id
             ));
             if (strlen($query['where']) > 0) {
@@ -743,7 +777,7 @@ class Model implements JsonSerializable
         if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
+                throw new Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->getClass()->getName()));
             }
             if (! is_null($p['filter'])) {
                 if (is_array($p['filter'])) {
@@ -771,9 +805,10 @@ class Model implements JsonSerializable
                 );
                 $p['view'] = '';
             }
-            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' . $this->_con->pfx . $m->_a['table'] . '.id';
 
-            $m->_a['views'][$p['view'] . '__manytomany__']['where'] = $this->_con->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
+            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . ModelUtils::getAssocField($m) . ' = ' . ModelUtils::getTable($m) . '."id"';
+
+            $m->_a['views'][$p['view'] . '__manytomany__']['where'] = ModelUtils::getAssocField($this) . '=' . $this->getId();
             $p['view'] = $p['view'] . '__manytomany__';
         }
         return $m->getList($p);
@@ -787,7 +822,7 @@ class Model implements JsonSerializable
         if (isset($this->_cache['getSelect']))
             return $this->_cache['getSelect'];
         $select = array();
-        $table = $this->getSqlTable();
+        $table = ModelUtils::getTable($this);
         foreach ($this->_a['cols'] as $col => $val) {
             if ($val['type'] != '\\Pluf\\DB\\Field\\Manytomany') {
                 $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' . $this->_con->qn($col);
@@ -811,7 +846,7 @@ class Model implements JsonSerializable
     function update($where = '')
     {
         $this->preSave();
-        $req = 'UPDATE ' . $this->getSqlTable() . ' SET' . "\n";
+        $req = 'UPDATE ' . ModelUtils::getTable($this) . ' SET' . "\n";
         $fields = array();
         $assoc = array();
         foreach ($this->_a['cols'] as $col => $val) {
@@ -863,7 +898,7 @@ class Model implements JsonSerializable
         if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
             $this->tenant = Tenant::current();
         }
-        $req = 'INSERT INTO ' . $this->getSqlTable() . "\n";
+        $req = 'INSERT INTO ' . ModelUtils::getTable($this) . "\n";
         $icols = array();
         $ivals = array();
         $assoc = array();
@@ -899,29 +934,29 @@ class Model implements JsonSerializable
         return true;
     }
 
-    /**
-     * Get models affected by delete.
-     *
-     * @return array Models deleted if deleting current model.
-     */
-    function getDeleteSideEffect()
-    {
-        $affected = array();
-        foreach ($this->_m['list'] as $method => $details) {
-            if (is_array($details)) {
-                // foreignkey
-                $related = $this->$method();
-                $affected = array_merge($affected, (array) $related);
-                foreach ($related as $rel) {
-                    if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
-                        continue; // $rel == $this
-                    }
-                    $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
-                }
-            }
-        }
-        return Model_RemoveDuplicates($affected);
-    }
+    // /**
+    // * Get models affected by delete.
+    // *
+    // * @return array Models deleted if deleting current model.
+    // */
+    // function getDeleteSideEffect()
+    // {
+    // $affected = array();
+    // foreach ($this->_m['list'] as $method => $details) {
+    // if (is_array($details)) {
+    // // foreignkey
+    // $related = $this->$method();
+    // $affected = array_merge($affected, (array) $related);
+    // foreach ($related as $rel) {
+    // if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
+    // continue; // $rel == $this
+    // }
+    // $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
+    // }
+    // }
+    // }
+    // return self::removeDuplicates($affected);
+    // }
 
     /**
      * Delete the current model from the database.
@@ -935,7 +970,7 @@ class Model implements JsonSerializable
             return false;
         }
         $this->preDelete();
-        $this->_con->execute('DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id'));
+        $this->_con->execute('DELETE FROM ' . ModelUtils::getTable($this) . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id'));
         $this->_reset();
         return true;
     }
@@ -966,7 +1001,7 @@ class Model implements JsonSerializable
      */
     function __toString()
     {
-        return $this->_a['model'] . '(' . $this->_data['id'] . ')';
+        return '<' . $this->getClass()->getName() . '(' . $this->_data['id'] . ')';
     }
 
     /**
@@ -1098,7 +1133,7 @@ class Model implements JsonSerializable
     }
 
     /**
-     * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
+     * Creates automatic function for a model
      *
      * Adds the get_xx_list method when the methods of the model
      * contains custom names.
@@ -1106,20 +1141,26 @@ class Model implements JsonSerializable
      * @param string $type
      *            Relation type: 'foreignkey' or 'manytomany'.
      */
-    protected function _setupAutomaticListMethods($type)
+    private function setupAutomaticListMethods($type)
     {
-        $current_model = $this->_a['model'];
-        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
+        $relations = ModelUtils::getModelRelations($this, $type);
+
+        if (isset($relations)) {
             foreach ($relations as $related) {
+                $current_model = '\\' . $this->getClass()->getName();
                 if ($related != $current_model) {
                     $model = new $related();
                 } else {
                     $model = clone $this;
                 }
                 $fkeys = $model->getRelationKeysToModel($current_model, $type);
+
                 foreach ($fkeys as $fkey => $val) {
-                    $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                    $relatedRef = new \ReflectionClass($related);
+                    $mname = $relatedRef->getShortName();
+                    if (array_key_exists('relate_name', $val)) {
+                        $mname = $val['relate_name'];
+                    }
                     $mname = 'get_' . strtolower($mname) . '_list';
                     if ('foreignkey' === $type) {
                         $this->_m['list'][$mname] = array(
@@ -1140,9 +1181,9 @@ class Model implements JsonSerializable
      *
      * Adds extra fields if multi-tenant is enabled
      */
-    protected function _setupMultitenantFields()
+    private function setupMultitenantFields()
     {
-        if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
+        if (Bootstrap::f('multitenant', false) && $this->multitinant) {
             // Add key
             $this->_a['cols']['tenant'] = $this->tenant_field;
             // Add idx
@@ -1175,9 +1216,9 @@ class Model implements JsonSerializable
      *
      * @return string
      */
-    public function getClass()
+    public function getClass(): \ReflectionObject
     {
-        return $this->_a['model'];
+        return $this->class;
     }
 
     /**
@@ -1215,13 +1256,13 @@ class Model implements JsonSerializable
 
     public function getName()
     {
-        return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass();
+        return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass()->getName();
     }
 
     public function getSchema()
     {
         $mainInfo = array(
-            "type" => $this->getClass(),
+            "type" => $this->getClass()->getShortName(),
             "unit" => null,
             "name" => $this->getName(),
             "title" => $this->getName(),
@@ -1242,6 +1283,11 @@ class Model implements JsonSerializable
         return $mainInfo;
     }
 
+    public function isEquals(Model $model)
+    {
+        return $this->getClass()->isInstance($model) && $this->getId() == $model->getId();
+    }
+
     private function getFieldInfo($name, $field)
     {
         return array(
@@ -1260,48 +1306,47 @@ class Model implements JsonSerializable
             "children" => []
         );
     }
-}
 
-/**
- * Check if a model is already in an array of models.
- *
- * It is not possible to override the == function in PHP to directly
- * use in_array.
- *
- * @param
- *            Model The model to test
- * @param
- *            Array The models
- * @return bool
- */
-function Model_InArray($model, $array)
-{
-    if ($model->id == '') {
-        return false;
-    }
-    foreach ($array as $modelin) {
-        if ($modelin->_a['model'] == $model->_a['model'] and $modelin->id == $model->id) {
-            return true;
-        }
-    }
-    return false;
-}
+    // /**
+    // * Check if a model is already in an array of models.
+    // *
+    // * It is not possible to override the == function in PHP to directly
+    // * use in_array.
+    // *
+    // * @param
+    // * Model The model to test
+    // * @param
+    // * Array The models
+    // * @return bool
+    // */
+    // public static function inArray(Model $model, $array)
+    // {
+    // if ($model->isAnonymous()) {
+    // return false;
+    // }
+    // foreach ($array as $item) {
+    // if ($model->isEquals($item)) {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
-/**
- * Return a list of unique models.
- *
- * @param
- *            array Models with duplicates
- * @return array Models with duplicates.
- */
-function Model_RemoveDuplicates($array)
-{
-    $res = array();
-    foreach ($array as $model) {
-        if (! Model_InArray($model, $res)) {
-            $res[] = $model;
-        }
-    }
-    return $res;
+    // /**
+    // * Return a list of unique models.
+    // *
+    // * @param
+    // * array Models with duplicates
+    // * @return array Models with duplicates.
+    // */
+    // public static function removeDuplicates($array)
+    // {
+    // $res = array();
+    // foreach ($array as $model) {
+    // if (! self::inArray($model, $res)) {
+    // $res[] = $model;
+    // }
+    // }
+    // return $res;
+    // }
 }
-

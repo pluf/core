@@ -60,6 +60,22 @@ class ModelRelationTest extends TestCase
         ));
         $m->unInstall();
     }
+    
+    
+    /**
+     *
+     * @test
+     */
+    public function testBasicsOfCompilerToGetClassName() {
+        $className = '\Pluf\Test\ModelRecurse';
+        
+        $ref = new \ReflectionClass($className);
+        $this->assertEquals('\\' . $ref->getName(), $className);
+        
+        $model = new Test\ModelRecurse();
+        $ref = new \ReflectionClass($model);
+        $this->assertEquals('\\' . $ref->getName(), $className);
+    }
 
     /**
      *
@@ -98,7 +114,7 @@ class ModelRelationTest extends TestCase
         // get all
         $compiler = new $class_name();
         $result = $compiler->render($rootValue, '{id, parent_id, parent{id}}');
-//         $this->assertFalse(array_key_exists('errors', $result));
+        $this->assertFalse(array_key_exists('errors', $result));
 
         $result = $result['data'];
         $this->assertTrue(array_key_exists('parent', $result));
@@ -135,6 +151,10 @@ class ModelRelationTest extends TestCase
         $this->assertEquals(true, $model2->create());
 
         $model->setAssoc($model2);
+        
+        
+        $model3 = new Test\ManyToManyTwo($model2->getId());
+        $model3->get_ones_list();
 
         $class_name = 'Pluf_GraphQl_Model_Test_ManyToMany' . rand();
         $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';

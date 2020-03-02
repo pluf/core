@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\DB;
+namespace Pluf\DB\Engine;
 
 use Pluf\DB;
 use Pluf\Exception;
@@ -24,13 +24,8 @@ use Pluf\Exception;
 /**
  * PostgreSQL connection class
  */
-class Pluf_DB_PostgreSQL
+class PostgreSQL extends \Pluf\DB\Engine
 {
-
-    /**
-     * The connection resource.
-     */
-    public $con_id;
 
     /**
      * The prefix for the table names.

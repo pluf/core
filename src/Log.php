@@ -394,4 +394,39 @@ class Log
         }
         return $t;
     }
+
+    /**
+     * Assertion handler.
+     *
+     * @param string $file
+     *            Name
+     *            of the file where the assert is called
+     * @param string $line
+     *            Line
+     *            number of the file where the assert is called
+     * @param string $code
+     *            Code
+     *            evaluated by the assert call
+     */
+    public static function assert($file, $line, $code)
+    {
+        if (! isset(self::$level)) {
+            self::$level = Bootstrap::f('log_level', 10);
+        }
+        if (self::$level <= self::$assert_level and self::$level != 10) {
+            self::$stack[] = array(
+                microtime(true),
+                self::$assert_level,
+                self::$assert_mess,
+                $file,
+                $line,
+                $code
+            );
+            if (! Bootstrap::f('log_delayed', false)) {
+                self::flush();
+            }
+        }
+        self::$assert_level = 6;
+        self::$assert_mess = null;
+    }
 }

@@ -96,7 +96,7 @@ class Pluf_Search
         foreach ($wids as $id) {
             $where[] = $db->qn('word') . '=' . (int) $id;
         }
-        $select = 'SELECT model_class, model_id, SUM(pondocc) AS score FROM ' . $gocc->getSqlTable() . ' WHERE ' . implode(' OR ', $where) . ' GROUP BY model_class, model_id HAVING COUNT(*)=' . count($wids) . ' ORDER BY score DESC';
+        $select = 'SELECT model_class, model_id, SUM(pondocc) AS score FROM ' .  ModelUtils::getTable($gocc) . ' WHERE ' . implode(' OR ', $where) . ' GROUP BY model_class, model_id HAVING COUNT(*)=' . count($wids) . ' ORDER BY score DESC';
         return $db->select($select);
     }
 
@@ -174,7 +174,7 @@ class Pluf_Search
         }
         // Drop the last indexation.
         $gocc = new Search\Occ();
-        $sql = new SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
+        $sql = new SQL('DELETE FROM ' . ModelUtils::getTable($gocc) . ' WHERE model_class=%s AND model_id=%s', array(
             $doc->_model,
             $doc->id
         ));
