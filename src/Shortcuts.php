@@ -132,7 +132,7 @@ class Shortcuts
     public static function getFormForModel($model, $data = null, $extra = array(), $label_suffix = null)
     {
         $extra['model'] = $model;
-        return new FormModelUpdate($data, $extra, $label_suffix);
+        return new Form\FormModelCreate($data, $extra, $label_suffix);
     }
 
     /**
