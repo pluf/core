@@ -36,7 +36,7 @@ class RelatedToTestModel extends \Pluf\Model
                 'type' => '\\Pluf\\DB\\Field\\Sequence',
                 'blank' => true
             ), // It is automatically added.
-            'testmodel_id' => array(
+            'testmodel' => array(
                 'type' => '\Pluf\DB\Field\Foreignkey',
                 'blank' => false,
                 'model' => '\Pluf\Test\Model'
