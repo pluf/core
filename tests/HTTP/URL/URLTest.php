@@ -22,16 +22,13 @@ use PHPUnit\Framework\TestCase;
 use Pluf\Bootstrap;
 use Pluf\Dispatcher;
 use Pluf\HTTP;
-use Pluf\Exception;
 
-class PlufHTTPURLTest extends TestCase
+class URLTest extends TestCase
 {
 
     protected function setUp()
     {
         Bootstrap::start(__DIR__ . '/../../conf/config.php');
-        // Pluf::loadFunction('Pluf_HTTP_URL_buildReverseUrl');
-        // Pluf::loadFunction('Pluf_HTTP_URL_reverse');
         $d = new Dispatcher();
         $d->loadControllers(Bootstrap::f('app_views'));
     }
@@ -42,18 +39,14 @@ class PlufHTTPURLTest extends TestCase
         $url = $murl->generate('/toto/titi/', array(
             'param1' => 'value%*one',
             'param2' => 'value&two'
-        ), false);
-        $this->assertEquals('?_px_action=%2Ftoto%2Ftiti%2F&param1=value%' . '25%2Aone&param2=value%26two', $url);
-    }
-
-    public function testGenerateSimpleEncoded()
-    {
-        $murl = new HTTP\URL('simple');
-        $url = $murl->generate('/toto/titi/', array(
-            'param1' => 'value%*one',
-            'param2' => 'value&two'
         ));
-        $this->assertEquals('?_px_action=%2Ftoto%2Ftiti%2F&amp;param1=value%' . '25%2Aone&amp;param2=value%26two', $url);
+
+        $data = array();
+        parse_str(substr($url, 1), $data);
+
+        $this->assertEquals($data['_px_action'], '/toto/titi/');
+        $this->assertEquals($data['param1'], 'value%*one');
+        $this->assertEquals($data['param2'], 'value&two');
     }
 
     public function testGenerateModRewrite()
@@ -68,7 +61,11 @@ class PlufHTTPURLTest extends TestCase
 
     public function testGetActionModRewrite()
     {
-        $_SERVER['QUERY_STRING'] = '/toto/titi/';
+        $_SERVER['PATH_INFO'] = '/toto/titi/';
+        $murl = new HTTP\URL('mod_rewrite');
+        $this->assertEquals('/toto/titi/', $murl->getAction());
+
+        $_SERVER['ORIG_PATH_INFO'] = '/toto/titi/';
         $murl = new HTTP\URL('mod_rewrite');
         $this->assertEquals('/toto/titi/', $murl->getAction());
     }
@@ -127,13 +124,9 @@ class PlufHTTPURLTest extends TestCase
             '23',
             'titi'
         );
-        try {
-            $url = HTTP\URL::buildReverseUrl($url_regex, $params);
-            $this->assertNotNull($url);
-        } catch (Exception $e) {
-            return;
-        }
-        $this->fail('An exception as not been raised, regex:' . $url_regex . ' should not match params: ' . var_export($params, true));
+        $url = HTTP\URL::buildReverseUrl($url_regex, $params);
+        $this->assertNotNull($url);
+        $this->assertEquals('/toto/23/asd/titi/', $url);
     }
 
     public function testReverseUrlFromView()

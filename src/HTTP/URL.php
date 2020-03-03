@@ -1,26 +1,20 @@
 <?php
-
-/* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 /*
- * # ***** BEGIN LICENSE BLOCK *****
- * # This file is part of Plume Framework, a simple PHP Application Framework.
- * # Copyright (C) 2001-2007 Loic d'Anterroches and contributors.
- * #
- * # Plume Framework is free software; you can redistribute it and/or modify
- * # it under the terms of the GNU Lesser General Public License as published by
- * # the Free Software Foundation; either version 2.1 of the License, or
- * # (at your option) any later version.
- * #
- * # Plume Framework is distributed in the hope that it will be useful,
- * # but WITHOUT ANY WARRANTY; without even the implied warranty of
- * # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * # GNU Lesser General Public License for more details.
- * #
- * # You should have received a copy of the GNU Lesser General Public License
- * # along with this program; if not, write to the Free Software
- * # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
- * #
- * # ***** END LICENSE BLOCK *****
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 namespace Pluf\HTTP;
 
@@ -38,6 +32,18 @@ class URL
 {
 
     /**
+     * Defines type ot the url
+     *
+     * @var string
+     */
+    var string $type = 'simple';
+
+    function __construct(string $type = 'simple')
+    {
+        $this->type = $type;
+    }
+
+    /**
      * Generate the URL.
      *
      * The & is encoded as &amp; in the url.
@@ -50,11 +56,22 @@ class URL
      *            bool Encode the & in the url (true)
      * @return string Ready to use URL.
      */
-    public static function generate($action, $params = array(), $encode = true)
+    public function generate(string $action, $params = array())
     {
-        $url = $action;
-        if (count($params)) {
-            $url .= '?' . http_build_query($params, '', ($encode) ? '&amp;' : '&');
+        $url = '';
+        switch ($this->type) {
+            case 'simple':
+                $params['_px_action'] = $action;
+                $url = '?' . http_build_query($params);
+                break;
+            case 'mod_rewrite':
+                $url = $action;
+                if (count($params)) {
+                    $url .= '?' . http_build_query($params);
+                }
+                break;
+            default:
+                throw new Exception('Unsupported URL type: "' . $this->type . '"');
         }
         return $url;
     }
@@ -66,19 +83,22 @@ class URL
      *
      * @return string Action
      */
-    public static function getAction()
+    public function getAction()
     {
-        if (isset($_GET['_pluf_action'])) {
-            return $_GET['_pluf_action'];
+        switch ($this->type) {
+            case 'simple':
+                return $_GET['_px_action'];
+            case 'mod_rewrite':
+                $request_uri = '/';
+                if (isset($_SERVER['PATH_INFO'])) {
+                    $request_uri = trim($_SERVER['PATH_INFO']);
+                } elseif (isset($_SERVER['ORIG_PATH_INFO'])) {
+                    $request_uri = trim(str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['ORIG_PATH_INFO']), '/');
+                }
+                return $request_uri;
+            default:
+                throw new Exception('Unsupported URL type: "' . $this->type . '"');
         }
-        if (isset($_SERVER['PATH_INFO'])) {
-            $request_uri = trim($_SERVER['PATH_INFO'], '/');
-        } elseif (isset($_SERVER['ORIG_PATH_INFO'])) {
-            $request_uri = trim(str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['ORIG_PATH_INFO']), '/');
-        } else {
-            $request_uri = '/';
-        }
-        return $request_uri;
     }
 
     /**
@@ -94,9 +114,10 @@ class URL
      *            bool Should the URL be encoded (true).
      * @return string URL.
      */
-    public static function urlForView($view, $params = array(), $get_params = array(), $encoded = true)
+    public static function urlForView($view, $params = array(), $get_params = array())
     {
-        return URL::generate(self::reverse($view, $params), $get_params, $encoded);
+        $url = new URL('mod_rewrite');
+        return $url->generate(self::reverse($view, $params), $get_params);
     }
 
     /**
@@ -202,6 +223,7 @@ class URL
             $groups = array_fill(0, count($params), '#\(([^)]+)\)#');
             $url = preg_replace($groups, $params, $url, 1);
         }
+        $matches = array();
         preg_match('/^#\^?([^#\$]+)/', $url, $matches);
         return $matches[1];
     }
