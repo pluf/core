@@ -100,7 +100,7 @@ $cfg['tenant_root_validate'] = 1;
  * Logger
  * **************************************************************************
  */
-$cfg['log_level'] = \Pluf\Log::INFO;
+$cfg['log_level'] = \Pluf\Log::OFF;
 $cfg['log_delayed'] = false;
 $cfg['log_handler'] = '\Pluf\Log\Console';
 

@@ -530,14 +530,14 @@ class Compiler
                 if (isset($this->extraTags[$name])) {
                     if (false == $_end) {
                         if (method_exists($this->extraTags[$name], 'start')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->allowedTags[$name] . '\', $t); $_extra_tag->start(' . $argfct . '); ';
+                            $res .= '$_extra_tag = new ' . $this->allowedTags[$name] . '($t); $_extra_tag->start(' . $argfct . '); ';
                         }
                         if (method_exists($this->extraTags[$name], 'genStart')) {
                             $res .= $this->extraTags[$name]->genStart();
                         }
                     } else {
                         if (method_exists($this->extraTags[$name], 'end')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->allowedTags[$name] . '\', $t); $_extra_tag->end(' . $argfct . '); ';
+                            $res .= '$_extra_tag = new ' . $this->allowedTags[$name] . '($t); $_extra_tag->end(' . $argfct . '); ';
                         }
                         if (method_exists($this->extraTags[$name], 'genEnd')) {
                             $res .= $this->extraTags[$name]->genEnd();
