@@ -1,7 +1,7 @@
 <?php
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,32 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Template;
+namespace Pluf\PlufTest\Template;
 
-/**
- * A string already escaped to display in a template.
- */
-class SafeString
+use PHPUnit\Framework\TestCase;
+use Pluf\Bootstrap;
+use Pluf\Template;
+
+class TemplateTest extends TestCase
 {
 
-    public $value = '';
-
-    function __construct($mixed, $safe = false)
+    protected function setUp()
     {
-        if (is_object($mixed) and 'Pluf\Template\SafeString' == get_class($mixed)) {
-            $this->value = $mixed->value;
-        } else {
-            $this->value = ($safe) ? $mixed : htmlspecialchars($mixed, ENT_COMPAT, 'UTF-8');
-        }
+        Bootstrap::start(__DIR__ . '/../conf/config.php');
     }
 
-    function __toString()
+    public function testRender()
     {
-        return $this->value;
-    }
+        $folders = array(
+            dirname(__FILE__) . '/Compiler/tpl1',
+            dirname(__FILE__) . '/Compiler/tpl2'
+        );
+        $tmpl = new Template('tpl-extends.html', $folders);
+        $this->assertEquals("This is the base template
 
-    public static function markSafe($string)
-    {
-        return new \Pluf\Template\SafeString($string, true);
+Hello blockname
+
+toto 
+
+Template base \"Bye bye block2\" here:Bye bye block2", $tmpl->render());
     }
 }

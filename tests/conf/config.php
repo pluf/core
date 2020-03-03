@@ -49,8 +49,24 @@ $cfg['mimetype'] = 'text/html';
  * **************************************************************************
  */
 
+// template_modifiers
 $cfg['template_tags'] = array(
-    'mytag' => 'Pluf_Template_Tag_Mytag'
+    // Buildin tags
+    'aperm' => '\Pluf\Template\Tag\APerm',
+    'cfg' => '\Pluf\Template\Tag\Cfg',
+    'cycle' => '\Pluf\Template\Tag\Cycle',
+    'firstof' => '\Pluf\Template\Tag\Firstof',
+    'media' => '\Pluf\Template\Tag\MediaUrl',
+    'getmsgs' => '\Pluf\Template\Tag\Messages',
+    'now' => '\Pluf\Template\Tag\Now',
+    'regroup' => '\Pluf\Template\Tag\Regroup',
+    'amedia' => '\Pluf\Template\Tag\RmediaUrl',
+    'aurl' => '\Pluf\Template\Tag\Rurl',
+    'tenant' => '\Pluf\Template\Tag\Tenant',
+    'url' => '\Pluf\Template\Tag\Url',
+
+    // Application tgs
+    'mytag' => '\Pluf\Test\Template\Tag\Mytag'
 );
 
 // The folder in which the templates of the application are located.

@@ -1,10 +1,10 @@
 <?php
-namespace Pluf\Template\Tag;
+namespace Pluf\Test\Template\Tag;
 
 /**
  * Custom tag example.
  */
-class Pluf_Template_Tag_Mytag extends \Pluf\Template\Tag
+class Mytag extends \Pluf\Template\Tag
 {
 
     /**
@@ -14,7 +14,7 @@ class Pluf_Template_Tag_Mytag extends \Pluf\Template\Tag
      * You can access the template context through
      * $this->context
      */
-    function start ($param1, $param2)
+    function start($param1, $param2)
     {
         echo 'start of tag mytag:<br />';
         echo '$this->context[mytag]: ' . $this->context->get('mytag') . '<br />';
@@ -30,7 +30,7 @@ class Pluf_Template_Tag_Mytag extends \Pluf\Template\Tag
      * You cannot access the template context but you can write
      * code that is modifying it through $t
      */
-    function genStart ()
+    function genStart()
     {
         return '$t->set(\'mytag\', \'hello world!\');';
     }
@@ -42,7 +42,7 @@ class Pluf_Template_Tag_Mytag extends \Pluf\Template\Tag
      * You can access the template context through
      * $this->context
      */
-    function end ($param1)
+    function end($param1)
     {
         echo 'end of tag mytag:<br />';
         echo '$this->context[mytag]: ' . $this->context->get('mytag') . '<br />';
@@ -58,7 +58,7 @@ class Pluf_Template_Tag_Mytag extends \Pluf\Template\Tag
      * You cannot access the template context but you can write
      * code that is modifying it through $t
      */
-    function genEnd ()
+    function genEnd()
     {
         // Cleaning :)
         return '$t->set(\'mytag\', \'\');';

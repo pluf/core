@@ -121,15 +121,16 @@ class Compiler
         'trim' => 'trim',
         'ltrim' => 'ltrim',
         'rtrim' => 'rtrim',
-        'unsafe' => 'Pluf_Template_unsafe',
-        'safe' => 'Pluf_Template_unsafe',
-        'date' => 'Pluf_Template_dateFormat',
-        'time' => 'Pluf_Template_timeFormat',
-        'dateago' => 'Pluf_Template_dateAgo',
-        'timeago' => 'Pluf_Template_timeAgo',
-        'email' => 'Pluf_Template_safeEmail',
-        'first' => 'Pluf_Template_first',
-        'last' => 'Pluf_Template_last'
+
+        'unsafe' => '\Pluf\Template::unsafe',
+        'safe' => '\Pluf\Template::unsafe',
+        'date' => '\Pluf\Template::dateFormat',
+        'time' => '\Pluf\Template::timeFormat',
+        'dateago' => '\Pluf\Template::dateAgo',
+        'timeago' => '\Pluf\Template::timeAgo',
+        'email' => '\Pluf\Template::safeEmail',
+        'first' => '\Pluf\Template::first',
+        'last' => '\Pluf\Template::last'
     );
 
     /**
@@ -148,42 +149,28 @@ class Compiler
      * These default tags are merged with the 'template_tags' defined
      * in the configuration of the application.
      */
-    protected $_allowedTags = array(
-        'url' => 'Pluf_Template_Tag_Url',
-        'aurl' => 'Pluf_Template_Tag_Rurl',
-        'media' => 'Pluf_Template_Tag_MediaUrl',
-        'amedia' => 'Pluf_Template_Tag_RmediaUrl',
-        'aperm' => 'Pluf_Template_Tag_APerm',
-        'getmsgs' => 'Pluf_Template_Tag_Messages'
-    );
+    protected $allowedTags = array();
 
     /**
      * During compilation, all the tags are created once so to query
      * their interface easily.
      */
-    protected $_extraTags = array();
+    protected $extraTags = array();
 
     /**
      * The block stack to see if the blocks are correctly closed.
      */
-    protected $_blockStack = array();
-
-    /**
-     * Special stack for the translation handling in blocktrans.
-     */
-    protected $_transStack = array();
-
-    protected $_transPlural = false;
+    protected $blockStack = array();
 
     /**
      * Current template source file.
      */
-    protected $_sourceFile;
+    protected $sourceFile;
 
     /**
      * Current tag.
      */
-    protected $_currentTag;
+    protected $currentTag;
 
     /**
      * Template folders.
@@ -246,12 +233,12 @@ class Compiler
             'modifiers' => array()
         );
         Signal::send('Pluf_Template_Compiler::construct_template_tags_modifiers', 'Pluf_Template_Compiler', $params);
-        $this->_allowedTags = array_merge($this->_allowedTags, $params['tags'], Bootstrap::f('template_tags', array()));
+        $this->allowedTags = array_merge($this->allowedTags, $params['tags'], Bootstrap::f('template_tags', array()));
         $this->_modifier = array_merge($this->_modifier, $params['modifiers'], Bootstrap::f('template_modifiers', array()));
-        foreach ($this->_allowedTags as $name => $model) {
-            $this->_extraTags[$name] = new $model();
+        foreach ($this->allowedTags as $name => $model) {
+            $this->extraTags[$name] = new $model();
         }
-        $this->_sourceFile = $template_file;
+        $this->sourceFile = $template_file;
         $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
@@ -276,6 +263,7 @@ class Compiler
         $tplcontent = preg_replace('!<\?php(.*?)\?>!s', '', $tplcontent);
         // Catch the litteral blocks and put them in the
         // $this->_literals stack
+        $_match = array();
         preg_match_all('!{literal}(.*?){/literal}!s', $tplcontent, $_match);
         $this->_literals = $_match[1];
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
@@ -284,8 +272,8 @@ class Compiler
             $this,
             '_callback'
         ), $tplcontent);
-        if (count($this->_blockStack)) {
-            trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
+        if (count($this->blockStack)) {
+            trigger_error(sprintf('End tag of a block missing: %s', end($this->blockStack)), E_USER_ERROR);
         }
         return $result;
     }
@@ -296,13 +284,6 @@ class Compiler
     function getCompiledTemplate()
     {
         $result = $this->compile();
-        if (count($this->_usedModifiers)) {
-            $code = array();
-            foreach ($this->_usedModifiers as $modifier) {
-                $code[] = 'Pluf::loadFunction(\'' . $modifier . '\'); ';
-            }
-            $result = '<?php ' . implode("\n", $code) . '?>' . $result;
-        }
         // Clean the output
         $result = str_replace(array(
             '?><?php',
@@ -325,6 +306,7 @@ class Compiler
         $tplcontent = $this->templateContent;
         $this->_extendedTemplate = '';
         // Match extends on the first line of the template
+        $_match = array();
         if (preg_match("!{extends\s['\"](.*?)['\"]}!", $tplcontent, $_match)) {
             $this->_extendedTemplate = $_match[1];
         }
@@ -348,7 +330,7 @@ class Compiler
             // The template of interest is now the extended template
             // as we are not in a base template
             $this->loadTemplateFile($this->_extendedTemplate);
-            $this->_sourceFile = $this->_extendedTemplate;
+            $this->sourceFile = $this->_extendedTemplate;
             $this->compileBlocks(); // It will recurse to the base template.
         } else {
             // Replace the current blocks by a place holder
@@ -390,20 +372,21 @@ class Compiler
             trigger_error(sprintf('Invalid tag syntax: %s', $tag), E_USER_ERROR);
             return '';
         }
-        $this->_currentTag = $tag;
+        $this->currentTag = $tag;
         if (in_array($firstcar, array(
             '$',
             '\'',
             '"'
         ))) {
-            if ('blocktrans' !== end($this->_blockStack)) {
-                return '<?php Pluf_Template_safeEcho(' . $this->_parseVariable($tag) . '); ?>';
+            if ('blocktrans' !== end($this->blockStack)) {
+                return '<?php \Pluf\Template::safeEcho(' . $this->_parseVariable($tag) . '); ?>';
             } else {
                 $tok = explode('|', $tag);
-                $this->_transStack[substr($tok[0], 1)] = $this->_parseVariable($tag);
+                $this->transStack[substr($tok[0], 1)] = $this->_parseVariable($tag);
                 return '%%' . substr($tok[0], 1) . '%%';
             }
         } else {
+            $m = array();
             if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, $m)) {
                 trigger_error(sprintf('Invalid function syntax: %s', $tag), E_USER_ERROR);
                 return '';
@@ -430,19 +413,17 @@ class Compiler
         $tok = explode('|', $expr);
         $res = $this->_parseFinal(array_shift($tok), $this->_allowedInVar);
         foreach ($tok as $modifier) {
+            $m = array();
             if (! preg_match('/^(\w+)(?:\:(.*))?$/', $modifier, $m)) {
-                trigger_error(sprintf('Invalid modifier syntax: (%s) %s', $this->_currentTag, $modifier), E_USER_ERROR);
+                trigger_error(sprintf('Invalid modifier syntax: (%s) %s', $this->currentTag, $modifier), E_USER_ERROR);
                 return '';
             }
-            $targs = array(
-                $res
-            );
             if (isset($m[2])) {
                 $res = $this->_modifier[$m[1]] . '(' . $res . ',' . $m[2] . ')';
             } else if (isset($this->_modifier[$m[1]])) {
                 $res = $this->_modifier[$m[1]] . '(' . $res . ')';
             } else {
-                trigger_error(sprintf('Unknown modifier: (%s) %s', $this->_currentTag, $m[1]), E_USER_ERROR);
+                trigger_error(sprintf('Unknown modifier: (%s) %s', $this->currentTag, $m[1]), E_USER_ERROR);
                 return '';
             }
             if (! in_array($this->_modifier[$m[1]], $this->_usedModifiers)) {
@@ -457,17 +438,17 @@ class Compiler
         switch ($name) {
             case 'if':
                 $res = 'if (' . $this->_parseFinal($args, $this->_allowedInExpr) . '): ';
-                array_push($this->_blockStack, 'if');
+                array_push($this->blockStack, 'if');
                 break;
             case 'else':
-                if (end($this->_blockStack) != 'if') {
-                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
+                if (end($this->blockStack) != 'if') {
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->blockStack)), E_USER_ERROR);
                 }
                 $res = 'else: ';
                 break;
             case 'elseif':
-                if (end($this->_blockStack) != 'if') {
-                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
+                if (end($this->blockStack) != 'if') {
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->blockStack)), E_USER_ERROR);
                 }
                 $res = 'elseif(' . $this->_parseFinal($args, $this->_allowedInExpr) . '):';
                 break;
@@ -485,20 +466,20 @@ class Compiler
                     ';',
                     '!'
                 )) . '): ';
-                array_push($this->_blockStack, 'foreach');
+                array_push($this->blockStack, 'foreach');
                 break;
             case 'while':
                 $res = 'while(' . $this->_parseFinal($args, $this->_allowedInExpr) . '):';
-                array_push($this->_blockStack, 'while');
+                array_push($this->blockStack, 'while');
                 break;
             case '/foreach':
             case '/if':
             case '/while':
                 $short = substr($name, 1);
-                if (end($this->_blockStack) != $short) {
-                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
+                if (end($this->blockStack) != $short) {
+                    trigger_error(sprintf('End tag of a block missing: %s', end($this->blockStack)), E_USER_ERROR);
                 }
-                array_pop($this->_blockStack);
+                array_pop($this->blockStack);
                 $res = 'end' . $short . '; ';
                 break;
             case 'assign':
@@ -520,64 +501,6 @@ class Compiler
             case 'superblock':
                 $res = '?>~~{~~superblock~~}~~<?php ';
                 break;
-            case 'trans':
-                $argfct = $this->_parseFinal($args, $this->_allowedAssign);
-                $res = 'echo(__(' . $argfct . '));';
-                break;
-            case 'blocktrans':
-                array_push($this->_blockStack, 'blocktrans');
-                $res = '';
-                $this->_transStack = array();
-                if ($args) {
-                    $this->_transPlural = true;
-                    $_args = $this->_parseFinal($args, $this->_allowedAssign, array(
-                        ';',
-                        '[',
-                        ']'
-                    ), true);
-                    $res .= '$_b_t_c=' . trim(array_shift($_args)) . '; ';
-                }
-                $res .= 'ob_start(); ';
-                break;
-            case '/blocktrans':
-                $short = substr($name, 1);
-                if (end($this->_blockStack) != $short) {
-                    trigger_error(sprintf('End tag of a block missing: %s', end($this->_blockStack)), E_USER_ERROR);
-                }
-                $res = '';
-                if ($this->_transPlural) {
-                    $res .= '$_b_t_p=ob_get_contents(); ob_end_clean(); echo(';
-                    $res .= 'Pluf_Translation::sprintf(_n($_b_t_s, $_b_t_p, $_b_t_c), array(';
-                    $_tmp = array();
-                    foreach ($this->_transStack as $key => $_trans) {
-                        $_tmp[] = '\'' . addslashes($key) . '\' => Pluf_Template_safeEcho(' . $_trans . ', false)';
-                    }
-                    $res .= implode(', ', $_tmp);
-                    unset($_trans, $_tmp);
-                    $res .= ')));';
-                    $this->_transStack = array();
-                } else {
-                    $res .= '$_b_t_s=ob_get_contents(); ob_end_clean(); ';
-                    if (count($this->_transStack) == 0) {
-                        $res .= 'echo(__($_b_t_s)); ';
-                    } else {
-                        $res .= 'echo(Pluf_Translation::sprintf(__($_b_t_s), array(';
-                        $_tmp = array();
-                        foreach ($this->_transStack as $key => $_trans) {
-                            $_tmp[] = '\'' . addslashes($key) . '\' => Pluf_Template_safeEcho(' . $_trans . ', false)';
-                        }
-                        $res .= implode(', ', $_tmp);
-                        unset($_trans, $_tmp);
-                        $res .= '))); ';
-                        $this->_transStack = array();
-                    }
-                }
-                $this->_transPlural = false;
-                array_pop($this->_blockStack);
-                break;
-            case 'plural':
-                $res = '$_b_t_s=ob_get_contents(); ob_end_clean(); ob_start(); ';
-                break;
             case 'include':
                 // XXX fixme: Will need some security check, when online
                 // editing.
@@ -597,27 +520,27 @@ class Compiler
 
                 // Here we start the template tag calls at the template tag
                 // {tag ...} is not a block, so it must be a function.
-                if (! isset($this->_allowedTags[$name])) {
+                if (! isset($this->allowedTags[$name])) {
                     trigger_error(sprintf('The function tag "%s" is not allowed.', $name), E_USER_ERROR);
                 }
                 $argfct = $this->_parseFinal($args, $this->_allowedAssign);
                 // $argfct is a string that can be copy/pasted in the PHP code
                 // but we need the array of args.
                 $res = '';
-                if (isset($this->_extraTags[$name])) {
+                if (isset($this->extraTags[$name])) {
                     if (false == $_end) {
-                        if (method_exists($this->_extraTags[$name], 'start')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->_allowedTags[$name] . '\', $t); $_extra_tag->start(' . $argfct . '); ';
+                        if (method_exists($this->extraTags[$name], 'start')) {
+                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->allowedTags[$name] . '\', $t); $_extra_tag->start(' . $argfct . '); ';
                         }
-                        if (method_exists($this->_extraTags[$name], 'genStart')) {
-                            $res .= $this->_extraTags[$name]->genStart();
+                        if (method_exists($this->extraTags[$name], 'genStart')) {
+                            $res .= $this->extraTags[$name]->genStart();
                         }
                     } else {
-                        if (method_exists($this->_extraTags[$name], 'end')) {
-                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->_allowedTags[$name] . '\', $t); $_extra_tag->end(' . $argfct . '); ';
+                        if (method_exists($this->extraTags[$name], 'end')) {
+                            $res .= '$_extra_tag = Pluf::factory(\'' . $this->allowedTags[$name] . '\', $t); $_extra_tag->end(' . $argfct . '); ';
                         }
-                        if (method_exists($this->_extraTags[$name], 'genEnd')) {
-                            $res .= $this->_extraTags[$name]->genEnd();
+                        if (method_exists($this->extraTags[$name], 'genEnd')) {
+                            $res .= $this->extraTags[$name]->genEnd();
                         }
                     }
                 }
@@ -648,12 +571,12 @@ class Compiler
     {
         $tokens = token_get_all('<?php ' . $string . '?>');
         $result = '';
-//         $first = true;
+        // $first = true;
         $inDot = false;
         $firstok = array_shift($tokens);
-//         $afterAs = false;
-//         $f_key = '';
-//         $f_val = '';
+        // $afterAs = false;
+        // $f_key = '';
+        // $f_val = '';
         $results = array();
 
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
@@ -664,13 +587,13 @@ class Compiler
         foreach ($tokens as $tok) {
             if (is_array($tok)) {
                 list ($type, $str) = $tok;
-//                 $first = false;
+                // $first = false;
                 if ($type == T_CLOSE_TAG) {
                     continue;
                 }
-//                 if ($type == T_AS) {
-//                     $afterAs = true;
-//                 }
+                // if ($type == T_AS) {
+                // $afterAs = true;
+                // }
                 if ($type == T_STRING && $inDot) {
                     $result .= $str;
                 } elseif ($type == T_VARIABLE) {
@@ -679,12 +602,12 @@ class Compiler
                 } elseif ($type == T_WHITESPACE || in_array($type, $allowed)) {
                     $result .= $str;
                 } else {
-                    trigger_error(sprintf('Invalid syntax: (%s) %s.', $this->_currentTag, $str . ' tokens' . var_export($tokens, true)), E_USER_ERROR);
+                    trigger_error(sprintf('Invalid syntax: (%s) %s.', $this->currentTag, $str . ' tokens' . var_export($tokens, true)), E_USER_ERROR);
                     return '';
                 }
             } else {
                 if (in_array($tok, $exceptchar)) {
-                    trigger_error(sprintf('Invalid character: (%s) %s.', $this->_currentTag, $tok), E_USER_ERROR);
+                    trigger_error(sprintf('Invalid character: (%s) %s.', $this->currentTag, $tok), E_USER_ERROR);
                 } elseif ($tok == '.') {
                     $inDot = true;
                     $result .= '->';
@@ -700,7 +623,7 @@ class Compiler
                 } else {
                     $result .= $tok;
                 }
-//                 $first = false;
+                // $first = false;
             }
         }
         if (! $getAsArray) {

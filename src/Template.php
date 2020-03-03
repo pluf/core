@@ -71,10 +71,12 @@ class Template
         } else {
             $this->cache = $cache;
         }
+        // TODO: maso,202: remove test code
         if (defined('IN_UNIT_TESTS')) {
             if (! isset($GLOBALS['_PX_tests_templates'])) {
                 $GLOBALS['_PX_tests_templates'] = array();
             }
+            \Pluf\Log::awarn('Remove test codes');
         }
         $this->compiled_template = $this->getCompiledTemplateName();
         $b = $this->compiled_template[1];
@@ -100,6 +102,8 @@ class Template
     {
         if (defined('IN_UNIT_TESTS')) {
             $GLOBALS['_PX_tests_templates'][] = $this;
+            // TODO: maso,202: remove test code
+            \Pluf\Log::awarn('Remove test codes');
         }
         if (null == $c) {
             $c = new Context();

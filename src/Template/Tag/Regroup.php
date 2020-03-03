@@ -98,7 +98,7 @@ use InvalidArgumentException;
  *
  * Based on concepts from the Django regroup template tag.
  */
-class Pluf_Template_Tag_Regroup extends Tag
+class Regroup extends Tag
 {
 
     /**
