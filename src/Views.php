@@ -36,7 +36,7 @@ use Pluf\Form\ModelBinaryUpdate;
  * If you follow SEEN API guid line, the view is verry usefull in your
  * implementation.
  */
-class Pluf_Views
+class Views
 {
 
     /**
@@ -49,7 +49,7 @@ class Pluf_Views
      * @param
      *            string Redirection URL (not a view)
      */
-    function redirectTo($request, $match, $url)
+    public function redirectTo($request, $match, $url)
     {
         return new Redirect($url);
     }
@@ -64,7 +64,7 @@ class Pluf_Views
      * @param
      *            string Content of the page
      */
-    function simpleContent($request, $match, $content)
+    public function simpleContent($request, $match, $content)
     {
         return new Response($content);
     }
@@ -72,21 +72,11 @@ class Pluf_Views
     /**
      * Creates a template and returns as result
      *
-     * در بسیاری از کاربردها نرم‌افزار کاربردی به صفحه‌های متفاوتی شکسته می‌شود
-     * و بر اساس
-     * حالت کاربر یکی از صفحه‌ها نمایش داده می‌شود. به این ترتیب حجم دانلود برای
-     * هر صفحه
-     * کم شده و توسعه هر صفحه نیز راحتر می‌شود.
-     *
-     * این فراخوانی این امکان را ایجاد می‌کند که در لایه نمایش به سادگی یکی از
-     * الگوها را
-     * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
-     *
      * @param Request $request
      * @param array $match
      * @return Response
      */
-    function loadTemplate($request, $match)
+    public function loadTemplate($request, $match)
     {
         $template = $match[1];
         $extra_context = array();
