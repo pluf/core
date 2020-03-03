@@ -19,7 +19,7 @@
  */
 namespace Pluf\Form;
 
-use Pluf\Model;
+use Pluf\Form;
 
 /**
  * Dynamic form validation class to update a model data.
@@ -28,13 +28,13 @@ use Pluf\Model;
  *
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
  */
-class FormModelUpdate extends Model
+class FormModelUpdate extends Form
 {
 
     /**
      * The model for which the form applies.
      */
-    public $model = null;
+    public $model = Null;
 
     function initFields($extra = array())
     {
