@@ -19,6 +19,7 @@
 namespace Pluf\HTTP;
 
 use Pluf\Exception;
+use Pluf\Bootstrap;
 
 /**
  * Generate a ready to use URL to be used in location/redirect or forms.
@@ -116,7 +117,7 @@ class URL
      */
     public static function urlForView($view, $params = array(), $get_params = array())
     {
-        $url = new URL('mod_rewrite');
+        $url = new URL(Bootstrap::f('url_format', 'mod_rewrite'));
         return $url->generate(self::reverse($view, $params), $get_params);
     }
 

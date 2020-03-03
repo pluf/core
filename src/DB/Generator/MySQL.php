@@ -198,7 +198,7 @@ class MySQL extends \Pluf\DB\Generator
             }
             if (isset($val['unique']) and $val['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
-                $columns = (Bootstrap::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
+                $columns = (Bootstrap::f('tenant_multi_enable', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
                 $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX `%s` ON `%s` (%s);', $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Schema::quoteColumn($columns, $this->con));
             }
         }

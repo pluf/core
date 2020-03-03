@@ -1,5 +1,5 @@
 <?php
-namespace Pluf\Smallest;
+namespace Pluf\Note;
 
 class Module extends \Pluf\Module
 {

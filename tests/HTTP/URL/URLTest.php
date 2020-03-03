@@ -30,7 +30,7 @@ class URLTest extends TestCase
     {
         Bootstrap::start(__DIR__ . '/../../conf/config.php');
         $d = new Dispatcher();
-        $d->loadControllers(Bootstrap::f('app_views'));
+        $d->loadControllers(__DIR__ . '/../../conf/views.php');
     }
 
     public function testGenerateSimple()
@@ -131,7 +131,7 @@ class URLTest extends TestCase
 
     public function testReverseUrlFromView()
     {
-        $url = HTTP\URL::reverse('Todo_Views::updateItem', array(
+        $url = HTTP\URL::reverse('\Pluf\Todo\Views::updateItem', array(
             '32'
         ));
         $this->assertEquals('/item/32/update/', $url);

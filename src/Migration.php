@@ -222,7 +222,7 @@ class Migration
      */
     public function findMigrations()
     {
-        // $migrations = array();
+        $migrations = array();
         // if (false !== ($mdir = Pluf::fileExists($this->app . '/Migrations'))) {
         // $dir = new DirectoryIterator($mdir);
         // foreach ($dir as $file) {

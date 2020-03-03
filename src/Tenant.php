@@ -184,19 +184,25 @@ class Tenant extends Model
      */
     public static function current()
     {
-        if (! Bootstrap::f('multitenant', false)) {
+        //----------------------------------------------------
+        // Single tenant
+        //----------------------------------------------------
+        if (! Bootstrap::f('tenant_multi_enable', false)) {
             $tenant = new Tenant();
-            $tenant->setFromFormData(Bootstrap::f('multitenant_default', array(
+            $tenant->setFromFormData(Bootstrap::pf('tenant_root_', array(
                 'level' => 10,
                 'title' => 'Tenant title',
                 'description' => 'Default tenant in single mode',
                 'domain' => 'pluf.ir',
                 'subdomain' => 'www',
                 'validate' => 1
-            )));
+            ), true));
             $tenant->id = 0;
             return $tenant;
         }
+        //----------------------------------------------------
+        // Multi tenant
+        //----------------------------------------------------
         if (array_key_exists('_PX_request', $GLOBALS)) {
             // load tenant from request
             return $GLOBALS['_PX_request']->tenant;

@@ -497,7 +497,7 @@ abstract class Model implements JsonSerializable
     function get($id)
     {
         $req = 'SELECT * FROM ' . ModelUtils::getTable($this) . ' WHERE ';
-        if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
+        if (Bootstrap::f('tenant_multi_enable', false) && $this->_a['multitenant']) {
             $sql = new SQL('tenant=%s AND id=%s', array(
                 Tenant::current()->id,
                 $this->_toDb($id, 'id')
@@ -639,7 +639,7 @@ abstract class Model implements JsonSerializable
             $query['where'] .= ' (' . $p['filter'] . ') ';
         }
         // Multi-Tenant filter
-        if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
+        if (Bootstrap::f('tenant_multi_enable', false) && $this->_a['multitenant']) {
             // Note: Hadi, 1395-11-26: Table should be set before tenant field.
             // It is to avoid ambiguous problem in join tables which both have tenant field.
             $sql = new SQL(ModelUtils::getTable($this) . '.tenant=%s', array(
@@ -895,7 +895,7 @@ abstract class Model implements JsonSerializable
         if (! $raw) {
             $this->preSave(true);
         }
-        if (Bootstrap::f('multitenant', false) && $this->_a['multitenant']) {
+        if (Bootstrap::f('tenant_multi_enable', false) && $this->_a['multitenant']) {
             $this->tenant = Tenant::current();
         }
         $req = 'INSERT INTO ' . ModelUtils::getTable($this) . "\n";
@@ -1183,7 +1183,7 @@ abstract class Model implements JsonSerializable
      */
     private function setupMultitenantFields()
     {
-        if (Bootstrap::f('multitenant', false) && $this->multitinant) {
+        if (Bootstrap::f('tenant_multi_enable', false) && $this->multitinant) {
             // Add key
             $this->_a['cols']['tenant'] = $this->tenant_field;
             // Add idx
