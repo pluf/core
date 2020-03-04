@@ -188,18 +188,11 @@ class Shortcuts
      *            name of model (of type Model)
      * @return string name of association table for given modeles.
      *        
-     * @deprecated use ModelUtil::getAssocTable($from,$to);
+     * @deprecated use ModelUtils::getAssocTable($from,$to);
      */
-    public static function getAssociationTableName($modelName1, $modelName2)
+    public static function getAssociationTableName($from, $to)
     {
-        $hay = array(
-            strtolower($modelName1),
-            strtolower($modelName2)
-        );
-        sort($hay);
-        $table = $hay[0] . '_' . $hay[1] . '_assoc';
-        $table = ModelUtils::skipeName($table);
-        return $table;
+        return ModelUtils::getAssocTable($from, $to);
     }
 
     /**
@@ -209,9 +202,9 @@ class Shortcuts
      *            name of model (of type Model)
      * @return string column name for given model as foreign key in an association table.
      */
-    public static function getForeignKeyName($modelName)
+    public static function getForeignKeyName(Model $model): string
     {
-        return strtolower($modelName) . '_id';
+        return $model->tableName . '_id';
     }
 
     /**
