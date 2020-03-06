@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');

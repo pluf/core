@@ -18,55 +18,55 @@ class Pluf_Translation_TemplateExtractor
      * Variables.
      */
     protected $_vartype = array(
-            T_CHARACTER,
-            T_CONSTANT_ENCAPSED_STRING,
-            T_DNUMBER,
-            T_ENCAPSED_AND_WHITESPACE,
-            T_LNUMBER,
-            T_OBJECT_OPERATOR,
-            T_STRING,
-            T_WHITESPACE,
-            T_ARRAY
+//         T_CHARACTER,
+        T_CONSTANT_ENCAPSED_STRING,
+        T_DNUMBER,
+        T_ENCAPSED_AND_WHITESPACE,
+        T_LNUMBER,
+        T_OBJECT_OPERATOR,
+        T_STRING,
+        T_WHITESPACE,
+        T_ARRAY
     );
 
     /**
      * Assignation operators.
      */
     protected $_assignOp = array(
-            T_AND_EQUAL,
-            T_DIV_EQUAL,
-            T_MINUS_EQUAL,
-            T_MOD_EQUAL,
-            T_MUL_EQUAL,
-            T_OR_EQUAL,
-            T_PLUS_EQUAL,
-            T_PLUS_EQUAL,
-            T_SL_EQUAL,
-            T_SR_EQUAL,
-            T_XOR_EQUAL
+        T_AND_EQUAL,
+        T_DIV_EQUAL,
+        T_MINUS_EQUAL,
+        T_MOD_EQUAL,
+        T_MUL_EQUAL,
+        T_OR_EQUAL,
+        T_PLUS_EQUAL,
+        T_PLUS_EQUAL,
+        T_SL_EQUAL,
+        T_SR_EQUAL,
+        T_XOR_EQUAL
     );
 
     /**
      * Operators.
      */
     protected $_op = array(
-            T_BOOLEAN_AND,
-            T_BOOLEAN_OR,
-            T_EMPTY,
-            T_INC,
-            T_ISSET,
-            T_IS_EQUAL,
-            T_IS_GREATER_OR_EQUAL,
-            T_IS_IDENTICAL,
-            T_IS_NOT_EQUAL,
-            T_IS_NOT_IDENTICAL,
-            T_IS_SMALLER_OR_EQUAL,
-            T_LOGICAL_AND,
-            T_LOGICAL_OR,
-            T_LOGICAL_XOR,
-            T_SR,
-            T_SL,
-            T_DOUBLE_ARROW
+        T_BOOLEAN_AND,
+        T_BOOLEAN_OR,
+        T_EMPTY,
+        T_INC,
+        T_ISSET,
+        T_IS_EQUAL,
+        T_IS_GREATER_OR_EQUAL,
+        T_IS_IDENTICAL,
+        T_IS_NOT_EQUAL,
+        T_IS_NOT_IDENTICAL,
+        T_IS_SMALLER_OR_EQUAL,
+        T_LOGICAL_AND,
+        T_LOGICAL_OR,
+        T_LOGICAL_XOR,
+        T_SR,
+        T_SL,
+        T_DOUBLE_ARROW
     );
 
     /**
@@ -88,23 +88,23 @@ class Pluf_Translation_TemplateExtractor
      * Output filters.
      */
     protected $_modifier = array(
-            'upper' => 'strtoupper',
-            'lower' => 'strtolower',
-            'escxml' => 'htmlspecialchars',
-            'escape' => 'Pluf_Template_htmlspecialchars',
-            'strip_tags' => 'strip_tags',
-            'escurl' => 'rawurlencode',
-            'capitalize' => 'ucwords',
-            // Not var_export because of recursive issues.
-            'debug' => 'print_r',
-            'fulldebug' => 'var_export',
-            'count' => 'count',
-            'nl2br' => 'nl2br',
-            'trim' => 'trim',
-            'unsafe' => 'Pluf_Template_unsafe',
-            'safe' => 'Pluf_Template_unsafe',
-            'date' => 'Pluf_Template_dateFormat',
-            'time' => 'Pluf_Template_timeFormat'
+        'upper' => 'strtoupper',
+        'lower' => 'strtolower',
+        'escxml' => 'htmlspecialchars',
+        'escape' => 'Pluf_Template_htmlspecialchars',
+        'strip_tags' => 'strip_tags',
+        'escurl' => 'rawurlencode',
+        'capitalize' => 'ucwords',
+        // Not var_export because of recursive issues.
+        'debug' => 'print_r',
+        'fulldebug' => 'var_export',
+        'count' => 'count',
+        'nl2br' => 'nl2br',
+        'trim' => 'trim',
+        'unsafe' => 'Pluf_Template_unsafe',
+        'safe' => 'Pluf_Template_unsafe',
+        'date' => 'Pluf_Template_dateFormat',
+        'time' => 'Pluf_Template_timeFormat'
     );
 
     /**
@@ -124,7 +124,7 @@ class Pluf_Translation_TemplateExtractor
      * in the configuration of the application.
      */
     protected $_allowedTags = array(
-            'url' => 'Pluf_Template_Tag_Url'
+        'url' => 'Pluf_Template_Tag_Url'
     );
 
     /**
@@ -177,21 +177,20 @@ class Pluf_Translation_TemplateExtractor
      * @param
      *            bool Load directly the template content. (true)
      */
-    function __construct ($template_file, $folders = array(), $load = true)
+    function __construct($template_file, $folders = array(), $load = true)
     {
         $allowedtags = Pluf::f('template_tags', array());
         $this->_allowedTags = array_merge($allowedtags, $this->_allowedTags);
         $modifiers = Pluf::f('template_modifiers', array());
         $this->_modifier = array_merge($modifiers, $this->_modifier);
-        
+
         foreach ($this->_allowedTags as $name => $model) {
             $this->_extraTags[$name] = new $model();
         }
         $this->_sourceFile = $template_file;
         $this->_allowedInVar = array_merge($this->_vartype, $this->_op);
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
-        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, 
-                $this->_op);
+        $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->templateFolders = $folders;
         if ($load) {
             $this->loadTemplateFile($template_file);
@@ -201,7 +200,7 @@ class Pluf_Translation_TemplateExtractor
     /**
      * Get blocktrans.
      */
-    function getBlockTrans ()
+    function getBlockTrans()
     {
         $tplcontent = $this->templateContent;
         $tplcontent = preg_replace('!{\*(.*?)\*}!s', '', $tplcontent);
@@ -217,7 +216,7 @@ class Pluf_Translation_TemplateExtractor
     /**
      * Get simple trans call.
      */
-    function getSimpleTrans ()
+    function getSimpleTrans()
     {
         $tplcontent = $this->templateContent;
         $tplcontent = preg_replace('!{\*(.*?)\*}!s', '', $tplcontent);
@@ -235,51 +234,42 @@ class Pluf_Translation_TemplateExtractor
      *
      * @return string PHP code of the compiled template.
      */
-    function compile ()
+    function compile()
     {
         $result = '';
         $blocktrans = $this->getBlockTrans();
         // Parse the blocktrans
         foreach ($blocktrans as $block) {
             $match = array();
-            if (preg_match(
-                    '!{blocktrans(.*?)}(.*?){plural}(.*?){/blocktrans}!s', 
-                    $block, $match)) {
+            if (preg_match('!{blocktrans(.*?)}(.*?){plural}(.*?){/blocktrans}!s', $block, $match)) {
                 $sing = $match[2];
                 $plural = $match[3];
-                $sing = preg_replace_callback('/{((.).*?)}/s', 
-                        array(
-                                $this,
-                                '_callbackInTransBlock'
-                        ), $sing);
-                $plural = preg_replace_callback('/{((.).*?)}/s', 
-                        array(
-                                $this,
-                                '_callbackInTransBlock'
-                        ), $plural);
-                $result .= '_n(\'' . addcslashes($sing, "'") . '\', \'' .
-                         addcslashes($plural, "'") . '\', $n);' . "\n";
-            } elseif (preg_match('!{blocktrans}(.*?){/blocktrans}!s', $block, 
-                    $match)) {
-                $sing = preg_replace_callback('/{((.).*?)}/s', 
-                        array(
-                                $this,
-                                '_callbackInTransBlock'
-                        ), $match[1]);
+                $sing = preg_replace_callback('/{((.).*?)}/s', array(
+                    $this,
+                    '_callbackInTransBlock'
+                ), $sing);
+                $plural = preg_replace_callback('/{((.).*?)}/s', array(
+                    $this,
+                    '_callbackInTransBlock'
+                ), $plural);
+                $result .= '_n(\'' . addcslashes($sing, "'") . '\', \'' . addcslashes($plural, "'") . '\', $n);' . "\n";
+            } elseif (preg_match('!{blocktrans}(.*?){/blocktrans}!s', $block, $match)) {
+                $sing = preg_replace_callback('/{((.).*?)}/s', array(
+                    $this,
+                    '_callbackInTransBlock'
+                ), $match[1]);
                 $result .= '__(\'' . addcslashes($sing, "'") . '\');' . "\n";
             }
         }
-        
+
         $simpletrans = $this->getSimpleTrans();
         foreach ($simpletrans as $content) {
-            $result .= preg_replace_callback('/{((.).*?)}/s', 
-                    array(
-                            $this,
-                            '_callback'
-                    ), $content);
+            $result .= preg_replace_callback('/{((.).*?)}/s', array(
+                $this,
+                '_callback'
+            ), $content);
         }
-        return '<?php # This is not a valid php code. It is just for gettext use' .
-                 "\n\n" . $result . ' ?>';
+        return '<?php # This is not a valid php code. It is just for gettext use' . "\n\n" . $result . ' ?>';
     }
 
     /**
@@ -291,13 +281,11 @@ class Pluf_Translation_TemplateExtractor
      * @param
      *            string Relative path of the file to load.
      */
-    function loadTemplateFile ($file)
+    function loadTemplateFile($file)
     {
         // FIXME: Very small security check, could be better.
         if (strpos($file, '..') !== false) {
-            throw new Exception(
-                    sprintf(__('Template file contains invalid characters: %s'), 
-                            $file));
+            throw new Exception(sprintf(__('Template file contains invalid characters: %s'), $file));
         }
         foreach ($this->templateFolders as $folder) {
             if (file_exists($folder . '/' . $file)) {
@@ -309,20 +297,17 @@ class Pluf_Translation_TemplateExtractor
         throw new Exception(sprintf(__('Template file not found: %s'), $file));
     }
 
-    function _callback ($matches)
+    function _callback($matches)
     {
         list (, $tag, $firstcar) = $matches;
         if ($firstcar != 't') {
-            trigger_error(
-                    sprintf(__('Invalid tag in translation extractor: %s'), 
-                            $tag), E_USER_ERROR);
+            trigger_error(sprintf(__('Invalid tag in translation extractor: %s'), $tag), E_USER_ERROR);
             return '';
         }
         $this->_currentTag = $tag;
-        if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', 
-                $tag, $m)) {
-            trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), 
-                    E_USER_ERROR);
+        $m = array();
+        if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, $m)) {
+            trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), E_USER_ERROR);
             return '';
         }
         if (count($m) == 4) {
@@ -336,12 +321,11 @@ class Pluf_Translation_TemplateExtractor
         return '';
     }
 
-    function _callbackInTransBlock ($matches)
+    function _callbackInTransBlock($matches)
     {
         list (, $tag, $firstcar) = $matches;
         if (! preg_match('/^\$|[\'"]|[a-zA-Z\/]$/', $firstcar)) {
-            trigger_error(sprintf(__('Invalid tag syntax: %s'), $tag), 
-                    E_USER_ERROR);
+            trigger_error(sprintf(__('Invalid tag syntax: %s'), $tag), E_USER_ERROR);
             return '';
         }
         $this->_currentTag = $tag;
@@ -353,7 +337,7 @@ class Pluf_Translation_TemplateExtractor
         return '';
     }
 
-    function _parseVariable ($expr)
+    function _parseVariable($expr)
     {
         $tok = explode('|', $expr);
         $res = $this->_parseFinal(array_shift($tok), $this->_allowedInVar);
@@ -361,7 +345,7 @@ class Pluf_Translation_TemplateExtractor
         return $res;
     }
 
-    function _parseFunction ($name, $args)
+    function _parseFunction($name, $args)
     {
         switch ($name) {
             case 'trans':
@@ -389,34 +373,35 @@ class Pluf_Translation_TemplateExtractor
      * tous : T_VARIABLE, @locale@
      *
      */
-    function _parseFinal ($string, $allowed = array(), $exceptchar = array(';'))
+    function _parseFinal($string, $allowed = array(), $exceptchar = array(
+        ';'
+    ))
     {
         $tokens = token_get_all('<?php ' . $string . '?>');
         $result = '';
-        $first = true;
+        // $first = true;
         $inDot = false;
         $firstok = array_shift($tokens);
-        $afterAs = false;
-        $f_key = '';
-        $f_val = '';
-        $results = array();
-        
+        // $afterAs = false;
+        // $f_key = '';
+        // $f_val = '';
+        // $results = array();
+
         // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
-        if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1]) &&
-                 $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
+        if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1]) && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);
             array_shift($tokens);
         }
         foreach ($tokens as $tok) {
             if (is_array($tok)) {
                 list ($type, $str) = $tok;
-                $first = false;
+                // $first = false;
                 if ($type == T_CLOSE_TAG) {
                     continue;
                 }
-                if ($type == T_AS) {
-                    $afterAs = true;
-                }
+                // if ($type == T_AS) {
+                // $afterAs = true;
+                // }
                 if ($inDot) {
                     $result .= $str;
                 } elseif ($type == T_VARIABLE) {
@@ -424,16 +409,12 @@ class Pluf_Translation_TemplateExtractor
                 } elseif ($type == T_WHITESPACE || in_array($type, $allowed)) {
                     $result .= $str;
                 } else {
-                    trigger_error(
-                            sprintf(__('Invalid syntax: (%s) %s.'), 
-                                    $this->_currentTag, $str), E_USER_ERROR);
+                    trigger_error(sprintf(__('Invalid syntax: (%s) %s.'), $this->_currentTag, $str), E_USER_ERROR);
                     return '';
                 }
             } else {
                 if (in_array($tok, $exceptchar)) {
-                    trigger_error(
-                            sprintf(__('Invalid character: (%s) %s.'), 
-                                    $this->_currentTag, $tok), E_USER_ERROR);
+                    trigger_error(sprintf(__('Invalid character: (%s) %s.'), $this->_currentTag, $tok), E_USER_ERROR);
                 } elseif ($tok == '.') {
                     $inDot = true;
                     $result .= '->';
@@ -443,13 +424,13 @@ class Pluf_Translation_TemplateExtractor
                     $result .= $tok;
                 } elseif ($tok == ']') {
                     $result .= $tok;
-                } elseif ($getAsArray && $tok == ',') {
-                    $results[] = $result;
+                } elseif (/* $getAsArray && */ $tok == ',') {
+                    // $results[] = $result;
                     $result = '';
                 } else {
                     $result .= $tok;
                 }
-                $first = false;
+                // $first = false;
             }
         }
         return $result;
