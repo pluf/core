@@ -38,7 +38,7 @@ use Pluf;
 class File implements \Pluf\LoggerHandler
 {
 
-    public function write($stack): void
+    public function write($stack = array()): void
     {
         $file = Pluf::f('pluf_log_file', Pluf::f('tmp_folder', '/tmp') . '/pluf.log');
         $out = array();

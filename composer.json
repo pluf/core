@@ -52,7 +52,8 @@
 		"psr-4" : {
 			"Pluf\\NoteBook\\" : "examples/NoteBook",
 			"Pluf\\Smallest\\" : "examples/Smallest",
-			"Pluf\\HelloWord\\" : "examples/HelloWord"
+			"Pluf\\HelloWord\\" : "examples/HelloWord",
+			"PlufTest\\" : "tests/"
 		},
 		"psr-0" : {
 			"test" : ""
