@@ -18,9 +18,9 @@
  */
 namespace Pluf;
 
-interface LoggerHandler
+interface LoggerAppender
 {
 
-    public function write($stack = array()): void;
+    public function write(string $message): void;
 }
 

@@ -51,14 +51,42 @@ $cfg['template_modifiers'] = array();
 // Logger
 // -------------------------------------------------------------------------
 
-$cfg['log_level'] = \Pluf\Logger::OFF;
-$cfg['log_delayed'] = false;
-$cfg['log_handler'] = '\Pluf\LoggerHandler\Console';
+//
+// All possible levels
+//
+// all
+// debug
+// info
+// notice
+// warning
+// error
+// critical
+// alert
+// emergency
+// off
+//
+$cfg['log_level'] = 'error';
 
-// log_remote_server' (localhost)
-// log_remote_path' (/)
-// log_remote_port' (8000)
-// log_remote_headers' (array())
+$cfg['log_delayed'] = false;
+
+//
+// Formatter convert runtime date into a simple writable message.
+//
+$cfg['log_formater'] = '\Pluf\LoggerFormatter\Plain';
+
+//
+// Logger appender get a message and append a log to outputs such as consoel
+// file remote server and etc.
+//
+$cfg['log_appender'] = '\Pluf\LoggerAppender\Console';
+
+//
+// Remote
+//
+// $cfg['log_appender_remote_server'] = 'localhost';
+// $cfg['log_appender_remote_path'] = '/';
+// $cfg['log_appender_remote_port'] = 8000;
+// $cfg['log_appender_remote_headers'] = [];
 
 // -------------------------------------------------------------------------
 // Tenants

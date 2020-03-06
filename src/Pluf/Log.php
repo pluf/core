@@ -30,6 +30,16 @@
  */
 class Pluf_Log extends \Pluf\Logger
 {
+
+    /**
+     * Signal handler to flush the log.
+     *
+     * The name of the signal and the parameters are not used.
+     */
+    public static function flushHandler($signal, &$params)
+    {
+        self::flush();
+    }
 }
 
 /**

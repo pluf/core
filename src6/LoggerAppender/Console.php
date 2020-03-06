@@ -16,18 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\LoggerHandler;
+namespace Pluf\LoggerAppender;
 
-use Pluf\Logger;
 
-class Console implements \Pluf\LoggerHandler
+class Console implements \Pluf\LoggerAppender
 {
 
-    public function write($stack = array()): void
+    public function write($message): void
     {
-        foreach ($stack as $elt) {
-            print(((int) $elt[0]) . ' ' . Logger::$reverse[$elt[1]] . ': ' . json_encode($elt[2]));
-        }
+        print($message . PHP_EOL);
     }
 }
 

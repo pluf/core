@@ -4,10 +4,10 @@ namespace PlufTest\Logger;
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
-use Pluf\LoggerHandler;
+use Pluf\LoggerAppender;
 use Pluf;
 
-class LoggerHandlerFileTest extends TestCase
+class LoggerAppenderFileTest extends TestCase
 {
 
     /**
@@ -18,10 +18,9 @@ class LoggerHandlerFileTest extends TestCase
     {
         \Pluf::start(__DIR__ . '/../conf/config.php');
 
-        $loggerHandler = new LoggerHandler\File();
-        $stack = array();
-        $loggerHandler->write($stack);
-
+        $loggerHandler = new LoggerAppender\File();
+        $message = 'hi';
+        $loggerHandler->write($message);
         $this->assertNotNull($loggerHandler);
     }
 }

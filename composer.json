@@ -21,7 +21,8 @@
 		"pear/mail_mime" : "^1.10.0",
 		"guzzlehttp/guzzle" : "^6.2",
 		"webonyx/graphql-php" : "^0.12.5",
-		"phayes/geophp" : "^1.2"
+		"phayes/geophp" : "^1.2",
+		"psr/log" : "~1.1"
 	},
 	"include-path" : [
 		"src/"

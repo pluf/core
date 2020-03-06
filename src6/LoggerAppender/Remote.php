@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\LoggerHandler;
+namespace Pluf\LoggerAppender;
 
 use Pluf;
 
@@ -34,7 +34,7 @@ use Pluf;
  * - 'log_remote_port' (8000)
  * - 'log_remote_headers' (array())
  */
-class Remote implements \Pluf\LoggerHandler
+class Remote implements \Pluf\LoggerAppender
 {
 
     /**
@@ -42,18 +42,17 @@ class Remote implements \Pluf\LoggerHandler
      *
      * @param $stack Array
      */
-    public function write($stack): void
+    public function write($message): void
     {
-        $payload = json_encode($stack);
         $out = 'POST ' . Pluf::f('log_remote_path', '/') . ' HTTP/1.1' . "\r\n";
         $out .= 'Host: ' . Pluf::f('log_remote_server', 'localhost') . "\r\n";
         $out .= 'Host: localhost' . "\r\n";
-        $out .= 'Content-Length: ' . strlen($payload) . "\r\n";
+        $out .= 'Content-Length: ' . strlen($message) . "\r\n";
         foreach (Pluf::f('log_remote_headers', array()) as $key => $val) {
             $out .= $key . ': ' . $val . "\r\n";
         }
         $out .= 'Connection: Close' . "\r\n\r\n";
-        $out .= $payload;
+        $out .= $message;
         $errno = 0;
         $errstr = '';
         $fp = fsockopen(Pluf::f('log_remote_server', 'localhost'), Pluf::f('log_remote_port', 8000), $errno, $errstr, 5);

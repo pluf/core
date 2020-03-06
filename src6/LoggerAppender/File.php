@@ -16,9 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\LoggerHandler;
+namespace Pluf\LoggerAppender;
 
-use Pluf\Logger;
 use Pluf;
 
 /**
@@ -35,16 +34,12 @@ use Pluf;
  * the log file 'pluf_log_file'. By default it creates a
  * <code>pluf.log</code> in the configured tmp folder.
  */
-class File implements \Pluf\LoggerHandler
+class File implements \Pluf\LoggerAppender
 {
 
-    public function write($stack = array()): void
+    public function write($message): void
     {
         $file = Pluf::f('pluf_log_file', Pluf::f('tmp_folder', '/tmp') . '/pluf.log');
-        $out = array();
-        foreach ($stack as $elt) {
-            $out[] = date(DATE_ISO8601, (int) $elt[0]) . ' ' . Logger::$reverse[$elt[1]] . ': ' . json_encode($elt[2]);
-        }
-        file_put_contents($file, implode(PHP_EOL, $out) . PHP_EOL, FILE_APPEND);
+        file_put_contents($file, $message . PHP_EOL, FILE_APPEND);
     }
 }

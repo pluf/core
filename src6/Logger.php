@@ -18,6 +18,7 @@
  */
 namespace Pluf;
 
+use Psr\Log\LoggerInterface;
 use Pluf;
 
 /**
@@ -28,8 +29,6 @@ use Pluf;
  */
 class Logger
 {
-
-    private static ?LoggerHandler $writer = null;
 
     /**
      * The log stack.
@@ -53,83 +52,65 @@ class Logger
      */
     const ALL = 1;
 
-    const DEBUG = 3;
+    const DEBUG = 1;
 
-    const INFO = 4;
+    const INFO = 2;
 
-    const PERF = 5;
+    const PERF = 3;
 
-    const EVENT = 6;
+    const EVENT = 3;
 
-    const WARN = 7;
+    const WARN = 4;
 
-    const ERROR = 8;
+    const ERROR = 5;
 
-    const FATAL = 9;
+    const FATAL = 6;
 
-    const OFF = 10;
+    const ALERT = 7;
+
+    const EMERGENCY = 8;
+
+    const OFF = 0;
 
     /**
      * Used to reverse the log level to the string.
      */
-    public static $reverse = array(
-        1 => 'ALL',
-        3 => 'DEBUG',
-        4 => 'INFO',
-        5 => 'PERF',
-        6 => 'EVENT',
-        7 => 'WARN',
-        8 => 'ERROR',
-        9 => 'FATAL'
+    private static $reverse = array(
+        0 => 'all',
+        1 => 'debug',
+        2 => 'info',
+        3 => 'notice',
+        4 => 'warning',
+        5 => 'error',
+        6 => 'critical',
+        7 => 'alert',
+        8 => 'emergency',
+        9 => 'off'
     );
 
-    /**
-     * Current log level.
-     *
-     * By default, logging is not enabled.
-     */
-    public static $level = null;
+    private static $direct = array(
+        'all' => 0,
+        'debug' => 1,
+        'info' => 2,
+        'notice' => 3,
+        'warning' => 4,
+        'error' => 5,
+        'critical' => 6,
+        'alert' => 7,
+        'emergency' => 8,
+        'off' => 9
+    );
 
-    /**
-     * Current message in the assert log.
-     */
-    public static $assert_mess = null;
+    private static array $loggerManagers = [];
 
-    /**
-     * Current level of the message in the assert log.
-     */
-    public static $assert_level = 10;
+    private static ?LoggerFormatter $loggerFormater = null;
 
-    private static function _log($level, $message)
+    private static ?LoggerAppender $loggerAppender = null;
+
+    private static function _log(int $level, $message)
     {
-        if (! isset(self::$level)) {
-            self::$level = Pluf::f('log_level', 10);
-        }
-        if (self::$level <= $level and self::$level != 10) {
-            self::$stack[] = array(
-                microtime(true),
-                $level,
-                $message
-            );
-            if (! Pluf::f('log_delayed', false)) {
-                self::flush();
-            }
-        }
-    }
-
-    /**
-     * Base assert logger.
-     *
-     * The assert logging is a two step process as one need to go
-     * through the assertion callback.
-     *
-     * @return bool false
-     */
-    private static function _alog($level, $message)
-    {
-        self::$assert_level = $level;
-        self::$assert_mess = $message;
-        return false; // This will trigger the assert handler.
+        $loggerManager = self::getLogger('default');
+        $loggerManager->log(self::$reverse[$level], $message);
     }
 
     /**
@@ -179,166 +160,47 @@ class Logger
     }
 
     /**
-     * Assert log at the ALL level.
-     */
-    public static function alog($message)
-    {
-        return self::_alog(self::ALL, $message);
-    }
-
-    /**
-     * Assert log at the DEBUG level.
-     */
-    public static function adebug($message)
-    {
-        self::_alog(self::DEBUG, $message);
-    }
-
-    public static function ainfo($message)
-    {
-        self::_alog(self::INFO, $message);
-    }
-
-    public static function aperf($message)
-    {
-        self::_alog(self::PERF, $message);
-    }
-
-    public static function aevent($message)
-    {
-        self::_alog(self::EVENT, $message);
-    }
-
-    public static function awarn($message)
-    {
-        self::_alog(self::WARN, $message);
-    }
-
-    public static function aerror($message)
-    {
-        self::_alog(self::ERROR, $message);
-    }
-
-    public static function afatal($message)
-    {
-        self::_alog(self::FATAL, $message);
-    }
-
-    /**
-     * Flush the data to the writer.
+     * Creates and return an instance of the logger with the given key
      *
-     * This reset the stack.
+     * @param string $key
+     * @return LoggerInterface
      */
-    public static function flush()
+    public static function getLogger(string $key): LoggerInterface
     {
-        if (count(self::$stack) == 0) {
-            return;
+        if (array_key_exists($key, self::$loggerManagers)) {
+            return self::$loggerManagers[$key];
         }
-        if (! isset(self::$writer)) {
-            $writerClass = Pluf::f('log_handler', '\Pluf\LoggerHandler\Console');
-            self::$writer = new $writerClass();
+        if (! isset(self::$loggerFormater)) {
+            $className = Pluf::f('log_formater', '\Pluf\LoggerFormater\Plain');
+            self::$loggerFormater = new $className();
         }
-        self::$writer->write(self::$stack);
-        self::$stack = array();
+        if (! isset(self::$loggerAppender)) {
+            $className = Pluf::f('log_appender', '\Pluf\LoggerAppender\Console');
+            self::$loggerAppender = new $className();
+        }
+        $loggerManager = new LoggerManager($key, self::$loggerFormater, self::$loggerAppender);
+        self::$loggerManagers[$key] = $loggerManager;
+        return $loggerManager;
     }
-
+    
+    
     /**
      * Signal handler to flush the log.
      *
      * The name of the signal and the parameters are not used.
      */
-    public static function flushHandler($signal, &$params)
+    public static function flush()
     {
-        self::flush();
-    }
-
-    /**
-     * Activation of the low impact logging.
-     *
-     * When called, it enabled the assertions for debugging.
-     */
-    public static function activeAssert()
-    {
-        assert_options(ASSERT_ACTIVE, 1);
-        assert_options(ASSERT_WARNING, 0);
-        assert_options(ASSERT_QUIET_EVAL, 1);
-        assert_options(ASSERT_CALLBACK, 'self_assert');
-    }
-
-    /**
-     * Increment a key in the store.
-     *
-     * It automatically creates the key as needed.
-     */
-    public static function inc($key, $amount = 1)
-    {
-        if (! isset(self::$store[$key])) {
-            self::$store[$key] = 0;
+        foreach (self::$loggerManagers as $loggerManager) {
+            $loggerManager->flush();
         }
-        self::$store[$key] += $amount;
     }
 
-    /**
-     * Set a key in the store.
-     */
-    public static function set($key, $value)
+    public static function toLevelMarker(string $level): int
     {
-        self::$store[$key] = $value;
-    }
-
-    /**
-     * Get a key from the store.
-     */
-    public static function get($key, $value = null)
-    {
-        return (isset(self::$store[$key])) ? self::$store[$key] : $value;
-    }
-
-    /**
-     * Start the time to track.
-     *
-     * @param $key string
-     *            Tracker
-     */
-    public static function stime(string $key)
-    {
-        self::$store['time_tracker_' . $key] = microtime(true);
-    }
-
-    /**
-     * End the time to track.
-     *
-     * @return float Time for this track
-     */
-    public static function etime($key, $total = null)
-    {
-        $t = microtime(true) - self::$store['time_tracker_' . $key];
-        if ($total) {
-            self::inc('time_tracker_' . $total, $t);
-        }
-        return $t;
-    }
-
-    static function assert($file, $line, $code): void
-    {
-        if (! isset(self::$level)) {
-            self::$level = Pluf::f('log_level', self::OFF);
-        }
-        if (self::$level <= self::$assert_level and self::$level != self::OFF) {
-            self::$stack[] = array(
-                microtime(true),
-                self::$assert_level,
-                self::$assert_mess,
-                $file,
-                $line,
-                $code
-            );
-            if (! Pluf::f('log_delayed', false)) {
-                self::flush();
-            }
-        }
-        self::$assert_level = 6;
-        self::$assert_mess = null;
+        return self::$direct[$level];
     }
 }
+
+
 
