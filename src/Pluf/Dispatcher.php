@@ -279,7 +279,7 @@ class Pluf_Dispatcher
         }
 
         // convert to response
-        $http = new HTTP2();
+        $http = new \Pluf\HTTP2();
         $contentType = array(
             'application/json',
             'text/plain'

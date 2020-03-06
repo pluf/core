@@ -47,11 +47,11 @@ class TestFormModel extends Pluf_Model
                         'id',
                         array(
                                 'title',
-                                'TestFormModel_ConvertTitle'
+                                'TestFormModel::ConvertTitle'
                         ),
                         array(
                                 'title',
-                                'TestFormModel_ConvertTitle',
+                                'TestFormModel::ConvertTitle',
                                 'My Title'
                         )
                 ),
@@ -62,10 +62,10 @@ class TestFormModel extends Pluf_Model
         );
         parent::init();
     }
-}
-
-function TestFormModel_ConvertTitle ($field, $item)
-{
-    return '"' . $item->$field . '"';
+    
+    public static function ConvertTitle ($field, $item)
+    {
+        return '"' . $item->$field . '"';
+    }
 }
 

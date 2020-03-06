@@ -43,7 +43,7 @@ $cfg['template_tags'] = array(
 
 // Must be shared by all the installed_apps and the core framework.
 // That way you can have several installations of the core framework.
-$cfg['db_table_prefix'] = 'pluf_unit_tests_';
+$cfg['db_table_prefix'] = 'pluf_unit_tests_' . rand();
 
 // Starting version 4.1 of MySQL the utf-8 support is "correct".
 // The reason of the db_version for MySQL is only for that.
