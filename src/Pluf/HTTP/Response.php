@@ -156,7 +156,7 @@ class Pluf_HTTP_Response
 //                 header($header.': '.$ch);
 //             }
             /* XXX: maso, 2019: Our header is not working well */
-            $HTTP = new HTTP_Header2();
+            $HTTP = new \Pluf\HTTP\Header2();
             $HTTP->sendStatusCode($this->status_code);
             foreach ($this->headers as $header => $value) {
                 $HTTP->setHeader($header, $value);

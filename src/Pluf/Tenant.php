@@ -219,7 +219,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      * Gets tenant storage path
      *
-     * @return path of the storage
+     * @return string path of the storage
      */
     public function getStoragePath()
     {

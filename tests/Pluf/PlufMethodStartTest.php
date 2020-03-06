@@ -17,24 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
+require_once 'Pluf.php';
 
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
 class PlufMethodStartTest extends TestCase
 {
-
-    /**
-     *
-     * @before
-     */
-    public function setUpTest()
-    {
-        // TODO: maso, 2019: update test
-    }
 
     /**
      *
@@ -51,5 +37,3 @@ class PlufMethodStartTest extends TestCase
         $this->assertEquals(false, $GLOBALS['_PX_config']['test']);
     }
 }
-
-?>

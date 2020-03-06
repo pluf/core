@@ -26,7 +26,7 @@
  * نمایش نگاشت داده می‌شود.
  *
  * @author maso
- *
+ *        
  */
 class Pluf_Dispatcher
 {
@@ -214,7 +214,7 @@ class Pluf_Dispatcher
          * is true, then ok go ahead, if not then it a response so
          * return it or an exception so let it go.
          */
-        if (isset($ctl['precond']) && !Pluf::f('dispatcher.precond.disable', false)) {
+        if (isset($ctl['precond']) && ! Pluf::f('dispatcher.precond.disable', false)) {
             $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
@@ -266,7 +266,7 @@ class Pluf_Dispatcher
         return false;
     }
 
-    private static function toResponse($response, $request)
+    public static function toResponse($response, $request)
     {
         // Check old result
         if ($response instanceof Pluf_HTTP_Response) {
@@ -288,7 +288,7 @@ class Pluf_Dispatcher
         if ($mime === false) {
             throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
         }
-        if($response instanceof Pluf_Paginator){
+        if ($response instanceof Pluf_Paginator) {
             $response = $response->render_object();
         }
         switch ($mime) {

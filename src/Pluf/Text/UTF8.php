@@ -45,7 +45,6 @@ class Pluf_Text_UTF8
      * same string (default is true)
      *
      * @author Andreas Gohr <andi@splitbrain.org>
-     * @see    urlencode
      */
     public static function filename($file, $safe=true)
     {

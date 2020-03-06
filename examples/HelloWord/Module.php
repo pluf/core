@@ -1,5 +1,5 @@
 <?php
-namespace Pluf\Smallest;
+namespace Pluf\HelloWord;
 
 use Pluf;
 
@@ -10,8 +10,8 @@ class Module extends \Pluf\Module
 
     const relations = array();
 
-    const urlsPath = __DIR__ . '/urls.php';
-
     public function init(Pluf $bootstrap): void
-    {}
+    {
+        // Nothing to do
+    }
 }

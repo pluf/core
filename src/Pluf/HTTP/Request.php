@@ -72,8 +72,6 @@ class Pluf_HTTP_Request
 
     /**
      * Current user
-     *
-     * @var User_Account
      */
     public $user = null;
 

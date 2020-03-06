@@ -17,14 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__.'/../apps');
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
  * Single tenant test
- * 
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -32,34 +31,40 @@ class Pluf_Migration_MtnitTest extends TestCase
 {
 
     /**
+     *
      * @test
      */
     public function shouldInstallEmptyApp()
     {
-        $conf = include __DIR__.'/../conf/mysql.mt.conf.php';
-        $conf['installed_apps'] = array('Pluf', 'Empty');
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['multitenant'] = true;
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
-            'Pluf', 'Empty',
+            'Pluf',
+            'Empty'
         ));
-        
+
         $this->assertTrue($m->install());
         $this->assertTrue($m->unInstall());
     }
-    
+
     /**
+     *
      * @test
      */
     public function shouldInitEmptyFromConfig()
     {
-        $conf = include __DIR__.'/../conf/mysql.conf.php';
-        $conf['installed_apps'] = array('Empty');
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['installed_apps'] = array(
+            'Empty'
+        );
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
-            'Pluf', 'Empty',
+            'Pluf',
+            'Empty'
         ));
         $this->assertTrue($m->install());
-        
+
         $tenant = new Pluf_Tenant();
         $tenant->title = 'Default Tenant';
         $tenant->description = 'Auto generated tenant';
@@ -67,39 +72,46 @@ class Pluf_Migration_MtnitTest extends TestCase
         $tenant->domain = Pluf::f('general_domain', 'donate.com');
         $tenant->create();
         $this->assertTrue($m->init($tenant));
-        
+
         $this->assertTrue($m->unInstall());
     }
-    
-    
+
     /**
+     *
      * @test
      */
     public function shouldInstallNoteApp()
     {
-        $conf = include __DIR__.'/../conf/mysql.conf.php';
-        $conf['installed_apps'] = array('Note');
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['installed_apps'] = array(
+            'Note'
+        );
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
-            'Pluf', 'Note',
+            'Pluf',
+            'Note'
         ));
         $this->assertTrue($m->install());
         $this->assertTrue($m->unInstall());
     }
-    
+
     /**
+     *
      * @test
      */
     public function shouldInitNoteFromConfig()
     {
-        $conf = include __DIR__.'/../conf/mysql.conf.php';
-        $conf['installed_apps'] = array('Note');
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['installed_apps'] = array(
+            'Note'
+        );
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
-            'Pluf', 'Note',
+            'Pluf',
+            'Note'
         ));
         $this->assertTrue($m->install());
-        
+
         $tenant = new Pluf_Tenant();
         $tenant->title = 'Default Tenant';
         $tenant->description = 'Auto generated tenant';
@@ -107,11 +119,11 @@ class Pluf_Migration_MtnitTest extends TestCase
         $tenant->domain = Pluf::f('general_domain', 'donate.com');
         $tenant->create();
         $this->assertTrue($m->init($tenant));
-        
+
         $GLOBALS['_PX_request'] = $tenant;
         $note = new Note_Book();
         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
-        
+
         $this->assertTrue($m->unInstall());
     }
 }

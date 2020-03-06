@@ -17,13 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
-
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -31,26 +30,19 @@ class PlufDBSchemaSQLiteTest extends TestCase
 {
 
     /**
+     *
      * @beforeClass
      */
     public static function initTest()
     {
-        Pluf::start(dirname(__FILE__) . '/../conf/sqlite.conf.php');
+        Pluf::start(dirname(__FILE__) . '/../conf/config.php');
         if (Pluf::db()->engine != 'SQLite') {
-            $this->markTestSkipped('Only to be run with the SQLite DB engine');
+            self::markTestSkipped('Only to be run with the SQLite DB engine');
         }
     }
-    
+
     /**
-     * @afterCalss
-     */
-    public static function finishTest()
-    {
-//         $this->db->close();
-//         unset($this->db);
-    }
-    
-    /**
+     *
      * @test
      */
     public function testGenerateSchema3()
@@ -60,21 +52,23 @@ class PlufDBSchemaSQLiteTest extends TestCase
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $sql = $gen->getSqlCreate($model);
-        
-        
-//         CREATE TABLE pluf_unit_tests_testmodel (
-//          id integer primary key autoincrement,
-//          title varchar(100) default '',
-//          description text not null default ''
-//         );
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'CREATE TABLE') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'integer') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'varchar(100)') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'text') !== false);
-        $this->assertEquals(true, strpos($sql['pluf_unit_tests_test_model'], 'test_model') !== false);
+
+        // CREATE TABLE pluf_unit_tests_testmodel (
+        // id integer primary key autoincrement,
+        // title varchar(100) default '',
+        // description text not null default ''
+        // );
+
+        $tablename = Pluf_ModelUtils::getTable($model);
+        $this->assertEquals(true, strpos($sql[$tablename], 'CREATE TABLE') !== false);
+        $this->assertEquals(true, strpos($sql[$tablename], 'integer') !== false);
+        $this->assertEquals(true, strpos($sql[$tablename], 'varchar(100)') !== false);
+        $this->assertEquals(true, strpos($sql[$tablename], 'text') !== false);
+        $this->assertEquals(true, strpos($sql[$tablename], 'test_model') !== false);
     }
-    
+
     /**
+     *
      * @test
      */
     public function testDeleteSchemaTestModel()
@@ -84,10 +78,13 @@ class PlufDBSchemaSQLiteTest extends TestCase
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $del = $gen->getSqlDelete($model);
-        $this->assertEquals('DROP TABLE IF EXISTS pluf_unit_tests_test_model', $del[0]);
+
+        $tablename = Pluf_ModelUtils::getTable($model);
+        $this->assertEquals('DROP TABLE IF EXISTS ' . $tablename, $del[0]);
     }
-    
+
     /**
+     *
      * @test
      */
     public function testGenerateSchema()
@@ -98,11 +95,11 @@ class PlufDBSchemaSQLiteTest extends TestCase
         $gen = $schema->getGenerator();
         $this->assertEquals(true, $schema->dropTables());
         $sql = $gen->getSqlCreate($model);
-        foreach ($sql as $k => $query) {
+        foreach ($sql as $query) {
             Pluf::db()->execute($query);
         }
         $sql = $gen->getSqlIndexes($model);
-        foreach ($sql as $k => $query) {
+        foreach ($sql as $query) {
             Pluf::db()->execute($query);
         }
         $model->title = 'my title';
@@ -114,8 +111,9 @@ class PlufDBSchemaSQLiteTest extends TestCase
             Pluf::db()->execute($sql);
         }
     }
-    
+
     /**
+     *
      * @test
      */
     public function testGenerateSchema2()

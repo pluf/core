@@ -23,16 +23,11 @@
 		"webonyx/graphql-php" : "^0.12.5",
 		"phayes/geophp" : "^1.2"
 	},
-	"require-dev" : {
-		"phpunit/phpunit" : "7.x"
-	},
 	"include-path" : [
 		"src/"
 	],
-	"autoload" : {
-		"psr-0" : {
-			"test" : ""
-		}
+	"require-dev" : {
+		"phpunit/phpunit" : "7.x"
 	},
 	"support" : {
 		"wiki" : "https://github.com/pluf/core/wiki",
@@ -48,10 +43,19 @@
 		"restfull",
 		"pluf-module"
 	],
+	"autoload" : {
+		"psr-4" : {
+			"Pluf\\" : "src6/"
+		}
+	},
 	"autoload-dev" : {
 		"psr-4" : {
-			"/Pluf/NoteBook" : "examples/NoteBook",
-			"/Pluf/Smallest" : "examples/Smallest"
+			"Pluf\\NoteBook\\" : "examples/NoteBook",
+			"Pluf\\Smallest\\" : "examples/Smallest",
+			"Pluf\\HelloWord\\" : "examples/HelloWord"
+		},
+		"psr-0" : {
+			"test" : ""
 		}
 	}
 }

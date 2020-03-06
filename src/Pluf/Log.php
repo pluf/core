@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -84,14 +85,14 @@ class Pluf_Log
      * Used to reverse the log level to the string.
      */
     public static $reverse = array(
-            1 => 'ALL',
-            3 => 'DEBUG',
-            4 => 'INFO',
-            5 => 'PERF',
-            6 => 'EVENT',
-            7 => 'WARN',
-            8 => 'ERROR',
-            9 => 'FATAL'
+        1 => 'ALL',
+        3 => 'DEBUG',
+        4 => 'INFO',
+        5 => 'PERF',
+        6 => 'EVENT',
+        7 => 'WARN',
+        8 => 'ERROR',
+        9 => 'FATAL'
     );
 
     /**
@@ -111,26 +112,16 @@ class Pluf_Log
      */
     public static $assert_level = 10;
 
-    /**
-     * اطلاعات را به پشته لوگ اضافه می کند
-     *
-     * در صورتی که نیاز باشد تمام اطلاعات جمع شده را در خروجی می‌نویسد.
-     *
-     * @param $level سطی
-     *            که می‌خواهیم لوگ در آن قرار گیرد
-     * @param $message پیام
-     *            لوگ
-     */
-    private static function _log ($level, $message)
+    private static function _log($level, $message)
     {
         if (! isset(self::$level)) {
             self::$level = Pluf::f('log_level', 10);
         }
         if (self::$level <= $level and self::$level != 10) {
             self::$stack[] = array(
-                    microtime(true),
-                    $level,
-                    $message
+                microtime(true),
+                $level,
+                $message
             );
             if (! Pluf::f('log_delayed', false)) {
                 self::flush();
@@ -150,7 +141,7 @@ class Pluf_Log
      *            to log
      * @return bool false
      */
-    private static function _alog ($level, $message)
+    private static function _alog($level, $message)
     {
         self::$assert_level = $level;
         self::$assert_mess = $message;
@@ -163,7 +154,7 @@ class Pluf_Log
      * @param $message Message
      *            to log
      */
-    public static function log ($message)
+    public static function log($message)
     {
         return self::_log(self::ALL, $message);
     }
@@ -174,37 +165,37 @@ class Pluf_Log
      * @param $message Message
      *            to log
      */
-    public static function debug ($message)
+    public static function debug($message)
     {
         self::_log(self::DEBUG, $message);
     }
 
-    public static function info ($message)
+    public static function info($message)
     {
         self::_log(self::INFO, $message);
     }
 
-    public static function perf ($message)
+    public static function perf($message)
     {
         self::_log(self::PERF, $message);
     }
 
-    public static function event ($message)
+    public static function event($message)
     {
         self::_log(self::EVENT, $message);
     }
 
-    public static function warn ($message)
+    public static function warn($message)
     {
         self::_log(self::WARN, $message);
     }
 
-    public static function error ($message)
+    public static function error($message)
     {
         self::_log(self::ERROR, $message);
     }
 
-    public static function fatal ($message)
+    public static function fatal($message)
     {
         self::_log(self::FATAL, $message);
     }
@@ -215,7 +206,7 @@ class Pluf_Log
      * @param $message Message
      *            to log
      */
-    public static function alog ($message)
+    public static function alog($message)
     {
         return self::_alog(self::ALL, $message);
     }
@@ -226,37 +217,37 @@ class Pluf_Log
      * @param $message Message
      *            to log
      */
-    public static function adebug ($message)
+    public static function adebug($message)
     {
         self::_alog(self::DEBUG, $message);
     }
 
-    public static function ainfo ($message)
+    public static function ainfo($message)
     {
         self::_alog(self::INFO, $message);
     }
 
-    public static function aperf ($message)
+    public static function aperf($message)
     {
         self::_alog(self::PERF, $message);
     }
 
-    public static function aevent ($message)
+    public static function aevent($message)
     {
         self::_alog(self::EVENT, $message);
     }
 
-    public static function awarn ($message)
+    public static function awarn($message)
     {
         self::_alog(self::WARN, $message);
     }
 
-    public static function aerror ($message)
+    public static function aerror($message)
     {
         self::_alog(self::ERROR, $message);
     }
 
-    public static function afatal ($message)
+    public static function afatal($message)
     {
         self::_alog(self::FATAL, $message);
     }
@@ -266,17 +257,16 @@ class Pluf_Log
      *
      * This reset the stack.
      */
-    public static function flush ()
+    public static function flush()
     {
-        if(count(self::$stack) == 0){
+        if (count(self::$stack) == 0) {
             return;
         }
         $writer = Pluf::f('log_handler', 'Pluf_Log_File');
-        call_user_func(
-                array(
-                        $writer,
-                        'write'
-                ), self::$stack);
+        call_user_func(array(
+            $writer,
+            'write'
+        ), self::$stack);
         self::$stack = array();
     }
 
@@ -290,7 +280,7 @@ class Pluf_Log
      * @param
      *            &$params Parameters
      */
-    public static function flushHandler ($signal, &$params)
+    public static function flushHandler($signal, &$params)
     {
         self::flush();
     }
@@ -300,7 +290,7 @@ class Pluf_Log
      *
      * When called, it enabled the assertions for debugging.
      */
-    public static function activeAssert ()
+    public static function activeAssert()
     {
         assert_options(ASSERT_ACTIVE, 1);
         assert_options(ASSERT_WARNING, 0);
@@ -318,7 +308,7 @@ class Pluf_Log
      * @param $amount Amount
      *            to increase (1)
      */
-    public static function inc ($key, $amount = 1)
+    public static function inc($key, $amount = 1)
     {
         if (! isset(Pluf_Log::$store[$key])) {
             Pluf_Log::$store[$key] = 0;
@@ -334,7 +324,7 @@ class Pluf_Log
      * @param $value Value
      *            to set
      */
-    public static function set ($key, $value)
+    public static function set($key, $value)
     {
         Pluf_Log::$store[$key] = $value;
     }
@@ -347,7 +337,7 @@ class Pluf_Log
      * @param $value Default
      *            value (null)
      */
-    public static function get ($key, $value = null)
+    public static function get($key, $value = null)
     {
         return (isset(Pluf_Log::$store[$key])) ? Pluf_Log::$store[$key] : $value;
     }
@@ -355,9 +345,9 @@ class Pluf_Log
     /**
      * Start the time to track.
      *
-     * @param $key Tracker            
+     * @param $key Tracker
      */
-    public static function stime ($key)
+    public static function stime($key)
     {
         Pluf_Log::$store['time_tracker_' . $key] = microtime(true);
     }
@@ -365,12 +355,12 @@ class Pluf_Log
     /**
      * End the time to track.
      *
-     * @param $key Tracker            
+     * @param $key Tracker
      * @param $total Tracker
      *            to store the total (null)
      * @return float Time for this track
      */
-    public static function etime ($key, $total = null)
+    public static function etime($key, $total = null)
     {
         $t = microtime(true) - Pluf_Log::$store['time_tracker_' . $key];
         if ($total) {
@@ -390,19 +380,19 @@ class Pluf_Log
  * @param $code Code
  *            evaluated by the assert call
  */
-function Pluf_Log_assert ($file, $line, $code)
+function Pluf_Log_assert($file, $line, $code)
 {
     if (! isset(Pluf_Log::$level)) {
         Pluf_Log::$level = Pluf::f('log_level', 10);
     }
     if (Pluf_Log::$level <= Pluf_Log::$assert_level and Pluf_Log::$level != 10) {
         Pluf_Log::$stack[] = array(
-                microtime(true),
-                Pluf_Log::$assert_level,
-                Pluf_Log::$assert_mess,
-                $file,
-                $line,
-                $code
+            microtime(true),
+            Pluf_Log::$assert_level,
+            Pluf_Log::$assert_mess,
+            $file,
+            $line,
+            $code
         );
         if (! Pluf::f('log_delayed', false)) {
             Pluf_Log::flush();

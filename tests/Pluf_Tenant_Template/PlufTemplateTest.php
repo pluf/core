@@ -54,7 +54,6 @@ class PlufTenantTemplateTest extends TestCase
             ),
             'pluf_use_rowpermission' => true,
             'mimetype' => 'text/html',
-            'app_views' => dirname(__FILE__) . '/views.php',
             'db_login' => 'testpluf',
             'db_password' => 'testpluf',
             'db_server' => 'localhost',

@@ -53,7 +53,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
         if (! file_exists($this->content)) {
             throw new Pluf_Exception_DoesNotExist('Requested resource not found');
         }
-        $dl = new HTTP_Download2(array(
+        $dl = new \Pluf\HTTP\Download2(array(
             'file' => $this->content,
             'contenttype' => $this->headers['Content-Type'],
             'gzip' => false,
