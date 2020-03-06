@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\LoggerHandler;
+
+use Pluf\Logger;
+use Pluf;
 
 /**
  * ذخیره کردن لاگ‌ها در فایل
@@ -30,27 +34,17 @@
  * The only configuration variable of the file writer is the path to
  * the log file 'pluf_log_file'. By default it creates a
  * <code>pluf.log</code> in the configured tmp folder.
- *
  */
-class Pluf_Log_File
+class File implements \Pluf\LoggerHandler
 {
-    /**
-     * لوگ‌ها را در فایل ذخیره می‌کند.
-     * 
-     * فرض این هست که لوگ‌ها به صورت یک ارایه داده می‌شود و این آرایه هیچگاه خالی نیست.
-     *
-     * @param $stack Array
-     */
-    public static function write($stack)
+
+    public function write($stack): void
     {
-        $file = Pluf::f('pluf_log_file', 
-                        Pluf::f('tmp_folder', '/tmp').'/pluf.log');
+        $file = Pluf::f('pluf_log_file', Pluf::f('tmp_folder', '/tmp') . '/pluf.log');
         $out = array();
         foreach ($stack as $elt) {
-            $out[] = date(DATE_ISO8601, (int) $elt[0]).' '.
-                Pluf_Log::$reverse[$elt[1]].': '.
-                json_encode($elt[2]);
+            $out[] = date(DATE_ISO8601, (int) $elt[0]) . ' ' . Logger::$reverse[$elt[1]] . ': ' . json_encode($elt[2]);
         }
-        file_put_contents($file, implode(PHP_EOL, $out).PHP_EOL, FILE_APPEND);
+        file_put_contents($file, implode(PHP_EOL, $out) . PHP_EOL, FILE_APPEND);
     }
 }

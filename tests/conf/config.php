@@ -4,7 +4,6 @@
 // Database Configurations
 // -------------------------------------------------------------------------
 // $var = include 'mysql.conf.php';
-// $var = include 'pluf.config.php';
 $cfg = include 'sqlite.conf.php';
 
 $cfg['test'] = true;
@@ -51,6 +50,15 @@ $cfg['template_modifiers'] = array();
 // -------------------------------------------------------------------------
 // Logger
 // -------------------------------------------------------------------------
+
+$cfg['log_level'] = \Pluf\Logger::OFF;
+$cfg['log_delayed'] = false;
+$cfg['log_handler'] = '\Pluf\LoggerHandler\Console';
+
+// log_remote_server' (localhost)
+// log_remote_path' (/)
+// log_remote_port' (8000)
+// log_remote_headers' (array())
 
 // -------------------------------------------------------------------------
 // Tenants
