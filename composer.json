@@ -47,5 +47,11 @@
 		"framework",
 		"restfull",
 		"pluf-module"
-	]
+	],
+	"autoload-dev" : {
+		"psr-4" : {
+			"/Pluf/NoteBook" : "examples/NoteBook",
+			"/Pluf/Smallest" : "examples/Smallest"
+		}
+	}
 }

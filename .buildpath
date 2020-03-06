@@ -4,4 +4,14 @@
 	<buildpathentry kind="src" path="tests"/>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/http2"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="src" path="examples/NoteBook">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="examples/Smallest">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
 </buildpath>
