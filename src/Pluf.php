@@ -98,7 +98,7 @@ class Pluf
         }
         $m = $GLOBALS['_PX_models'];
         foreach ($apps as $app) {
-            $moduleName = "Pluf\\" . $app . "\\Module";
+            $moduleName = "\\Pluf\\" . $app . "\\Module";
             if (class_exists($moduleName)) {
                 // Load PSR4 modules
                 $m = array_merge_recursive($m, $moduleName::relations);
