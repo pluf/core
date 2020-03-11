@@ -139,5 +139,28 @@ class ModelUtils
             }
         }
     }
+
+    public static function getModelsFromModule(string $app): array
+    {
+        $path = $app . '/module.json';
+
+        $moduleName = "\\Pluf\\" . $app . "\\Module";
+        if (class_exists($moduleName)) {
+            $modulRef = new \ReflectionClass($moduleName);
+            $path = dirname($modulRef->getFileName()) . '/module.json';
+        }
+
+        if (false == ($file = Pluf::fileExists($path))) {
+            return [];
+        }
+        $myfile = fopen($file, "r") or die("Unable to open module.json!");
+        $json = fread($myfile, filesize($file));
+        fclose($myfile);
+        $moduel = json_decode($json, true);
+        if (! array_key_exists('model', $moduel)) {
+            return [];
+        }
+        return $moduel['model'];
+    }
 }
 
