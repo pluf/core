@@ -41,20 +41,20 @@ class Book extends Pluf_Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
-                'type' => '\Pluf\DB\Field\Sequence',
+                'type' => 'Pluf_DB_Field_Sequence',
                 // It is automatically added.
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
             ),
             'title' => array(
-                'type' => '\Pluf\DB\Field\Text',
+                'type' => 'Pluf_DB_Field_Text',
                 'blank' => false,
                 'editable' => false,
                 'readable' => true
             ),
             'creation_dtime' => array(
-                'type' => '\Pluf\DB\Field\Datetime',
+                'type' => 'Pluf_DB_Field_Datetime',
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
