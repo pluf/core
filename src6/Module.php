@@ -54,10 +54,20 @@ abstract class Module
      */
     public function getViews()
     {
+        $apiPrefix = \Pluf::f('module_api_prefix', '');
+        $apiBase = \Pluf::f('module_api_base', '');
+
         $reflection = new \ReflectionObject($this);
         $directory = dirname($reflection->getFileName());
-        if (is_readable($directory . self::MODULE_DEFAULT_URL_PATH)) {
-            return require $directory . '/' . self::MODULE_DEFAULT_URL_PATH;
+        if (is_readable($directory . '/' . self::MODULE_DEFAULT_URL_PATH)) {
+            return [
+                array(
+                    'app' => $reflection->getNamespaceName(),
+                    'regex' => '#^' . $apiPrefix . '/' . strtolower($this->getKey()) . '#',
+                    'base' => $apiBase,
+                    'sub' => require $directory . '/' . self::MODULE_DEFAULT_URL_PATH
+                )
+            ];
         }
         return array();
     }

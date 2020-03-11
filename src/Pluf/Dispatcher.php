@@ -154,6 +154,7 @@ class Pluf_Dispatcher
                     continue;
                 }
             }
+            $match = [];
             if (preg_match($ctl['regex'], $to_match, $match)) {
                 if (! isset($ctl['sub'])) {
                     return self::send($req, $ctl, $match);
@@ -181,7 +182,7 @@ class Pluf_Dispatcher
             }
         }
         // نمایش مناسبی یافت نشده است
-        throw new Pluf_HTTP_Error404();
+        throw new Pluf_HTTP_Error404($req->query);
     }
 
     /**

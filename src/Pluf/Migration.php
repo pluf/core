@@ -128,7 +128,7 @@ class Pluf_Migration
     /**
      * Uninstall the application.
      */
-    public function unInstall()
+    public function uninstall()
     {
         $apps = array_reverse($this->apps);
         foreach ($apps as $app) {
