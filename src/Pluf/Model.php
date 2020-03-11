@@ -1,5 +1,4 @@
 <?php
-
 use Pluf\ModelUtils;
 
 /*
@@ -148,10 +147,10 @@ class Pluf_Model implements JsonSerializable
     function _init()
     {
         $this->_getConnection();
-        if(ModelUtils::loadFromCache($this)){
-           return;
+        if (ModelUtils::loadFromCache($this)) {
+            return;
         }
-        
+
         $this->init();
         $this->_setupMultitenantFields();
         foreach ($this->_a['cols'] as $col => $val) {
@@ -682,7 +681,7 @@ class Pluf_Model implements JsonSerializable
      * Get the number of items.
      *
      * @see getList() for definition of the keys
-     *
+     *     
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
@@ -1095,28 +1094,27 @@ class Pluf_Model implements JsonSerializable
      */
     protected function _setupAutomaticListMethods($type)
     {
-        $current_model = $this->_a['model'];
-        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
-            foreach ($relations as $related) {
-                if ($related != $current_model) {
-                    $model = new $related();
+        $current_model = ModelUtils::getModelCacheKey($this);
+        $relations = ModelUtils::getRelatedModels($this, $type);
+
+        foreach ($relations as $related) {
+            if ($related != $current_model) {
+                $model = new $related();
+            } else {
+                $model = clone $this;
+            }
+            $fkeys = $model->getRelationKeysToModel($current_model, $type);
+            foreach ($fkeys as $fkey => $val) {
+                $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                $mname = 'get_' . strtolower($mname) . '_list';
+                if ('foreignkey' === $type) {
+                    $this->_m['list'][$mname] = array(
+                        $related,
+                        $fkey
+                    );
                 } else {
-                    $model = clone $this;
-                }
-                $fkeys = $model->getRelationKeysToModel($current_model, $type);
-                foreach ($fkeys as $fkey => $val) {
-                    $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
-                    $mname = 'get_' . strtolower($mname) . '_list';
-                    if ('foreignkey' === $type) {
-                        $this->_m['list'][$mname] = array(
-                            $related,
-                            $fkey
-                        );
-                    } else {
-                        $this->_m['list'][$mname] = $related;
-                        $this->_m['many'][$related] = $type;
-                    }
+                    $this->_m['list'][$mname] = $related;
+                    $this->_m['many'][$related] = $type;
                 }
             }
         }
