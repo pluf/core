@@ -1,4 +1,5 @@
 <?php
+use Pluf\ModelUtils;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -22,7 +23,7 @@
  * Create a compilre render
  *
  * @author maso
- *
+ *        
  */
 class Pluf_Graphql_Compiler
 {
@@ -181,7 +182,7 @@ class ' . $className . ' {
         array_push($this->compiledTypes, $type);
 
         $model = new $type();
-        $name = $model->_a['model'];
+        $name = ModelUtils::getModelCacheKey($model);
         if (array_key_exists('graphql_name', $model->_a)) {
             $name = $model->_a['graphql_name'];
         }
@@ -190,7 +191,7 @@ class ' . $className . ' {
         $requiredModel = '';
         if (sizeof($preModels) > 0) {
             $names = array();
-            foreach ($preModels as $pm){
+            foreach ($preModels as $pm) {
                 $names[] = Pluf_ModelUtils::skipeName($pm);
             }
             $requiredModel = 'use (&$' . implode(', &$', $names) . ')';
@@ -241,8 +242,8 @@ class ' . $className . ' {
                     continue;
                 }
             }
-            if(array_key_exists('readable', $field)){
-                if(!$field['readable']){
+            if (array_key_exists('readable', $field)) {
+                if (! $field['readable']) {
                     continue;
                 }
             }
@@ -289,19 +290,18 @@ class ' . $className . ' {
     private function compileRelationFields($type, $mainModel)
     {
         $res = '';
-        $current_model = $mainModel->_a['model'];
-        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
-            foreach ($relations as $related) {
-                if ($related != $current_model) {
-                    $model = new $related();
-                } else {
-                    $model = clone $mainModel;
-                }
-                $fkeys = $model->getRelationKeysToModel($current_model, $type);
-                foreach ($fkeys as $fkey => $val) {
-                    $name = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
-                    $res .= '
+        $current_model = ModelUtils::getModelCacheKey($mainModel);
+        $relations = ModelUtils::getRelatedModels($mainModel, $type);
+        foreach ($relations as $related) {
+            if ($related != $current_model) {
+                $model = new $related();
+            } else {
+                $model = clone $mainModel;
+            }
+            $fkeys = $model->getRelationKeysToModel($current_model, $type);
+            foreach ($fkeys as $fkey => $val) {
+                $name = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                $res .= '
                     //Foreinkey list-' . $this->fieldComment($fkey, []) . '
                     \'' . $name . '\' => [
                             \'type\' => Type::listOf(' . $this->getNameOf($related) . '),
@@ -309,7 +309,6 @@ class ' . $className . ' {
                                 return $root->get_' . $name . '_list();
                             },
                     ],';
-                }
             }
         }
         return $res;
@@ -388,8 +387,8 @@ class ' . $className . ' {
         return $res;
     }
 
-
-    private function compileFieldManytomany($key, $field){
+    private function compileFieldManytomany($key, $field)
+    {
         // type
         $type = $this->getNameOf($field['model']);
         // function
@@ -407,7 +406,7 @@ class ' . $className . ' {
          * XXX: maso, 2018: check for security access
          *
          * if(parent is accessable) then
-         *      All children are too
+         * All children are too
          */
         return '
                     //Foreinkey value-' . $this->fieldComment($key, $field) . '
@@ -441,19 +440,15 @@ class ' . $className . ' {
             }
         }
 
-        $current_model = $model->_a['model'];
-
         $types = [
             'foreignkey',
             'manytomany'
         ];
         foreach ($types as $type) {
-            if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-                $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
-                foreach ($relations as $related) {
-                    if (! in_array($related, $preModels)) {
-                        array_push($preModels, $related);
-                    }
+            $relations = ModelUtils::getRelatedModels($model, $type);
+            foreach ($relations as $related) {
+                if (! in_array($related, $preModels)) {
+                    array_push($preModels, $related);
                 }
             }
         }

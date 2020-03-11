@@ -1,5 +1,7 @@
 <?php
 
+use Pluf\ModelUtils;
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -69,11 +71,11 @@ class Pluf_Graphql
     function render($c, $query)
     {
         // 1. root type
-        $rootType = get_class($c);
+        $rootType = ModelUtils::getModelCacheKey($c);
         $itemType = null;
         $schema = 'Pluf_GraphQl_Schema_' . Pluf_ModelUtils::skipeName($rootType);
         if ($c instanceof Pluf_Paginator) {
-            $itemType = get_class($c->model);
+            $itemType = ModelUtils::getModelCacheKey($c->model);
             $schema = $schema . '_' . $itemType;
         }
 
