@@ -48,7 +48,7 @@ class Pluf_Dispatcher
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
             // Puts request in global scope
-            $GLOBALS['_PX_request'] = $req;
+            Pluf_HTTP_Request::setCurrent($req);
             $middleware = array();
             foreach (Pluf::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();

@@ -1,5 +1,4 @@
 <?php
-
 use Pluf\ModelUtils;
 
 /*
@@ -71,12 +70,14 @@ class Pluf_Graphql
     function render($c, $query)
     {
         // 1. root type
-        $rootType = ModelUtils::getModelCacheKey($c);
         $itemType = null;
-        $schema = 'Pluf_GraphQl_Schema_' . Pluf_ModelUtils::skipeName($rootType);
         if ($c instanceof Pluf_Paginator) {
+            $rootType = 'Pluf_Paginator';
             $itemType = ModelUtils::getModelCacheKey($c->model);
-            $schema = $schema . '_' . $itemType;
+            $schema = 'Pluf_GraphQl_Schema__Pluf_Paginator_' . $itemType;
+        } else {
+            $rootType = ModelUtils::getModelCacheKey($c);
+            $schema = 'Pluf_GraphQl_Schema_' . Pluf_ModelUtils::skipeName($rootType);
         }
 
         // 2. load schema

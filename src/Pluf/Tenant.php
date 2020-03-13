@@ -14,7 +14,7 @@ class Pluf_Tenant extends Pluf_Model
      *
      * @var Pluf_Tenant
      */
-    static $currentTenant = NULL;
+    static ?Pluf_Tenant $currentTenant = NULL;
 
     /**
      * یک نگاشت به صورت کلید-مقدار که تنظیمات ملک را نگه می دارد.
@@ -171,9 +171,24 @@ class Pluf_Tenant extends Pluf_Model
         return $result;
     }
 
-    public static function setCurrent($tenant)
+    public static function setCurrent(?Pluf_Tenant $tenant = null): void
     {
         self::$currentTenant = $tenant;
+        // Change current request tenant
+        $request = Pluf_HTTP_Request::getCurrent();
+        if (isset($request)) {
+            $request->setTenant($tenant);
+        }
+    }
+
+    /**
+     *
+     * @deprecated See Pluf_Tenant::getCurrent()
+     * @return unknown
+     */
+    public static function current(): ?Pluf_Tenant
+    {
+        return self::getCurrent();
     }
 
     /**
@@ -181,8 +196,14 @@ class Pluf_Tenant extends Pluf_Model
      *
      * @return Pluf_Tenant
      */
-    public static function current()
+    public static function getCurrent(): ?Pluf_Tenant
     {
+        // check current value
+        if (isset(self::$currentTenant)) {
+            return self::$currentTenant;
+        }
+
+        // create for single tinant
         if (! Pluf::f('multitenant', false)) {
             $tenant = new Pluf_Tenant();
             $tenant->setFromFormData(Pluf::f('multitenant_default', array(
@@ -194,16 +215,15 @@ class Pluf_Tenant extends Pluf_Model
                 'validate' => 1
             )));
             $tenant->id = 0;
-            return $tenant;
+            return self::$currentTenant = $tenant;
         }
-        if (array_key_exists('_PX_request', $GLOBALS)) {
-            // load tenant from request
-            return $GLOBALS['_PX_request']->tenant;
+
+        // fetch from request
+        $request = Pluf_HTTP_Request::getCurrent();
+        if (isset($request)) {
+            return self::$currentTenant = $request->tenant;
         }
-        if(isset(self::$currentTenant)){
-            return self::currentTenant;
-        }
-        throw new Pluf_Exception('No tenant loaded');
+        return null;
     }
 
     /**
@@ -213,7 +233,7 @@ class Pluf_Tenant extends Pluf_Model
      */
     public static function storagePath()
     {
-        return self::current()->getStoragePath();
+        return self::getCurrent()->getStoragePath();
     }
 
     /**

@@ -26,6 +26,8 @@
 class Pluf_HTTP_Request
 {
 
+    static ?Pluf_HTTP_Request $current = null;
+
     public $POST = array();
 
     public $GET = array();
@@ -80,7 +82,7 @@ class Pluf_HTTP_Request
      *
      * @var Pluf_Tenant
      */
-    public $tenant = null;
+    public ?Pluf_Tenant $tenant = null;
 
     function __construct($query)
     {
@@ -168,5 +170,50 @@ class Pluf_HTTP_Request
         // Header size
         $size += strlen(serialize($this->HEADERS));
         return $size;
+    }
+
+    public function setTenant(?Pluf_Tenant $tenant = null): void
+    {
+        $this->tenant = $tenant;
+    }
+
+    public function getTenant(): ?Pluf_Tenant
+    {
+        if (isset($this->tenant)) {
+            return $this->tenant;
+        }
+        return Pluf_Tenant::getCurrent();
+    }
+
+    public function isGet(): bool
+    {
+        return $this->method == 'GET';
+    }
+
+    public function isPost(): bool
+    {
+        return $this->method == 'POST';
+    }
+
+    public function isPut(): bool
+    {
+        return $this->method == 'PUT';
+    }
+
+    public function isDelete(): bool
+    {
+        return $this->method == 'DELETE';
+    }
+
+    public static function getCurrent(): ?Pluf_HTTP_Request
+    {
+        return self::$current;
+    }
+
+    public static function setCurrent(?Pluf_HTTP_Request $request = null): void
+    {
+        // Legacy model,
+        $GLOBALS['_PX_request'] = $request;
+        self::$current = $request;
     }
 }

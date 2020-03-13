@@ -120,7 +120,10 @@ class Pluf_Migration_MtnitTest extends TestCase
         $tenant->create();
         $this->assertTrue($m->init($tenant));
 
-        $GLOBALS['_PX_request'] = $tenant;
+        // 1- Switch Tenant to the new one
+        Pluf_Tenant::setCurrent($tenant);
+        
+        // 2- Create new instance of book
         $note = new Note_Book();
         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
 

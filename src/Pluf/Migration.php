@@ -112,17 +112,17 @@ class Pluf_Migration
      *
      * @return boolean
      */
-    public function init($tenant = null)
+    public function init(?Pluf_Tenant $tenant = null): void
     {
-        // TODO: maso, init default tenant
-        if (! isset($GLOBALS['_PX_request'])) {
-            $GLOBALS['_PX_request'] = new Pluf_HTTP_Request('/');
+        $current = Pluf_Tenant::current();
+        try {
+            Pluf_Tenant::setCurrent($tenant);
+            foreach ($this->apps as $app) {
+                $this->initAppFromConfig($app);
+            }
+        } finally {
+            Pluf_Tenant::setCurrent($current);
         }
-        $GLOBALS['_PX_request']->tenant = $tenant;
-        foreach ($this->apps as $app) {
-            $this->initAppFromConfig($app);
-        }
-        return true;
     }
 
     /**
@@ -154,7 +154,8 @@ class Pluf_Migration
                 echo ($func . "\n");
             }
             if (! $this->dry_run) {
-                $ret = $func($path, $name);
+                /* $ret = */
+                $func($path, $name);
             }
         }
         return true;
@@ -177,7 +178,8 @@ class Pluf_Migration
                 echo ($func . "\n");
             }
             if (! $this->dry_run) {
-                $ret = $func($path, $name);
+                /* $ret = */
+                $func($path, $name);
             }
         }
         return true;
@@ -342,9 +344,8 @@ class Pluf_Migration
      */
     public static function getModuleConfig($app)
     {
-
-        $moduleName ="Pluf\\" . $app . "\\Module";
-        if(class_exists($moduleName)){
+        $moduleName = "Pluf\\" . $app . "\\Module";
+        if (class_exists($moduleName)) {
             $file = $moduleName::moduleJsonPath;
         } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
             return false;
@@ -495,7 +496,7 @@ class Pluf_Migration
     public function getAppVersion($app)
     {
         try {
-            $db = & Pluf::db();
+            $db = &Pluf::db();
             $res = $db->select('SELECT version FROM ' . $db->pfx . 'schema_info WHERE application=' . $db->esc($app));
             return (int) $res[0]['version'];
         } catch (Exception $e) {

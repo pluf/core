@@ -108,7 +108,7 @@ class Pluf
         }
         return $default;
     }
-
+    
     /**
      * Access an array of configuration variables having a given
      * prefix.
@@ -284,15 +284,12 @@ class Pluf
     /**
      * Get Curretn request
      *
+     * @deprecated This will removed in the next major version. Pleas use Pluf_HTTP_Request::getCurrent()
      * @return Pluf_HTTP_Request|NULL
      */
     public static function getCurrentRequest()
     {
-        $requestKey = '_PX_request';
-        if (array_key_exists($requestKey, $GLOBALS) && ($GLOBALS[$requestKey] instanceof Pluf_HTTP_Request)) {
-            return $GLOBALS[$requestKey];
-        }
-        return null;
+        return Pluf_HTTP_Request::getCurrent();
     }
 }
 
@@ -302,7 +299,7 @@ class Pluf
  * @param
  *            string String to be translated.
  * @return string Translated string.
- * @deprecated
+ * @deprecated Server side translateion will be removed
  */
 function __($str)
 {
@@ -341,7 +338,7 @@ function Pluf_autoload($class_name)
             print $e->getMessage();
             die();
         }
-        throw new Pluf_Exception('Class not found:' . $class_name);
+        throw new \Pluf\Exception('Class not found:' . $class_name);
     }
 }
 
