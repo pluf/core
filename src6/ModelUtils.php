@@ -21,7 +21,7 @@ class ModelUtils
     {
         $objr = new \ReflectionObject($model);
         $key = $objr->getName();
-        if (strpos($key, '\\') > 0) {
+        if (strpos($key, '\\')) {
             $key = '\\' . $key;
         }
         return $key;

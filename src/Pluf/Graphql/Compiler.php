@@ -102,6 +102,7 @@ class ' . $className . ' {
             $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
         } catch (Exception $e) {
+            var_dump($e);
             throw new Pluf_Exception_BadRequest($e->getMessage());
         }
     }
@@ -175,14 +176,15 @@ class ' . $className . ' {
      */
     private function createModelType($type)
     {
-        if (in_array($type, $this->compiledTypes)) {
+        $model = new $type();
+        $name = ModelUtils::getModelCacheKey($model);
+        $orginName = $name;
+
+        if (in_array($name, $this->compiledTypes)) {
             // type is compiled before
             return '';
         }
-        array_push($this->compiledTypes, $type);
-
-        $model = new $type();
-        $name = ModelUtils::getModelCacheKey($model);
+        array_push($this->compiledTypes, $name);
         if (array_key_exists('graphql_name', $model->_a)) {
             $name = $model->_a['graphql_name'];
         }
@@ -199,7 +201,7 @@ class ' . $className . ' {
 
         // compile the model
         $result = ' //
-        ' . $this->getNameOf($type) . ' = new ObjectType([
+        ' . $this->getNameOf($orginName) . ' = new ObjectType([
             \'name\' => \'' . $name . '\',
             \'fields\' => function () ' . $requiredModel . '{
                 return ' . $this->compileFields($model) . ';
