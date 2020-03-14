@@ -53,7 +53,7 @@ class PlufModelTest extends TestCase
         $m = new Pluf_Migration(array(
             'Test'
         ));
-        $m->unInstall();
+        $m->uninstall();
     }
 
     /**

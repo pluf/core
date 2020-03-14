@@ -55,7 +55,7 @@ class Pluf_Graphql_RenderTest extends TestCase
             'Pluf',
             'Test'
         ));
-        $m->unInstall();
+        $m->uninstall();
     }
 
     /**

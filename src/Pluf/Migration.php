@@ -34,7 +34,7 @@
  * $m = new Pluf_Migration('MyApp');
  * $m->install();
  * // Uninstall the application MyApp
- * $m->unInstall();
+ * $m->uninstall();
  *
  * $m = new Pluf_Migration();
  * $m->migrate(); // migrate all the installed app to the newest version.
