@@ -44,7 +44,7 @@ class PlufTenantTemplateTest extends TestCase
             'installed_apps' => array(
                 'Pluf'
             ),
-            'tmp_folder' => dirname(__FILE__) . '/../tmp',
+            'tmp_folder' => '/tmp',
             'templates_folder' => array(
                 dirname(__FILE__) . '/../templates'
             ),
@@ -57,7 +57,7 @@ class PlufTenantTemplateTest extends TestCase
             'db_login' => 'testpluf',
             'db_password' => 'testpluf',
             'db_server' => 'localhost',
-            'db_database' => dirname(__FILE__) . '/../tmp/tmp.sqlite.db',
+            'db_database' => '/tmp/tmp.sqlite.db',
             'app_base' => '/testapp',
             'url_format' => 'simple',
             'db_table_prefix' => 'pluf_unit_tests_' . rand() . '_',

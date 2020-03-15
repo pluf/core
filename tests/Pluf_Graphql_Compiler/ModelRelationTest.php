@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
@@ -82,7 +81,7 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $this->assertEquals(true, $model3->create());
 
         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
-        $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
+        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
         if (file_exists($filename)) {
             unlink($filename);
         }
@@ -135,7 +134,7 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $model->setAssoc($model2);
 
         $class_name = 'Pluf_GraphQl_Model_ManyToMany_' . rand();
-        $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
+        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
         if (file_exists($filename)) {
             unlink($filename);
         }
