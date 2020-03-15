@@ -1,49 +1,24 @@
 # <img src="logo.svg" width="32px"></a> Pluf core
 
 
-
-[![Build Status](https://travis-ci.org/pluf/core.svg?branch=master)](https://travis-ci.org/pluf/core)
+[![Build Status](https://travis-ci.com/pluf/core.svg?branch=master)](https://travis-ci.com/pluf/core)
 [![codecov](https://codecov.io/gh/pluf/core/branch/master/graph/badge.svg)](https://codecov.io/gh/pluf/core)
-[![Coverage Status](https://coveralls.io/repos/github/pluf/core/badge.svg?branch=master)](https://coveralls.io/github/pluf/core?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/pluf/core/badge.svg)](https://coveralls.io/github/pluf/core)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/maintainability)](https://codeclimate.com/github/pluf/core/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/test_coverage)](https://codeclimate.com/github/pluf/core/test_coverage)
 
-<a href="https://codeclimate.com/github/pluf/core/maintainability"><img src="https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/maintainability" /></a>
-<a href="https://codeclimate.com/github/pluf/core/test_coverage"><img src="https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/test_coverage" /></a>
 
-Pluf is fast, reliable and small PHP application framework.
+Pluf is a light, reliable and small PHP application framework to develop REST-full Multi/Single-tenant applications. This is the core of the Pluf framework which contains core concepts of Pluf Framework.
 
-This project is part of pluf.
-
-Pluf is open source light RESTFull framework. 
-
-There are severall opensource modules to extend pluf.
 
 ## Development
 
-ساختار در نظر گرفته شده برای پیاده‌سازی سیستم‌ها MVT است که از سه بخش مدل، نمایش و الگو تشکیل می‌شود. 
+TODO:
 
-مدل ساختارهای داده‌ای و روش‌های دستکاری آنها را تعیین می‌کند.
-
-نمایش، با استفاده از کنترلرها، امنیت، مسیر‌های دسترسی و سایر امکانات دسترسی کاربران به داده‌ها را فراهم می‌کند.
-
-الگو ساختارهای داده‌ای را تعیین می‌کند که باید برای کاربران ارسال شود.
-
-
-## معماری
+## Architecture
 
 ![modules](document/img/component diagram.png)
 
 
-## امکانات
 
-- Multi tenant support
-- REST full
-- Sessiong management
-- Security layer
-- Plug and play
-
-# حق نشر
-
-این بسته توسط شرکت دانش پژوهان ققنوس توسعه یافته است:
-
-[Phoinex Scholars Co.](http://dpq.co.ir)
 
