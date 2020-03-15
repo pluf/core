@@ -29,55 +29,55 @@ require_once dirname(__FILE__) . '/TestFormModel.php';
 class PlufFormTest extends TestCase
 {
 
-    protected function setUp()
-    {
-        $this->markTestSkipped('Need to rewrite the form handling.');
-        Pluf::start(__DIR__ . '/../conf/config.php');
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
-        $schema->model = $m1;
-        $schema->dropTables();
-        $schema->createTables();
-    }
+//     protected function setUp()
+//     {
+//         $this->markTestSkipped('Need to rewrite the form handling.');
+//         Pluf::start(__DIR__ . '/../conf/config.php');
+//         $db = Pluf::db();
+//         $schema = Pluf::factory('Pluf_DB_Schema', $db);
+//         $m1 = new TestFormModel();
+//         $schema->model = $m1;
+//         $schema->dropTables();
+//         $schema->createTables();
+//     }
 
-    protected function tearDown()
-    {
-        $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
-        $m1 = new TestFormModel();
-        $schema->model = $m1;
-        $schema->dropTables();
-    }
+//     protected function tearDown()
+//     {
+//         $db = Pluf::db();
+//         $schema = Pluf::factory('Pluf_DB_Schema', $db);
+//         $m1 = new TestFormModel();
+//         $schema->model = $m1;
+//         $schema->dropTables();
+//     }
 
-    public function testFormRenderByField()
-    {
-        $m1 = new TestFormModel();
-        $form = new Pluf_Form_Create();
-        $form->defineFromModel($m1);
-        $errors = array();
-        $m1->description = 'My description';
-        $m1->title = 'What a title?';
-        $m1->create();
-        $new_data = $m1->getData();
-        $form_view = new Pluf_Form_Render($form, $new_data, $errors);
-        $this->assertEquals('<label class="px-form-required" for="title">Title of the item:</label>', $form_view->fields['title']->label);
-        $this->assertEquals('<label for="description">Description:</label>', $form_view->fields['description']->label);
-    }
+//     public function testFormRenderByField()
+//     {
+//         $m1 = new TestFormModel();
+//         $form = new Pluf_Form_Create();
+//         $form->defineFromModel($m1);
+//         $errors = array();
+//         $m1->description = 'My description';
+//         $m1->title = 'What a title?';
+//         $m1->create();
+//         $new_data = $m1->getData();
+//         $form_view = new Pluf_Form_Render($form, $new_data, $errors);
+//         $this->assertEquals('<label class="px-form-required" for="title">Title of the item:</label>', $form_view->fields['title']->label);
+//         $this->assertEquals('<label for="description">Description:</label>', $form_view->fields['description']->label);
+//     }
 
-    public function testFormValidate()
-    {
-        $m1 = new TestFormModel();
-        $form = new Pluf_Form_Update();
-        $form->defineFromModel($m1);
-        $errors = array();
-        $m1->description = 'My description';
-        $m1->title = 'What a title?';
-        $m1->id = 'qwe';
-        $new_data = $m1->getData();
-        $errors = $form->getValidationErrors($new_data);
-        $this->assertEquals(true, isset($errors['id']));
-        $this->assertEquals(1, count($errors));
-    }
+//     public function testFormValidate()
+//     {
+//         $m1 = new TestFormModel();
+//         $form = new Pluf_Form_Update();
+//         $form->defineFromModel($m1);
+//         $errors = array();
+//         $m1->description = 'My description';
+//         $m1->title = 'What a title?';
+//         $m1->id = 'qwe';
+//         $new_data = $m1->getData();
+//         $errors = $form->getValidationErrors($new_data);
+//         $this->assertEquals(true, isset($errors['id']));
+//         $this->assertEquals(1, count($errors));
+//     }
 }
 

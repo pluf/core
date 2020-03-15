@@ -112,9 +112,9 @@ class Pluf_Migration
      *
      * @return boolean
      */
-    public function init(?Pluf_Tenant $tenant = null): void
+    public function init(?Pluf_Tenant $tenant = null): bool
     {
-        $current = Pluf_Tenant::current();
+        $current = Pluf_Tenant::getCurrent();
         try {
             Pluf_Tenant::setCurrent($tenant);
             foreach ($this->apps as $app) {
@@ -123,12 +123,13 @@ class Pluf_Migration
         } finally {
             Pluf_Tenant::setCurrent($current);
         }
+        return true;
     }
 
     /**
      * Uninstall the application.
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         $apps = array_reverse($this->apps);
         foreach ($apps as $app) {

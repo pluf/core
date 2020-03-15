@@ -1,5 +1,5 @@
 <?php
-namespace\Pluf\HelloWord;
+namespace Pluf\HelloWord;
 
 class Views extends \Pluf_Views
 {

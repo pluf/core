@@ -55,7 +55,7 @@
 			"Pluf\\NoteBook\\" : "examples/NoteBook",
 			"Pluf\\Smallest\\" : "examples/Smallest",
 			"Pluf\\HelloWord\\" : "examples/HelloWord",
-			"PlufTest\\" : "tests/"
+			"Pluf\\Test\\" : "tests/"
 		},
 		"psr-0" : {
 			"test" : ""

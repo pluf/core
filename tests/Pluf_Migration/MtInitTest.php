@@ -73,7 +73,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $tenant->create();
         $this->assertTrue($m->init($tenant));
 
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**
@@ -86,13 +86,14 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf['installed_apps'] = array(
             'Note'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
             'Pluf',
             'Note'
         ));
         $this->assertTrue($m->install());
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**
@@ -105,6 +106,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf['installed_apps'] = array(
             'Note'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
             'Pluf',
@@ -122,7 +124,7 @@ class Pluf_Migration_MtnitTest extends TestCase
 
         // 1- Switch Tenant to the new one
         Pluf_Tenant::setCurrent($tenant);
-        
+
         // 2- Create new instance of book
         $note = new Note_Book();
         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');

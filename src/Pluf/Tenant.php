@@ -184,7 +184,7 @@ class Pluf_Tenant extends Pluf_Model
     /**
      *
      * @deprecated See Pluf_Tenant::getCurrent()
-     * @return unknown
+     * @return Pluf_Tenant current tentant
      */
     public static function current(): ?Pluf_Tenant
     {

@@ -332,15 +332,10 @@ class Pluf_Dispatcher
         }
         try {
             // 1- Add to log
-            Pluf_Log::fatal(array(
+            Pluf_Log::fatal('Fail to handle the request', array(
                 'query' => $req->query,
                 'error' => $exception
             ));
-            // 2- send email if error is not handled
-            $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
-            $email = new Pluf_Mail($from, $from, 'fatal error in system');
-            $email->addTextMessage('unsupported error in system:' . $exception);
-            $email->sendMail();
         } catch (Exception $ex) {}
     }
 }

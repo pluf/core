@@ -8,7 +8,6 @@
 	colors="true">
     <testsuites>
          <testsuite name="Basics">
-            <directory>tests/Dispatcher/</directory>
             <directory>tests/Cache/</directory>
          </testsuite>
         <testsuite name="Pluf2Suit">
@@ -28,6 +27,8 @@
             <directory>tests/Pluf_Model/</directory>
         </testsuite>
         <testsuite name="View">
+            <directory>tests/Middleware/</directory>
+            <directory>tests/Dispatcher/</directory>
             <directory>tests/Pluf_Dispatcher/</directory>
             <directory>tests/Pluf_Paginator/</directory>
             <directory>tests/Pluf_Text_Wiki/</directory>

@@ -36,7 +36,7 @@ class Book extends Pluf_Model
      */
     function init()
     {
-        $this->_a['table'] = 'note_book';
+        $this->_a['table'] = 'notebook_book';
         $this->_a['verbose'] = 'Note book';
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.

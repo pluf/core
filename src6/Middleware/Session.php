@@ -1,12 +1,35 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace Pluf\Middleware;
+
+use Pluf\Exception;
+use Pluf;
+use Pluf_HTTP_Request;
+use Pluf_HTTP_Response;
+use Pluf_SQL;
+use Pluf_Session;
+use Pluf_Signal;
 
 /**
- * میان افزار نشست
- *
- * 
  * Allow a session object in the request.
  */
-class Pluf_Middleware_Session
+class Session implements \Pluf\Middleware
 {
 
     /**
@@ -18,7 +41,7 @@ class Pluf_Middleware_Session
      *            Pluf_HTTP_Request The request
      * @return bool false
      */
-    function process_request (&$request)
+    function process_request(Pluf_HTTP_Request &$request)
     {
         $session = new Pluf_Session();
         if (! isset($request->COOKIE[$session->cookie_name])) {
@@ -40,10 +63,9 @@ class Pluf_Middleware_Session
         }
         if (isset($data['Pluf_Session_key'])) {
             $sql = new Pluf_SQL('session_key=%s', $data['Pluf_Session_key']);
-            $found_session = Pluf::factory('Pluf_Session')->getList(
-                    array(
-                            'filter' => $sql->gen()
-                    ));
+            $found_session = Pluf::factory('Pluf_Session')->getList(array(
+                'filter' => $sql->gen()
+            ));
             if (isset($found_session[0])) {
                 $request->session = $found_session[0];
             } else {
@@ -52,10 +74,10 @@ class Pluf_Middleware_Session
         } else {
             $request->session = $session;
         }
-//         if ($set_lang and
-//                  false == $request->session->getData('pluf_language', false)) {
-//             $request->session->setData('pluf_language', $set_lang);
-//         }
+        // if ($set_lang and
+        // false == $request->session->getData('pluf_language', false)) {
+        // $request->session->setData('pluf_language', $set_lang);
+        // }
         if (isset($request->COOKIE[$request->session->test_cookie_name])) {
             $request->session->test_cookie = $request->COOKIE[$request->session->test_cookie_name];
         }
@@ -72,9 +94,8 @@ class Pluf_Middleware_Session
      *            Pluf_HTTP_Request The request
      * @param
      *            Pluf_HTTP_Response The response
-     * @return Pluf_HTTP_Response The response
      */
-    function process_response ($request, $response)
+    function process_response(Pluf_HTTP_Request $request, Pluf_HTTP_Response $response): Pluf_HTTP_Response
     {
         if ($request->session->touched) {
             if ($request->session->isAnonymous()) {
@@ -84,8 +105,7 @@ class Pluf_Middleware_Session
             }
             $data = array();
             $data['Pluf_Session_key'] = $request->session->session_key;
-            $response->cookies[$request->session->cookie_name] = self::_encodeData(
-                    $data);
+            $response->cookies[$request->session->cookie_name] = self::_encodeData($data);
         }
         if ($request->session->set_test_cookie != false) {
             $response->cookies[$request->session->test_cookie_name] = $request->session->test_cookie_value;
@@ -100,11 +120,10 @@ class Pluf_Middleware_Session
      *            mixed Data to encode
      * @return string Encoded data ready for the cookie
      */
-    public static function _encodeData ($data)
+    public static function _encodeData($data)
     {
         if ('' == ($key = Pluf::f('secret_key'))) {
-            throw new Exception(
-                    'Security error: "secret_key" is not set in the configuration file.');
+            throw new Exception('Security error: "secret_key" is not set in the configuration file.');
         }
         $data = serialize($data);
         return base64_encode($data) . md5(base64_encode($data) . $key);
@@ -119,7 +138,7 @@ class Pluf_Middleware_Session
      *            string Encoded data
      * @return mixed Decoded data
      */
-    public static function _decodeData ($encoded_data)
+    public static function _decodeData($encoded_data)
     {
         $check = substr($encoded_data, - 32);
         $base64_data = substr($encoded_data, 0, strlen($encoded_data) - 32);
@@ -129,16 +148,14 @@ class Pluf_Middleware_Session
         return unserialize(base64_decode($base64_data));
     }
 
-    public static function processContext ($signal, &$params)
+    public static function processContext($signal, &$params)
     {
-        $params['context'] = array_merge($params['context'], 
-                Pluf_Middleware_Session_ContextPreProcessor($params['request']));
+        $params['context'] = array_merge($params['context'], Pluf_Middleware_Session_ContextPreProcessor($params['request']));
     }
 }
 
-
-Pluf_Signal::connect('Pluf_Template_Context_Request::construct', 
-        array(
-                'Pluf_Middleware_Session',
-                'processContext'
-        ));
+// TODO: maso, 2020: move to module initials
+Pluf_Signal::connect('Pluf_Template_Context_Request::construct', array(
+    'Pluf_Middleware_Session',
+    'processContext'
+));

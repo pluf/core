@@ -33,6 +33,15 @@ $cfg['url_format'] = 'simple';
 // It is mandatory if you are using the template system.
 $cfg['tmp_folder'] = '/tmp';
 
+//
+// List of Middleware
+//
+//  Define list of middleware to apply on all requests. Add full path of
+// middleware class addres into the list to enable it. The order of the 
+// list is important.
+//
+// $cfg['middleware_classes'] = array();
+
 // -------------------------------------------------------------------------
 // Template manager and compiler
 // -------------------------------------------------------------------------
@@ -54,16 +63,16 @@ $cfg['template_modifiers'] = array();
 //
 // All possible levels
 //
-// all
-// debug
-// info
-// notice
-// warning
-// error
-// critical
-// alert
-// emergency
-// off
+// - all
+// - debug
+// - info
+// - notice
+// - warning
+// - error
+// - critical
+// - alert
+// - emergency
+// - off
 //
 $cfg['log_level'] = 'error';
 
@@ -92,5 +101,23 @@ $cfg['log_appender'] = '\Pluf\LoggerAppender\Console';
 // Tenants
 // -------------------------------------------------------------------------
 
-// multitenant
+//
+// Default tenant path
+// 
+//  If a user try to access an undefined tenant, it will be redirect to the 
+// following URL. You can create a registration page and inform the user 
+// about the bad URL.
+//
+// $cfg['tenant_notfound_url'] = 'https://pluf.ir/wb/blog/page/how-config-notfound-tenant';
+
+//
+// Enable/Disable Mutlitenant system
+//
+//  By deault system runs based on a single tenant model. If you want to switch
+// to multitenant model change th following option. Note that, befor installing
+// the application you must switch to multi/single tinant model and do not change
+// it anymore.
+//
+//  $cfg['multitenant'] = false;
+
 return $cfg;

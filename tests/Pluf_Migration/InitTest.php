@@ -49,16 +49,17 @@ class Pluf_Migration_InitTest extends TestCase
      */
     public function shouldInstallEmptyApp()
     {
-        $conf = include __DIR__ . '/../conf/mysql.conf.php';
+        $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
             'Empty'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
             'Empty'
         ));
         $this->assertTrue($m->install());
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**
@@ -71,6 +72,7 @@ class Pluf_Migration_InitTest extends TestCase
         $conf['installed_apps'] = array(
             'Empty'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
             'Empty'
@@ -78,7 +80,7 @@ class Pluf_Migration_InitTest extends TestCase
         $this->assertTrue($m->install());
 
         $this->assertTrue($m->init());
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**
@@ -91,12 +93,13 @@ class Pluf_Migration_InitTest extends TestCase
         $conf['installed_apps'] = array(
             'Note'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new Pluf_Migration(array(
             'Note'
         ));
         $this->assertTrue($m->install());
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**
