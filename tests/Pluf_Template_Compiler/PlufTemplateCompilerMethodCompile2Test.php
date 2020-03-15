@@ -17,41 +17,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
 class PlufTemplateCompilerMethodCompile2Test extends TestCase
 {
 
-    protected function setUp ()
+    protected function setUp()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
 
-    public function testCompile ()
+    public function testCompile()
     {
-        $compiler = new Pluf_Template_Compiler('tpl-extends.html', 
-                array(
-                        dirname(__FILE__)
-                ));
-        $compiled = file_get_contents(
-                dirname(__FILE__) . '/tpl-extends.compiled.html');
+        $compiler = new Pluf_Template_Compiler('tpl-extends.html', array(
+            dirname(__FILE__)
+        ));
+        $compiled = file_get_contents(dirname(__FILE__) . '/tpl-extends.compiled.html');
         $this->assertEquals($compiled, $compiler->getCompiledTemplate() . "\n");
     }
 
-    public function testCompileMultiFolders ()
+    public function testCompileMultiFolders()
     {
         $folders = array(
-                dirname(__FILE__) . '/tpl1',
-                dirname(__FILE__) . '/tpl2'
+            dirname(__FILE__) . '/tpl1',
+            dirname(__FILE__) . '/tpl2'
         );
         $compiler = new Pluf_Template_Compiler('tpl-extends.html', $folders);
-        $compiled = file_get_contents(
-                dirname(__FILE__) . '/tpl-extends.compiled.html');
+        $compiled = file_get_contents(dirname(__FILE__) . '/tpl-extends.compiled.html');
         $this->assertEquals($compiled, $compiler->getCompiledTemplate() . "\n");
     }
 }

@@ -26,7 +26,7 @@
  * نمایش نگاشت داده می‌شود.
  *
  * @author maso
- *
+ *        
  */
 class Pluf_Dispatcher
 {
@@ -48,7 +48,7 @@ class Pluf_Dispatcher
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
             // Puts request in global scope
-            $GLOBALS['_PX_request'] = $req;
+            Pluf_HTTP_Request::setCurrent($req);
             $middleware = array();
             foreach (Pluf::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();
@@ -154,6 +154,7 @@ class Pluf_Dispatcher
                     continue;
                 }
             }
+            $match = [];
             if (preg_match($ctl['regex'], $to_match, $match)) {
                 if (! isset($ctl['sub'])) {
                     return self::send($req, $ctl, $match);
@@ -181,7 +182,7 @@ class Pluf_Dispatcher
             }
         }
         // نمایش مناسبی یافت نشده است
-        throw new Pluf_HTTP_Error404();
+        throw new Pluf_HTTP_Error404($req->query);
     }
 
     /**
@@ -214,7 +215,7 @@ class Pluf_Dispatcher
          * is true, then ok go ahead, if not then it a response so
          * return it or an exception so let it go.
          */
-        if (isset($ctl['precond']) && !Pluf::f('dispatcher.precond.disable', false)) {
+        if (isset($ctl['precond']) && ! Pluf::f('dispatcher.precond.disable', false)) {
             $preconds = $ctl['precond'];
             if (! is_array($preconds)) {
                 $preconds = array(
@@ -266,7 +267,7 @@ class Pluf_Dispatcher
         return false;
     }
 
-    private static function toResponse($response, $request)
+    public static function toResponse($response, $request)
     {
         // Check old result
         if ($response instanceof Pluf_HTTP_Response) {
@@ -279,7 +280,7 @@ class Pluf_Dispatcher
         }
 
         // convert to response
-        $http = new HTTP2();
+        $http = new \Pluf\HTTP2();
         $contentType = array(
             'application/json',
             'text/plain'
@@ -288,7 +289,7 @@ class Pluf_Dispatcher
         if ($mime === false) {
             throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
         }
-        if($response instanceof Pluf_Paginator){
+        if ($response instanceof Pluf_Paginator) {
             $response = $response->render_object();
         }
         switch ($mime) {
@@ -331,15 +332,10 @@ class Pluf_Dispatcher
         }
         try {
             // 1- Add to log
-            Pluf_Log::fatal(array(
+            Pluf_Log::fatal('Fail to handle the request', array(
                 'query' => $req->query,
                 'error' => $exception
             ));
-            // 2- send email if error is not handled
-            $from = Pluf::f('general_from_email', 'info@dpq.co.ir');
-            $email = new Pluf_Mail($from, $from, 'fatal error in system');
-            $email->addTextMessage('unsupported error in system:' . $exception);
-            $email->sendMail();
         } catch (Exception $ex) {}
     }
 }

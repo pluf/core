@@ -1,4 +1,5 @@
 <?php
+use Pluf\ModelUtils;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -86,12 +87,12 @@ class Pluf_Model implements JsonSerializable
      * The object data are stored in an associative array. Each key
      * corresponds to a column and stores a Pluf_DB_Field_* variable.
      */
-    protected $_data = array();
+    public $_data = array();
 
     /**
      * Storage cached data for methods_get
      */
-    protected $_cache = array();
+    public $_cache = array();
 
     // We should use a global cache.
 
@@ -100,13 +101,13 @@ class Pluf_Model implements JsonSerializable
      *
      * Set by the init() method from the definition of the columns.
      */
-    protected $_fk = array();
+    public $_fk = array();
 
     /**
      * Methods available, this array is dynamically populated by init
      * method.
      */
-    protected $_m = array(
+    public $_m = array(
         'list' => array(), // get_*_list methods
         'many' => array(), // many to many
         'get' => array(), // foreign keys
@@ -146,15 +147,10 @@ class Pluf_Model implements JsonSerializable
     function _init()
     {
         $this->_getConnection();
-        if (isset($GLOBALS['_PX_models_init_cache'][$this->_model])) {
-            $init_cache = $GLOBALS['_PX_models_init_cache'][$this->_model];
-            $this->_cache = $init_cache['cache'];
-            $this->_m = $init_cache['m'];
-            $this->_a = $init_cache['a'];
-            $this->_fk = $init_cache['fk'];
-            $this->_data = $init_cache['data'];
+        if (ModelUtils::loadFromCache($this)) {
             return;
         }
+
         $this->init();
         $this->_setupMultitenantFields();
         foreach ($this->_a['cols'] as $col => $val) {
@@ -209,13 +205,7 @@ class Pluf_Model implements JsonSerializable
         $this->_setupAutomaticListMethods('foreignkey');
         $this->_setupAutomaticListMethods('manytomany');
 
-        $GLOBALS['_PX_models_init_cache'][$this->_model] = array(
-            'cache' => $this->_cache,
-            'm' => $this->_m,
-            'a' => $this->_a,
-            'fk' => $this->_fk,
-            'data' => $this->_data
-        );
+        ModelUtils::putModelToCache($this);
     }
 
     /**
@@ -691,7 +681,7 @@ class Pluf_Model implements JsonSerializable
      * Get the number of items.
      *
      * @see getList() for definition of the keys
-     *
+     *     
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
@@ -1104,28 +1094,27 @@ class Pluf_Model implements JsonSerializable
      */
     protected function _setupAutomaticListMethods($type)
     {
-        $current_model = $this->_a['model'];
-        if (isset($GLOBALS['_PX_models_related'][$type][$current_model])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$current_model];
-            foreach ($relations as $related) {
-                if ($related != $current_model) {
-                    $model = new $related();
+        $current_model = ModelUtils::getModelCacheKey($this);
+        $relations = ModelUtils::getRelatedModels($this, $type);
+
+        foreach ($relations as $related) {
+            if ($related != $current_model) {
+                $model = new $related();
+            } else {
+                $model = clone $this;
+            }
+            $fkeys = $model->getRelationKeysToModel($current_model, $type);
+            foreach ($fkeys as $fkey => $val) {
+                $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                $mname = 'get_' . strtolower($mname) . '_list';
+                if ('foreignkey' === $type) {
+                    $this->_m['list'][$mname] = array(
+                        $related,
+                        $fkey
+                    );
                 } else {
-                    $model = clone $this;
-                }
-                $fkeys = $model->getRelationKeysToModel($current_model, $type);
-                foreach ($fkeys as $fkey => $val) {
-                    $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
-                    $mname = 'get_' . strtolower($mname) . '_list';
-                    if ('foreignkey' === $type) {
-                        $this->_m['list'][$mname] = array(
-                            $related,
-                            $fkey
-                        );
-                    } else {
-                        $this->_m['list'][$mname] = $related;
-                        $this->_m['many'][$related] = $type;
-                    }
+                    $this->_m['list'][$mname] = $related;
+                    $this->_m['many'][$related] = $type;
                 }
             }
         }

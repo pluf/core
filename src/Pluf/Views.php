@@ -266,13 +266,15 @@ class Pluf_Views
     }
 
     /**
-     * Clear collection list with the given query
+     * Clear Many to on relations
      *
-     * @param unknown $request
-     * @param unknown $match
-     * @param unknown $p
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return NULL
      */
-    public function clearManyToOne($request, $match, $p){
+    public function clearManyToOne(Pluf_HTTP_Request $request, $match = array(), $p = array())
+    {
         // XXX: clean list
         return null;
     }

@@ -34,7 +34,7 @@
  * $m = new Pluf_Migration('MyApp');
  * $m->install();
  * // Uninstall the application MyApp
- * $m->unInstall();
+ * $m->uninstall();
  *
  * $m = new Pluf_Migration();
  * $m->migrate(); // migrate all the installed app to the newest version.
@@ -112,15 +112,16 @@ class Pluf_Migration
      *
      * @return boolean
      */
-    public function init($tenant = null)
+    public function init(?Pluf_Tenant $tenant = null): bool
     {
-        // TODO: maso, init default tenant
-        if (! isset($GLOBALS['_PX_request'])) {
-            $GLOBALS['_PX_request'] = new Pluf_HTTP_Request('/');
-        }
-        $GLOBALS['_PX_request']->tenant = $tenant;
-        foreach ($this->apps as $app) {
-            $this->initAppFromConfig($app);
+        $current = Pluf_Tenant::getCurrent();
+        try {
+            Pluf_Tenant::setCurrent($tenant);
+            foreach ($this->apps as $app) {
+                $this->initAppFromConfig($app);
+            }
+        } finally {
+            Pluf_Tenant::setCurrent($current);
         }
         return true;
     }
@@ -128,7 +129,7 @@ class Pluf_Migration
     /**
      * Uninstall the application.
      */
-    public function unInstall()
+    public function uninstall(): bool
     {
         $apps = array_reverse($this->apps);
         foreach ($apps as $app) {
@@ -154,7 +155,8 @@ class Pluf_Migration
                 echo ($func . "\n");
             }
             if (! $this->dry_run) {
-                $ret = $func($path, $name);
+                /* $ret = */
+                $func($path, $name);
             }
         }
         return true;
@@ -177,7 +179,8 @@ class Pluf_Migration
                 echo ($func . "\n");
             }
             if (! $this->dry_run) {
-                $ret = $func($path, $name);
+                /* $ret = */
+                $func($path, $name);
             }
         }
         return true;
@@ -342,9 +345,8 @@ class Pluf_Migration
      */
     public static function getModuleConfig($app)
     {
-
-        $moduleName ="Pluf\\" . $app . "\\Module";
-        if(class_exists($moduleName)){
+        $moduleName = "Pluf\\" . $app . "\\Module";
+        if (class_exists($moduleName)) {
             $file = $moduleName::moduleJsonPath;
         } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
             return false;
@@ -495,7 +497,7 @@ class Pluf_Migration
     public function getAppVersion($app)
     {
         try {
-            $db = & Pluf::db();
+            $db = &Pluf::db();
             $res = $db->select('SELECT version FROM ' . $db->pfx . 'schema_info WHERE application=' . $db->esc($app));
             return (int) $res[0]['version'];
         } catch (Exception $e) {

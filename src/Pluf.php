@@ -1,4 +1,5 @@
 <?php
+use Pluf\ModelUtils;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -54,7 +55,7 @@ class Pluf
      * Load the given configuration file.
      *
      * The configuration is saved in the $GLOBALS['_PX_config'] array.
-     * The relations between the models are loaded in $GLOBALS['_PX_models'].
+     * The relations between the models are loaded in $GLOBALS[ModelUtils::MODEL_KEY].
      *
      * @param
      *            string Configuration file to load.
@@ -70,7 +71,7 @@ class Pluf
         }
         // Load the relations for each installed application. Each
         // application folder must be in the include path.
-        self::loadRelations(!Pluf::f('debug', false));
+        self::loadRelations(! Pluf::f('debug', false));
     }
 
     /**
@@ -86,59 +87,9 @@ class Pluf
      * @param
      *            bool Use the cache (true)
      */
-    static function loadRelations($usecache = true)
+    public static function loadRelations($usecache = true)
     {
-        $GLOBALS['_PX_models'] = array();
-        $GLOBALS['_PX_models_init_cache'] = array();
-        $apps = Pluf::f('installed_apps', array());
-        $cache = Pluf::f('tmp_folder') . '/Pluf_relations_cache_' . md5(serialize($apps)) . '.phps';
-        if ($usecache and file_exists($cache)) {
-            list($GLOBALS['_PX_models'], $GLOBALS['_PX_models_related'], $GLOBALS['_PX_signal']) = include $cache;
-            return;
-        }
-        $m = $GLOBALS['_PX_models'];
-        foreach ($apps as $app) {
-            $moduleName = "Pluf\\" . $app . "\\Module";
-            if (class_exists($moduleName)) {
-                // Load PSR4 modules
-                $m = array_merge_recursive($m, $moduleName::relations);
-            } else {
-                // Load PSR1 modules
-                $m = array_merge_recursive($m, require $app . '/relations.php');
-            }
-        }
-        $GLOBALS['_PX_models'] = $m;
-
-        $_r = array(
-            'relate_to' => array(),
-            'relate_to_many' => array()
-        );
-        foreach ($GLOBALS['_PX_models'] as $model => $relations) {
-            foreach ($relations as $type => $related) {
-                foreach ($related as $related_model) {
-                    if (!isset($_r[$type][$related_model])) {
-                        $_r[$type][$related_model] = array();
-                    }
-                    $_r[$type][$related_model][] = $model;
-                }
-            }
-        }
-        $_r['foreignkey'] = $_r['relate_to'];
-        $_r['manytomany'] = $_r['relate_to_many'];
-        $GLOBALS['_PX_models_related'] = $_r;
-
-        // $GLOBALS['_PX_signal'] is automatically set by the require
-        // statement and possibly in the configuration file.
-        if ($usecache) {
-            $s = var_export(array(
-                $GLOBALS['_PX_models'],
-                $GLOBALS['_PX_models_related'],
-                $GLOBALS['_PX_signal']
-            ), true);
-            if (@file_put_contents($cache, '<?php return ' . $s . ';' . "\n", LOCK_EX)) {
-                chmod($cache, 0755);
-            }
-        }
+        ModelUtils::loadRelations($usecache);
     }
 
     /**
@@ -157,7 +108,7 @@ class Pluf
         }
         return $default;
     }
-
+    
     /**
      * Access an array of configuration variables having a given
      * prefix.
@@ -174,7 +125,7 @@ class Pluf
         $pfx_len = strlen($pfx);
         foreach ($GLOBALS['_PX_config'] as $key => $val) {
             if (0 === strpos($key, $pfx)) {
-                if (!$strip) {
+                if (! $strip) {
                     $ret[$key] = $val;
                 } else {
                     $ret[substr($key, $pfx_len)] = $val;
@@ -218,10 +169,10 @@ class Pluf
             return;
         }
         $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        if (!file_exists(stream_resolve_include_path($file))) {
+        if (! file_exists(stream_resolve_include_path($file))) {
             return;
         }
-        include_once  $file;
+        include_once $file;
         if (class_exists($class, false) || interface_exists($class, false)) {
             return;
         }
@@ -252,7 +203,7 @@ class Pluf
         if (false !== ($file = Pluf::fileExists($file))) {
             include $file;
         }
-        if (!function_exists($function)) {
+        if (! function_exists($function)) {
             throw new Exception('Impossible to load the function: ' . $function);
         }
     }
@@ -279,7 +230,7 @@ class Pluf
     public static function fileExists($file)
     {
         $file = trim($file);
-        if (!$file) {
+        if (! $file) {
             return false;
         }
         // using an absolute path for the file?
@@ -298,7 +249,7 @@ class Pluf
                 if (file_exists($target)) {
                     return $target;
                 }
-            } catch (Exception $e) { }
+            } catch (Exception $e) {}
         }
         // never found it
         return false;
@@ -329,6 +280,17 @@ class Pluf
         $a = $func($extra);
         return $a;
     }
+
+    /**
+     * Get Curretn request
+     *
+     * @deprecated This will removed in the next major version. Pleas use Pluf_HTTP_Request::getCurrent()
+     * @return Pluf_HTTP_Request|NULL
+     */
+    public static function getCurrentRequest()
+    {
+        return Pluf_HTTP_Request::getCurrent();
+    }
 }
 
 /**
@@ -337,7 +299,7 @@ class Pluf
  * @param
  *            string String to be translated.
  * @return string Translated string.
- * @deprecated
+ * @deprecated Server side translateion will be removed
  */
 function __($str)
 {
@@ -376,7 +338,7 @@ function Pluf_autoload($class_name)
             print $e->getMessage();
             die();
         }
-        throw new Pluf_Exception('Class not found:' . $class_name);
+        throw new \Pluf\Exception('Class not found:' . $class_name);
     }
 }
 
@@ -424,7 +386,7 @@ function PlufErrorHandler($code, $string, $file, $line)
 }
 
 // Set the error handler only if not performing the unittests.
-if (!defined('IN_UNIT_TESTS')) {
+if (! defined('IN_UNIT_TESTS')) {
     set_error_handler('PlufErrorHandler', error_reporting());
 }
 

@@ -272,16 +272,16 @@ class Pluf_FileUtil
             $zip->extractTo($folder);
             $zip->close();
         } else {
-            throw new Pluf_Exception('Unable to unzip file.');
+            throw new \Pluf\Exception('Unable to unzip file.');
         }
     }
 
     public static function createTempFolder($pre = '')
     {
         $key = $pre . md5(microtime() . rand(0, 123456789));
-        $folder = Pluf::f('tmp_folder', '/var/tmp') . '/' . $key;
+        $folder = Pluf::f('tmp_folder', '/tmp') . '/' . $key;
         if (! mkdir($folder, 0777, true)) {
-            throw new Pluf_Exception('Failed to create folder in temp');
+            throw new \Pluf\Exception('Failed to create folder in temp');
         }
         return $folder;
     }

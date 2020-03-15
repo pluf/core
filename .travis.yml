@@ -1,87 +1,38 @@
 language: php
 php:
-  - '7.2'
-
-services:
-  - mysql
+  - '7.4'
 
 git:
   depth: 1
 
-mysql:
-  database: test
-  username: root
-  encoding: utf8
-  
-before_install:
-  - sudo apt-get update > /dev/null
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
-
 install:
   # Install composer packages, will also trigger dump-autoload
   - travis_retry composer install --no-interaction
-  - travis_retry composer require codeclimate/php-test-reporter --no-interaction
-  # Install coveralls.phar
-  - wget -c -nc --retry-connrefused --tries=0 https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
-  - chmod +x coveralls.phar
-  - php coveralls.phar --version
   
 script:
-  - php run.php
-  # CODECLIMATE_REPO_TOKEN reqired
-  - vendor/bin/test-reporter
+  - ./vendor/bin/phpunit 
 
 after_success:
-# Submit coverage report to Coveralls servers, see .coveralls.yml
- - travis_retry php coveralls.phar -v
-# Submit coverage report to codecov.io
- - bash <(curl -s https://codecov.io/bash)
-
-notifications:
-  email:
-    - mostafabarmshory+eeqna5hwqenxwczq7lax@boards.trello.com
-  on_success: never
-  on_failure: always
-  on_error: always
-
-language: php
-php:
-  - '7.2'
-
-services:
-  - mysql
-
-git:
-  depth: 1
-
-mysql:
-  database: test
-  username: root
-  encoding: utf8
+  #
+  # Codecove
+  #
+  # Submit coverage report to codecov.io
+  - bash <(curl -s https://codecov.io/bash)
   
-before_install:
-  - sudo apt-get update > /dev/null
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
-
-install:
-  # Install composer packages, will also trigger dump-autoload
-  - travis_retry composer install --no-interaction
-  - travis_retry composer require codeclimate/php-test-reporter --no-interaction
-  # Install coveralls.phar
-  - wget -c -nc --retry-connrefused --tries=0 https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
-  - chmod +x coveralls.phar
-  - php coveralls.phar --version
+  #
+  # Coveralls
+  #
+  # Submit coverage report to Coveralls servers, see .coveralls.yml
+  - travis_retry composer require --dev php-coveralls/php-coveralls --no-interaction
+  - travis_retry php vendor/bin/php-coveralls -v
+  - travis_retry composer remove  --dev php-coveralls/php-coveralls --no-interaction
   
-script:
-  - php run.php
-  # CODECLIMATE_REPO_TOKEN reqired
-  - vendor/bin/test-reporter
-
-after_success:
-# Submit coverage report to Coveralls servers, see .coveralls.yml
- - travis_retry php coveralls.phar -v
-# Submit coverage report to codecov.io
- - bash <(curl -s https://codecov.io/bash)
+  #
+  # Code Cliemet 
+  #
+  - travis_retry composer require --dev codeclimate/php-test-reporter --no-interaction
+  - travis_retry vendor/bin/test-reporter
+  - travis_retry composer remove --dev codeclimate/php-test-reporter --no-interaction
 
 notifications:
   email:

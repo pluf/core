@@ -259,8 +259,6 @@ class Pluf_Utils
      * @credits dk at brightbyte dot de
      * @source http://www.php.net/manual/en/function.shell-exec.php
      *
-     * @see proc_open
-     *
      * @param
      *            string Command to run (will be passed to proc_open)
      * @param

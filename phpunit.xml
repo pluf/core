@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit 
+	bootstrap="./vendor/autoload.php"
+	stopOnWarning="false"
+	verbose="false"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	colors="true">
     <testsuites>
          <testsuite name="Basics">
-            <directory>tests/Dispatch/</directory>
             <directory>tests/Cache/</directory>
          </testsuite>
         <testsuite name="Pluf2Suit">
@@ -22,10 +27,13 @@
             <directory>tests/Pluf_Model/</directory>
         </testsuite>
         <testsuite name="View">
+            <directory>tests/Middleware/</directory>
+            <directory>tests/Dispatcher/</directory>
             <directory>tests/Pluf_Dispatcher/</directory>
             <directory>tests/Pluf_Paginator/</directory>
             <directory>tests/Pluf_Text_Wiki/</directory>
             <directory>tests/Pluf_Text_HTML_Filter/</directory>
+            <directory>tests/Pluf_Form/</directory>
             <directory>tests/Pluf_Form_Field/</directory>
             <directory>tests/Pluf_HTTP_Response</directory>
         </testsuite>
@@ -34,13 +42,17 @@
             <directory>tests/Pluf_Graphql/</directory>
 		</testsuite>
     </testsuites>
-    
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
+
+	<!-- Code coverage -->
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./src</directory>
+			<directory suffix=".php">./src6</directory>
+		</whitelist>
+	</filter>
     <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
+		<log type="coverage-html" target="build/tmp/report" lowUpperBound="35" highLowerBound="70"/>
+		<log type="coverage-clover" target="build/tmp/coverage.xml"/>
+		<log type="junit" target="build/tmp/logfile.xml"/>
     </logging>
 </phpunit>

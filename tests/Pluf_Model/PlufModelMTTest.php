@@ -70,7 +70,7 @@ class Pluf_Model_PlufModelMTTest extends TestCase
             'Pluf',
             'Test'
         ));
-        $m->unInstall();
+        $m->uninstall();
     }
 
     /**

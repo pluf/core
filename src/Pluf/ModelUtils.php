@@ -1,6 +1,6 @@
 <?php
 
-class Pluf_ModelUtils
+class Pluf_ModelUtils extends \Pluf\ModelUtils
 {
 
     public static function getModelName($model): String

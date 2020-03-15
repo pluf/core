@@ -1,5 +1,6 @@
 {
 	"name" : "pluf/core",
+	"version" : "6.0.5",
 	"description" : "Pluf core pakcage",
 	"type" : "library",
 	"license" : "MIT",
@@ -16,23 +17,19 @@
 	],
 	"minimum-stability" : "stable",
 	"require" : {
-		"pluf/http2" : "5.12.x",
+		"pluf/http2" : "6.x",
 		"pear/mail" : "^1.3",
 		"pear/mail_mime" : "^1.10.0",
 		"guzzlehttp/guzzle" : "^6.2",
 		"webonyx/graphql-php" : "^0.12.5",
-		"phayes/geophp" : "^1.2"
-	},
-	"require-dev" : {
-		"phpunit/phpunit" : "^8.3"
+		"phayes/geophp" : "^1.2",
+		"psr/log" : "~1.1"
 	},
 	"include-path" : [
 		"src/"
 	],
-	"autoload" : {
-		"psr-0" : {
-			"test" : ""
-		}
+	"require-dev" : {
+		"phpunit/phpunit" : "7.x"
 	},
 	"support" : {
 		"wiki" : "https://github.com/pluf/core/wiki",
@@ -47,5 +44,21 @@
 		"framework",
 		"restfull",
 		"pluf-module"
-	]
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Pluf\\" : "src6/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Pluf\\NoteBook\\" : "examples/NoteBook",
+			"Pluf\\Smallest\\" : "examples/Smallest",
+			"Pluf\\HelloWord\\" : "examples/HelloWord",
+			"Pluf\\Test\\" : "tests/"
+		},
+		"psr-0" : {
+			"test" : ""
+		}
+	}
 }

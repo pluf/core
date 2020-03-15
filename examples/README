@@ -1,0 +1,13 @@
+Here is some exmple of Pluf extensions, modules and plugins.
+
+Each application will be create in a namespace as follow:
+
+	XXX  => \Pluf\XXX
+	
+For exmaple:
+
+	NoteBook     => \Pluf\NoteBook
+	Smallest => \Pluf\Smallest
+
+
+NOTE: thies applications will be loaded in test and debug environment automatically.

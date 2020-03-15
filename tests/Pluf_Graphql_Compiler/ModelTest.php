@@ -56,7 +56,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
             'Pluf',
             'Test'
         ));
-        $m->unInstall();
+        $m->uninstall();
     }
 
     /**

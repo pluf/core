@@ -78,7 +78,7 @@ if ($what['install']) {
     $m->install();
 } elseif ($what['un-install']) {
     debug('# Uninstall ' . $app_disp);
-    $m->unInstall();
+    $m->uninstall();
 } elseif ($what['backup']) {
     debug('# Backup ' . $app_disp);
     if (! isset($args[1]))

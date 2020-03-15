@@ -17,10 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -28,25 +28,23 @@ class PlufCryptTest extends TestCase
 {
 
     /**
+     *
      * @before
      */
-    protected function setUpTest ()
+    protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
-
 
     /**
      *
      * @test
      */
-    public function testEncrypt ()
+    public function testEncrypt()
     {
         $crypt = Pluf::factory('Pluf_Crypt', 'mykeyasdkjhsdkfjsdhfksjdh');
-        $a = $crypt->encrypt(
-                'Thisisalongemail.name@longemailcompany.domain.com');
-        $this->assertEquals($crypt->decrypt($a), 
-                'Thisisalongemail.name@longemailcompany.domain.com');
+        $a = $crypt->encrypt('Thisisalongemail.name@longemailcompany.domain.com');
+        $this->assertEquals($crypt->decrypt($a), 'Thisisalongemail.name@longemailcompany.domain.com');
     }
 }
 
