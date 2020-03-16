@@ -53,6 +53,10 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
         if (! file_exists($this->content)) {
             throw new Pluf_Exception_DoesNotExist('Requested resource not found');
         }
+        if (defined('IN_UNIT_TESTS')) {
+            parent::render($output_body);
+            return;
+        }
         $dl = new \Pluf\HTTP\Download2(array(
             'file' => $this->content,
             'contenttype' => $this->headers['Content-Type'],
@@ -61,10 +65,6 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
         ));
         foreach ($this->headers as $key => $value){            
             $dl->headers[$key] = $value;
-        }
-        if (defined('IN_UNIT_TESTS')) {
-            parent::render($output_body);
-            return;
         }
         $dl->send(false);
     }
