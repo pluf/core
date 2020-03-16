@@ -45,14 +45,35 @@ class Pluf_Dispatcher
     {
         $response = null;
         try {
+            /*
+             * # Create q request
+             *
+             * TODO: maso, 2020: remove from dispatcher
+             * - It limits tests
+             * - It bind the dispatcher to a specific environment
+             */
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
-            // Puts request in global scope
             Pluf_HTTP_Request::setCurrent($req);
+
+            /*
+             * # Load and run middlewares
+             *
+             * Load all middlewares based on configuration and then run them on
+             * request. and response
+             */
             $middleware = array();
             foreach (Pluf::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();
             }
+
+            /*
+             * # Main dispatching process
+             *
+             * 1- Process request with middlewares
+             * 2- Find and run a view
+             * 3- Process (request,response) with middlewares
+             */
             // 1- middleware process request
             $skip = false;
             foreach ($middleware as $mw) {
@@ -65,8 +86,9 @@ class Pluf_Dispatcher
                     }
                 }
             }
+
+            // 2- Call view
             if ($skip === false) {
-                // 2- Call view
                 if (isset($controllers)) {
                     self::loadControllers($controllers);
                 }
@@ -88,7 +110,8 @@ class Pluf_Dispatcher
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
-            self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
+            $response = new Pluf_HTTP_Response_ServerError($e);
+            self::handleResponse($req, $response);
             self::logError($req, $e);
         }
         /**
