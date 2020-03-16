@@ -45,7 +45,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
         $m = new Pluf_Migration($conf['installed_apps']);
         $m->install();
     }
-    
+
     /**
      *
      * @afterClass
@@ -73,7 +73,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
         ];
         foreach ($types as $rootType => $itemType) {
             $class_name = 'Pluf_GraphQl_TestRender_' . rand();
-            $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
+            $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
             if (file_exists($filename)) {
                 unlink($filename);
             }
@@ -93,7 +93,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
     public function testRenderAndRun()
     {
         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
-        $filename = dirname(__FILE__) . '/../tmp/' . $class_name . '.phps';
+        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
         if (file_exists($filename)) {
             unlink($filename);
         }
