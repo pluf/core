@@ -181,14 +181,13 @@ class Pluf_Dispatcher
             if (preg_match($ctl['regex'], $to_match, $match)) {
                 if (! isset($ctl['sub'])) {
                     return self::send($req, $ctl, $match);
-                } else {
-                    // Go in the subtree
-                    $views = $ctl['sub'];
-                    $i = 0;
-                    $n = count($views);
-                    $to_match = substr($to_match, strlen($match[0]));
-                    continue;
                 }
+                // Go in the subtree
+                $views = $ctl['sub'];
+                $i = 0;
+                $n = count($views);
+                $to_match = substr($to_match, strlen($match[0]));
+                continue;
             }
             $i ++;
         }
