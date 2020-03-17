@@ -44,7 +44,7 @@ class Tenant implements \Pluf\Middleware
         /*
          * In single tenant mode we do not check anything
          */
-        if (! Pluf::f('multitenant', true)) {
+        if (! Pluf::f('multitenant', false)) {
             $request->setTenant(Pluf_Tenant::getCurrent());
             return false;
         }
