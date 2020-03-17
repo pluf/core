@@ -22,7 +22,7 @@ require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
-class PlufModelTest extends TestCase
+class PlufModelRestAPITest extends TestCase
 {
 
     /**

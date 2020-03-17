@@ -93,11 +93,9 @@ class Pluf_HTTP_URL
                 return $_GET['_px_action'];
             case 'mod_rewrite':
                 $request_uri = '';
-                if (isset($_SERVER['QUERY_STRING'])) {
-                    $request_uri = trim($_SERVER['QUERY_STRING']);
-                } elseif (isset($_SERVER['PATH_INFO'])) {
+                if (isset($_SERVER['PATH_INFO'])) {
                     $request_uri = trim($_SERVER['PATH_INFO']);
-                } elseif (isset($_SERVER['ORIG_PATH_INFO'])) {
+                } else if (isset($_SERVER['ORIG_PATH_INFO'])) {
                     $request_uri = trim(str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['ORIG_PATH_INFO']), '/');
                 }
                 return $request_uri;
