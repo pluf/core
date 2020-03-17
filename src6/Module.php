@@ -54,8 +54,8 @@ abstract class Module
      */
     public function getViews()
     {
-        $apiPrefix = \Pluf::f('module_api_prefix', '');
-        $apiBase = \Pluf::f('module_api_base', '');
+        $apiPrefix = \Pluf::f('view_api_prefix', '');
+        $apiBase = \Pluf::f('view_api_base', '');
 
         $reflection = new \ReflectionObject($this);
         $directory = dirname($reflection->getFileName());
