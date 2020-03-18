@@ -38,20 +38,20 @@ class PlufSQLTest extends TestCase {
 
     public function testSimpleSQLAnd()
     {
-        $sql = Pluf::factory('Pluf_SQL');
+        $sql = new Pluf_SQL();
         $sql->Q('blablo=%s', 'bli');
         $this->assertEquals('blablo=\'bli\'', $sql->gen());
     }
 
     public function testSQLAndOr()
     {
-        $sql1 = Pluf::factory('Pluf_SQL');
+        $sql1 = new Pluf_SQL();
         $sql1->Q('title=%s', 'my title');
-        $sql2 = Pluf::factory('Pluf_SQL');
+        $sql2 = new Pluf_SQL();
         $sql2->Q('description=%s', '%par example');
-        $sql3 = Pluf::factory('Pluf_SQL');
+        $sql3 = new Pluf_SQL();
         $sql3->Q('status=%s', '1');
-        $sql4 = Pluf::factory('Pluf_SQL');
+        $sql4 = new Pluf_SQL();
         $sql4->Q('keywords=%s', "tag'gi`ng");
         $sql1->SAnd($sql2);
         $sql3->SAnd($sql4);
@@ -69,9 +69,9 @@ class PlufSQLTest extends TestCase {
     public function testChainSQLAndOr()
     {
         $sql1 = new Pluf_SQL('title=%s', 'my title');
-        $sql2 = Pluf::factory('Pluf_SQL');
+//         $sql2 = new Pluf_SQL();
         $sql1->Q('description=%s', '%par example')->Q('keywords=%s', "tag'gi`ng");
-        $sql3 = Pluf::factory('Pluf_SQL');
+        $sql3 = new Pluf_SQL();
         $sql3->Q('status=%s', '1');
         $sql1->SOr($sql3);
         if ($this->db->engine == 'SQLite') {
@@ -88,12 +88,12 @@ class PlufSQLTest extends TestCase {
     {
         $query = 'key1 key2   key3';
         $fields = array('title', 'description');
-        $lastsql = Pluf::factory('Pluf_SQL');
+        $lastsql = new Pluf_SQL();
         $keywords = $lastsql->keywords($query);
         foreach ($keywords as $key) {
-            $sql = Pluf::factory('Pluf_SQL');
+            $sql = new Pluf_SQL();
             foreach ($fields as $field) {
-                $sqlor = Pluf::factory('Pluf_SQL');
+                $sqlor = new Pluf_SQL();
                 $sqlor->Q($field.' LIKE %s', '%'.$key.'%');
                 $sql->SOr($sqlor);
             }

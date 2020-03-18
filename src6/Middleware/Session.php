@@ -63,7 +63,7 @@ class Session implements \Pluf\Middleware
         }
         if (isset($data['Pluf_Session_key'])) {
             $sql = new Pluf_SQL('session_key=%s', $data['Pluf_Session_key']);
-            $found_session = Pluf::factory('Pluf_Session')->getList(array(
+            $found_session = Pluf::factory(Pluf_Session::class)->getList(array(
                 'filter' => $sql->gen()
             ));
             if (isset($found_session[0])) {

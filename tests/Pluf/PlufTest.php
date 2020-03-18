@@ -50,6 +50,9 @@ class PlufTest extends TestCase
     {
         $pluf = Pluf::factory('Pluf');
         $this->assertEquals(get_class($pluf), 'Pluf');
+
+        $pluf = Pluf::factory(Pluf::class);
+        $this->assertEquals(get_class($pluf), Pluf::class);
     }
 
     /**
@@ -79,5 +82,23 @@ class PlufTest extends TestCase
     {
         Pluf::loadFunction('Pluf_HTTP_handleMagicQuotes');
         $this->assertEquals(true, function_exists('Pluf_HTTP_handleMagicQuotes'));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function phpConceptsTest()
+    {
+        /*
+         * We are about to accept the folloing RFC :
+         * https://wiki.php.net/rfc/class_name_literal_on_object
+         *
+         * How ever the oldest RFC is accepted and used in the code
+         */
+        $this->assertEquals(Pluf::class, 'Pluf');
+        // PHP8
+        // $obj = new Pluf_Dispatcher();
+        // $this->assertEquals($obj::class, 'Pluf_Dispatcher');
     }
 }

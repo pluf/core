@@ -16,30 +16,60 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use PHPUnit\Framework\TestCase;
+
+namespace Pluf\Test\Model;
+
 require_once 'Pluf.php';
 
-class PlufCryptTest extends TestCase
+use PHPUnit\Framework\TestCase;
+use Pluf;
+use Pluf_Migration;
+use Pluf\Model\QueryBuilder;
+use Pluf\Model\Repository;
+use Pluf\NoteBook\Book;
+
+class RepositoryTest extends TestCase
 {
 
     /**
      *
-     * @before
+     * @beforeClass
      */
-    protected function setUpTest()
+    public static function installApplication()
     {
         Pluf::start(__DIR__ . '/../conf/config.php');
+        $m = new Pluf_Migration();
+        $m->install();
     }
 
     /**
      *
+     * @afterClass
+     */
+    public static function deleteApplication()
+    {
+        $m = new Pluf_Migration();
+        $m->uninstall();
+    }
+
+    /**
+     * Getting list of books with repository model
+     * 
      * @test
      */
-    public function testEncrypt()
+    public function getListOfBook()
     {
-        $crypt = new Pluf_Crypt('mykeyasdkjhsdkfjsdhfksjdh');
-        $a = $crypt->encrypt('Thisisalongemail.name@longemailcompany.domain.com');
-        $this->assertEquals($crypt->decrypt($a), 'Thisisalongemail.name@longemailcompany.domain.com');
+        $query = QueryBuilder::getInstance()
+            ->setFilter(array(
+                'title=\'test\''
+            ))
+            ->setOrder(array(
+                'id'
+            ))
+            ->build();
+        $res = Repository::getInstance(Book::class)
+            ->getList($query);
+        $this->assertNotNull($res);
     }
 }
 

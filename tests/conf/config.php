@@ -33,6 +33,10 @@ $cfg['url_format'] = 'simple';
 // It is mandatory if you are using the template system.
 $cfg['tmp_folder'] = '/tmp';
 
+
+// $cfg['upload_max_size'] = 1024;
+// $cfg['upload_path'] = '/tmp'
+
 //
 // List of Middleware
 //

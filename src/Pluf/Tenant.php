@@ -156,7 +156,7 @@ class Pluf_Tenant extends Pluf_Model
     public static function bySubDomain($subdomain)
     {
         $sql = new Pluf_SQL('subdomain=%s', $subdomain);
-        return Pluf::factory('Pluf_Tenant')->getOne($sql->gen());
+        return Pluf::factory(Pluf_Tenant::class)->getOne($sql->gen());
     }
 
     /**
@@ -167,7 +167,7 @@ class Pluf_Tenant extends Pluf_Model
     public static function byDomain($domain)
     {
         $sql = new Pluf_SQL('domain=%s', $domain);
-        $result = Pluf::factory('Pluf_Tenant')->getOne($sql->gen());
+        $result = Pluf::factory(Pluf_Tenant::class)->getOne($sql->gen());
         return $result;
     }
 

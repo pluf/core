@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
@@ -39,7 +38,7 @@ class PlufHTTPURLTest extends TestCase
 
     public function testGenerateSimple()
     {
-        $murl = Pluf::factory('Pluf_HTTP_URL', 'simple');
+        $murl = new Pluf_HTTP_URL('simple');
         $url = $murl->generate('/toto/titi/', array(
             'param1' => 'value%*one',
             'param2' => 'value&two'
@@ -51,7 +50,7 @@ class PlufHTTPURLTest extends TestCase
 
     public function testGenerateModRewrite()
     {
-        $murl = Pluf::factory('Pluf_HTTP_URL', 'mod_rewrite');
+        $murl = new Pluf_HTTP_URL('mod_rewrite');
         $url = $murl->generate('/toto/titi/', array(
             'param1' => 'value%*one',
             'param2' => 'value&two'
@@ -69,19 +68,19 @@ class PlufHTTPURLTest extends TestCase
     public function testGetActionSimple()
     {
         $_GET['_px_action'] = '/toto/titi/';
-        $murl = Pluf::factory('Pluf_HTTP_URL', 'simple');
+        $murl = new Pluf_HTTP_URL('simple');
         $this->assertEquals('/toto/titi/', $murl->getAction());
     }
 
     public function testReverseSimpleUrl()
     {
-        $url = Pluf_HTTP_URL_buildReverseUrl('#^/toto/$#');
+        $url = Pluf_HTTP_URL::buildReverseUrl('#^/toto/$#');
         $this->assertEquals('/toto/', $url);
     }
 
     public function testReverseSimpleArgUrl()
     {
-        $url = Pluf_HTTP_URL_buildReverseUrl('#^/toto/(\d+)/$#', array(
+        $url = Pluf_HTTP_URL::buildReverseUrl('#^/toto/(\d+)/$#', array(
             23
         ));
         $this->assertEquals('/toto/23/', $url);
@@ -89,7 +88,7 @@ class PlufHTTPURLTest extends TestCase
 
     public function testReverseMultipleArgUrl()
     {
-        $url = Pluf_HTTP_URL_buildReverseUrl('#^/toto/(\d+)/asd/(.*)/$#', array(
+        $url = Pluf_HTTP_URL::buildReverseUrl('#^/toto/(\d+)/asd/(.*)/$#', array(
             23,
             'titi'
         ));
@@ -98,7 +97,7 @@ class PlufHTTPURLTest extends TestCase
 
     public function testComplexReverseMultipleArgUrl()
     {
-        $url = Pluf_HTTP_URL_buildReverseUrl('#^/toto/([A-Z]{2})/asd/(.*)/$#', array(
+        $url = Pluf_HTTP_URL::buildReverseUrl('#^/toto/([A-Z]{2})/asd/(.*)/$#', array(
             'AB',
             'titi'
         ));
@@ -107,7 +106,7 @@ class PlufHTTPURLTest extends TestCase
 
     public function testReverseWithBackSlashes()
     {
-        $url = Pluf_HTTP_URL_buildReverseUrl('#^/toto/(.*)\.txt$#', array(
+        $url = Pluf_HTTP_URL::buildReverseUrl('#^/toto/(.*)\.txt$#', array(
             'AB'
         ));
         $this->assertEquals('/toto/AB.txt', $url);
@@ -125,7 +124,7 @@ class PlufHTTPURLTest extends TestCase
     // }
     public function testReverseUrlFromView()
     {
-        $url = Pluf_HTTP_URL_reverse('Todo_Views::updateItem', array(
+        $url = Pluf_HTTP_URL::reverse('Todo_Views::updateItem', array(
             '32'
         ));
         $this->assertEquals('/item/32/update/', $url);
