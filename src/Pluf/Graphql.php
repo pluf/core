@@ -105,7 +105,7 @@ class Pluf_Graphql
         $compiler = new $schema();
         $result = $compiler->render($c, $query);
         if (array_key_exists('errors', $result)) {
-            throw new Pluf_Exception('Fail to run GraphQl query: ' . $this->beautifyErrorMessage($result['errors']));
+            throw new \Pluf\Exception('Fail to run GraphQl query: ' . $this->beautifyErrorMessage($result['errors']));
         }
         return $result['data'];
     }

@@ -18,7 +18,7 @@
  */
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
-require_once 'Pluf.php';
+
 require_once dirname(__FILE__) . '/MyModel.php';
 
 /**

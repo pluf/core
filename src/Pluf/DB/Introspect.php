@@ -43,7 +43,7 @@ class Pluf_DB_Introspect
     function listTables()
     {
         if (!method_exists($this->int, 'listTables')) {
-            throw new Pluf_Exception_NotImplemented();
+            throw new \Pluf\Exception_NotImplemented();
         }
         return $this->int->listTables();
     }

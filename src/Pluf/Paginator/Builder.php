@@ -287,7 +287,7 @@ class Pluf_Paginator_Builder
         }
         // maso, 2048: assert the condition is_null($this->model)
         if (is_null($this->model)) {
-            throw new Pluf_Exception('Model is empty');
+            throw new \Pluf\Exception('Model is empty');
         }
         $this->visibleVariablesName = array();
         foreach ($this->model->_a['cols'] as $key => $col) {

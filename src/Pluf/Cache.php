@@ -72,7 +72,7 @@ class Pluf_Cache {
 	 */
 	public static function factory() {
 		if (false === ($engine = Pluf::f ( 'cache_engine', false ))) {
-			throw new Pluf_Exception_SettingError ( '"cache_engine" setting not defined.' );
+			throw new \Pluf\Exception_SettingError ( '"cache_engine" setting not defined.' );
 		}
 		if (! isset ( $GLOBALS ['_PX_Pluf_Cache-' . $engine] )) {
 			$GLOBALS ['_PX_Pluf_Cache-' . $engine] = new $engine ();
@@ -92,7 +92,7 @@ class Pluf_Cache {
 	 * @return bool Success
 	 */
 	public function set($key, $value, $timeout = null) {
-		throw new Pluf_Exception_NotImplemented ();
+		throw new \Pluf\Exception_NotImplemented ();
 	}
 	
 	/**
@@ -106,6 +106,6 @@ class Pluf_Cache {
 	 *        	mixed Stored value or default
 	 */
 	public function get($key, $default = null) {
-		throw new Pluf_Exception_NotImplemented ();
+		throw new \Pluf\Exception_NotImplemented ();
 	}
 }

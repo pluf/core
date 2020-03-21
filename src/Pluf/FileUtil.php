@@ -214,26 +214,26 @@ class Pluf_FileUtil
     public static function copyFile($from, $to)
     {
         if (! file_exists($from)) {
-            throw new Pluf_Exception("Source file not found :" . $from);
+            throw new \Pluf\Exception("Source file not found :" . $from);
         }
         $path = pathinfo($to);
         if (! file_exists($path['dirname'])) {
             mkdir($path['dirname'], 0777, true);
         }
         if (! copy($from, $to)) {
-            throw new Pluf_Exception("Fail to copy file from:" . $from . "to :" . $to);
+            throw new \Pluf\Exception("Fail to copy file from:" . $from . "to :" . $to);
         }
     }
 
     public static function zipFolder($folder, $zipFilePath)
     {
         if (! extension_loaded('zip') || ! file_exists($folder)) {
-            throw new Pluf_Exception("Fail to zip folder");
+            throw new \Pluf\Exception("Fail to zip folder");
         }
 
         $parentFolder = dirname($zipFilePath);
         if (! (file_exists($parentFolder) || mkdir($parentFolder, 0777, true))) {
-            throw new Pluf_Exception("Fail to create zip file folder:" . $parentFolder);
+            throw new \Pluf\Exception("Fail to create zip file folder:" . $parentFolder);
         }
 
         $zip = new ZipArchive();

@@ -248,7 +248,7 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new Pluf_Exception('Module file not found in path');
+            throw new \Pluf\Exception('Module file not found in path');
         }
         $db = Pluf::db();
         $schema = new Pluf_DB_Schema($db);
@@ -272,7 +272,7 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new Pluf_Exception('Module file not found in path');
+            throw new \Pluf\Exception('Module file not found in path');
         }
 
         // Load models
@@ -287,7 +287,7 @@ class Pluf_Migration
                         $p->setFromFormData($value);
                     }
                     if (! $p->create()) {
-                        throw new Pluf_Exception('Impossible to load init modules: ' . $model);
+                        throw new \Pluf\Exception('Impossible to load init modules: ' . $model);
                     }
                 }
             }
@@ -320,7 +320,7 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new Pluf_Exception('Module file not found in path');
+            throw new \Pluf\Exception('Module file not found in path');
         }
         $db = Pluf::db();
         $schema = new Pluf_DB_Schema($db);

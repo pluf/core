@@ -178,7 +178,6 @@ if ($what['all'] and $what['version'] !== null) {
     die();
 }
 
-require 'Pluf.php';
 Pluf::start($what['conf']);
 if (PHP_SAPI != 'cli' and Pluf::f('migrate_allow_web', false)) {
     echo ('Error: This script can only be run from the command line.' . "\n");

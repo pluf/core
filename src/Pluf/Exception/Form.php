@@ -11,7 +11,7 @@
  * @author maso
  *
  */
-class Pluf_Exception_Form extends Pluf_Exception
+class \Pluf\Exception_Form extends \Pluf\Exception
 {
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.

@@ -18,7 +18,7 @@
  */
 use PHPUnit\Framework\TestCase;
 use Pluf\Module;
-require_once 'Pluf.php';
+
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 

@@ -18,7 +18,7 @@
  */
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
-require_once 'Pluf.php';
+
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
@@ -55,7 +55,7 @@ class Pluf_Model_PlufModelMTTest extends TestCase
         $tenant->subdomain = 'www';
         $tenant->validate = true;
         if (true !== $tenant->create()) {
-            throw new Pluf_Exception('Faile to create new tenant');
+            throw new \Pluf\Exception('Faile to create new tenant');
         }
         $m->init($tenant);
     }

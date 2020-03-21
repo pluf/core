@@ -44,7 +44,7 @@ class Pluf_Cache_File extends Pluf_Cache {
 	private $_keymap = array ();
 	public function __construct() {
 		if (! Pluf::f ( 'cache_file_folder', false )) {
-			throw new Pluf_Exception_SettingError ( '"cache_file_folder" setting not defined.' );
+			throw new \Pluf\Exception_SettingError ( '"cache_file_folder" setting not defined.' );
 		}
 		
 		$this->_debug = Pluf::f ( 'debug', false );

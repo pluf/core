@@ -41,7 +41,7 @@ class Pluf_HTTP_Response_ServerErrorDebug extends Pluf_HTTP_Response
         if (Pluf::f('rest', false)) {
             $mimetype = Pluf::f('mimetype_json', 'application/json') .
                      '; charset=utf-8';
-            if (! ($exception instanceof Pluf_Exception)) {
+            if (! ($exception instanceof \Pluf\Exception)) {
                 $exception = new Pluf_HTTP_Error500('Unknown exception', 5000, 
                         $exception);
             }

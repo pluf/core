@@ -96,7 +96,7 @@ class Pluf_DB_PostgreSQL
         $this->cur = null;
         $this->con_id = @pg_connect($cstring);
         if (! $this->con_id) {
-            throw new Pluf_Exception($this->getError());
+            throw new \Pluf\Exception($this->getError());
         }
     }
 
@@ -149,7 +149,7 @@ class Pluf_DB_PostgreSQL
         $this->debug($query);
         $this->cur = @pg_query($this->con_id, $query);
         if (! $this->cur) {
-            throw new Pluf_Exception($this->getError());
+            throw new \Pluf\Exception($this->getError());
         }
         $res = array();
         while ($row = pg_fetch_assoc($this->cur)) {
@@ -165,7 +165,7 @@ class Pluf_DB_PostgreSQL
         $this->debug($query);
         $this->cur = @pg_query($this->con_id, $query);
         if (! $this->cur) {
-            throw new Pluf_Exception($this->getError());
+            throw new \Pluf\Exception($this->getError());
         }
         return true;
     }
@@ -212,7 +212,7 @@ class Pluf_DB_PostgreSQL
     function setSearchPath($search_path = 'public')
     {
         if (preg_match('/[^\w\s\,]/', $search_path)) {
-            throw new Pluf_Exception('The search path: "' . $search_path . '" is not valid.');
+            throw new \Pluf\Exception('The search path: "' . $search_path . '" is not valid.');
         }
         $this->execute('SET search_path TO ' . $search_path);
         $this->search_path = $search_path;

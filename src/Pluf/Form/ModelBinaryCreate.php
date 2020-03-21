@@ -30,7 +30,7 @@ class Pluf_Form_ModelBinaryCreate extends Pluf_Form_Model
     function save($commit = true)
     {
         if (! $this->isValid()) {
-            throw new Pluf_Exception_Form('cannot save the ' . $this->model->_a['model'] . ' from an invalid form', $this);
+            throw new \Pluf\Exception_Form('cannot save the ' . $this->model->_a['model'] . ' from an invalid form', $this);
         }
         // Create the content
         $item = $this->model;

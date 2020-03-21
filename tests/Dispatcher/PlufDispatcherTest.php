@@ -20,7 +20,6 @@ namespace Pluf\PlufTest\Dispatcher;
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Module;
-require_once 'Pluf.php';
 
 class DispatcherTest extends TestCase
 {

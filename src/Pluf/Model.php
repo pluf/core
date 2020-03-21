@@ -437,7 +437,7 @@ class Pluf_Model implements JsonSerializable
             Pluf::loadFunction($this->_m['extra'][$method][1]);
             return call_user_func_array($this->_m['extra'][$method][1], $args);
         }
-        throw new Pluf_Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
+        throw new \Pluf\Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
     }
 
     /**
@@ -872,7 +872,7 @@ class Pluf_Model implements JsonSerializable
         $this->_con->execute($req);
         if (! $raw) {
             if (false === ($id = $this->_con->getLastID())) {
-                throw new Pluf_Exception($this->_con->getError());
+                throw new \Pluf\Exception($this->_con->getError());
             }
             $this->_data['id'] = $id;
         }

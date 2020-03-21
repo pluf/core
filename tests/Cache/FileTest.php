@@ -17,13 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
 class Pluf_Tests_Cache_FileTest extends TestCase
 {
 
@@ -65,7 +59,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
     /**
      * 
      * @test
-     * @expectedException Pluf_Exception_SettingError
+     * @expectedException \Pluf\Exception_SettingError
      */
     public function testConstructor()
     {

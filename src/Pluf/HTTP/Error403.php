@@ -4,9 +4,9 @@
  * ساختار خطای کلی کاربر را تعیین می‌کند
  * 
  * @author maso
- * @deprecated use Pluf_Exception_DoesNotExist
+ * @deprecated use \Pluf\Exception_DoesNotExist
  */
-class Pluf_HTTP_Error403 extends Pluf_Exception
+class Pluf_HTTP_Error403 extends \Pluf\Exception
 {
 
     public function __construct ($message = 'Resource not found.', $previous = null)

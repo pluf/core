@@ -309,7 +309,7 @@ class Pluf_Dispatcher
         );
         $mime = $http->negotiateMimeType($contentType, $contentType[0]);
         if ($mime === false) {
-            throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
+            throw new \Pluf\Exception("You don't want any of the content types I have to offer\n");
         }
         if ($response instanceof Pluf_Paginator) {
             $response = $response->render_object();
@@ -347,7 +347,7 @@ class Pluf_Dispatcher
     private static function logError($req, $exception)
     {
         // return if is not internal error
-        if ($exception instanceof Pluf_Exception) {
+        if ($exception instanceof \Pluf\Exception) {
             if ($exception->getStatus() !== 500) {
                 return;
             }

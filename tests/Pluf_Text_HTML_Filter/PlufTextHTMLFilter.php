@@ -18,7 +18,7 @@
  */
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
-require_once 'Pluf.php';
+
 
 /**
  * Based on the tests provided with the Pluf_Text_HTML_Filter original
