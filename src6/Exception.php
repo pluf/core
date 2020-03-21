@@ -21,10 +21,14 @@ namespace Pluf;
 use Pluf;
 
 /**
- * Pluf exception
+ * Pluf root exception type
+ *
+ * All pluf application exceptions are subclass of the \Pluf\Exception. If any exeption throw
+ * which is not subclass of it, the framework will consider as non expected exception.
  *
  *
- * @author maso(mostafa.barmshory@dpq.co.ir)
+ * @author Mostafa Barmshory<mostafa.barmshory@dpq.co.ir>
+ * @since Pluf6 
  *        
  */
 class Exception extends \Exception implements \JsonSerializable
