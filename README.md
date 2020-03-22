@@ -1,5 +1,4 @@
-# <img src="logo.svg" width="32px"></a> Pluf core
-
+# Pluf
 
 [![Build Status](https://travis-ci.com/pluf/core.svg?branch=master)](https://travis-ci.com/pluf/core)
 [![codecov](https://codecov.io/gh/pluf/core/branch/master/graph/badge.svg)](https://codecov.io/gh/pluf/core)
@@ -7,11 +6,24 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/maintainability)](https://codeclimate.com/github/pluf/core/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9e1457dbf2f0bcc8b953/test_coverage)](https://codeclimate.com/github/pluf/core/test_coverage)
 
-
 Pluf is a light, reliable and small PHP application framework to develop REST-full Multi/Single-tenant applications. This is the core of the Pluf framework which contains core concepts of Pluf Framework.
 
 
-## Contributing
+## Installation
+
+To use the Pluf library in your project, simply add a dependency on pluf/core
+to your project's `composer.json` file. Here is a minimal example of a `composer.json`
+file that just defines a dependency on UPDATE_NAME 1.x:
+
+```json
+{
+    "require": {
+        "pluf/core": "~6.0"
+    }
+}
+```
+
+## Development
 
 If you would like to contribute to Pluf, please read the README and CONTRIBUTING documents.
 
@@ -23,10 +35,21 @@ Fork the project, create a feature branch, and send us a pull request.
 
 To ensure a consistent code base, you should make sure the code follows the PSR-2 Coding Standards.
 
-## Architecture
+### Running Composer
 
-![modules](document/img/component diagram.png)
+To pull in the project dependencies via Composer, run:
 
+    composer install
 
+### Running the CI checks
 
+To run all CI checks, which includes PHPUnit tests, PHPCS style checks and coverage tag validation, run:
+
+    ./vendor/bin/phpcs -p -s src
+    
+### Running the tests
+
+To run just the PHPUnit tests run
+
+    ./vendor/bin/phpunit
 

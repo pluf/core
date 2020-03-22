@@ -20,7 +20,7 @@ phpunit:
 	docker-compose run --rm app ./vendor/bin/phpunit
 
 phpcs:
-	docker-compose run --rm app ./vendor/bin/phpcs -p -s
+	docker-compose run --rm app ./vendor/bin/phpcs -p -s src
 
 stan:
 	docker-compose run --rm app ./vendor/bin/phpstan analyse --level=1 --no-progress src/ tests/
