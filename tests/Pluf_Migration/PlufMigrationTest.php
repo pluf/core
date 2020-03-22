@@ -18,7 +18,7 @@
  */
 use PHPUnit\Framework\TestCase;
 
-
+require_once 'Pluf.php';
 
 /**
  *

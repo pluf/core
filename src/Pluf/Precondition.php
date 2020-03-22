@@ -52,11 +52,11 @@ class Pluf_Precondition
      * Throws bad request exception if given name does not match.
      * 
      * @param string $name
-     * @throws \Pluf\Exception_BadRequest
+     * @throws Pluf_Exception_BadRequest
      */
     public static function assertKeyIsValid($name){
         if(preg_match('/^[a-zA-Z_][0-9a-zA-Z_]*$/', $name) !== 1){
-            throw new \Pluf\Exception_BadRequest('Invalid parameter: <' . $name . '>');
+            throw new Pluf_Exception_BadRequest('Invalid parameter: <' . $name . '>');
         }
     }
 

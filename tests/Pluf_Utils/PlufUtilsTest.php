@@ -20,7 +20,7 @@
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 
-
+require_once 'Pluf.php';
 
 class PlufUtilsTest extends TestCase
 {

@@ -19,6 +19,8 @@
 
 namespace Pluf\Test\Model;
 
+require_once 'Pluf.php';
+
 use PHPUnit\Framework\TestCase;
 use Pluf;
 use Pluf_Migration;

@@ -25,13 +25,11 @@
 		"phayes/geophp" : "^1.2",
 		"psr/log" : "~1.1"
 	},
+	"include-path" : [
+		"src/"
+	],
 	"require-dev" : {
-		"phpunit/phpunit" : "~7.5",
-		"ockcyp/covers-validator" : "~1.0",
-		"squizlabs/php_codesniffer" : "~3.3",
-		"slevomat/coding-standard" : "~4.5",
-		"mediawiki/mediawiki-codesniffer" : "~23.0",
-		"phpstan/phpstan" : "~0.10.6"
+		"phpunit/phpunit" : "7.x"
 	},
 	"support" : {
 		"wiki" : "https://github.com/pluf/core/wiki",
@@ -49,14 +47,8 @@
 	],
 	"autoload" : {
 		"psr-4" : {
-			"\\" : "src6/"
-		},
-		"psr-0" : {
-			"" : "src"
-		},
-		"files" : [
-			"src6/bootstrap.php"
-		]
+			"Pluf\\" : "src6/"
+		}
 	},
 	"autoload-dev" : {
 		"psr-4" : {
@@ -64,6 +56,9 @@
 			"Pluf\\Smallest\\" : "examples/Smallest",
 			"Pluf\\HelloWord\\" : "examples/HelloWord",
 			"Pluf\\Test\\" : "tests/"
+		},
+		"psr-0" : {
+			"test" : ""
 		}
 	}
 }

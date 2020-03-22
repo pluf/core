@@ -41,7 +41,7 @@ class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
         parent::__construct($filepath, $mimetype);
         
         if (! is_file($filepath)) {
-            throw new \Pluf\Exception_DoesNotExist();
+            throw new Pluf_Exception_DoesNotExist();
         }
         $this->httpRange = $httpRange;
         $this->totalSize = filesize($filepath);

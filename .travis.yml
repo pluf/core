@@ -5,17 +5,12 @@ php:
 git:
   depth: 1
 
-sudo: false
 install:
   # Install composer packages, will also trigger dump-autoload
   - travis_retry composer install --no-interaction
   
 script:
-  - composer validate --no-interaction
-  - ./vendor/bin/covers-validator
   - ./vendor/bin/phpunit 
-  - ./vendor/bin/phpcs -p -s
-  - ./vendor/bin/phpstan analyse --level=1 --no-progress src/ tests/
 
 after_success:
   #

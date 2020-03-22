@@ -17,7 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\IncompleteTestError;
 
+/**
+ *
+ * @backupGlobals disabled
+ * @backupStaticAttributes disabled
+ */
 class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
 {
 
@@ -91,7 +97,6 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
         $this->assertEquals('ok', Pluf_Dispatcher::match($req1)->content);
         $this->assertInstanceOf(Pluf_HTTP_Response_Redirect::class, Pluf_Dispatcher::match($req2));
     }
-
     /**
      *
      * @test
@@ -195,7 +200,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
         $this->assertEquals(3, Pluf_Dispatcher::match($h3));
         $this->assertEquals(4, Pluf_Dispatcher::match($h4));
         $this->assertInstanceOf(Pluf_HTTP_Response_Redirect::class, Pluf_Dispatcher::match($req2));
-
+        
         Pluf::loadFunction('Pluf_HTTP_URL_reverse');
         $this->assertEquals('/hello/world/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello'));
         $this->assertEquals('/hello1/world/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello1'));

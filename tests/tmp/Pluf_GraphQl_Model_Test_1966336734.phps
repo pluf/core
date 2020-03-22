@@ -149,7 +149,7 @@ class Pluf_GraphQl_Model_Test_1966336734 {
             $result = GraphQL::executeQuery($schema, $query, $rootValue);
             return $result->toArray();
         } catch (Exception $e) {
-            throw new \Pluf\Exception_BadRequest($e->getMessage());
+            throw new Pluf_Exception_BadRequest($e->getMessage());
         }
     }
 }

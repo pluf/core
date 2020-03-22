@@ -1,6 +1,8 @@
 <?php
 namespace Pluf\Test\Middleware;
 
+require_once 'Pluf.php';
+
 use PHPUnit\Framework\TestCase;
 use Pluf;
 use Pluf_Dispatcher;

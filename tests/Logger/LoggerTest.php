@@ -1,6 +1,8 @@
 <?php
 namespace PlufTest\Logger;
 
+require_once 'Pluf.php';
+
 use PHPUnit\Framework\TestCase;
 
 class LoggerTest extends TestCase

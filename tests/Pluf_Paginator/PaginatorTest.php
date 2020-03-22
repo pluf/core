@@ -20,7 +20,7 @@
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\IncompleteTestError;
 
-
+require_once 'Pluf.php';
 
 require_once dirname(__FILE__) . '/MyModel.php';
 
@@ -497,7 +497,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
      * Test filter key validation
      *
      * @test
-     * @expectedException \Pluf\Exception_BadRequest
+     * @expectedException Pluf_Exception_BadRequest
      */
     public function testValidationForFilterKeys()
     {
@@ -544,7 +544,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
      * Test sort key validation
      *
      * @test
-     * @expectedException \Pluf\Exception_BadRequest
+     * @expectedException Pluf_Exception_BadRequest
      */
     public function testValidationForSortKeys()
     {

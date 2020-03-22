@@ -11,7 +11,7 @@
  * @author maso
  *
  */
-class \Pluf\Exception_BadRequest extends \Pluf\Exception
+class Pluf_Exception_BadRequest extends \Pluf\Exception
 {
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.

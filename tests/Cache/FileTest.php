@@ -38,7 +38,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
      */
     public function setUpTest()
     {
-        if(!array_key_exists('_PX_config', $GLOBALS)){
+        if (! array_key_exists('_PX_config', $GLOBALS)) {
             $GLOBALS['_PX_config'] = array();
         }
         $this->_config = $GLOBALS['_PX_config']; // backup
@@ -46,7 +46,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $GLOBALS['_PX_config']['cache_timeout'] = 5;
         $GLOBALS['_PX_config']['cache_file_folder'] = '/tmp/pluf_unittest_cache';
     }
-    
+
     /**
      *
      * @after
@@ -57,9 +57,9 @@ class Pluf_Tests_Cache_FileTest extends TestCase
     }
 
     /**
-     * 
+     *
      * @test
-     * @expectedException \Pluf\Exception_SettingError
+     * @expectedException Pluf_Exception_SettingError
      */
     public function testConstructor()
     {
@@ -68,7 +68,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
     }
 
     /**
-     * 
+     *
      * @test
      */
     public function testBasic()
@@ -78,7 +78,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $this->assertTrue($success);
         $this->assertEquals('foo1', $cache->get('test1'));
     }
-    
+
     /**
      *
      * @test
@@ -88,7 +88,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $cache = Pluf_Cache::factory();
         $this->assertNull($cache->get('unknown'));
     }
-    
+
     /**
      *
      * @test
@@ -98,7 +98,7 @@ class Pluf_Tests_Cache_FileTest extends TestCase
         $cache = Pluf_Cache::factory();
         $this->assertEquals('default', $cache->get('unknown', 'default'));
     }
-    
+
     /**
      *
      * @test

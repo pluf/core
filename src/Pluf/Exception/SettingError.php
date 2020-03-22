@@ -21,6 +21,6 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class \Pluf\Exception_SettingError extends \Pluf\Exception
+class Pluf_Exception_SettingError extends \Pluf\Exception
 {
 }

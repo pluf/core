@@ -51,7 +51,7 @@ class Pluf_HTTP_Response_File extends Pluf_HTTP_Response
     function render($output_body = true)
     {
         if (! file_exists($this->content)) {
-            throw new \Pluf\Exception_DoesNotExist('Requested resource not found');
+            throw new Pluf_Exception_DoesNotExist('Requested resource not found');
         }
         if (defined('IN_UNIT_TESTS')) {
             parent::render($output_body);

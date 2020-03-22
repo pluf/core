@@ -103,7 +103,7 @@ class ' . $className . ' {
             return $result->toArray();
         } catch (Exception $e) {
             var_dump($e);
-            throw new \Pluf\Exception_BadRequest($e->getMessage());
+            throw new Pluf_Exception_BadRequest($e->getMessage());
         }
     }
 }
