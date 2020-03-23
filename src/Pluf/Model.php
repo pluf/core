@@ -1,6 +1,4 @@
 <?php
-use Pluf\ModelUtils;
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -18,6 +16,8 @@ use Pluf\ModelUtils;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Pluf\ModelUtils;
 
 /**
  * Sort of Active Record Class
@@ -437,7 +437,7 @@ class Pluf_Model implements JsonSerializable
             Pluf::loadFunction($this->_m['extra'][$method][1]);
             return call_user_func_array($this->_m['extra'][$method][1], $args);
         }
-        throw new Pluf_Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
+        throw new \Pluf\Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
     }
 
     /**
@@ -490,10 +490,10 @@ class Pluf_Model implements JsonSerializable
      * Usage:
      *
      * <pre>
-     * $m = Pluf::factory('My_Model')->getOne(array('filter' => 'id=1'));
+     * $m = Pluf::factory(My_Model::class)->getOne(array('filter' => 'id=1'));
      * </pre>
      * <pre>
-     * $m = Pluf::factory('My_Model')->getOne('id=1');
+     * $m = Pluf::factory(My_Model::class)->getOne('id=1');
      * </pre>
      *
      * @param
@@ -515,7 +515,7 @@ class Pluf_Model implements JsonSerializable
         if ($items->count() == 0) {
             return null;
         }
-        throw new Pluf_Exception(__('Error: More than one matching item found.'));
+        throw new \Pluf\Exception(__('Error: More than one matching item found.'));
     }
 
     /**
@@ -729,7 +729,7 @@ class Pluf_Model implements JsonSerializable
         if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new Pluf_Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
+                throw new \Pluf\Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
             }
             if (! is_null($p['filter'])) {
                 if (is_array($p['filter'])) {
@@ -872,7 +872,7 @@ class Pluf_Model implements JsonSerializable
         $this->_con->execute($req);
         if (! $raw) {
             if (false === ($id = $this->_con->getLastID())) {
-                throw new Pluf_Exception($this->_con->getError());
+                throw new \Pluf\Exception($this->_con->getError());
             }
             $this->_data['id'] = $id;
         }

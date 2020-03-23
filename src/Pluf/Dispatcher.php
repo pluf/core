@@ -45,14 +45,35 @@ class Pluf_Dispatcher
     {
         $response = null;
         try {
+            /*
+             * # Create q request
+             *
+             * TODO: maso, 2020: remove from dispatcher
+             * - It limits tests
+             * - It bind the dispatcher to a specific environment
+             */
             $query = preg_replace('#^(/)+#', '/', '/' . $query);
             $req = new Pluf_HTTP_Request($query);
-            // Puts request in global scope
             Pluf_HTTP_Request::setCurrent($req);
+
+            /*
+             * # Load and run middlewares
+             *
+             * Load all middlewares based on configuration and then run them on
+             * request. and response
+             */
             $middleware = array();
             foreach (Pluf::f('middleware_classes', array()) as $mw) {
                 $middleware[] = new $mw();
             }
+
+            /*
+             * # Main dispatching process
+             *
+             * 1- Process request with middlewares
+             * 2- Find and run a view
+             * 3- Process (request,response) with middlewares
+             */
             // 1- middleware process request
             $skip = false;
             foreach ($middleware as $mw) {
@@ -65,8 +86,9 @@ class Pluf_Dispatcher
                     }
                 }
             }
+
+            // 2- Call view
             if ($skip === false) {
-                // 2- Call view
                 if (isset($controllers)) {
                     self::loadControllers($controllers);
                 }
@@ -88,7 +110,8 @@ class Pluf_Dispatcher
             if (defined('IN_UNIT_TESTS')) {
                 throw $e;
             }
-            self::handleResponse($req, new Pluf_HTTP_Response_ServerError($e));
+            $response = new Pluf_HTTP_Response_ServerError($e);
+            self::handleResponse($req, $response);
             self::logError($req, $e);
         }
         /**
@@ -158,14 +181,13 @@ class Pluf_Dispatcher
             if (preg_match($ctl['regex'], $to_match, $match)) {
                 if (! isset($ctl['sub'])) {
                     return self::send($req, $ctl, $match);
-                } else {
-                    // Go in the subtree
-                    $views = $ctl['sub'];
-                    $i = 0;
-                    $n = count($views);
-                    $to_match = substr($to_match, strlen($match[0]));
-                    continue;
                 }
+                // Go in the subtree
+                $views = $ctl['sub'];
+                $i = 0;
+                $n = count($views);
+                $to_match = substr($to_match, strlen($match[0]));
+                continue;
             }
             $i ++;
         }
@@ -287,7 +309,7 @@ class Pluf_Dispatcher
         );
         $mime = $http->negotiateMimeType($contentType, $contentType[0]);
         if ($mime === false) {
-            throw new Pluf_Exception("You don't want any of the content types I have to offer\n");
+            throw new \Pluf\Exception("You don't want any of the content types I have to offer\n");
         }
         if ($response instanceof Pluf_Paginator) {
             $response = $response->render_object();
@@ -325,7 +347,7 @@ class Pluf_Dispatcher
     private static function logError($req, $exception)
     {
         // return if is not internal error
-        if ($exception instanceof Pluf_Exception) {
+        if ($exception instanceof \Pluf\Exception) {
             if ($exception->getStatus() !== 500) {
                 return;
             }

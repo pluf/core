@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,35 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf;
+
+use Pluf_HTTP_Request;
+use Pluf_HTTP_Response;
 
 /**
- * Migration script.
+ * Pluf general middleware
+ *
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *        
  */
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
-require 'Pluf.php';
-
-function usage ()
+interface Middleware
 {
-    echo 'Usage examples:' . "\n" .
-             ' Extract all:      extracttemplates.php path/to/config.php path/to/outpudir' .
-             "\n";
-}
 
-function debug ($what)
-{
-    global $debug;
-    if ($debug) {
-        echo ($what . "\n");
-    }
-}
+    /**
+     *
+     * @param Pluf_HTTP_Request $request
+     * @return boolean false if ther is no problem otherwize ther is an error
+     */
+    public function process_request(Pluf_HTTP_Request &$request);
 
-if ($argc !== 3) {
-    usage();
-    die();
+    /**
+     *
+     * @param Pluf_HTTP_Request $request
+     * @param Pluf_HTTP_Response $response
+     */
+    public function process_response(Pluf_HTTP_Request $request, Pluf_HTTP_Response $response): Pluf_HTTP_Response;
 }
-$conf = $argv[1];
-$outputdir = $argv[2];
-Pluf::start($conf);
-$generator = new Pluf_Translation_Generator();
-$generator->generate($outputdir);
-echo 'Done', "\n";

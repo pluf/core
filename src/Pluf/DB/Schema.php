@@ -82,14 +82,14 @@ class Pluf_DB_Schema
         }
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Pluf_Exception($this->con->getError());
+                throw new \Pluf\Exception($this->con->getError());
             }
         }
         if (! $this->model->_a['mapped']) {
             $sql = $this->schema->getSqlIndexes($this->model);
             foreach ($sql as $query) {
                 if (false === $this->con->execute($query)) {
-                    throw new Pluf_Exception($this->con->getError());
+                    throw new \Pluf\Exception($this->con->getError());
                 }
             }
         }
@@ -100,14 +100,14 @@ class Pluf_DB_Schema
      * Creates the constraints for the current model.
      * This should be done _after_ all tables of all models have been created.
      *
-     * @throws Pluf_Exception
+     * @throws \Pluf\Exception
      */
     function createConstraints()
     {
         $sql = $this->schema->getSqlCreateConstraints($this->model);
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Pluf_Exception($this->con->getError());
+                throw new \Pluf\Exception($this->con->getError());
             }
         }
     }
@@ -130,7 +130,7 @@ class Pluf_DB_Schema
         }
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Pluf_Exception($this->con->getError());
+                throw new \Pluf\Exception($this->con->getError());
             }
         }
         return true;
@@ -140,7 +140,7 @@ class Pluf_DB_Schema
      * Drops the constraints for the current model.
      * This should be done _before_ all tables of all models are dropped.
      *
-     * @throws Pluf_Exception
+     * @throws \Pluf\Exception
      * @return boolean
      */
     function dropConstraints()
@@ -148,7 +148,7 @@ class Pluf_DB_Schema
         $sql = $this->schema->getSqlDeleteConstraints($this->model);
         foreach ($sql as $query) {
             if (false === $this->con->execute($query)) {
-                throw new Pluf_Exception($this->con->getError());
+                throw new \Pluf\Exception($this->con->getError());
             }
         }
         return true;

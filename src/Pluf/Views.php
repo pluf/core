@@ -159,7 +159,7 @@ class Pluf_Views
      * @param array $p
      * @param Pluf_Model $object
      * @param Pluf_Model $parent
-     * @throws Pluf_Exception
+     * @throws \Pluf\Exception
      */
     private static function CRUD_checkPreconditions($request, $p, $object, $parent = null)
     {
@@ -179,7 +179,7 @@ class Pluf_Views
                 $parent
             ));
             if ($res !== true) {
-                throw new Pluf_Exception('CRUD precondition is not satisfied.');
+                throw new \Pluf\Exception('CRUD precondition is not satisfied.');
             }
         }
     }

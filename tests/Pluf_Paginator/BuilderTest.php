@@ -38,7 +38,7 @@ class Pluf_Paginator_BuilderTest extends TestCase
     {
         Pluf::start(__DIR__. '/../conf/config.php');
         $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
+        $schema = new Pluf_DB_Schema($db);
         $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();
@@ -58,7 +58,7 @@ class Pluf_Paginator_BuilderTest extends TestCase
     protected function tearDownTest()
     {
         $db = Pluf::db();
-        $schema = Pluf::factory('Pluf_DB_Schema', $db);
+        $schema = new Pluf_DB_Schema($db);
         $m1 = new Pluf_Paginator_MyModel();
         $schema->model = $m1;
         $schema->dropTables();

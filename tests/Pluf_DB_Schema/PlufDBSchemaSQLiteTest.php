@@ -48,7 +48,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema3()
     {
         $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema = new Pluf_DB_Schema(Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $sql = $gen->getSqlCreate($model);
@@ -74,7 +74,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testDeleteSchemaTestModel()
     {
         $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema = new Pluf_DB_Schema(Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $del = $gen->getSqlDelete($model);
@@ -90,7 +90,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema()
     {
         $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema = new Pluf_DB_Schema(Pluf::db());
         $schema->model = $model;
         $gen = $schema->getGenerator();
         $this->assertEquals(true, $schema->dropTables());
@@ -119,7 +119,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema2()
     {
         $model = new Test_Model();
-        $schema = Pluf::factory('Pluf_DB_Schema', Pluf::db());
+        $schema = new Pluf_DB_Schema(Pluf::db());
         $schema->model = $model;
         $this->assertEquals(true, $schema->dropTables());
         $this->assertEquals(true, $schema->createTables());

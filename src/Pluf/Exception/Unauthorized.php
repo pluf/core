@@ -8,7 +8,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Pluf_Exception_Unauthorized extends Pluf_Exception
+class Pluf_Exception_Unauthorized extends \Pluf\Exception
 {
 
     /**

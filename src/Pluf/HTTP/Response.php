@@ -132,6 +132,9 @@ class Pluf_HTTP_Response
      */
     function render($output_body=true)
     {
+        if (defined('IN_UNIT_TESTS')) {
+            return;
+        }
         if ($this->status_code >= 200
                 && $this->status_code != 204
                 && $this->status_code != 304) {

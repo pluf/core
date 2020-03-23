@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,15 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf;
 
-/**
- * Pluf exception
- *
- * @author maso<mostafa.barmshory@dpq.co.ir>
- * @deprecated Use Pluf\Exception
- */
-class Pluf_Exception extends \Pluf\Exception
+interface LoggerAppender
 {
-}
 
+    public function write(string $message): void;
+}
 

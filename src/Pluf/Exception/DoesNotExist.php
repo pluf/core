@@ -6,7 +6,7 @@
  * @author webpich.com
  *
  */
-class Pluf_Exception_DoesNotExist extends Pluf_Exception
+class Pluf_Exception_DoesNotExist extends \Pluf\Exception
 {
 
     public function __construct($message = null, $previous = null, $link = null, $developerMessage = null)

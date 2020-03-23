@@ -9,7 +9,7 @@
  * @author maso
  *
  */
-class Pluf_Exception_GetMethodSuported extends Pluf_Exception
+class Pluf_Exception_GetMethodSuported extends \Pluf\Exception
 {
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.

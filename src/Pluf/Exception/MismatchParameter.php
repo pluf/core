@@ -7,7 +7,7 @@
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *
  */
-class Pluf_Exception_MismatchParameter extends Pluf_Exception {
+class Pluf_Exception_MismatchParameter extends \Pluf\Exception {
 	
 	/**
 	 * یک نمونه از این کلاس ایجاد می‌کند.

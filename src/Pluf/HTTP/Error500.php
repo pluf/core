@@ -5,7 +5,7 @@
  * @author maso
  *
  */
-class Pluf_HTTP_Error500 extends Pluf_Exception {
+class Pluf_HTTP_Error500 extends \Pluf\Exception {
 	public function __construct($message = null, $code = 5000, $previous = null) {
 		$status = 500;
 		$link = Pluf::f ( 'exception_5000_link', '/wiki/page/en/internal-error' );

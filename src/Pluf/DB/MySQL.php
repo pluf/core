@@ -177,18 +177,18 @@ class Pluf_DB_MySQL
     /**
      * خطای مناسب با حالت سیستم ایجاد می‌کند.
      *
-     * @throws Pluf_Exception
+     * @throws \Pluf\Exception
      */
     function throwError()
     {
         $errorno = $this->getErrorNumber();
         switch ($errorno) {
             case 1062:
-                throw new Pluf_Exception($this->getError(), 4101, null, 400);
+                throw new \Pluf\Exception($this->getError(), 4101, null, 400);
             case 1064:
-                throw new Pluf_Exception($this->getError(), 4102, null, 400);
+                throw new \Pluf\Exception($this->getError(), 4102, null, 400);
             default:
-                throw new Pluf_Exception($this->getError(), 4000, null, 400);
+                throw new \Pluf\Exception($this->getError(), 4000, null, 400);
         }
     }
 

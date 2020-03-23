@@ -19,11 +19,6 @@
 use PHPUnit\Framework\TestCase;
 require_once 'Pluf.php';
 
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
 class PlufCryptTest extends TestCase
 {
 
@@ -42,7 +37,7 @@ class PlufCryptTest extends TestCase
      */
     public function testEncrypt()
     {
-        $crypt = Pluf::factory('Pluf_Crypt', 'mykeyasdkjhsdkfjsdhfksjdh');
+        $crypt = new Pluf_Crypt('mykeyasdkjhsdkfjsdhfksjdh');
         $a = $crypt->encrypt('Thisisalongemail.name@longemailcompany.domain.com');
         $this->assertEquals($crypt->decrypt($a), 'Thisisalongemail.name@longemailcompany.domain.com');
     }

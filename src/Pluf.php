@@ -1,6 +1,4 @@
 <?php
-use Pluf\ModelUtils;
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -18,6 +16,7 @@ use Pluf\ModelUtils;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Pluf\ModelUtils;
 
 /**
  * The main class of the framework.

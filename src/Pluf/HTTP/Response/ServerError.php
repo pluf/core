@@ -40,7 +40,7 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
          */
         $mimetype = Pluf::f('mimetype_json', 'application/json') .
                 '; charset=utf-8';
-        if (!($exception instanceof Pluf_Exception)) {
+        if (!($exception instanceof \Pluf\Exception)) {
             parent::__construct(json_encode(array(
                     'code' => 5000,
                     'status' => 500,

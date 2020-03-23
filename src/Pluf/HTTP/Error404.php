@@ -6,7 +6,7 @@
  * @author maso
  *
  */
-class Pluf_HTTP_Error404 extends Pluf_Exception
+class Pluf_HTTP_Error404 extends \Pluf\Exception
 {
 
     public function __construct ($message = 'Resource not found.', $code = 404, $previous = null)

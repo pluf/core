@@ -33,6 +33,10 @@ $cfg['url_format'] = 'simple';
 // It is mandatory if you are using the template system.
 $cfg['tmp_folder'] = '/tmp';
 
+
+// $cfg['upload_max_size'] = 1024;
+// $cfg['upload_path'] = '/tmp'
+
 //
 // List of Middleware
 //
@@ -96,6 +100,14 @@ $cfg['log_appender'] = '\Pluf\LoggerAppender\Console';
 // $cfg['log_appender_remote_path'] = '/';
 // $cfg['log_appender_remote_port'] = 8000;
 // $cfg['log_appender_remote_headers'] = [];
+
+// -------------------------------------------------------------------------
+// View
+// -------------------------------------------------------------------------
+
+// $cfg['view_api_prefix'] = '';
+// $cfg['view_api_base'] = '';
+
 
 // -------------------------------------------------------------------------
 // Tenants

@@ -17,15 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufEncoderTest extends TestCase {
-    
+class PlufEncoderTest extends TestCase
+{
+
     /**
      * Undocumented function
      *
@@ -34,7 +35,7 @@ class PlufEncoderTest extends TestCase {
      */
     protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
     }
 
     /**
@@ -45,26 +46,26 @@ class PlufEncoderTest extends TestCase {
      */
     protected function tearDownTest()
     {
-        putenv('PHP_TZ='.Pluf::f('timezone')); 
+        putenv('PHP_TZ=' . Pluf::f('timezone'));
     }
 
     public function testEncoder()
     {
         $p = array();
         $form = array();
-        $enc = Pluf::factory('Pluf_Encoder');
+        $enc = new Pluf_Encoder();
         $this->assertEquals(true, $enc->checkEmpty('', $form, $p));
         $p['blank'] = false;
         // ------------- url -------------------------------
         $good = array(
-                      'http://www.example.com/lkjasd',
-                      'https://wwwcom/lkjasd',
-                      'https://www-com/lkjasd',
-                      'http://123.345.234.12/lkjasd'
-                      );
+            'http://www.example.com/lkjasd',
+            'https://wwwcom/lkjasd',
+            'https://www-com/lkjasd',
+            'http://123.345.234.12/lkjasd'
+        );
         $bad = array(
-                     'www.com'
-                     );
+            'www.com'
+        );
         foreach ($good as $url) {
             $this->assertEquals($url, $enc->url($url, $form, $p));
         }
@@ -78,16 +79,16 @@ class PlufEncoderTest extends TestCase {
         }
         // ------------- date -------------------------------
         $good = array(
-                      '1995-12-04',
-                      '1995-12-1',
-                      '1000-2-2',
-                      '9999-12-31'
-                      );
+            '1995-12-04',
+            '1995-12-1',
+            '1000-2-2',
+            '9999-12-31'
+        );
         $bad = array(
-                     '23-12-2',
-                     '1996-2-31',
-                     '2006.05.12',
-                     );
+            '23-12-2',
+            '1996-2-31',
+            '2006.05.12'
+        );
         foreach ($good as $date) {
             $this->assertEquals($date, $enc->date($date, $form, $p));
         }
@@ -99,30 +100,39 @@ class PlufEncoderTest extends TestCase {
                 $this->assertEquals(true, true);
             }
         }
-
     }
 
     public function testTimeShift()
     {
-        $enc = Pluf::factory('Pluf_Encoder');
-        $p = array('blank' => false);
+        $enc = new Pluf_Encoder();
+        $p = array(
+            'blank' => false
+        );
         $form = array();
         // When passing a datetime (not a date and not a time)
-        // from the browser, the datetime must be converted 
+        // from the browser, the datetime must be converted
         // into GMT time.
         $tests = array();
-        $tests[] = array('Europe/Berlin', 
-                         '2006-03-16 01:15:35', '2006-03-16 00:15:35');
-        $tests[] = array('America/New_York', 
-                         '2006-03-16 01:15:35', '2006-03-16 06:15:35');
-        $tests[] = array('America/Los_Angeles', 
-                         '2006-03-16 01:15:35', '2006-03-16 09:15:35');
+        $tests[] = array(
+            'Europe/Berlin',
+            '2006-03-16 01:15:35',
+            '2006-03-16 00:15:35'
+        );
+        $tests[] = array(
+            'America/New_York',
+            '2006-03-16 01:15:35',
+            '2006-03-16 06:15:35'
+        );
+        $tests[] = array(
+            'America/Los_Angeles',
+            '2006-03-16 01:15:35',
+            '2006-03-16 09:15:35'
+        );
         foreach ($tests as $test) {
-            putenv('TZ='.$test[0]);
+            putenv('TZ=' . $test[0]);
             date_default_timezone_set($test[0]);
             $this->assertEquals($test[2], $enc->datetime($test[1], $form, $p));
-            $this->assertEquals($test[1], date('Y-m-d H:i:s', strtotime($test[2].' GMT')));
+            $this->assertEquals($test[1], date('Y-m-d H:i:s', strtotime($test[2] . ' GMT')));
         }
-
     }
 }
