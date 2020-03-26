@@ -36,12 +36,53 @@ abstract class Module
      */
     private ?string $key = null;
 
-    public function __construct($key)
+    /**
+     * Flag to show state of the module
+     *
+     * If the module is loaded, then this flag is true.
+     *
+     * @var boolean
+     */
+    private bool $loaded = false;
+
+    /**
+     * Creates new instance of a module with the given key
+     *
+     * @param string $key
+     *            of the module
+     */
+    public function __construct(string $key)
     {
         $this->key = $key;
         // TODO: maso, 2020: load if key is empty
     }
 
+    /**
+     * Checks if the module is loaded.
+     *
+     * @return boolean
+     */
+    public function isLoaded()
+    {
+        return $this->loaded;
+    }
+
+    /**
+     * Set the module as loaded.
+     *
+     * @param bool $loaded
+     *            state of the module
+     */
+    private function setLoaded(bool $loaded)
+    {
+        $this->loaded = $loaded;
+    }
+
+    /**
+     * Gets the key of the module
+     *
+     * @return string
+     */
     public function getKey(): string
     {
         return $this->key;
@@ -79,6 +120,11 @@ abstract class Module
      */
     public abstract function init(\Pluf $bootstrap): void;
 
+    /**
+     * Gets list of modules
+     * 
+     * @return Module[] list of modules
+     */
     public static function getModules(): array
     {
         $apps = \Pluf::f('installed_apps', array());
@@ -109,6 +155,27 @@ abstract class Module
             $views = array_merge_recursive($views, $mviews);
         }
         return $views;
+    }
+
+    /**
+     * Load all modules
+     * 
+     * NOTE: This method is not intend to called directlly.
+     */
+    public static function loadModules(): void
+    {
+        $modules = self::getModules();
+        $bootstrap = new \Pluf();
+        foreach ($modules as $module) {
+            $loaded =false;
+            try {
+                $module->init($bootstrap);
+                $loaded = true;
+            } catch (\Exception $ex) {
+                Logger::error('Fail to load module ' . $module->getKey(), $ex);
+            }
+            $module->setLoaded($loaded);
+        }
     }
 }
 

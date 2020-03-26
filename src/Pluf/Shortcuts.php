@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-function Pluf_Shortcuts_GetRequestParamOr403 ($request, $id)
+function Pluf_Shortcuts_GetRequestParamOr403($request, $id)
 {
     if (array_key_exists($id, $request->REQUEST)) {
         return $request->REQUEST[$id];
@@ -25,7 +25,7 @@ function Pluf_Shortcuts_GetRequestParamOr403 ($request, $id)
     throw new Pluf_HTTP_Error403(sprintf("Parameter not found (name: %s).", $id));
 }
 
-function Pluf_Shortcuts_GetRequestParam ($request, $id)
+function Pluf_Shortcuts_GetRequestParam($request, $id)
 {
     if (array_key_exists($id, $request->REQUEST)) {
         return $request->REQUEST[$id];
@@ -42,14 +42,13 @@ function Pluf_Shortcuts_GetRequestParam ($request, $id)
  *            int Id of the model to get
  * @return Pluf_Model The found object.
  */
-function Pluf_Shortcuts_GetObjectOr404 ($object, $id)
+function Pluf_Shortcuts_GetObjectOr404($object, $id)
 {
     $item = new $object($id);
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404(
-            "Object not found (" . $object . "," . $id . ")");
+    throw new Pluf_HTTP_Error404("Object not found (" . $object . "," . $id . ")");
 }
 
 /**
@@ -70,13 +69,12 @@ function Pluf_Shortcuts_GetObjectOr404 ($object, $id)
  *            string Parameters for the base SQL
  * @return Object The found object
  */
-function Pluf_Shortcuts_GetOneOr404 ($object, $bsql, $psql)
+function Pluf_Shortcuts_GetOneOr404($object, $bsql, $psql)
 {
     $sql = new Pluf_SQL($bsql, $psql);
-    $item = Pluf::factory($object)->getOne(
-            array(
-                    'filter' => $sql->gen()
-            ));
+    $item = Pluf::factory($object)->getOne(array(
+        'filter' => $sql->gen()
+    ));
     if ($item != null) {
         return $item;
     }
@@ -99,7 +97,7 @@ function Pluf_Shortcuts_GetOneOr404 ($object, $bsql, $psql)
  *            Pluf_HTTP_Request Request object (null)
  * @return Pluf_HTTP_Response The response with the rendered template
  */
-function Pluf_Shortcuts_RenderToResponse ($tplfile, $params, $request = null)
+function Pluf_Shortcuts_RenderToResponse($tplfile, $params, $request = null)
 {
     $tmpl = new Pluf_Template($tplfile);
     if (is_null($request)) {
@@ -123,8 +121,7 @@ function Pluf_Shortcuts_RenderToResponse ($tplfile, $params, $request = null)
  *            string Label suffix (null)
  * @return Pluf_Form_Model Form for this model.
  */
-function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
-        $label_suffix = null)
+function Pluf_Shortcuts_GetFormForModel($model, $data = null, $extra = array(), $label_suffix = null)
 {
     $extra['model'] = $model;
     return new Pluf_Form_Model($data, $extra, $label_suffix);
@@ -143,8 +140,7 @@ function Pluf_Shortcuts_GetFormForModel ($model, $data = null, $extra = array(),
  *            string Label suffix (null)
  * @return Object Form to update for this model.
  */
-function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null,
-        $extra = array(), $label_suffix = null)
+function Pluf_Shortcuts_GetFormForUpdateModel($model, $data = null, $extra = array(), $label_suffix = null)
 {
     $extra['model'] = $model;
     return new Pluf_Form_UpdateModel($data, $extra, $label_suffix);
@@ -152,25 +148,24 @@ function Pluf_Shortcuts_GetFormForUpdateModel ($model, $data = null,
 
 /**
  * Compute folder size
+ *
  * @param string $dir
  * @return number
  */
-function Pluf_Shortcuts_folderSize ($dir)
+function Pluf_Shortcuts_folderSize($dir)
 {
     $count_size = 0;
     $count = 0;
     $dir_array = scandir($dir);
-    foreach ($dir_array as $key => $filename) {
+    foreach ($dir_array as /* $key =>  */$filename) {
         if ($filename != ".." && $filename != ".") {
             if (is_dir($dir . "/" . $filename)) {
-                $new_foldersize = Pluf_Shortcuts_folderSize($dir . "/" .
-                         $filename);
+                $new_foldersize = Pluf_Shortcuts_folderSize($dir . "/" . $filename);
                 $count_size = $count_size + $new_foldersize;
-            } else
-                if (is_file($dir . "/" . $filename)) {
-                    $count_size = $count_size + filesize($dir . "/" . $filename);
-                    $count ++;
-                }
+            } else if (is_file($dir . "/" . $filename)) {
+                $count_size = $count_size + filesize($dir . "/" . $filename);
+                $count ++;
+            }
         }
     }
     return $count_size;
@@ -179,19 +174,22 @@ function Pluf_Shortcuts_folderSize ($dir)
 /**
  * Returns association table name (without prefix) for given models.
  *
- * @param string $modelName1 name of model (of type Pluf_Model)
- * @param string $modelName2 name of model (of type Pluf_Model)
+ * @param string $modelName1
+ *            name of model (of type Pluf_Model)
+ * @param string $modelName2
+ *            name of model (of type Pluf_Model)
  * @return string name of association table for given modeles.
- *
+ *        
  * @deprecated use Pluf_ModelUtil::getAssocTable($from,$to);
  */
-function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
+function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2)
+{
     $hay = array(
         strtolower($modelName1),
         strtolower($modelName2)
     );
     sort($hay);
-    $table =  $hay[0] . '_' . $hay[1] . '_assoc';
+    $table = $hay[0] . '_' . $hay[1] . '_assoc';
     $table = Pluf_ModelUtils::skipeName($table);
     return $table;
 }
@@ -199,13 +197,14 @@ function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2){
 /**
  * Returns column name for given model as foreign key in an association table.
  *
- * @param string $modelName name of model (of type Pluf_Model)
+ * @param string $modelName
+ *            name of model (of type Pluf_Model)
  * @return string column name for given model as foreign key in an association table.
  */
-function Pluf_Shortcuts_GetForeignKeyName($modelName){
+function Pluf_Shortcuts_GetForeignKeyName($modelName)
+{
     return strtolower($modelName) . '_id';
 }
-
 
 /**
  * Returns list count for given request.

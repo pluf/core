@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -26,37 +27,51 @@ class Pluf_Signal
     /**
      * Send a signal.
      *
-     * @param string Signal to be sent.
-     * @param string Sender.
-     * @param array Parameters
+     * @param
+     *            string Signal to be sent.
+     * @param
+     *            string Sender.
+     * @param
+     *            array Parameters
      * @return void
      */
-    public static function send($signal, $sender, &$params=array())
+    public static function send($signal, $sender, &$params = array())
     {
-        if (!empty($GLOBALS['_PX_signal'][$signal])) {
-            foreach ($GLOBALS['_PX_signal'][$signal] as $key=>$val) {
+        if (! empty($GLOBALS['_PX_signal'][$signal])) {
+            foreach ($GLOBALS['_PX_signal'][$signal] as /* $key=> */$val) {
                 if ($val[2] === null or $sender == $val[2]) {
-                    call_user_func_array(array($val[0], $val[1]), 
-                                         array($signal, &$params));
+                    call_user_func_array(array(
+                        $val[0],
+                        $val[1]
+                    ), array(
+                        $signal,
+                        &$params
+                    ));
                 }
             }
         }
     }
 
-
     /**
      * Connect to a signal.
      *
-     * @param string Name of the signal.
-     * @param array array('class', 'method') handling the signal.
-     * @param string Optional sender filtering.
+     * @param
+     *            string Name of the signal.
+     * @param
+     *            array array('class', 'method') handling the signal.
+     * @param
+     *            string Optional sender filtering.
      */
-    public static function connect($signal, $who, $sender=null)
+    public static function connect($signal, $who, $sender = null)
     {
-        if (!isset($GLOBALS['_PX_signal'][$signal])) {
+        if (! isset($GLOBALS['_PX_signal'][$signal])) {
             $GLOBALS['_PX_signal'][$signal] = array();
         }
-        $GLOBALS['_PX_signal'][$signal][] = array($who[0], $who[1], $sender);
+        $GLOBALS['_PX_signal'][$signal][] = array(
+            $who[0],
+            $who[1],
+            $sender
+        );
     }
 }
 
