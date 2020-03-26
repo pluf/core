@@ -292,10 +292,10 @@ class Pluf_Utils
         fclose($pipes[0]); // close child's input imidiately
         stream_set_blocking($pipes[1], false);
         stream_set_blocking($pipes[2], false);
-        $todo = array(
-            $pipes[1],
-            $pipes[2]
-        );
+//         $todo = array(
+//             $pipes[1],
+//             $pipes[2]
+//         );
         while (true) {
             $read = array();
             if (! feof($pipes[1]))

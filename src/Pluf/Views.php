@@ -578,6 +578,16 @@ class Pluf_Views
         return self::CRUD_response($request, $p, $objectCopy);
     }
 
+    /**
+     * Convert a model into the data schema
+     * 
+     * Data schema is used to fill form in clients.
+     * 
+     * @param Pluf_HTTP_Request $request
+     * @param array $match
+     * @param array $p
+     * @return array
+     */
     public function getSchema($request, $match, $p)
     {
         $model = self::CRUD_getModel($p);

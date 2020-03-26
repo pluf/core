@@ -17,17 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use Pluf\ModelUtils;
+use Pluf\Module;
 
 /**
  * The main class of the framework.
  * From where all start.
  *
  * The __autoload function is automatically set.
- *
- * @date 1394 فرآیند یافتن پرونده‌ها تنها در مسیرهایی بود که سیستم تعیین می‌کند
- * این مسیرهای با استفاده از ini_get گرفته می‌شود. این کار منجر به بروز خطا
- * در اجرا برای سیستم‌های CPanel می‌شد. در این نمونه با استفاده از get_include_path
- * این مشکل رفع شده است.
  */
 class Pluf
 {
@@ -38,8 +34,9 @@ class Pluf
      * @param
      *            string Configuration file to use
      */
-    static function start($config)
+    public static function start($config)
     {
+        // Load configurations
         $GLOBALS['_PX_starttime'] = microtime(true);
         $GLOBALS['_PX_uniqid'] = uniqid($GLOBALS['_PX_starttime'], true);
         $GLOBALS['_PX_signal'] = array();
@@ -48,6 +45,9 @@ class Pluf
         date_default_timezone_set(Pluf::f('time_zone', 'UTC'));
         mb_internal_encoding(Pluf::f('encoding', 'UTF-8'));
         mb_regex_encoding(Pluf::f('encoding', 'UTF-8'));
+        
+        // Load modules
+        Module::loadModules();
     }
 
     /**
@@ -83,6 +83,7 @@ class Pluf
      * Signals and relations are cached in the same file as the way to
      * go for signals is to put them in the relations.php file.
      *
+     * @deprecated use ModelUtils::loadRelations instead
      * @param
      *            bool Use the cache (true)
      */
@@ -100,14 +101,14 @@ class Pluf
      *            mixed Possible default value if value is not set ('')
      * @return mixed Configuration variable or default value if not defined.
      */
-    static function f($cfg, $default = '')
+    public static function f($cfg, $default = '')
     {
         if (isset($GLOBALS['_PX_config'][$cfg])) {
             return $GLOBALS['_PX_config'][$cfg];
         }
         return $default;
     }
-    
+
     /**
      * Access an array of configuration variables having a given
      * prefix.
