@@ -45,7 +45,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         ));
 
         $this->assertTrue($m->install());
-        $this->assertTrue($m->unInstall());
+        $this->assertTrue($m->uninstall());
     }
 
     /**

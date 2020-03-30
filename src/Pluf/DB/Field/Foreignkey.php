@@ -17,19 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-class Pluf_DB_Field_Foreignkey extends Pluf_DB_Field
-{
+// class Pluf_DB_Field_Foreignkey extends Pluf_DB_Field
+// {
 
-    public $type = 'foreignkey';
+//     public $type = 'foreignkey';
 
-    function formField($def, $form_field = 'Pluf_Form_Field_Varchar')
-    {
-        $gmodel = new $def['model']();
-        $choices = array();
-        foreach ($gmodel->getList() as $item) {
-            $choices[(string) $item] = $item->id;
-        }
-        $def['choices'] = $choices;
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field = 'Pluf_Form_Field_Varchar')
+//     {
+//         $gmodel = new $def['model']();
+//         $choices = array();
+//         foreach ($gmodel->getList() as $item) {
+//             $choices[(string) $item] = $item->id;
+//         }
+//         $def['choices'] = $choices;
+//         return parent::formField($def, $form_field);
+//     }
+// }

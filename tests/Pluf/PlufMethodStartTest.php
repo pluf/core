@@ -29,11 +29,11 @@ class PlufMethodStartTest extends TestCase
     public function testStart()
     {
         Pluf::start(__DIR__ . '/../conf/config.php');
-        $this->assertEquals(true, isset($GLOBALS['_PX_config']));
 
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['test'] = false;
         Pluf::start($conf);
-        $this->assertEquals(false, $GLOBALS['_PX_config']['test']);
+        $this->assertEquals(false, Pluf::f('test', true));
+        $this->assertEquals(true, Pluf::f('testxxxx', true));
     }
 }

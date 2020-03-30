@@ -21,12 +21,12 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Datetime extends Pluf_DB_Field
-{
-    public $type = 'datetime';
+// class Pluf_DB_Field_Datetime extends Pluf_DB_Field
+// {
+//     public $type = 'datetime';
 
-    function formField($def, $form_field='Pluf_Form_Field_Datetime')
-    {
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Datetime')
+//     {
+//         return parent::formField($def, $form_field);
+//     }
+// }

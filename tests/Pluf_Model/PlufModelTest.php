@@ -17,12 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -30,6 +30,7 @@ class PlufModelTest extends TestCase
 {
 
     /**
+     *
      * @beforeClass
      */
     public static function createDataBase()
@@ -46,6 +47,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @afterClass
      */
     public static function removeDatabses()
@@ -57,6 +59,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testSetModelField()
@@ -67,6 +70,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testTestModelRecurse()
@@ -79,13 +83,15 @@ class PlufModelTest extends TestCase
         $model2 = new Test_ModelRecurse();
         $model2->title = 'child';
         $model2->parent_id = $model;
-        $this->assertEquals(true, $model2->create());
+        $model2->create();
+        $this->assertFalse($model2->isAnonymous());
 
         $a = $model->get_children_list();
         $this->assertEquals($a[0]->title, 'child');
     }
 
     /**
+     *
      * @test
      */
     public function testCreateTestModel()
@@ -93,11 +99,12 @@ class PlufModelTest extends TestCase
         $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
-        $this->assertEquals(true, $model->create());
-        $this->assertEquals(1, (int) $model->id);
+        $model->create();
+        $this->assertFalse($model->isAnonymous());
     }
 
     /**
+     *
      * @test
      */
     public function testGetTestModel()
@@ -106,11 +113,13 @@ class PlufModelTest extends TestCase
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $model->create();
-        $m = new Test_Model(1);
-        $this->assertEquals('my title', $m->title);
+
+        $m = new Test_Model($model->id);
+        $this->assertEquals($model->title, $m->title);
     }
 
     /**
+     *
      * @test
      */
     public function testUpdateTestModel()
@@ -126,6 +135,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testDeleteTestModel()
@@ -144,6 +154,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testGetListTestModel()
@@ -168,6 +179,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testGetCountModel()
@@ -190,6 +202,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testRelatedTestModel()
@@ -197,12 +210,14 @@ class PlufModelTest extends TestCase
         $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
-        $this->assertEquals(true, $model->create());
+        $model->create();
+        $this->assertFalse($model->isAnonymous());
 
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
-        $this->assertEquals(true, $m->create());
+        $m->create();
+        $this->assertFalse($m->isAnonymous());
 
         $rel = $model->get_test_relatedtotestmodel_list();
         $this->assertEquals('stupid values', $rel[0]->dummy);
@@ -211,6 +226,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testLimitRelatedTestModel()
@@ -218,22 +234,27 @@ class PlufModelTest extends TestCase
         $model = new Test_Model();
         $model->title = 'title';
         $model->description = 'A small desc ';
-        $this->assertEquals(true, $model->create());
+        $model->create();
+        $this->assertFalse($model->isAnonymous());
 
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values';
-        $this->assertEquals(true, $m->create());
+        $m->create();
+        $this->assertFalse($m->isAnonymous());
 
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 2';
-        $this->assertEquals(true, $m->create());
+        $m->create();
+        $this->assertFalse($m->isAnonymous());
 
         $m = new Test_RelatedToTestModel();
         $m->testmodel = $model;
         $m->dummy = 'stupid values 3';
-        $this->assertEquals(true, $m->create());
+        $m->create();
+        $this->assertFalse($m->isAnonymous());
+        
         $rel = $model->get_test_relatedtotestmodel_list(array(
             'filter' => "dummy='stupid values 2'"
         ));
@@ -244,6 +265,7 @@ class PlufModelTest extends TestCase
     }
 
     /**
+     *
      * @test
      */
     public function testManyRelatedTestModel()
@@ -252,10 +274,12 @@ class PlufModelTest extends TestCase
         $tm1->title = 'title tm1';
         $tm1->description = 'A small desc tm1';
         $tm1->create();
+
         $tm2 = new Test_Model();
         $tm2->title = 'title tm2';
         $tm2->description = 'A small desc tm2';
         $tm2->create();
+
         $tm3 = new Test_Model();
         $tm3->title = 'title tm3';
         $tm3->description = 'A small desc tm3';
@@ -294,11 +318,15 @@ class PlufModelTest extends TestCase
         $this->assertEquals(1, count($rel));
         $this->assertEquals('stupid values rm3', $rel[0]->dummy);
 
+        $tm1_2 = new Test_Model($tm1->id);
+        $this->assertEquals($tm1->id, $tm1_2->id);
+
         $tm1bis = $rm2->get_testmodel_1();
         $this->assertEquals('title tm1', $tm1bis->title);
     }
 
     /**
+     *
      * @test
      */
     public function testRelatedToNotCreatedTestModel()
@@ -311,17 +339,17 @@ class PlufModelTest extends TestCase
     }
 
     // XXX: maso, 2018: why it must throws exception?!
-//     /**
-//      *
-//      * @expectedException Exception
-//      * @test
-//      */
-//     public function testExceptionOnProperty()
-//     {
-//         $model = new Test_Model();
-// //         $model->title = 'title';
-//         $model->description = 'A small desc ';
-//         $this->assertEquals(true, $model->create());
-//     }
+    // /**
+    // *
+    // * @expectedException Exception
+    // * @test
+    // */
+    // public function testExceptionOnProperty()
+    // {
+    // $model = new Test_Model();
+    // // $model->title = 'title';
+    // $model->description = 'A small desc ';
+    // $this->assertEquals(true, $model->create());
+    // }
 }
 

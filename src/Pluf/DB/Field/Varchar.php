@@ -18,14 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * String data type
- *
- * @author maso
- *        
- */
-class Pluf_DB_Field_Varchar extends Pluf_DB_Field
-{
+// /**
+//  * String data type
+//  *
+//  * @author maso
+//  *        
+//  */
+// class Pluf_DB_Field_Varchar extends Pluf_DB_Field
+// {
 
-    public $type = 'varchar';
-}
+//     public $type = 'varchar';
+// }

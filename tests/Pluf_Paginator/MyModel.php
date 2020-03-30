@@ -27,36 +27,36 @@ class Pluf_Paginator_MyModel extends Pluf_Model
         $this->_a['model'] = 'TestFormModel';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => 'Sequence',
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => 'Varchar',
                 'blank' => false,
                 'size' => 100,
                 'verbose' => 'Title of the item'
             ),
             'description' => array(
-                'type' => 'Pluf_DB_Field_Text',
+                'type' => 'Text',
                 'blank' => true,
                 'help_text' => 'This is a small description'
             ),
             'creation_dtime' => array(
-                'type' => 'Pluf_DB_Field_Datetime',
+                'type' => 'Datetime',
                 'blank' => true,
                 'is_null' => true,
                 'editable' => false,
                 'readable' => true
             ),
             'int_field' => array(
-                'type' => 'Pluf_DB_Field_Integer',
+                'type' => 'Integer',
                 'blank' => true,
                 'is_null' => true,
                 'editable' => true,
                 'readable' => true
             ),
             'float_field' => array(
-                'type' => 'Pluf_DB_Field_Float',
+                'type' => 'Float',
                 'blank' => true,
                 'is_null' => true,
                 'editable' => true,

@@ -3,6 +3,7 @@ namespace Pluf;
 
 use Pluf;
 use Pluf_Model;
+use Pluf\Db\Engine;
 
 /**
  * Utilities to work with model
@@ -122,8 +123,8 @@ class ModelUtils
                 }
             }
         }
-        $_r['foreignkey'] = $_r['relate_to'];
-        $_r['manytomany'] = $_r['relate_to_many'];
+        $_r[Engine::FOREIGNKEY] = $_r['relate_to'];
+        $_r[Engine::MANY_TO_MANY] = $_r['relate_to_many'];
         $GLOBALS['_PX_models_related'] = $_r;
 
         // $GLOBALS['_PX_signal'] is automatically set by the require

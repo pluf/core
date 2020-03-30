@@ -1,5 +1,6 @@
 <?php
 use Pluf\ModelUtils;
+use Pluf\Db\Engine;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -228,8 +229,8 @@ class ' . $className . ' {
                     // List of basic fields
                     ' . $this->compileBasicFields($cols) . '
                     // relations: forenkey
-                    ' . $this->compileRelationFields('foreignkey', $model) . '
-                    ' . $this->compileRelationFields('manytomany', $model) . '
+                    ' . $this->compileRelationFields(Engine::FOREIGNKEY, $model) . '
+                    ' . $this->compileRelationFields(Engine::MANY_TO_MANY, $model) . '
                 ]';
         return $fields;
     }
@@ -252,13 +253,13 @@ class ' . $className . ' {
 
             // Foreignkey
             $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey') {
+            if ($fieldType === 'Foreignkey') {
                 $fields .= $this->compileFieldForeignkey($key, $field);
                 continue;
             }
 
             // ManyToMany
-            if ($fieldType === 'Pluf_DB_Field_Manytomany') {
+            if ($fieldType === 'Manytomany') {
                 $fields .= $this->compileFieldManytomany($key, $field);
                 continue;
             }
@@ -285,7 +286,7 @@ class ' . $className . ' {
      * in the model definitions.
      *
      * @param string $type
-     *            Relation type: 'foreignkey' or 'manytomany'.
+     *            Relation type: Engine::FOREIGNKEY Engine::Many_To_many
      * @param Pluf_Model $mainModel
      *            main model wihch is the target of compile
      */
@@ -320,32 +321,32 @@ class ' . $className . ' {
     {
         // set type
         switch ($field['type']) {
-            case 'Pluf_DB_Field_Sequence':
+            case 'Sequence':
                 $res = 'Type::int()';
                 break;
-            case 'Pluf_DB_Field_Date':
-            case 'Pluf_DB_Field_Datetime':
-            case 'Pluf_DB_Field_Email':
-            case 'Pluf_DB_Field_File':
-            case 'Pluf_DB_Field_Serialized':
-            case 'Pluf_DB_Field_Slug':
-            case 'Pluf_DB_Field_Text':
-            case 'Pluf_DB_Field_Varchar':
-            case 'Pluf_DB_Field_Geometry':
+            case 'Date':
+            case 'Datetime':
+            case 'Email':
+            case 'File':
+            case 'Serialized':
+            case 'Slug':
+            case 'Text':
+            case 'Varchar':
+            case 'Geometry':
                 $res = 'Type::string()';
                 break;
-            case 'Pluf_DB_Field_Integer':
+            case 'Integer':
                 $res = 'Type::int()';
                 break;
-            case 'Pluf_DB_Field_Float':
+            case 'Float':
                 $res = 'Type::float()';
                 break;
-            case 'Pluf_DB_Field_Boolean':
+            case 'Boolean':
                 $res = 'Type::boolean()';
                 break;
 
-            case 'Pluf_DB_Field_Foreignkey':
-            case 'Pluf_DB_Field_Manytomany':
+            case 'Foreignkey':
+            case 'Manytomany':
                 return '';
             default:
                 // TODO: Unsupported type exceptions
@@ -435,7 +436,7 @@ class ' . $className . ' {
         $preModels = [];
         foreach ($cols as $field) {
             $fieldType = $field['type'];
-            if ($fieldType === 'Pluf_DB_Field_Foreignkey' || $fieldType === 'Pluf_DB_Field_Manytomany') {
+            if ($fieldType === Engine::FOREIGNKEY || $fieldType === Engine::MANY_TO_MANY) {
                 if (! in_array($field['model'], $preModels)) {
                     array_push($preModels, $field['model']);
                 }
@@ -443,8 +444,8 @@ class ' . $className . ' {
         }
 
         $types = [
-            'foreignkey',
-            'manytomany'
+            Engine::FOREIGNKEY,
+            Engine::MANY_TO_MANY
         ];
         foreach ($types as $type) {
             $relations = ModelUtils::getRelatedModels($model, $type);

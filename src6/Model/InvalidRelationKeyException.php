@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,38 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Model;
+
+use Pluf\Exception;
 
 /**
+ * Invalid Relation Key
+ *
+ * If you try to get a related object with wrong key/name, then this exception
+ * will be thrown.
  *
  * @author maso
  *        
  */
-class Test_ModelCount extends Pluf_Model
+class InvalidRelationKeyException extends Exception
 {
 
-    /**
-     *
-     * {@inheritdoc}
-     * @see Pluf_Model::init()
-     */
-    function init()
+    // TODO: add error code
+    public function __construct($from, $to, $relationName)
     {
-        $this->_a['table'] = 'test_model_count';
-        $this->_a['cols'] = array(
-            'id' => array(
-                'type' => 'Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'title' => array(
-                'type' => 'Varchar',
-                'blank' => false,
-                'size' => 100
-            ),
-            'description' => array(
-                'type' => 'Text',
-                'blank' => true
-            )
-        );
+        parent::__construct('Invalid relation name from:' . $from . ', to:' . $to . ', relation:' . $relationName);
+        $this->from = $from;
+        $this->to = $to;
+        $this->relation = $relationName;
     }
 }
 

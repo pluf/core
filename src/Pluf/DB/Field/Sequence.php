@@ -21,16 +21,16 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Sequence extends Pluf_DB_Field
-{
-    public $type = 'sequence';
+// class Pluf_DB_Field_Sequence extends Pluf_DB_Field
+// {
+//     public $type = 'sequence';
 
-    /**
-     * It is never possible to manually set the id of a model, this
-     * should be passed through the URL.
-     */
-    function formField($def, $form_field='')
-    {
-        return null;
-    }
-}
+//     /**
+//      * It is never possible to manually set the id of a model, this
+//      * should be passed through the URL.
+//      */
+//     function formField($def, $form_field='')
+//     {
+//         return null;
+//     }
+// }

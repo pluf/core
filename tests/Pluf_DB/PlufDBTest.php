@@ -21,6 +21,7 @@ use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -30,60 +31,61 @@ class PlufDBTest extends TestCase
     public $db;
 
     /**
+     *
      * @before
      */
-    public function setUpTest ()
+    public function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
         $this->db = &Pluf::db();
     }
 
-    public function testEscapeInteger ()
+    public function testEscapeInteger()
     {
         $tests = array(
-                '123',
-                123,
-                123.32,
-                'qwe\\qwe',
-                '\''
+            '123',
+            123,
+            123.32,
+            'qwe\\qwe',
+            '\''
         );
         $res = array(
-                '123',
-                '123',
-                '123',
-                '0',
-                '0'
+            '123',
+            '123',
+            '123',
+            '0',
+            '0'
         );
         foreach ($tests as $test) {
             $ok = current($res);
-            $this->assertEquals($ok, Pluf_DB_IntegerToDb($test, $this->db));
+            $this->assertEquals($ok, \Pluf\Db\Engine::integerToDb($test, $this->db));
             next($res);
         }
     }
 
-    public function testEscapeBoolean ()
+    public function testEscapeBoolean()
     {
         $tests = array(
-                '123',
-                123,
-                123.32,
-                'qwe\\qwe',
-                '\'',
-                false,
-                '0'
+            '123',
+            123,
+            123.32,
+            'qwe\\qwe',
+            '\'',
+            false,
+            '0'
         );
         $res = array(
-                "'1'",
-                "'1'",
-                "'1'",
-                "'1'",
-                "'1'",
-                "'0'",
-                "'0'"
+            "'1'",
+            "'1'",
+            "'1'",
+            "'1'",
+            "'1'",
+            "'0'",
+            "'0'"
         );
         foreach ($tests as $test) {
             $ok = current($res);
-            $this->assertEquals($ok, Pluf_DB_BooleanToDb($test, $this->db));
+            $this->assertEquals($ok, \Pluf\Db\Engine::booleanToDb($test, $this->db));
             next($res);
         }
     }

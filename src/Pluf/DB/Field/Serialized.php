@@ -21,15 +21,15 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Serialized extends Pluf_DB_Field
-{
-    public $type = 'text';
+// class Pluf_DB_Field_Serialized extends Pluf_DB_Field
+// {
+//     public $type = 'text';
 
-    function formField($def, $form_field='Pluf_Form_Field_Varchar')
-    {
-        if (!isset($def['widget'])) {
-            $def['widget'] = 'Pluf_Form_Widget_TextareaInput';
-        }
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Varchar')
+//     {
+//         if (!isset($def['widget'])) {
+//             $def['widget'] = 'Pluf_Form_Widget_TextareaInput';
+//         }
+//         return parent::formField($def, $form_field);
+//     }
+// }

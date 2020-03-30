@@ -32,34 +32,34 @@ class Pluf_Search_Stats extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true
                 ),
                 'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 150,
                         'verbose' => __('model class')
                 ),
                 'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('model id')
                 ),
                 'indexations' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('number of indexations'),
                         'default' => 0
                 ),
                 'creation_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => true,
                         'verbose' => __('created at')
                 ),
                 'modif_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => true,
                         'verbose' => __('modified at')
                 )

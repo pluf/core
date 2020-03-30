@@ -21,12 +21,12 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Boolean extends Pluf_DB_Field
-{
-    public $type = 'boolean';
+// class Pluf_DB_Field_Boolean extends Pluf_DB_Field
+// {
+//     public $type = 'boolean';
 
-    function formField($def, $form_field='Pluf_Form_Field_Boolean')
-    {
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Boolean')
+//     {
+//         return parent::formField($def, $form_field);
+//     }
+// }

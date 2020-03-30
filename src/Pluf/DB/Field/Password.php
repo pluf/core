@@ -21,13 +21,13 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Password extends Pluf_DB_Field
-{
-    public $type = 'varchar';
+// class Pluf_DB_Field_Password extends Pluf_DB_Field
+// {
+//     public $type = 'varchar';
 
-    function formField($def, $form_field='Pluf_Form_Field_Varchar')
-    {
-        $def['widget'] = 'Pluf_Form_Widget_PasswordInput';
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Varchar')
+//     {
+//         $def['widget'] = 'Pluf_Form_Widget_PasswordInput';
+//         return parent::formField($def, $form_field);
+//     }
+// }

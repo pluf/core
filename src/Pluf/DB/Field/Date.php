@@ -21,12 +21,12 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Date extends Pluf_DB_Field
-{
-    public $type = 'date';
+// class Pluf_DB_Field_Date extends Pluf_DB_Field
+// {
+//     public $type = 'date';
 
-    function formField($def, $form_field='Pluf_Form_Field_Date')
-    {
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Date')
+//     {
+//         return parent::formField($def, $form_field);
+//     }
+// }

@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf\Model;
 
 use Pluf_Model;
@@ -99,6 +98,13 @@ class Repository
         $this->model = new $modelType();
     }
 
+    /**
+     * Get a given item.
+     *
+     * @param
+     *            int Id of the item.
+     * @return mixed Item or false if not found.
+     */
     public function get($id): ?Pluf_Model
     {
         $modelClassName = get_class($this->model);
@@ -106,28 +112,108 @@ class Repository
         return $model;
     }
 
+    /**
+     * Get one item.
+     *
+     * The parameters are the same as the ones of the getList method,
+     * but, the return value is either:
+     *
+     * - The object
+     * - null if no match
+     * - Exception if the match results in more than one item.
+     *
+     * @see self::getList
+     * @param Query $query)
+     *            A query to run on db
+     * @return Pluf_Model|null find model
+     */
     public function getOne(Query $query): ?Pluf_Model
     {
         return $this->model->getOne($query->toArray());
     }
 
+    /**
+     * Gets list of object
+     *
+     * Note: all object will be fetched in the memory
+     *
+     * The filter should be used only for simple filtering. If you want
+     * a complex query, you should create a new view.
+     * Both filter and order accept an array or a string in case of multiple
+     *
+     * @param Query $query
+     *            to run on db
+     * @return array of items or through an exception if
+     *         database failure
+     */
     public function getList(Query $query): array
     {
         $res = $this->model->getList($query->toArray());
-        if($res instanceof \ArrayObject){
+        if ($res instanceof \ArrayObject) {
             return $res->getArrayCopy();
         }
         return [];
     }
 
+    /**
+     * Get the number of items.
+     *
+     * @see getList() for definition of the keys
+     *     
+     * @param Query $query
+     *            with associative keys 'view' and 'filter'
+     * @return int The number of items
+     */
     public function getCount(Query $query): int
     {
         return $this->model->getCount($query->toArray());
     }
 
-    public function getRelated(string $model, string $relation = null, Query $query): array
+    /**
+     * Get a list of related items.
+     *
+     * See the getList() method for usage of the view and filters.
+     *
+     *
+     *
+     *
+     * ```php
+     * <?php
+     *
+     * $repository = new Repository('\Pluf\Cms\Content');
+     *
+     * $content = $repository->get(1);
+     * $parent = $repository->getRelated($content, 'parent');
+     * $children = $repository->getRelated($content, 'children', $query);
+     * ```
+     *
+     * @param \Pluf_Model $model
+     *            The root of the relation
+     * @param string $relationName
+     *            name of ther relation to
+     * @param Query $query
+     *            to run on related objects if the result is many objects
+     * @return array Array of items
+     */
+    public function getRelated(\Pluf_Model $model, string $relationName = null, Query $query): array
     {
-        $this->model->getRelated($model, null, $query->toArray());
+        if ($this->isForignKeyRelation($relationName)) {
+            // TODO: support foring key
+        } elseif ($this->isManyToManyRelation($relationName)) {
+            $this->model->getRelated($model, null, $query->toArray());
+        } else {
+            throw new InvalidRelationKeyException($this->model, $model, $relationName);
+        }
+    }
+
+    private function isForignKeyRelation(string $relationName): bool
+    {
+        return false;
+    }
+
+    private function isManyToManyRelation(string $relationName): bool
+    {
+        return true;
     }
 }
 

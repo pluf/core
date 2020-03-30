@@ -21,7 +21,7 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Float extends Pluf_DB_Field
-{
-    public $type = 'float';
-}
+// class Pluf_DB_Field_Float extends Pluf_DB_Field
+// {
+//     public $type = 'float';
+// }

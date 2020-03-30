@@ -32,26 +32,26 @@ class Note_Item extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true,
                         'editable' => false,
                         'readable' => true
                 ),
                 'title' => array(
-                        'type' => 'Pluf_DB_Field_Text',
+                        'type' => 'Text',
                         'blank' => false,
                         'editable' => true,
                         'readable' => true
                 ),
                 'body' => array(
-                        'type' => 'Pluf_DB_Field_Text',
+                        'type' => 'Text',
                         'blank' => false,
                         'editable' => true,
                         'readable' => true
                 ),
                 'creation_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => true,
                         'editable' => false,
                         'readable' => true

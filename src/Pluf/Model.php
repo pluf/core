@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 use Pluf\ModelUtils;
+use Pluf\Db\Engine;
 
 /**
  * Sort of Active Record Class
@@ -38,7 +38,7 @@ class Pluf_Model implements JsonSerializable
      * @var array
      */
     protected $tenant_field = array(
-        'type' => 'Pluf_DB_Field_Foreignkey',
+        'type' => Engine::FOREIGNKEY,
         'model' => 'Pluf_Tenant',
         'blank' => false,
         'relate_name' => 'tenant',
@@ -54,7 +54,7 @@ class Pluf_Model implements JsonSerializable
     /**
      * Database connection.
      */
-    public $_con = null;
+    public ?Engine $_con = null;
 
     /**
      * Store the attributes of the model.
@@ -146,64 +146,63 @@ class Pluf_Model implements JsonSerializable
      */
     function _init()
     {
-        $this->_getConnection();
+        // $engine = $this->getEngine();
         if (ModelUtils::loadFromCache($this)) {
             return;
         }
 
         $this->init();
         $this->_setupMultitenantFields();
-        foreach ($this->_a['cols'] as $col => $val) {
-            $field = new $val['type']('', $col);
+        foreach ($this->_a['cols'] as $col => $description) {
+
+            // $field = new $val['type']('', $col);
             $col_lower = strtolower($col);
 
-            $type = 'foreignkey';
-            if ($type === $field->type) {
+            if ($description['type'] === Engine::FOREIGNKEY) {
                 $this->_m['get']['get_' . $col_lower] = array(
-                    $val['model'],
+                    $description['model'],
                     $col
                 );
-                $this->_cache['fk'][$col] = $type;
-                $this->_fk[$col] = $type;
+                $this->_cache['fk'][$col] = Engine::FOREIGNKEY;
+                $this->_fk[$col] = Engine::FOREIGNKEY;
                 /*
                  * TODO: maso, 2018: this model will replace the old one in the
                  * next major version
                  */
-                if (array_key_exists('name', $val)) {
-                    $this->_m['get']['get_' . $val['name']] = $this->_m['get']['get_' . $col_lower];
+                if (array_key_exists('name', $description)) {
+                    $this->_m['get']['get_' . $description['name']] = $this->_m['get']['get_' . $col_lower];
                 }
             }
 
-            $type = 'manytomany';
-            if ($type === $field->type) {
-                $this->_m['list']['get_' . $col_lower . '_list'] = $val['model'];
-                $this->_m['many'][$val['model']] = $type;
+            if ($description['type'] === Engine::MANY_TO_MANY) {
+                $this->_m['list']['get_' . $col_lower . '_list'] = $description['model'];
+                $this->_m['many'][$description['model']] = Engine::MANY_TO_MANY;
                 /*
                  * TODO: maso, 2018: this model will replace the old one in the
                  * next major version
                  */
-                if (array_key_exists('name', $val)) {
-                    $this->_m['list']['get_' . $val['name'] . '_list'] = $val['model'];
+                if (array_key_exists('name', $description)) {
+                    $this->_m['list']['get_' . $description['name'] . '_list'] = $description['model'];
                 }
             }
 
-            foreach ($field->methods as $method) {
-                $this->_m['extra'][$method[0]] = array(
-                    $col_lower,
-                    $method[1]
-                );
-            }
+            // foreach ($field->methods as $method) {
+            // $this->_m['extra'][$method[0]] = array(
+            // $col_lower,
+            // $method[1]
+            // );
+            // }
 
-            if (array_key_exists('default', $val)) {
-                $this->_data[$col] = $val['default'];
+            if (array_key_exists('default', $description)) {
+                $this->_data[$col] = $description['default'];
             } else {
                 // TODO: hadi 1398-09-27: I think we should set an appropriate default value for each type (ex 0 for numerical types and null for nullable fields).
                 $this->_data[$col] = '';
             }
         }
 
-        $this->_setupAutomaticListMethods('foreignkey');
-        $this->_setupAutomaticListMethods('manytomany');
+        $this->_setupAutomaticListMethods(Engine::FOREIGNKEY);
+        $this->_setupAutomaticListMethods(Engine::MANY_TO_MANY);
 
         ModelUtils::putModelToCache($this);
     }
@@ -213,17 +212,17 @@ class Pluf_Model implements JsonSerializable
      *
      * @param string $model
      * @param string $type
-     *            Relation type: 'foreignkey' or 'manytomany'.
+     *            Relation Engine::FOREIGNKEY or Engine::MANY_TO_MANY
      * @return array Key relationships.
      */
     public function getRelationKeysToModel($model, $type)
     {
         $keys = array();
-        foreach ($this->_a['cols'] as $col => $val) {
-            if (isset($val['model']) && $model === $val['model']) {
-                $field = new $val['type']();
-                if ($type === $field->type) {
-                    $keys[$col] = $val;
+        foreach ($this->_a['cols'] as $col => $description) {
+            if (isset($description['model']) && $model === $description['model']) {
+                // $field = new $val['type']();
+                if ($type === $description['type']) {
+                    $keys[$col] = $description;
                 }
             }
         }
@@ -241,7 +240,7 @@ class Pluf_Model implements JsonSerializable
      */
     function getForeignKeysToModel($model)
     {
-        return $this->getRelationKeysToModel($model, 'foreignkey');
+        return $this->getRelationKeysToModel($model, Engine::FOREIGNKEY);
     }
 
     /**
@@ -255,7 +254,7 @@ class Pluf_Model implements JsonSerializable
     {
         foreach ($this->_a['cols'] as $col => $val) {
             $field = new $val['type']();
-            if ($field->type == 'manytomany') {
+            if ($field->type == Engine::MANY_TO_MANY) {
                 $this->_data[$col] = array();
                 // XXX: maso, 2018: do not load many to many relation if is not required
                 $method = 'get_' . strtolower($col) . '_list';
@@ -273,14 +272,11 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            object Object to associate to the current object
      */
-    function setAssoc($model)
+    function setAssoc(Pluf_Model $model, ?string $assocName = null)
     {
-        $req = 'INSERT INTO ' . Pluf_ModelUtils::getAssocTable($this, $model);
-        $req .= '(' . Pluf_ModelUtils::getAssocField($this) . ', ' . Pluf_ModelUtils::getAssocField($model) . ') VALUES ' . "\n";
-        $req .= '(' . $this->_toDb($this->_data['id'], 'id') . ', ';
-        $req .= $this->_toDb($model->id, 'id') . ')';
-        $this->_con->execute($req);
-        return true;
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+        return $engine->execute($schema->createRelationQuery($this, $model, $assocName));
     }
 
     /**
@@ -289,14 +285,11 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            object Object to associate to the current object
      */
-    function delAssoc($model)
+    function delAssoc(Pluf_Model $model, ?string $assocName = null)
     {
-        $table = Pluf_ModelUtils::getAssocTable($this, $model);
-        $req = 'DELETE FROM ' . $table . ' WHERE ';
-        $req .= $this->_con->qn(strtolower($this->_a['model']) . '_id') . ' = ' . $this->_toDb($this->_data['id'], 'id');
-        $req .= ' AND ' . $this->_con->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $this->_toDb($model->id, 'id');
-        $this->_con->execute($req);
-        return true;
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+        return $engine->execute($schema->deleteRelationQuery($this, $model, $assocName));
     }
 
     /**
@@ -324,40 +317,18 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * Get a database connection.
-     */
-    function _getConnection()
-    {
-        static $con = null;
-        if ($this->_con !== null) {
-            return $this->_con;
-        }
-        if ($con !== null) {
-            $this->_con = $con;
-            return $this->_con;
-        }
-        $this->_con = &Pluf::db($this);
-        $con = $this->_con;
-        return $this->_con;
-    }
-
-    /**
-     * Get a database connection.
-     */
-    function getDbConnection()
-    {
-        return $this->_getConnection();
-    }
-
-    /**
      * Get the table of the model.
      *
      * Avoid doing the concatenation of the prefix and the table
      * manually.
+     *
+     * @deprecated
      */
     function getSqlTable()
     {
-        return $this->_con->pfx . $this->_a['table'];
+        return $this->getEngine()
+            ->getSchema()
+            ->getTableName($this);
     }
 
     /**
@@ -404,7 +375,9 @@ class Pluf_Model implements JsonSerializable
             if (isset($this->_cache[$method])) {
                 return $this->_cache[$method];
             } else {
-                $this->_cache[$method] = Pluf::factory($this->_m['get'][$method][0], $this->_data[$this->_m['get'][$method][1]]);
+                $model = $this->_m['get'][$method][0];
+                $id = $this->_data[$this->_m['get'][$method][1]];
+                $this->_cache[$method] = new $model($id);
                 if ($this->_cache[$method]->id == '') {
                     $this->_cache[$method] = null;
                 }
@@ -418,15 +391,13 @@ class Pluf_Model implements JsonSerializable
             } else {
                 $model = $this->_m['list'][$method];
             }
-            $args = array_merge(array(
-                $model,
-                $method
-            ), $args);
-            return call_user_func_array(array(
-                $this,
-                'getRelated'
-            ), $args);
+            $params = [];
+            if (sizeof($args) > 0) {
+                $params = $args[0];
+            }
+            return $this->getRelated($model, $method, $params);
         }
+
         // Extra methods added by fields
         if (isset($this->_m['extra'][$method])) {
             $args = array_merge(array(
@@ -446,31 +417,22 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            int Id of the item.
      * @return mixed Item or false if not found.
+     * @deprecated use \Pluf\Model\Repository::getList
      */
     function get($id)
     {
-        $req = 'SELECT * FROM ' . $this->getSqlTable() . ' WHERE ';
-        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            $sql = new Pluf_SQL('tenant=%s AND id=%s', array(
-                Pluf_Tenant::current()->id,
-                $this->_toDb($id, 'id')
-            ));
-        } else {
-            $sql = new Pluf_SQL('id=%s', array(
-                $this->_toDb($id, 'id')
-            ));
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+        $res = $engine->select($schema->selectByIdQuery($this, $id));
+        if (false === $res) {
+            throw new Exception($engine->getError());
         }
-        $req .= $sql->gen();
-        if (false === ($rs = $this->_con->select($req))) {
-            throw new Exception($this->_con->getError());
-        }
-        if (count($rs) == 0) {
+        if (count($res) == 0) {
             return false;
         }
-        foreach ($this->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type != 'manytomany' && array_key_exists($col, $rs[0])) {
-                $this->_data[$col] = $this->_fromDb($rs[0][$col], $col);
+        foreach ($this->_a['cols'] as $col => $description) {
+            if (array_key_exists($col, $res[0])) {
+                $this->_data[$col] = $engine->fromDb($res[0][$col], $description['type']);
             }
         }
         $this->restore();
@@ -500,6 +462,7 @@ class Pluf_Model implements JsonSerializable
      *            array|string Filter string or array given to getList
      * @see self::getList
      * @return Pluf_Model|null find model
+     * @deprecated use \Pluf\Model\Repository::getList
      */
     public function getOne($p = array())
     {
@@ -544,6 +507,7 @@ class Pluf_Model implements JsonSerializable
      *            'count': Run a count query and not a select if set to true
      * @return ArrayObject of items or through an exception if
      *         database failure
+     * @deprecated use \Pluf\Model\Repository::getList
      */
     function getList($p = array())
     {
@@ -558,117 +522,43 @@ class Pluf_Model implements JsonSerializable
             'count' => false
         );
         $p = array_merge($default, $p);
-        if (! is_null($p['view']) && ! isset($this->_a['views'][$p['view']])) {
-            throw new Exception(sprintf(__('The view "%s" is not defined.'), $p['view']));
-        }
-        $query = array(
-            'select' => $this->getSelect(),
-            'from' => $this->_a['table'],
-            'join' => '',
-            'where' => '',
-            'group' => '',
-            'having' => '',
-            'order' => '',
-            'limit' => '',
-            'props' => array()
-        );
-        if (! is_null($p['view'])) {
-            $query = array_merge($query, $this->_a['views'][$p['view']]);
-        }
-        if (! is_null($p['select'])) {
-            $query['select'] = $p['select'];
-        }
-        if (! is_null($p['group'])) {
-            $query['group'] = $p['group'];
-        }
-        if (! is_null($p['filter'])) {
-            if (is_array($p['filter'])) {
-                $p['filter'] = implode(' AND ', $p['filter']);
-            }
-            if (strlen($query['where']) > 0) {
-                $query['where'] .= ' AND ';
-            }
-            $query['where'] .= ' (' . $p['filter'] . ') ';
-        }
-        // Multi-Tenant filter
-        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            // Note: Hadi, 1395-11-26: Table should be set before tenant field.
-            // It is to avoid ambiguous problem in join tables which both have tenant field.
-            $sql = new Pluf_SQL($this->getSqlTable() . '.tenant=%s', array(
-                Pluf_Tenant::current()->id
-            ));
-            if (strlen($query['where']) > 0) {
-                $query['where'] = ' AND ' . $query['where'];
-            }
-            $query['where'] = $sql->gen() . $query['where'];
-        }
-        if (! is_null($p['order'])) {
-            if (is_array($p['order'])) {
-                $p['order'] = implode(', ', $p['order']);
-            }
-            if (strlen($query['order']) > 0 and strlen($p['order']) > 0) {
-                $query['order'] .= ', ';
-            }
-            $query['order'] .= $p['order'];
-        }
-        if (! is_null($p['start']) && is_null($p['nb'])) {
-            $p['nb'] = 10000000;
-        }
-        if (! is_null($p['start'])) {
-            if ($p['start'] != 0) {
-                $p['start'] = (int) $p['start'];
-            }
-            $p['nb'] = (int) $p['nb'];
-            $query['limit'] = 'LIMIT ' . $p['nb'] . ' OFFSET ' . $p['start'];
-        }
-        if (! is_null($p['nb']) && is_null($p['start'])) {
-            $p['nb'] = (int) $p['nb'];
-            $query['limit'] = 'LIMIT ' . $p['nb'];
-        }
-        if ($p['count'] == true) {
-            if (isset($query['select_count'])) {
-                $query['select'] = $query['select_count'];
-            } else {
-                $query['select'] = 'COUNT(*) as nb_items';
-            }
-            $query['order'] = '';
-            $query['limit'] = '';
-        }
-        $req = 'SELECT ' . $query['select'] . ' FROM ' . $this->_con->pfx . $query['from'] . ' ' . $query['join'];
-        if (strlen($query['where'])) {
-            $req .= "\n" . 'WHERE ' . $query['where'];
-        }
-        if (strlen($query['group'])) {
-            $req .= "\n" . 'GROUP BY ' . $query['group'];
-        }
-        if (strlen($query['having'])) {
-            $req .= "\n" . 'HAVING ' . $query['having'];
-        }
-        if (strlen($query['order'])) {
-            $req .= "\n" . 'ORDER BY ' . $query['order'];
-        }
-        if (strlen($query['limit'])) {
-            $req .= "\n" . $query['limit'];
-        }
-        if (false === ($rs = $this->_con->select($req))) {
-            throw new Exception($this->_con->getError());
+
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+        $query = $schema->selectListQuery($this, $p);
+
+        $rs = $engine->select($query);
+        if (false === $rs) {
+            throw new Exception($engine->getError());
         }
         if (count($rs) == 0) {
             return new ArrayObject();
         }
+
         if ($p['count'] == true) {
             return $rs;
         }
         $res = new ArrayObject();
+
+        // load properties
+        $props = [];
+        if (isset($p['view'])) {
+            $view = $this->_a['views'][$p['view']];
+            if (isset($view['props'])) {
+                $props = $view['props'];
+            }
+        }
+
+        // Convert to a lis of Objects
         foreach ($rs as $row) {
             $this->_reset();
-            foreach ($this->_a['cols'] as $col => $val) {
+            foreach ($this->_a['cols'] as $col => $description) {
                 if (isset($row[$col])) {
-                    $this->_data[$col] = $this->_fromDb($row[$col], $col);
+                    $this->_data[$col] = $engine->fromDb($row[$col], $description['type']);
                 }
             }
             // FIXME: The associated properties need to be converted too.
-            foreach ($query['props'] as $prop => $key) {
+            foreach ($props as $prop => $key) {
                 $this->_data[$key] = (isset($row[$prop])) ? $row[$prop] : null;
             }
             $this->restore();
@@ -685,6 +575,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
+     * @deprecated use \Pluf\Model\Repository::getCount
      */
     function getCount($p = array())
     {
@@ -710,9 +601,14 @@ class Pluf_Model implements JsonSerializable
      *            array Parameters, see getList() for the definition of
      *            the keys
      * @return array Array of items
+     *        
+     * @deprecated use \Pluf\Model\Repository::getRelated
      */
     function getRelated($model, $method = null, $p = array())
     {
+        if ($this->isAnonymous()) {
+            return new ArrayObject();
+        }
         $default = array(
             'view' => null,
             'filter' => null,
@@ -722,14 +618,18 @@ class Pluf_Model implements JsonSerializable
             'count' => false
         );
         $p = array_merge($default, $p);
-        if ('' == $this->_data['id']) {
-            return new ArrayObject();
+
+        if (! ($model instanceof Pluf_Model)) {
+            $model = new $model();
         }
-        $m = new $model();
+
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+
         if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
             $foreignkey = $this->_m['list'][$method][1];
             if (strlen($foreignkey) == 0) {
-                throw new \Pluf\Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
+                throw new Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
             }
             if (! is_null($p['filter'])) {
                 if (is_array($p['filter'])) {
@@ -739,30 +639,30 @@ class Pluf_Model implements JsonSerializable
             } else {
                 $p['filter'] = '';
             }
-            $p['filter'] .= $this->_con->qn($foreignkey) . '=' . $this->_toDb($this->_data['id'], 'id');
+            $p['filter'] .= $schema->qn($foreignkey) . '=' . $engine->toDb($this->_data['id'], Engine::SEQUENCE);
         } else {
-            $table = Pluf_ModelUtils::getAssocTable($this, $m);
-            if (isset($m->_a['views'][$p['view']])) {
-                $m->_a['views'][$p['view'] . '__manytomany__'] = $m->_a['views'][$p['view']];
-                if (! isset($m->_a['views'][$p['view'] . '__manytomany__']['join'])) {
-                    $m->_a['views'][$p['view'] . '__manytomany__']['join'] = '';
+            $table = $schema->getRelationTable($this, $model);
+            if (isset($model->_a['views'][$p['view']])) {
+                $model->_a['views'][$p['view'] . '__manytomany__'] = $model->_a['views'][$p['view']];
+                if (! isset($model->_a['views'][$p['view'] . '__manytomany__']['join'])) {
+                    $model->_a['views'][$p['view'] . '__manytomany__']['join'] = '';
                 }
-                if (! isset($m->_a['views'][$p['view'] . '__manytomany__']['where'])) {
-                    $m->_a['views'][$p['view'] . '__manytomany__']['where'] = '';
+                if (! isset($model->_a['views'][$p['view'] . '__manytomany__']['where'])) {
+                    $model->_a['views'][$p['view'] . '__manytomany__']['where'] = '';
                 }
             } else {
-                $m->_a['views']['__manytomany__'] = array(
+                $model->_a['views']['__manytomany__'] = array(
                     'join' => '',
                     'where' => ''
                 );
                 $p['view'] = '';
             }
-            $m->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $this->_con->qn(strtolower($m->_a['model']) . '_id') . ' = ' . $this->_con->pfx . $m->_a['table'] . '.id';
+            $model->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $schema->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $schema->getPrefix() . $model->_a['table'] . '.id';
 
-            $m->_a['views'][$p['view'] . '__manytomany__']['where'] = $this->_con->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
+            $model->_a['views'][$p['view'] . '__manytomany__']['where'] = $schema->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
             $p['view'] = $p['view'] . '__manytomany__';
         }
-        return $m->getList($p);
+        return $model->getList($p);
     }
 
     /**
@@ -770,13 +670,15 @@ class Pluf_Model implements JsonSerializable
      */
     function getSelect()
     {
-        if (isset($this->_cache['getSelect']))
+        if (isset($this->_cache['getSelect'])) {
             return $this->_cache['getSelect'];
+        }
+        $schema = $this->getEngine()->getSchema();
         $select = array();
-        $table = $this->getSqlTable();
+        $table = $schema->getTableName($this);
         foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != 'Pluf_DB_Field_Manytomany') {
-                $select[] = $table . '.' . $this->_con->qn($col) . ' AS ' . $this->_con->qn($col);
+            if ($val['type'] != Engine::MANY_TO_MANY) {
+                $select[] = $table . '.' . $schema->qn($col) . ' AS ' . $schema->qn($col);
             }
         }
         $this->_cache['getSelect'] = implode(', ', $select);
@@ -797,34 +699,23 @@ class Pluf_Model implements JsonSerializable
     function update($where = '')
     {
         $this->preSave();
-        $req = 'UPDATE ' . $this->getSqlTable() . ' SET' . "\n";
-        $fields = array();
-        $assoc = array();
-        foreach ($this->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
-            if ($col == 'id') {
-                continue;
-            } elseif ($field->type == 'manytomany') {
-                if (is_array($this->$col)) {
-                    $assoc[$val['model']] = $this->$col;
-                }
-                continue;
-            }
-            $fields[] = $this->_con->qn($col) . ' = ' . $this->_toDb($this->$col, $col);
+
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+
+        $req = $schema->updateQuery($this, $where);
+        $res = $engine->execute($req);
+        if (false === $res) {
+            throw new Exception($engine->getError());
         }
-        $req .= implode(',' . "\n", $fields);
-        if (strlen($where) > 0) {
-            $req .= ' WHERE ' . $where;
-        } else {
-            $req .= ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id');
-        }
-        $this->_con->execute($req);
-        if (false === $this->get($this->_data['id'])) {
-            return false;
-        }
-        foreach ($assoc as $model => $ids) {
-            $this->batchAssoc($model, $ids);
-        }
+
+        // if (false === $this->get($this->_data['id'])) {
+        // return false;
+        // }
+        // foreach ($assoc as $model => $ids) {
+        // $this->batchAssoc($model, $ids);
+        // }
+
         $this->postSave();
         return true;
     }
@@ -846,42 +737,21 @@ class Pluf_Model implements JsonSerializable
         if (! $raw) {
             $this->preSave(true);
         }
-        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            $this->tenant = Pluf_Tenant::current();
-        }
-        $req = 'INSERT INTO ' . $this->getSqlTable() . "\n";
-        $icols = array();
-        $ivals = array();
-        $assoc = array();
-        foreach ($this->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
-            if ($col == 'id' and ! $raw) {
-                continue;
-            } elseif ($field->type == 'manytomany') {
-                // If is a defined array, we need to associate.
-                if (is_array($this->_data[$col])) {
-                    $assoc[$val['model']] = $this->_data[$col];
-                }
-                continue;
-            }
-            $icols[] = $this->_con->qn($col);
-            $ivals[] = $this->_toDb($this->_data[$col], $col);
-        }
-        $req .= '(' . implode(', ', $icols) . ') VALUES ';
-        $req .= '(' . implode(',' . "\n", $ivals) . ')';
-        $this->_con->execute($req);
+
+        $engine = $this->getEngine();
+        $schema = $engine->getSchema();
+        $engine->execute($schema->createQuery($this));
         if (! $raw) {
-            if (false === ($id = $this->_con->getLastID())) {
-                throw new \Pluf\Exception($this->_con->getError());
+            if (false === ($id = $engine->getLastID())) {
+                throw new Exception($engine->getError());
             }
             $this->_data['id'] = $id;
         }
-        foreach ($assoc as $model => $ids) {
-            $this->batchAssoc($model, $ids);
-        }
+
         if (! $raw) {
             $this->postSave(true);
         }
+
         return true;
     }
 
@@ -1039,8 +909,7 @@ class Pluf_Model implements JsonSerializable
      */
     function _toDb($val, $col)
     {
-        $m = $this->_con->type_cast[$this->_a['cols'][$col]['type']][1];
-        return $m($val, $this->_con);
+        return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
     }
 
     /**
@@ -1057,8 +926,7 @@ class Pluf_Model implements JsonSerializable
      */
     function _fromDb($val, $col)
     {
-        $m = $this->_con->type_cast[$this->_a['cols'][$col]['type']][0];
-        return ($m == 'Pluf_DB_IdentityFromDb') ? $val : $m($val);
+        return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
     }
 
     /**
@@ -1090,7 +958,7 @@ class Pluf_Model implements JsonSerializable
      * contains custom names.
      *
      * @param string $type
-     *            Relation type: 'foreignkey' or 'manytomany'.
+     *            Relation type: Engine::FORINKEY or ENGINE::MANY_TO_MANY
      */
     protected function _setupAutomaticListMethods($type)
     {
@@ -1107,7 +975,7 @@ class Pluf_Model implements JsonSerializable
             foreach ($fkeys as $fkey => $val) {
                 $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
                 $mname = 'get_' . strtolower($mname) . '_list';
-                if ('foreignkey' === $type) {
+                if (Engine::FOREIGNKEY === $type) {
                     $this->_m['list'][$mname] = array(
                         $related,
                         $fkey
@@ -1244,6 +1112,27 @@ class Pluf_Model implements JsonSerializable
             "tags" => [],
             "children" => []
         );
+    }
+
+    /**
+     * Gets engine where this model is managed
+     *
+     *
+     * @return Engine|NULL
+     */
+    public function getEngine(): ?Engine
+    {
+        static $con = null;
+        if ($this->_con !== null) {
+            return $this->_con;
+        }
+        if ($con !== null) {
+            $this->_con = $con;
+            return $this->_con;
+        }
+        $this->_con = &Pluf::db($this);
+        $con = $this->_con;
+        return $this->_con;
     }
 }
 

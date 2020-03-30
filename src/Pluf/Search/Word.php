@@ -30,12 +30,12 @@ class Pluf_Search_Word extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true
                 ),
                 'word' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'unique' => true,
                         'size' => 150,

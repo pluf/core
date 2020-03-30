@@ -21,13 +21,13 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-class Pluf_DB_Field_Email extends Pluf_DB_Field
-{
-    public $type = 'varchar';
-    public $extra = array('size' => 200);
+// class Pluf_DB_Field_Email extends Pluf_DB_Field
+// {
+//     public $type = 'varchar';
+//     public $extra = array('size' => 200);
 
-    function formField($def, $form_field='Pluf_Form_Field_Email')
-    {
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Email')
+//     {
+//         return parent::formField($def, $form_field);
+//     }
+// }

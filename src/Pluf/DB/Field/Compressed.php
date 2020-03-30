@@ -21,22 +21,22 @@
 #
 # ***** END LICENSE BLOCK ***** */
 
-/**
- * This field will automatically inflate/deflate its content.
- *
- * This can be used to store large text bodies where you do not need
- * to directly search into the content using the standard SQL
- * functions.
- */
-class Pluf_DB_Field_Compressed extends Pluf_DB_Field
-{
-    public $type = 'blob';
+// /**
+//  * This field will automatically inflate/deflate its content.
+//  *
+//  * This can be used to store large text bodies where you do not need
+//  * to directly search into the content using the standard SQL
+//  * functions.
+//  */
+// class Pluf_DB_Field_Compressed extends Pluf_DB_Field
+// {
+//     public $type = 'blob';
 
-    function formField($def, $form_field='Pluf_Form_Field_Varchar')
-    {
-        if (!isset($def['widget'])) {
-            $def['widget'] = 'Pluf_Form_Widget_TextareaInput';
-        }
-        return parent::formField($def, $form_field);
-    }
-}
+//     function formField($def, $form_field='Pluf_Form_Field_Varchar')
+//     {
+//         if (!isset($def['widget'])) {
+//             $def['widget'] = 'Pluf_Form_Widget_TextareaInput';
+//         }
+//         return parent::formField($def, $form_field);
+//     }
+// }

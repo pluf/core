@@ -63,25 +63,25 @@ class Pluf_Session extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true
                 ),
                 'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => true
                 ),
                 'session_key' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 100
                 ),
                 'session_data' => array(
-                        'type' => 'Pluf_DB_Field_Text',
+                        'type' => 'Text',
                         'blank' => false
                 ),
                 'expire' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => false
                 )
         );

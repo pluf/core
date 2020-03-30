@@ -48,33 +48,33 @@ class Pluf_Queue extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true
                 ),
                 'version' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => true
                 ),
                 'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 150,
                         'verbose' => __('model class')
                 ),
                 'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('model id')
                 ),
                 'action' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 150,
                         'verbose' => __('action')
                 ),
                 'lock' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('lock status'),
                         'default' => 0,
@@ -85,12 +85,12 @@ class Pluf_Queue extends Pluf_Model
                         )
                 ),
                 'creation_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => true,
                         'verbose' => __('created at')
                 ),
                 'modif_dtime' => array(
-                        'type' => 'Pluf_DB_Field_Datetime',
+                        'type' => 'Datetime',
                         'blank' => true,
                         'verbose' => __('modified at')
                 )
