@@ -114,14 +114,10 @@ abstract class Schema
 
         foreach ($model->_a['cols'] as $col => $description) {
             $type = $description['type'];
-            $val = $model->_data[$col];
+            $val = $model->$col;
             if ($col == 'id' && ! $raw) {
                 continue;
             } elseif ($type === Engine::MANY_TO_MANY) {
-                // // If is a defined array, we need to associate.
-                // if (is_array($this->_data[$col])) {
-                // $assoc[$description['model']] = $this->_data[$col];
-                // }
                 continue;
             }
             $icols[] = $this->qn($col);
@@ -129,22 +125,6 @@ abstract class Schema
         }
 
         return new Pluf_SQL('INSERT INTO ' . $this->getTableName($model) . '(' . implode(',', $icols) . ') VALUES (' . implode(', ', array_fill(0, sizeof($ivals), '%s')) . ')', $ivals);
-
-        // TODO: maso, 2020 support multi query and insert
-        // $this->_con->execute($req);
-        // if (! $raw) {
-        // if (false === ($id = $this->_con->getLastID())) {
-        // throw new \Pluf\Exception($this->_con->getError());
-        // }
-        // $this->_data['id'] = $id;
-        // }
-        // foreach ($assoc as $model => $ids) {
-        // $this->batchAssoc($model, $ids);
-        // }
-        // if (! $raw) {
-        // $this->postSave(true);
-        // }
-        // return true;
     }
 
     public function selectByIdQuery(Pluf_Model $model, $id)
@@ -363,8 +343,9 @@ abstract class Schema
     public abstract function dropTableQueries(Pluf_Model $model): array;
 
     public abstract function createIndexQueries(Pluf_Model $model): array;
-    
+
     public abstract function createConstraintQueries(Pluf_Model $model): array;
+
     public abstract function dropConstraintQueries(Pluf_Model $model): array;
 
     public static function skipeName(String $name): String
