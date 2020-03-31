@@ -200,6 +200,7 @@ function Pluf_Shortcuts_GetAssociationTableName($modelName1, $modelName2)
  * @param string $modelName
  *            name of model (of type Pluf_Model)
  * @return string column name for given model as foreign key in an association table.
+ * @deprecated use Schema::getAssocField($model);
  */
 function Pluf_Shortcuts_GetForeignKeyName($modelName)
 {

@@ -47,7 +47,5 @@ class Test_ModelRecurse extends Pluf_Model
                 'graphql_name' => 'parent'
             )
         );
-        $this->_a['idx'] = array();
-        $this->_a['views'] = array();
     }
 }

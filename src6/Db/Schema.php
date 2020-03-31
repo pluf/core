@@ -1,7 +1,6 @@
 <?php
 namespace Pluf\Db;
 
-use Pluf\Exception;
 use Pluf\Options;
 use Pluf;
 use Pluf_Model;
@@ -202,9 +201,6 @@ abstract class Schema
             'count' => false
         );
         $p = array_merge($default, $p);
-        if (! is_null($p['view']) && ! isset($model->_a['views'][$p['view']])) {
-            throw new Exception(sprintf('The view "%s" is not defined.', $p['view']));
-        }
         $query = array(
             'select' => $model->getSelect(),
             'from' => $model->_a['table'],
@@ -218,7 +214,8 @@ abstract class Schema
         );
         $params = [];
         if (! is_null($p['view'])) {
-            $query = array_merge($query, $model->_a['views'][$p['view']]);
+            $mview = $model->getView($p['view']);
+            $query = array_merge($query, $mview);
         }
         if (! is_null($p['select'])) {
             $query['select'] = $p['select'];
@@ -327,7 +324,7 @@ abstract class Schema
     public function deleteRelationQuery(Pluf_Model $from, Pluf_Model $to, ?string $relationName = null): Pluf_SQL
     {
         return new Pluf_SQL('DELETE FROM ' . $this->getRelationTable($from, $to, $relationName) . //
-        'WHERE ' . $this->getAssocField($from, $relationName) . '=%s ANS ' . $this->getAssocField($to, $relationName) . '%s=%s', array(
+        ' WHERE ' . $this->getAssocField($from, $relationName) . '=%s AND ' . $this->getAssocField($to, $relationName) . '=%s', array(
             $from->id,
             $to->id
         ));
@@ -338,7 +335,7 @@ abstract class Schema
         return str_replace('\\', '_', $this->prefix . $model->_a['table']);
     }
 
-    public function getAssocField($model, $relationName): String
+    public function getAssocField($model, ?string $relationName = null): String
     {
         $name = self::skipeName(strtolower($model->_a['model']) . '_id');
         $name = $this->qn($name);
@@ -350,6 +347,8 @@ abstract class Schema
     public abstract function createTableQueries(Pluf_Model $model): array;
 
     public abstract function dropTableQueries(Pluf_Model $model): array;
+
+    public abstract function createIndexQueries(Pluf_Model $model): array;
 
     public static function skipeName(String $name): String
     {

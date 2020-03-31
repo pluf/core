@@ -51,8 +51,6 @@ class Test_RelatedToTestModel extends Pluf_Model
                 'col' => 'testmodel'
             )
         );
-        $this->_a['views'] = array();
-        parent::init();
     }
 }
 

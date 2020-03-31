@@ -151,8 +151,10 @@ class Pluf_Model implements JsonSerializable
             return;
         }
 
+        // put in catch temprory
         $this->init();
         $this->_setupMultitenantFields();
+
         foreach ($this->_a['cols'] as $col => $description) {
 
             // $field = new $val['type']('', $col);
@@ -252,9 +254,9 @@ class Pluf_Model implements JsonSerializable
      */
     function getData()
     {
-        foreach ($this->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type == Engine::MANY_TO_MANY) {
+        foreach ($this->_a['cols'] as $col => $description) {
+            // $field = new $val['type']();
+            if ($description['type'] == Engine::MANY_TO_MANY) {
                 $this->_data[$col] = array();
                 // XXX: maso, 2018: do not load many to many relation if is not required
                 $method = 'get_' . strtolower($col) . '_list';
@@ -543,7 +545,7 @@ class Pluf_Model implements JsonSerializable
         // load properties
         $props = [];
         if (isset($p['view'])) {
-            $view = $this->_a['views'][$p['view']];
+            $view = $this->getView($p['view']);
             if (isset($view['props'])) {
                 $props = $view['props'];
             }
@@ -641,26 +643,21 @@ class Pluf_Model implements JsonSerializable
             }
             $p['filter'] .= $schema->qn($foreignkey) . '=' . $engine->toDb($this->_data['id'], Engine::SEQUENCE);
         } else {
-            $table = $schema->getRelationTable($this, $model);
-            if (isset($model->_a['views'][$p['view']])) {
-                $model->_a['views'][$p['view'] . '__manytomany__'] = $model->_a['views'][$p['view']];
-                if (! isset($model->_a['views'][$p['view'] . '__manytomany__']['join'])) {
-                    $model->_a['views'][$p['view'] . '__manytomany__']['join'] = '';
-                }
-                if (! isset($model->_a['views'][$p['view'] . '__manytomany__']['where'])) {
-                    $model->_a['views'][$p['view'] . '__manytomany__']['where'] = '';
-                }
-            } else {
-                $model->_a['views']['__manytomany__'] = array(
-                    'join' => '',
-                    'where' => ''
-                );
-                $p['view'] = '';
-            }
-            $model->_a['views'][$p['view'] . '__manytomany__']['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $schema->qn(strtolower($model->_a['model']) . '_id') . ' = ' . $schema->getPrefix() . $model->_a['table'] . '.id';
+            $manyToManyView = array(
+                'join' => '',
+                'where' => ''
+            );
 
-            $model->_a['views'][$p['view'] . '__manytomany__']['where'] = $schema->qn(strtolower($this->_a['model']) . '_id') . '=' . $this->_data['id'];
-            $p['view'] = $p['view'] . '__manytomany__';
+            if ($model->hasView($p['view'])) {
+                $manyToManyView = array_merge($manyToManyView, $model->getView($p['view']));
+            }
+
+            $manyToManyView['join'] .= ' LEFT JOIN ' . $schema->getRelationTable($this, $model) . ' ON ' . $schema->getAssocField($model) . ' = ' . $schema->getTableName($model) . '.id';
+            $manyToManyView['where'] = $schema->getAssocField($this) . '=' . $this->id;
+
+            $manyToManyViewName = $p['view'] . '__manytomany__';
+            $model->setView($manyToManyViewName, $manyToManyView);
+            $p['view'] = $manyToManyViewName;
         }
         return $model->getList($p);
     }
@@ -886,19 +883,6 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * Set a view.
-     *
-     * @param
-     *            string Name of the view.
-     * @param
-     *            array Definition of the view.
-     */
-    function setView($view, $def)
-    {
-        $this->_a['views'][$view] = $def;
-    }
-
-    /**
      * Prepare the value to be put in the DB.
      *
      * @param
@@ -996,12 +980,7 @@ class Pluf_Model implements JsonSerializable
     protected function _setupMultitenantFields()
     {
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            // Add key
             $this->_a['cols']['tenant'] = $this->tenant_field;
-            // Add idx
-            foreach ($this->_a['idx'] as $col => $idx) {
-                $this->_a['idx'][$col]['col'] = 'tenant,' . $idx['col'];
-            }
         }
     }
 
@@ -1098,7 +1077,7 @@ class Pluf_Model implements JsonSerializable
     private function getFieldInfo($name, $field)
     {
         return array(
-            "type" => (new $field['type']())->type,
+            "type" => $field['type'],
             "unit" => null,
             "name" => $name,
             "title" => $name,
@@ -1133,6 +1112,77 @@ class Pluf_Model implements JsonSerializable
         $this->_con = &Pluf::db($this);
         $con = $this->_con;
         return $this->_con;
+    }
+
+    public function getView(string $name): array
+    {
+        $views = ModelUtils::loadViewsFromCache($this);
+        if (! $views) {
+            $views = $this->loadViews();
+            ModelUtils::putViewsToCache($this, $views);
+        }
+        if (! isset($views[$name])) {
+            throw new Exception('View ' . $name . ' not found in ' . $this);
+        }
+        return $views[$name];
+    }
+
+    /**
+     * Set a view.
+     *
+     * @param string $name
+     *            Name of the view.
+     * @param array $view
+     *            Definition of the view.
+     */
+    public function setView(string $name, array $view): void
+    {
+        $views = ModelUtils::loadViewsFromCache($this);
+        if (! $views) {
+            $views = $this->loadViews();
+        }
+        $views[$name] = $view;
+        ModelUtils::putViewsToCache($this, $views);
+    }
+
+    public function hasView(?string $name = null): bool
+    {
+        try {
+            if (! isset($name)) {
+                return false;
+            }
+            $this->getView($name);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Loads and return views
+     */
+    public function loadViews(): array
+    {
+        return [];
+    }
+
+    public function getIndexes(): array
+    {
+        $indexes = $this->loadIndexes();
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            foreach ($indexes as $col => $idx) {
+                $this->_a['idx'][$col]['col'] = 'tenant,' . $idx['col'];
+            }
+        }
+        return $indexes;
+    }
+
+    public function loadIndexes(): array
+    {
+        if (isset($this->_a['idx'])) {
+            return $this->_a['idx'];
+        }
+        return [];
     }
 }
 

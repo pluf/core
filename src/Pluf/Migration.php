@@ -294,7 +294,7 @@ class Pluf_Migration
             }
         }
         if (! $model->_a['mapped']) {
-            $sql = $schema->getSqlIndexes($model);
+            $sql = $schema->createIndexQueries($model);
             foreach ($sql as $query) {
                 if (false === $engine->execute($query)) {
                     throw new Exception($engine->getError());

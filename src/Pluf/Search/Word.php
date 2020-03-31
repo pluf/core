@@ -23,29 +23,28 @@
 class Pluf_Search_Word extends Pluf_Model
 {
 
-    function init ()
+    function init()
     {
         $this->_a['verbose'] = 'word';
         $this->_a['table'] = 'pluf_search_words';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'word' => array(
-                        'type' => 'Varchar',
-                        'blank' => false,
-                        'unique' => true,
-                        'size' => 150,
-                        'verbose' => __('word')
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'word' => array(
+                'type' => 'Varchar',
+                'blank' => false,
+                'unique' => true,
+                'size' => 150,
+                'verbose' => __('word')
+            )
         );
-        $this->_a['views'] = array();
     }
 
-    function __toString ()
+    function __toString()
     {
         return $this->word;
     }

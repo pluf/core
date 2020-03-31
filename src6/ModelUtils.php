@@ -1,9 +1,9 @@
 <?php
 namespace Pluf;
 
+use Pluf\Db\Engine;
 use Pluf;
 use Pluf_Model;
-use Pluf\Db\Engine;
 
 /**
  * Utilities to work with model
@@ -17,6 +17,8 @@ class ModelUtils
     public const MODEL_CACHE_KEY = '_PX_models_init_cache';
 
     public const MODEL_KEY = '_PX_models';
+
+    public const MODEL_VIEW_CACHE_KEY = '_PX_models_views';
 
     public static function getModelCacheKey(Pluf_Model $model)
     {
@@ -162,6 +164,21 @@ class ModelUtils
             return [];
         }
         return $moduel['model'];
+    }
+
+    public static function loadViewsFromCache(Pluf_Model $model)
+    {
+        $key = self::getModelCacheKey($model);
+        if (isset($GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key])) {
+            return $GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key];
+        }
+        return false;
+    }
+
+    public static function putViewsToCache(Pluf_Model $model, array $views)
+    {
+        $key = self::getModelCacheKey($model);
+        $GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key] = $views;
     }
 }
 

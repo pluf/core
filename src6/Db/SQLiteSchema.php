@@ -3,7 +3,6 @@ namespace Pluf\Db;
 
 use Pluf\Options;
 use Pluf;
-use Pluf_DB_Schema;
 use Pluf_Model;
 
 /**
@@ -175,35 +174,52 @@ class SQLiteSchema extends Schema
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    function getSqlIndexes($model)
+    public function createIndexQueries(Pluf_Model $model): array
     {
         $index = array();
-        foreach ($model->_a['idx'] as $idx => $val) {
+        $idxs = $model->getIndexes();
+        $schema = $model->getEngine()->getSchema();
+        $table = $schema->getTableName($model);
+        foreach ($idxs as $idx => $val) {
             if (! isset($val['col'])) {
                 $val['col'] = $idx;
             }
             $unique = (isset($val['type']) && ($val['type'] == 'unique')) ? 'UNIQUE ' : '';
-            $index[$this->prefix . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, $this->prefix . $model->_a['table'] . '_' . $idx, $this->prefix . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this));
+            $index[$this->prefix . $model->_a['table'] . '_' . $idx] = 
+            sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, 
+                $table . '_' . $idx, 
+                $table, 
+                $schema::quoteColumn($val['col'], $this));
         }
         foreach ($model->_a['cols'] as $col => $description) {
             // $field = new $val['type']();
             $type = $description['type'];
             if ($type == Engine::FOREIGNKEY) {
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey'] = sprintf('CREATE INDEX %s ON %s (%s);', $this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey_idx', $this->prefix . $model->_a['table'], Pluf_DB_Schema::quoteColumn($col, $this));
+                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey'] = 
+                sprintf('CREATE INDEX %s ON %s (%s);', 
+                    $table . '_' . $col . '_foreignkey_idx', 
+                    $table, 
+                    $schema::quoteColumn($col, $this));
             }
-            if (isset($val['unique']) and $val['unique'] == true) {
+            if (isset($description['unique']) and $description['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
                 $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->prefix . $model->_a['table'] . '_' . $col . '_unique_idx', $this->prefix . $model->_a['table'], Pluf_DB_Schema::quoteColumn($columns, $this));
+                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_unique'] = 
+                sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', 
+                    $table . '_' . $col . '_unique_idx', 
+                    $table, 
+                    $schema::quoteColumn($columns, $this));
             }
         }
         return $index;
     }
 
     /**
+     *
      * @deprecated
      */
-    public function getSqlDelete($model): array{
+    public function getSqlDelete($model): array
+    {
         return $this->dropTableQueries($model);
     }
 

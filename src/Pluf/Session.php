@@ -45,7 +45,7 @@ class Pluf_Session extends Pluf_Model
      *
      * @see Pluf_Model::_init()
      */
-    function _init ()
+    function _init()
     {
         $this->cookie_name = Pluf::f('session_cookie_id', 'sessionid');
         parent::_init();
@@ -56,43 +56,42 @@ class Pluf_Session extends Pluf_Model
      *
      * @see Pluf_Model::init()
      */
-    function init ()
+    function init()
     {
         $this->_a['table'] = 'sessions';
         $this->_a['verbose'] = 'sessions';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Sequence',
-                        // It is automatically added.
-                        'blank' => true
-                ),
-                'version' => array(
-                        'type' => 'Integer',
-                        'blank' => true
-                ),
-                'session_key' => array(
-                        'type' => 'Varchar',
-                        'blank' => false,
-                        'size' => 100
-                ),
-                'session_data' => array(
-                        'type' => 'Text',
-                        'blank' => false
-                ),
-                'expire' => array(
-                        'type' => 'Datetime',
-                        'blank' => false
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Sequence',
+                // It is automatically added.
+                'blank' => true
+            ),
+            'version' => array(
+                'type' => 'Integer',
+                'blank' => true
+            ),
+            'session_key' => array(
+                'type' => 'Varchar',
+                'blank' => false,
+                'size' => 100
+            ),
+            'session_data' => array(
+                'type' => 'Text',
+                'blank' => false
+            ),
+            'expire' => array(
+                'type' => 'Datetime',
+                'blank' => false
+            )
         );
         $this->_a['idx'] = array(
-                'session_key_idx' => array(
-                        'type' => 'unique',
-                        'col' => 'session_key'
-                )
+            'session_key_idx' => array(
+                'type' => 'unique',
+                'col' => 'session_key'
+            )
         );
         $this->_admin = array();
-        $this->_a['views'] = array();
     }
 
     /**
@@ -108,7 +107,7 @@ class Pluf_Session extends Pluf_Model
      *            داده مورد نظر. در صورتی که مقدار آن تهی باشد به معنی
      *            حذف است.
      */
-    function setData ($key, $value = null)
+    function setData($key, $value = null)
     {
         if (is_null($value)) {
             unset($this->data[$key]);
@@ -125,7 +124,7 @@ class Pluf_Session extends Pluf_Model
      * این فراخوانی
      * برگردانده خواهد شد.
      */
-    function getData ($key = null, $default = '')
+    function getData($key = null, $default = '')
     {
         if (is_null($key)) {
             return parent::getData();
@@ -136,13 +135,15 @@ class Pluf_Session extends Pluf_Model
             return $default;
         }
     }
-    
+
     /**
      * Check if value is set in session
+     *
      * @param string $key
      * @return boolean
      */
-    public function containsKey($key){
+    public function containsKey($key)
+    {
         return isset($this->data[$key]);
     }
 
@@ -151,7 +152,7 @@ class Pluf_Session extends Pluf_Model
      *
      * تمام داده‌های ذخیره شده در نشست را پاک می‌کند.
      */
-    function clear ()
+    function clear()
     {
         $this->data = array();
         $this->touched = true;
@@ -162,16 +163,13 @@ class Pluf_Session extends Pluf_Model
      *
      * از این کلید برای دستیابی به داده‌ها استفاده می‌شود.
      */
-    function getNewSessionKey ()
+    function getNewSessionKey()
     {
         while (1) {
-            $key = md5(
-                    microtime() . rand(0, 123456789) . rand(0, 123456789) .
-                             Pluf::f('secret_key'));
-            $sess = $this->getList(
-                    array(
-                            'filter' => 'session_key=\'' . $key . '\''
-                    ));
+            $key = md5(microtime() . rand(0, 123456789) . rand(0, 123456789) . Pluf::f('secret_key'));
+            $sess = $this->getList(array(
+                'filter' => 'session_key=\'' . $key . '\''
+            ));
             if (count($sess) == 0) {
                 break;
             }
@@ -182,7 +180,7 @@ class Pluf_Session extends Pluf_Model
     /**
      * Presave/create function to encode data into session_data.
      */
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         $this->session_data = serialize($this->data);
         if ($this->session_key == '') {
@@ -194,7 +192,7 @@ class Pluf_Session extends Pluf_Model
     /**
      * Restore function to decode the session_data into $this->data.
      */
-    function restore ()
+    function restore()
     {
         $this->data = unserialize($this->session_data);
     }
@@ -202,17 +200,17 @@ class Pluf_Session extends Pluf_Model
     /**
      * Create a test cookie.
      */
-    public function createTestCookie ()
+    public function createTestCookie()
     {
         $this->set_test_cookie = true;
     }
 
-    public function getTestCookie ()
+    public function getTestCookie()
     {
         return ($this->test_cookie == $this->test_cookie_value);
     }
 
-    public function deleteTestCookie ()
+    public function deleteTestCookie()
     {
         $this->set_test_cookie = true;
         $this->test_cookie_value = null;

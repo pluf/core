@@ -129,7 +129,6 @@ class Pluf_Tenant extends Pluf_Model
                 'readable' => true
             )
         );
-        $this->_a['views'] = array();
     }
 
     /**
