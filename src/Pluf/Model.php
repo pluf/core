@@ -1171,7 +1171,7 @@ class Pluf_Model implements JsonSerializable
         $indexes = $this->loadIndexes();
         if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
             foreach ($indexes as $col => $idx) {
-                $this->_a['idx'][$col]['col'] = 'tenant,' . $idx['col'];
+                $indexes[$col]['col'] = 'tenant,' . $idx['col'];
             }
         }
         return $indexes;
