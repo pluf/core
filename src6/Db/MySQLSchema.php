@@ -1,6 +1,7 @@
 <?php
 namespace Pluf\Db;
 
+use Pluf\Options;
 use Pluf;
 use Pluf_DB_Schema;
 use Pluf_Model;
@@ -13,71 +14,211 @@ class MySQLSchema extends Schema
      * Mapping of the fields.
      */
     public $mappings = array(
-        'varchar' => 'varchar(%s)',
-        'sequence' => 'mediumint(9) unsigned not null auto_increment',
-        'boolean' => 'bool',
-        'date' => 'date',
-        'datetime' => 'datetime',
+        Engine::VARCHAR => 'varchar(%s)',
+        Engine::SEQUENCE => 'mediumint(9) unsigned not null auto_increment',
+        Engine::BOOLEAN => 'bool',
+        Engine::DATE => 'date',
+        Engine::DATETIME => 'datetime',
         Engine::FILE => 'varchar(250)',
         Engine::MANY_TO_MANY => null,
         Engine::FOREIGNKEY => 'mediumint(9) unsigned',
-        'text' => 'longtext',
-        'html' => 'longtext',
-        'time' => 'time',
-        'integer' => 'integer',
-        'email' => 'varchar(150)',
-        'password' => 'varchar(150)',
-        'float' => 'numeric(%s, %s)',
-        'blob' => 'blob',
-        // GEO types
-        'point' => 'POINT',
-        'geometry' => 'GEOMETRY',
-        'polygon' => 'POLYGON'
+        Engine::TEXT => 'longtext',
+        Engine::HTML => 'longtext',
+        Engine::TIME => 'time',
+        Engine::INTEGER => 'integer',
+        Engine::EMAIL => 'varchar(150)',
+        Engine::PASSWORD => 'varchar(150)',
+        Engine::FLOAT => 'numeric(%s, %s)',
+        Engine::BLOB => 'blob',
+        Engine::GEOMETRY => 'GEOMETRY'
     );
 
     public $defaults = array(
         Engine::VARCHAR => "''",
         Engine::SEQUENCE => null,
-        Engine::BOOLEAN => 1,
+        Engine::SEQUENCE => 1,
         Engine::DATE => 0,
         Engine::DATETIME => 0,
         Engine::FILE => "''",
-        Engine::MANY_TO_MANY=> null,
+        Engine::MANY_TO_MANY => null,
         Engine::FOREIGNKEY => 0,
-        'text' => "''",
-        'html' => "''",
-        'time' => 0,
-        'integer' => 0,
-        'email' => "''",
-        'password' => "''",
-        'float' => 0.0,
-        'blob' => "''",
-
-        // GEO types
-        'point' => null,
-        'geometry' => null,
-        'polygon' => null
+        Engine::TEXT => "''",
+        Engine::HTML => "''",
+        Engine::TIME => 0,
+        Engine::INTEGER => 0,
+        Engine::EMAIL => "''",
+        Engine::PASSWORD => "''",
+        Engine::FLOAT => 0.0,
+        Engine::BLOB => "''",
+        Engine::GEOMETRY => null
     );
 
     private $con = null;
 
     /**
-     * Creates new instance
+     * Creates new instance of the schema
      *
-     * @param Object $con
+     * @param Engine $con
+     * @param Options $options
      */
-    function __construct($con)
+    function __construct(Engine $con, ?Options $options = null)
     {
-        $this->con = $con;
+        parent::__construct($con, $options);
+
+        // TODO: maso, 2020: load options
     }
 
     /**
-     * Creates sql for DB
+     * Workaround for <http://bugs.mysql.com/bug.php?id=13942> which limits the
+     * length of foreign key identifiers to 64 characters.
      *
-     * @param Pluf_Model $model
-     * @return string[]
+     * @param
+     *            string
+     * @return string
      */
-    function getSqlCreate(Pluf_Model $model)
+    function getShortenedFKeyName($name)
+    {
+        if (strlen($name) <= 64) {
+            return $name;
+        }
+        return substr($name, 0, 55) . '_' . substr(md5($name), 0, 8);
+    }
+
+    /**
+     * Get the SQL to create the constraints for the given model
+     *
+     * @param
+     *            Object Model
+     * @return array Array of SQL strings ready to execute.
+     */
+    function getSqlCreateConstraints($model)
+    {
+        $table = $this->prefix . $model->_a['table'];
+        $constraints = array();
+        $alter_tbl = 'ALTER TABLE ' . $table;
+        $cols = $model->_a['cols'];
+        $manytomany = array();
+
+        foreach ($cols as $col => $val) {
+            $field = new $val['type']();
+            // remember these for later
+            if ($field->type == 'manytomany') {
+                $manytomany[] = $col;
+            }
+            if ($field->type == Engine::FOREIGNKEY) {
+                // Add the foreignkey constraints
+                $referto = new $val['model']();
+                $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey') . '
+                    FOREIGN KEY (' . $this->qn($col) . ')
+                    REFERENCES ' . $this->prefix . $referto->_a['table'] . ' (id)
+                    ON DELETE NO ACTION ON UPDATE NO ACTION';
+            }
+        }
+
+        // Now for the many to many
+        foreach ($manytomany as $many) {
+            $omodel = new $cols[$many]['model']();
+            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+
+            $alter_tbl = 'ALTER TABLE ' . $table;
+            $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1') . '
+                FOREIGN KEY (' . strtolower($model->_a['model']) . '_id)
+                REFERENCES ' . $this->prefix . $model->_a['table'] . ' (id)
+                ON DELETE NO ACTION ON UPDATE NO ACTION';
+            $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2') . '
+                FOREIGN KEY (' . strtolower($omodel->_a['model']) . '_id)
+                REFERENCES ' . $this->prefix . $omodel->_a['table'] . ' (id)
+                ON DELETE NO ACTION ON UPDATE NO ACTION';
+        }
+        return $constraints;
+    }
+
+    /**
+     * Get the SQL to drop the constraints for the given model
+     *
+     * @param
+     *            Object Model
+     * @return array Array of SQL strings ready to execute.
+     */
+    function getSqlDeleteConstraints($model)
+    {
+        $table = $this->prefix . $model->_a['table'];
+        $constraints = array();
+        $alter_tbl = 'ALTER TABLE ' . $table;
+        $cols = $model->_a['cols'];
+        $manytomany = array();
+
+        foreach ($cols as $col => $val) {
+            $field = new $val['type']();
+            // remember these for later
+            if ($field->type == 'manytomany') {
+                $manytomany[] = $col;
+            }
+            if ($field->type == Engine::FOREIGNKEY) {
+                // Add the foreignkey constraints
+                // $referto = new $val['model']();
+                $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey');
+            }
+        }
+
+        // Now for the many to many
+        foreach ($manytomany as $many) {
+            $omodel = new $cols[$many]['model']();
+            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $alter_tbl = 'ALTER TABLE ' . $table;
+            $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1');
+            $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2');
+        }
+        return $constraints;
+    }
+
+    /**
+     * Quote the column name.
+     *
+     * @param
+     *            string Name of the column
+     * @return string Escaped name
+     */
+    function qn(string $col): string
+    {
+        return '`' . $col . '`';
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Db\Schema::dropTableQueries()
+     */
+    public function dropTableQueries(Pluf_Model $model): array
+    {
+        $cols = $model->_a['cols'];
+        $manytomany = array();
+        $sql = 'DROP TABLE IF EXISTS `' . $this->prefix . $model->_a['table'] . '`';
+
+        foreach ($cols as $col => $val) {
+            $field = new $val['type']();
+            if ($field->type == 'manytomany') {
+                $manytomany[] = $col;
+            }
+        }
+
+        // Now for the many to many
+        foreach ($manytomany as $many) {
+            $omodel = new $cols[$many]['model']();
+            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $sql .= ', `' . $table . '`';
+        }
+        return array(
+            $sql
+        );
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Db\Schema::createTableQueries()
+     */
+    public function createTableQueries(Pluf_Model $model): array
     {
         $tables = array();
         $cols = $model->_a['cols'];
@@ -149,14 +290,7 @@ class MySQLSchema extends Schema
         return $tables;
     }
 
-    /**
-     * دستور معادل برای ایجاد اندیس‌ها را تولید می‌کند.
-     *
-     * @param
-     *            Object Model
-     * @return array Array of SQL strings ready to execute.
-     */
-    function getSqlIndexes($model)
+    public function createIndexQueries(Pluf_Model $model): array
     {
         $index = array();
         foreach ($model->_a['idx'] as $idx => $val) {
@@ -181,153 +315,6 @@ class MySQLSchema extends Schema
             }
         }
         return $index;
-    }
-
-    /**
-     * Workaround for <http://bugs.mysql.com/bug.php?id=13942> which limits the
-     * length of foreign key identifiers to 64 characters.
-     *
-     * @param
-     *            string
-     * @return string
-     */
-    function getShortenedFKeyName($name)
-    {
-        if (strlen($name) <= 64) {
-            return $name;
-        }
-        return substr($name, 0, 55) . '_' . substr(md5($name), 0, 8);
-    }
-
-    /**
-     * Get the SQL to create the constraints for the given model
-     *
-     * @param
-     *            Object Model
-     * @return array Array of SQL strings ready to execute.
-     */
-    function getSqlCreateConstraints($model)
-    {
-        $table = $this->prefix . $model->_a['table'];
-        $constraints = array();
-        $alter_tbl = 'ALTER TABLE ' . $table;
-        $cols = $model->_a['cols'];
-        $manytomany = array();
-
-        foreach ($cols as $col => $val) {
-            $field = new $val['type']();
-            // remember these for later
-            if ($field->type == 'manytomany') {
-                $manytomany[] = $col;
-            }
-            if ($field->type == Engine::FOREIGNKEY) {
-                // Add the foreignkey constraints
-                $referto = new $val['model']();
-                $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey') . '
-                    FOREIGN KEY (' . $this->qn($col) . ')
-                    REFERENCES ' . $this->prefix . $referto->_a['table'] . ' (id)
-                    ON DELETE NO ACTION ON UPDATE NO ACTION';
-            }
-        }
-
-        // Now for the many to many
-        foreach ($manytomany as $many) {
-            $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
-
-            $alter_tbl = 'ALTER TABLE ' . $table;
-            $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1') . '
-                FOREIGN KEY (' . strtolower($model->_a['model']) . '_id)
-                REFERENCES ' . $this->prefix . $model->_a['table'] . ' (id)
-                ON DELETE NO ACTION ON UPDATE NO ACTION';
-            $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2') . '
-                FOREIGN KEY (' . strtolower($omodel->_a['model']) . '_id)
-                REFERENCES ' . $this->prefix . $omodel->_a['table'] . ' (id)
-                ON DELETE NO ACTION ON UPDATE NO ACTION';
-        }
-        return $constraints;
-    }
-
-    /**
-     * Get the SQL to drop the tables corresponding to the model.
-     *
-     * @param
-     *            Object Model
-     * @return string SQL string ready to execute.
-     */
-    function getSqlDelete($model)
-    {
-        $cols = $model->_a['cols'];
-        $manytomany = array();
-        $sql = 'DROP TABLE IF EXISTS `' . $this->prefix . $model->_a['table'] . '`';
-
-        foreach ($cols as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type == 'manytomany') {
-                $manytomany[] = $col;
-            }
-        }
-
-        // Now for the many to many
-        foreach ($manytomany as $many) {
-            $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
-            $sql .= ', `' . $table . '`';
-        }
-        return array(
-            $sql
-        );
-    }
-
-    /**
-     * Get the SQL to drop the constraints for the given model
-     *
-     * @param
-     *            Object Model
-     * @return array Array of SQL strings ready to execute.
-     */
-    function getSqlDeleteConstraints($model)
-    {
-        $table = $this->prefix . $model->_a['table'];
-        $constraints = array();
-        $alter_tbl = 'ALTER TABLE ' . $table;
-        $cols = $model->_a['cols'];
-        $manytomany = array();
-
-        foreach ($cols as $col => $val) {
-            $field = new $val['type']();
-            // remember these for later
-            if ($field->type == 'manytomany') {
-                $manytomany[] = $col;
-            }
-            if ($field->type == Engine::FOREIGNKEY) {
-                // Add the foreignkey constraints
-                // $referto = new $val['model']();
-                $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey');
-            }
-        }
-
-        // Now for the many to many
-        foreach ($manytomany as $many) {
-            $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
-            $alter_tbl = 'ALTER TABLE ' . $table;
-            $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1');
-            $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2');
-        }
-        return $constraints;
-    }
-
-    /**
-     * Quote the column name.
-     *
-     * @param
-     *            string Name of the column
-     * @return string Escaped name
-     */
-    function qn($col)
-    {
-        return '`' . $col . '`';
     }
 }
 

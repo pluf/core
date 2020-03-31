@@ -190,5 +190,8 @@ class MySQLEngine extends Engine
     {
         return '<Pluf_DB_MySQL(' . $this->con_id . ')>';
     }
+    public function isLive(): bool
+    {}
+
 }
 

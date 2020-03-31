@@ -342,10 +342,24 @@ abstract class Schema
         return $name;
     }
 
+    /**
+     * Quote the column name.
+     *
+     * @param
+     *            string Name of the column
+     * @return string Escaped name
+     */
     public abstract function qn(string $name): string;
 
     public abstract function createTableQueries(Pluf_Model $model): array;
 
+    /**
+     * Get the SQL to drop the tables corresponding to the model.
+     *
+     * @param Pluf_Model $model
+     *            Model to create sql for
+     * @return array SQL strings ready to execute.
+     */
     public abstract function dropTableQueries(Pluf_Model $model): array;
 
     public abstract function createIndexQueries(Pluf_Model $model): array;
