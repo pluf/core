@@ -91,7 +91,7 @@ class MySQLSchema extends Schema
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    function getSqlCreateConstraints($model)
+    public function createConstraintQueries(Pluf_Model $model): array
     {
         $table = $this->prefix . $model->_a['table'];
         $constraints = array();
@@ -100,9 +100,9 @@ class MySQLSchema extends Schema
         $manytomany = array();
 
         foreach ($cols as $col => $val) {
-            $field = new $val['type']();
+            $type = $val['type'];
             // remember these for later
-            if ($field->type == 'manytomany') {
+            if ($type == Engine::MANY_TO_MANY) {
                 $manytomany[] = $col;
             }
             if ($field->type == Engine::FOREIGNKEY) {
@@ -110,7 +110,7 @@ class MySQLSchema extends Schema
                 $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey') . '
                     FOREIGN KEY (' . $this->qn($col) . ')
-                    REFERENCES ' . $this->prefix . $referto->_a['table'] . ' (id)
+                    REFERENCES ' . $this->getTableName($referto) . ' (id)
                     ON DELETE NO ACTION ON UPDATE NO ACTION';
             }
         }
@@ -118,16 +118,17 @@ class MySQLSchema extends Schema
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $table = $this->getRelationTable($model, $omodel);
+            $modelTable = $this->getTableName($model);
 
             $alter_tbl = 'ALTER TABLE ' . $table;
             $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1') . '
-                FOREIGN KEY (' . strtolower($model->_a['model']) . '_id)
-                REFERENCES ' . $this->prefix . $model->_a['table'] . ' (id)
+                FOREIGN KEY (' . $this->getAssocField($model) . ')
+                REFERENCES ' . $modelTable . ' (id)
                 ON DELETE NO ACTION ON UPDATE NO ACTION';
             $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2') . '
-                FOREIGN KEY (' . strtolower($omodel->_a['model']) . '_id)
-                REFERENCES ' . $this->prefix . $omodel->_a['table'] . ' (id)
+                FOREIGN KEY (' . $this->getAssocField($omodel) . ')
+                REFERENCES ' . $this->getTableName($omodel) . ' (id)
                 ON DELETE NO ACTION ON UPDATE NO ACTION';
         }
         return $constraints;
@@ -140,7 +141,7 @@ class MySQLSchema extends Schema
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    function getSqlDeleteConstraints($model)
+    public function dropConstraintQueries(Pluf_Model $model): array
     {
         $table = $this->prefix . $model->_a['table'];
         $constraints = array();
@@ -149,12 +150,12 @@ class MySQLSchema extends Schema
         $manytomany = array();
 
         foreach ($cols as $col => $val) {
-            $field = new $val['type']();
             // remember these for later
-            if ($field->type == 'manytomany') {
+            $type = $val['type'];
+            if ($type == Engine::MANY_TO_MANY) {
                 $manytomany[] = $col;
             }
-            if ($field->type == Engine::FOREIGNKEY) {
+            if ($type == Engine::FOREIGNKEY) {
                 // Add the foreignkey constraints
                 // $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey');
@@ -181,7 +182,12 @@ class MySQLSchema extends Schema
      */
     function qn(string $col): string
     {
-        return '`' . $col . '`';
+        $cols = explode(',', $col);
+        $colArray = array();
+        foreach($cols as $myCol){
+            $colsArray[] = '`' . trim($myCol) . '`';
+        }
+        return implode(',', $colsArray);
     }
 
     /**
@@ -192,12 +198,12 @@ class MySQLSchema extends Schema
     public function dropTableQueries(Pluf_Model $model): array
     {
         $cols = $model->_a['cols'];
+        $modelTable = $this->getTableName($model);
         $manytomany = array();
-        $sql = 'DROP TABLE IF EXISTS `' . $this->prefix . $model->_a['table'] . '`';
+        $sql = 'DROP TABLE IF EXISTS `' . $modelTable . '`';
 
         foreach ($cols as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type == 'manytomany') {
+            if ($val['type'] == Engine::MANY_TO_MANY) {
                 $manytomany[] = $col;
             }
         }
@@ -205,7 +211,7 @@ class MySQLSchema extends Schema
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $table = $this->getRelationTable($model, $omodel);
             $sql .= ', `' . $table . '`';
         }
         return array(
@@ -226,36 +232,37 @@ class MySQLSchema extends Schema
         $sql = 'CREATE TABLE `' . $this->prefix . $model->_a['table'] . '` (';
 
         foreach ($cols as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type != 'manytomany') {
-                $sql .= "\n" . $this->qn($col) . ' ';
-                $_tmp = $this->mappings[$field->type];
-                if ($field->type == 'varchar') {
+//             $field = new $val['type']();
+            $type = $val['type'];
+            if ($type != Engine::MANY_TO_MANY) {
+                $sql .= $this->qn($col) . ' ';
+                $_tmp = $this->mappings[$type];
+                if ($type == Engine::VARCHAR) {
                     if (isset($val['size'])) {
-                        $_tmp = sprintf($this->mappings['varchar'], $val['size']);
+                        $_tmp = sprintf($this->mappings[$type], $val['size']);
                     } else {
-                        $_tmp = sprintf($this->mappings['varchar'], '150');
+                        $_tmp = sprintf($this->mappings[$type], '150');
                     }
                 }
-                if ($field->type == 'float') {
+                if ($type == Engine::FLOAT) {
                     if (! isset($val['max_digits'])) {
                         $val['max_digits'] = 32;
                     }
                     if (! isset($val['decimal_places'])) {
                         $val['decimal_places'] = 8;
                     }
-                    $_tmp = sprintf($this->mappings['float'], $val['max_digits'], $val['decimal_places']);
+                    $_tmp = sprintf($this->mappings[$type], $val['max_digits'], $val['decimal_places']);
                 }
                 $sql .= $_tmp;
                 if (empty($val['is_null'])) {
                     $sql .= ' NOT NULL';
                 }
-                if ($field->type != 'text' && $field->type != 'blob' && $field->type != 'geometry' && $field->type != 'polygon') {
+                if ($type != Engine::TEXT && $type != Engine::BLOB && $type != Engine::GEOMETRY) {
                     if (isset($val['default'])) {
                         $sql .= ' default ';
                         $sql .= $model->_toDb($val['default'], $col);
-                    } elseif ($field->type != 'sequence' && $field->type != 'point') {
-                        $sql .= ' default ' . $this->defaults[$field->type];
+                    } elseif ($type != Engine::SEQUENCE) {
+                        $sql .= ' default ' . $this->defaults[$type];
                     }
                 }
                 $sql .= ',';
@@ -263,7 +270,7 @@ class MySQLSchema extends Schema
                 $manytomany[] = $col;
             }
         }
-        $sql .= "\n" . 'PRIMARY KEY (`id`))';
+        $sql .= ' PRIMARY KEY (`id`))';
         $engine = 'InnoDB';
         if (key_exists('engine', $model->_a)) {
             $engine = $model->_a['engine'];
@@ -280,10 +287,10 @@ class MySQLSchema extends Schema
             $rb = Pluf_ModelUtils::getAssocField($omodel);
 
             $sql = 'CREATE TABLE `' . $table . '` (';
-            $sql .= "\n" . $ra . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
-            $sql .= "\n" . $rb . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
-            $sql .= "\n" . 'PRIMARY KEY (' . $ra . ', ' . $rb . ')';
-            $sql .= "\n" . ') ENGINE=InnoDB';
+            $sql .= $ra . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
+            $sql .= $rb . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
+            $sql .= 'PRIMARY KEY (' . $ra . ', ' . $rb . ')';
+            $sql .= ') ENGINE=InnoDB';
             $sql .= ' DEFAULT CHARSET=utf8;';
             $tables[$table] = $sql;
         }
@@ -293,7 +300,9 @@ class MySQLSchema extends Schema
     public function createIndexQueries(Pluf_Model $model): array
     {
         $index = array();
-        foreach ($model->_a['idx'] as $idx => $val) {
+        $indexes = $model->getIndexes();
+        $modelTable = $this->getTableName($model);
+        foreach ($indexes as $idx => $val) {
             if (! isset($val['col'])) {
                 $val['col'] = $idx;
             }
@@ -301,17 +310,23 @@ class MySQLSchema extends Schema
             if (isset($val['type']) && strcasecmp($val['type'], 'normal') != 0) {
                 $type = $val['type'];
             }
-            $index[$this->prefix . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %s INDEX `%s` ON `%s` (%s);', $type, $idx, $this->prefix . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$modelTable . '_' . $idx] = 
+                sprintf('CREATE %s INDEX `%s` ON `%s` (%s);', 
+                    $type, $idx, $modelTable, $this->qn($val['col']));
         }
         foreach ($model->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
-            if ($field->type == Engine::FOREIGNKEY) {
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey'] = sprintf('CREATE INDEX `%s` ON `%s` (`%s`);', $col . '_foreignkey_idx', $this->prefix . $model->_a['table'], $col);
+            $type = $val['type'];
+            if ($type == Engine::FOREIGNKEY) {
+                $index[$modelTable . '_' . $col . '_foreignkey'] = 
+                    sprintf('CREATE INDEX `%s` ON `%s` (`%s`);', 
+                        $col . '_foreignkey_idx', $modelTable, $col);
             }
-            if (isset($val['unique']) and $val['unique'] == true) {
+            if (isset($val['unique']) && $val['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
                 $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX `%s` ON `%s` (%s);', $col . '_unique_idx', $this->prefix . $model->_a['table'], Pluf_DB_Schema::quoteColumn($columns, $this->con));
+                $index[$modelTable . '_' . $col . '_unique'] = 
+                    sprintf('CREATE UNIQUE INDEX `%s` ON `%s` (%s);', 
+                        $col . '_unique_idx', $modelTable, $this->qn($columns));
             }
         }
         return $index;

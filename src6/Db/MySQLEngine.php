@@ -34,7 +34,7 @@ class MySQLEngine extends Engine
         if (! $this->con_id) {
             $this->throwError();
         }
-        $this->database($options->dbname);
+        $this->database($options->database);
         $this->execute('SET NAMES \'utf8\'');
     }
 
@@ -66,9 +66,13 @@ class MySQLEngine extends Engine
         return false;
     }
 
-    function select($query)
+    function select($queryObj)
     {
-        $this->debug($query);
+        $query = $queryObj;
+        $myModel = 'Pluf_SQL';
+        if ($queryObj instanceof $myModel) {
+            $query = $queryObj->gen($this);
+        }
         $cur = mysqli_query($this->con_id, $query);
         if ($cur) {
             $res = array();
@@ -87,8 +91,13 @@ class MySQLEngine extends Engine
      * @param String $query
      * @return boolean true if is success
      */
-    function execute($query)
+    function execute($queryObj)
     {
+        $query = $queryObj;
+        $myModel = 'Pluf_SQL';
+        if ($queryObj instanceof $myModel) {
+            $query = $queryObj->gen($this);
+        }
         $cur = mysqli_query($this->con_id, $query);
         if (! $cur) {
             $this->throwError();
@@ -96,7 +105,7 @@ class MySQLEngine extends Engine
         return true;
     }
 
-    function getLastID()
+    function getLastID() : int
     {
         return (int) mysqli_insert_id($this->con_id);
     }
@@ -113,9 +122,6 @@ class MySQLEngine extends Engine
             $message = mysqli_error($this->con_id);
         } else {
             $message = mysqli_error();
-        }
-        if (Pluf::f('debug', false)) {
-            $message = $message . ' - ' . $this->lastquery;
         }
         return $message;
     }
@@ -191,7 +197,9 @@ class MySQLEngine extends Engine
         return '<Pluf_DB_MySQL(' . $this->con_id . ')>';
     }
     public function isLive(): bool
-    {}
+    {
+        return true;
+    }
 
 }
 

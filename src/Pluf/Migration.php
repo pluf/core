@@ -254,11 +254,14 @@ class Pluf_Migration
             throw new Exception('Module file not found in path');
         }
         $engine = Pluf::db();
+        $schema = $engine->getSchema();
         // Create modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
             foreach ($models as $model) {
-                self::createTables($engine, $engine->getSchema(), new $model());
+                $modelObj = new $model();
+                self::createTables($engine, $engine->getSchema(), $modelObj);
+                // self::createConstraints($engine, $engine->getSchema(), $modelObj);
             }
         }
         return true;
@@ -426,9 +429,9 @@ class Pluf_Migration
         // Delete modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
-            foreach ($models as $model) {
-                self::dropConstraints($engine, $schema, new $model());
-            }
+//             foreach ($models as $model) {
+//                 self::dropConstraints($engine, $schema, new $model());
+//             }
             foreach ($models as $model) {
                 self::dropTables($engine, $schema, new $model());
             }
