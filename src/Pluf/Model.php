@@ -188,18 +188,8 @@ class Pluf_Model implements JsonSerializable
                 }
             }
 
-            // foreach ($field->methods as $method) {
-            // $this->_m['extra'][$method[0]] = array(
-            // $col_lower,
-            // $method[1]
-            // );
-            // }
-
             if (array_key_exists('default', $description)) {
                 $this->_data[$col] = $description['default'];
-            } else {
-                // TODO: hadi 1398-09-27: I think we should set an appropriate default value for each type (ex 0 for numerical types and null for nullable fields).
-                $this->_data[$col] = '';
             }
         }
 
@@ -341,7 +331,14 @@ class Pluf_Model implements JsonSerializable
      */
     function __get($prop)
     {
-        return (array_key_exists($prop, $this->_data)) ? $this->_data[$prop] : $this->__call($prop, array());
+        if (array_key_exists($prop, $this->_a['cols'])) {
+            if (isset($this->_data[$prop])) {
+                return $this->_data[$prop];
+            }
+            return null;
+        }
+
+        return $this->__call($prop, array());
     }
 
     /**
