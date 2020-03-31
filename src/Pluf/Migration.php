@@ -336,7 +336,7 @@ class Pluf_Migration
      */
     public static function createConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
     {
-        $sql = $schema->getSqlCreateConstraints($model);
+        $sql = $schema->createConstraintQueries($model);
         foreach ($sql as $query) {
             if (false === $engine->execute($query)) {
                 throw new Exception($$engine->getError());
@@ -353,7 +353,7 @@ class Pluf_Migration
      */
     public static function dropConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
     {
-        $sql = $schema->getSqlDeleteConstraints($model);
+        $sql = $schema->dropConstraintQueries($model);
         foreach ($sql as $query) {
             if (false === $engine->execute($query)) {
                 throw new Exception($engine->getError());
