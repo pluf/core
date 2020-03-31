@@ -363,6 +363,9 @@ abstract class Schema
     public abstract function dropTableQueries(Pluf_Model $model): array;
 
     public abstract function createIndexQueries(Pluf_Model $model): array;
+    
+    public abstract function createConstraintQueries(Pluf_Model $model): array;
+    public abstract function dropConstraintQueries(Pluf_Model $model): array;
 
     public static function skipeName(String $name): String
     {

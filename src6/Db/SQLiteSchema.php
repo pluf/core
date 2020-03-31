@@ -143,31 +143,6 @@ class SQLiteSchema extends Schema
     }
 
     /**
-     * Get the SQL to generate the tables of the given model.
-     *
-     * @param
-     *            Object Model
-     * @return array Array of SQL strings ready to execute.
-     */
-    function getSqlCreate($model)
-    {
-        return $this->createTableQueries($model);
-    }
-
-    /**
-     * SQLite cannot add foreign key constraints to already existing tables,
-     * so we skip their creation completely.
-     *
-     * @param
-     *            Object Model
-     * @return array
-     */
-    function getSqlCreateConstraints($model)
-    {
-        return array();
-    }
-
-    /**
      * Get the SQL to generate the indexes of the given model.
      *
      * @param
@@ -185,42 +160,21 @@ class SQLiteSchema extends Schema
                 $val['col'] = $idx;
             }
             $unique = (isset($val['type']) && ($val['type'] == 'unique')) ? 'UNIQUE ' : '';
-            $index[$this->prefix . $model->_a['table'] . '_' . $idx] = 
-            sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, 
-                $table . '_' . $idx, 
-                $table, 
-                $schema::quoteColumn($val['col'], $this));
+            $index[$this->prefix . $model->_a['table'] . '_' . $idx] = sprintf('CREATE %sINDEX %s ON %s (%s);', $unique, $table . '_' . $idx, $table, $schema::quoteColumn($val['col'], $this));
         }
         foreach ($model->_a['cols'] as $col => $description) {
             // $field = new $val['type']();
             $type = $description['type'];
             if ($type == Engine::FOREIGNKEY) {
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey'] = 
-                sprintf('CREATE INDEX %s ON %s (%s);', 
-                    $table . '_' . $col . '_foreignkey_idx', 
-                    $table, 
-                    $schema::quoteColumn($col, $this));
+                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_foreignkey'] = sprintf('CREATE INDEX %s ON %s (%s);', $table . '_' . $col . '_foreignkey_idx', $table, $schema::quoteColumn($col, $this));
             }
             if (isset($description['unique']) and $description['unique'] == true) {
                 // Add tenant column to index if config and table are multitenant.
                 $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
-                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_unique'] = 
-                sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', 
-                    $table . '_' . $col . '_unique_idx', 
-                    $table, 
-                    $schema::quoteColumn($columns, $this));
+                $index[$this->prefix . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $table . '_' . $col . '_unique_idx', $table, $schema::quoteColumn($columns, $this));
             }
         }
         return $index;
-    }
-
-    /**
-     *
-     * @deprecated
-     */
-    public function getSqlDelete($model): array
-    {
-        return $this->dropTableQueries($model);
     }
 
     /**
@@ -253,19 +207,6 @@ class SQLiteSchema extends Schema
     }
 
     /**
-     * SQLite cannot drop foreign keys from existing tables,
-     * so we skip their deletion completely.
-     *
-     * @param
-     *            Object Model
-     * @return array
-     */
-    function getSqlDeleteConstraints($model)
-    {
-        return array();
-    }
-
-    /**
      * Quote the column name.
      *
      * @param
@@ -275,6 +216,29 @@ class SQLiteSchema extends Schema
     public function qn($col): string
     {
         return '"' . $col . '"';
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Db\Schema::createConstraintQueries()
+     */
+    public function createConstraintQueries(Pluf_Model $model): array
+    {
+        return [];
+    }
+
+    /**
+     * SQLite cannot drop foreign keys from existing tables,
+     * so we skip their deletion completely.
+     *
+     * @param
+     *            Object Model
+     * @return array
+     */
+    public function dropConstraintQueries(Pluf_Model $model): array
+    {
+        return [];
     }
 }
 
