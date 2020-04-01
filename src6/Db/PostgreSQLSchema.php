@@ -1,7 +1,7 @@
 <?php
 namespace Pluf\Db;
 
-use Pluf_DB_Schema;
+use Pluf_Model;
 use Pluf_ModelUtils;
 
 /**
@@ -29,14 +29,14 @@ class PostgreSQLSchema extends schema
         Engine::FILE => 'character varying',
         Engine::MANY_TO_MANY => null,
         Engine::FOREIGNKEY => 'integer',
-        'text' => 'text',
-        'html' => 'text',
-        'time' => 'time',
-        'integer' => 'integer',
-        'email' => 'character varying',
-        'password' => 'character varying',
-        'float' => 'real',
-        'blob' => 'bytea'
+        Engine::TEXT => 'text',
+        Engine::HTML => 'text',
+        Engine::TIME => 'time',
+        Engine::INTEGER => 'integer',
+        Engine::EMAIL => 'character varying',
+        Engine::PASSWORD => 'character varying',
+        Engine::FLOAT => 'real',
+        Engine::BLOB => 'bytea'
     );
 
     public $defaults = array(
@@ -48,14 +48,14 @@ class PostgreSQLSchema extends schema
         Engine::FILE => "''",
         Engine::MANY_TO_MANY => null,
         Engine::FOREIGNKEY => 0,
-        'text' => "''",
-        'html' => "''",
-        'time' => "'00:00:00'",
-        'integer' => 0,
-        'email' => "''",
-        'password' => "''",
-        'float' => 0.0,
-        'blob' => "''"
+        Engine::TEXT => "''",
+        Engine::HTMLL => "''",
+        Engine::TIME => "'00:00:00'",
+        Engine::DATETIME => 0,
+        Engine::EMAIL => "''",
+        Engine::PASSWORD => "''",
+        Engine::FLOAT => 0.0,
+        Engine::BLOB => "''"
     );
 
     private $con = null;
@@ -140,12 +140,11 @@ class PostgreSQLSchema extends schema
                 $unique = '';
             }
 
-            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], self::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
             if (isset($val['unique']) and $val['unique'] == true) {
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($col, $this->con));
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], self::quoteColumn($col, $this->con));
             }
         }
         return $index;
@@ -267,7 +266,7 @@ class PostgreSQLSchema extends schema
             }
             if ($field->type == Engine::FOREIGNKEY) {
                 // Add the foreignkey constraints
-                $referto = new $val['model']();
+//                 $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedIdentifierName($table . '_' . $col . '_fkey');
             }
         }
@@ -294,5 +293,20 @@ class PostgreSQLSchema extends schema
     {
         return '"' . $col . '"';
     }
+
+    public function dropTableQueries(Pluf_Model $model): array
+    {}
+
+    public function createConstraintQueries(Pluf_Model $model): array
+    {}
+
+    public function dropConstraintQueries(Pluf_Model $model): array
+    {}
+
+    public function createTableQueries(Pluf_Model $model): array
+    {}
+
+    public function createIndexQueries(Pluf_Model $model): array
+    {}
 }
 

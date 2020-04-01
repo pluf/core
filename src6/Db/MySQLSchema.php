@@ -3,7 +3,6 @@ namespace Pluf\Db;
 
 use Pluf\Options;
 use Pluf;
-use Pluf_DB_Schema;
 use Pluf_Model;
 use Pluf_ModelUtils;
 

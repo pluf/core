@@ -3,7 +3,6 @@
 	"version": "4.0.0",
 	"title": "Pluf core module",
 	"model": [
-		"Pluf_DB_SchemaInfo",
 		"Pluf_Session",
 		"Pluf_Search_Word",
 		"Pluf_Search_Occ",

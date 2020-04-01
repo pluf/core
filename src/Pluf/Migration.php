@@ -260,8 +260,8 @@ class Pluf_Migration
             $models = $module['model'];
             foreach ($models as $model) {
                 $modelObj = new $model();
-                self::createTables($engine, $engine->getSchema(), $modelObj);
-                // self::createConstraints($engine, $engine->getSchema(), $modelObj);
+                self::createTables($engine, $schema, $modelObj);
+                // self::createConstraints($engine, $schema, $modelObj);
             }
         }
         return true;
