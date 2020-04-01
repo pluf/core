@@ -77,7 +77,13 @@ class Pluf_SQL
             if (is_array($param)) {
                 $escaped[] = implode(',', $this->escapeParams($param));
             } else {
-                $escaped[] = $this->db->esc($param);
+                if (! isset($param)) {
+                    $escaped[] = 'NULL';
+                } else if (is_string($param)) {
+                    $escaped[] = $this->db->quote($param);
+                } else {
+                    $escaped[] = $param;
+                }
             }
         }
         return $escaped;

@@ -273,7 +273,7 @@ abstract class Engine
         if (null === $val) {
             return null;
         }
-        return $db->esc(serialize($val));
+        return serialize($val);
     }
 
     public static function compressedFromDb($val)
@@ -283,7 +283,7 @@ abstract class Engine
 
     public static function compressedToDb($val, $db)
     {
-        return (null === $val) ? null : $db->esc(gzdeflate($val, 9));
+        return (null === $val) ? null : gzdeflate($val, 9);
     }
 
     public static function booleanFromDb($val)
@@ -300,9 +300,9 @@ abstract class Engine
             return null;
         }
         if ($val) {
-            return $db->esc('1');
+            return '1';
         }
-        return $db->esc('0');
+        return '0';
     }
 
     public static function integerFromDb($val)
@@ -333,11 +333,11 @@ abstract class Engine
             'md5',
             'crc32'
         ))) {
-            return $db->esc($val);
+            return $val;
         }
         // We need to hash the value.
         $salt = Pluf_Utils::getRandomString(5);
-        return $db->esc('sha1:' . $salt . ':' . sha1($salt . $val));
+        return 'sha1:' . $salt . ':' . sha1($salt . $val);
     }
 
     public static function slugFromDB($val)

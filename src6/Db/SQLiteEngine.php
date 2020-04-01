@@ -31,7 +31,7 @@ use Pluf_SQL;
 class SQLiteEngine extends Engine
 {
 
-    public $con_id;
+    public ?PDO $con_id;
 
     public $engine = 'SQLite';
 
@@ -116,24 +116,26 @@ class SQLiteEngine extends Engine
         return implode(' - ', $err);
     }
 
-    function esc($str)
-    {
-        if (is_array($str)) {
-            $res = array();
-            foreach ($str as $s) {
-                $res[] = $this->con_id->quote($s);
-            }
-            return implode(', ', $res);
-        }
-        return $this->con_id->quote($str);
-    }
-    
+//     function esc($str)
+//     {
+//         if (is_array($str)) {
+//             $res = array();
+//             foreach ($str as $s) {
+//                 $res[] = $this->con_id->quote($s);
+//             }
+//             return implode(', ', $res);
+//         }
+//         return $this->con_id->quote($str);
+//     }
+
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Pluf\Db\Engine::quote()
      */
-    public function quote(string $string, int $parameter_type = null){
-        return $this->con_id->qoute($string, $parameter_type);
+    public function quote(string $string, int $parameterType = null)
+    {
+        return $this->con_id->quote($string, $parameterType);
     }
 
     /**
