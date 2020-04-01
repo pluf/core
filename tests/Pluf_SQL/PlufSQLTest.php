@@ -73,7 +73,7 @@ class PlufSQLTest extends TestCase {
         $sql3 = new Pluf_SQL();
         $sql3->Q('status=%s', '1');
         $sql1->SOr($sql3);
-        if ($this->db->engine == 'SQLite') {
+        if ($this->db->engine == '\Pluf\Db\SQLiteEngine') {
             $res = "(title='my title' AND description='%par example' AND keywords='tag''gi`ng')";
             $res .= " OR (status='1')";
         } else {
