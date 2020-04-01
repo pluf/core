@@ -55,6 +55,7 @@ class Pluf_Tenant extends Pluf_Model
             'level' => array(
                 'type' => 'Integer',
                 'blank' => true,
+                'default' => 0,
                 'editable' => false
             ),
             'title' => array(
@@ -79,7 +80,6 @@ class Pluf_Tenant extends Pluf_Model
             ),
             'subdomain' => array(
                 'type' => 'Varchar',
-                'blank' => false,
                 'is_null' => false,
                 'unique' => true,
                 'size' => 63,
@@ -88,12 +88,12 @@ class Pluf_Tenant extends Pluf_Model
             'validate' => array(
                 'type' => 'Boolean',
                 'default' => false,
-                'blank' => true,
+                'is_null' => true,
                 'editable' => false
             ),
             'email' => array(
                 'type' => 'Email',
-                'blank' => true,
+                'is_null' => true,
                 'verbose' => 'Owner email',
                 'editable' => true,
                 'readable' => true

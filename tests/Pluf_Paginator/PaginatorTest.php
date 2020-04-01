@@ -374,7 +374,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $result = $pag->render_object();
         $this->assertTrue(is_array($result));
         $this->assertTrue(array_key_exists('items', $result));
-        $this->assertTrue(sizeof($result['items']) === 1);
+        $this->assertEquals(sizeof($result['items']), 1);
 
         $item1->delete();
         $item2->delete();

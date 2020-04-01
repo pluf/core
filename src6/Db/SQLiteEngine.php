@@ -39,9 +39,13 @@ class SQLiteEngine extends Engine
     {
         parent::__construct($options);
 
-        $this->type_cast['Compressed'] = $this->type_cast['Compressed'] = array(
+        $this->type_cast[Engine::COMPRESSED] = $this->type_cast['Compressed'] = array(
             '\Pluf\Db\SQLiteEngine::compressedFromDb',
             '\Pluf\Db\SQLiteEngine::compressedToDb'
+        );
+        $this->type_cast[Engine::GEOMETRY] = $this->type_cast['Compressed'] = array(
+            '\Pluf\Db\SQLiteEngine::geometryFromDb',
+            '\Pluf\Db\SQLiteEngine::geometryToDb'
         );
 
         // Connect and let the Exception be thrown in case of problem
@@ -92,7 +96,8 @@ class SQLiteEngine extends Engine
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see \Pluf\Db\Engine::getLastID()
      */
     public function getLastID(): int
@@ -121,6 +126,11 @@ class SQLiteEngine extends Engine
             return implode(', ', $res);
         }
         return $this->con_id->quote($str);
+    }
+    
+    
+    public function quote(string $string, int $parameter_type = null){
+        return $his->con_id->qoute($string, $parameter_type);
     }
 
     /**
@@ -173,5 +183,25 @@ class SQLiteEngine extends Engine
     public function isLive(): bool
     {
         return isset($this->con_id);
+    }
+
+    /**
+     *
+     * @param Object $val
+     * @return string
+     */
+    public static function geometryFromDb($val)
+    {
+        return $val;
+    }
+
+    /**
+     * Convert text to geometry
+     *
+     * @return string
+     */
+    public static function geometryToDb($val, $db)
+    {
+        return self::identityToDb($val, $db);
     }
 }

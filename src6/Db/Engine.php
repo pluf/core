@@ -205,6 +205,8 @@ abstract class Engine
 
     public abstract function isLive(): bool;
 
+    public abstract function quote(string $string, int $parameter_type = null);
+
     public abstract function execute($query);
 
     /**
@@ -255,7 +257,7 @@ abstract class Engine
         if (null === $val) {
             return 'NULL';
         }
-        return $db->esc($val);
+        return $val;
     }
 
     public static function serializedFromDb($val)

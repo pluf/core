@@ -395,22 +395,22 @@ class Pluf_Migration
             }
         }
 
-        // Init Releations
-        if (array_key_exists('init_assoc', $module)) {
-            $relations = $module['init_assoc'];
-            foreach ($relations as $models => $relates) {
-                $model = explode('|', $models);
-                $model0 = trim($model[0]);
-                $model1 = trim($model[1]);
-                $p0 = new $model0();
-                $p1 = new $model1();
-                foreach ($relates as $rel) {
-                    $p0 = $p0->getOne($rel['from']);
-                    $p1 = $p1->getOne($rel['to']);
-                    $p0->setAssoc($p1);
-                }
-            }
-        }
+//         // Init Releations
+//         if (array_key_exists('init_assoc', $module)) {
+//             $relations = $module['init_assoc'];
+//             foreach ($relations as $models => $relates) {
+//                 $model = explode('|', $models);
+//                 $model0 = trim($model[0]);
+//                 $model1 = trim($model[1]);
+//                 $p0 = new $model0();
+//                 $p1 = new $model1();
+//                 foreach ($relates as $rel) {
+//                     $p0 = $p0->getOne($rel['from']);
+//                     $p1 = $p1->getOne($rel['to']);
+//                     $p0->setAssoc($p1);
+//                 }
+//             }
+//         }
     }
 
     /**

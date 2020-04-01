@@ -121,7 +121,7 @@ abstract class Schema
                 continue;
             }
             $icols[] = $this->qn($col);
-            $ivals[] = $val;
+            $ivals[] = $this->con->toDb($val, $type);
         }
 
         return new Pluf_SQL('INSERT INTO ' . $this->getTableName($model) . '(' . implode(',', $icols) . ') VALUES (' . implode(', ', array_fill(0, sizeof($ivals), '%s')) . ')', $ivals);

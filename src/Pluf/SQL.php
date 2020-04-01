@@ -61,17 +61,26 @@ class Pluf_SQL
      */
     function Q($base, $args = array())
     {
-        $escaped = array();
         if (! is_array($args)) {
             $args = array(
                 $args
             );
         }
-        foreach ($args as $arg) {
-            $escaped[] = $this->db->esc($arg);
-        }
-        $this->ands[] = vsprintf($base, $escaped);
+        $this->ands[] = vsprintf($base, $this->escapeParams($args));
         return $this;
+    }
+
+    public function escapeParams(array $params)
+    {
+        $escaped = [];
+        foreach ($params as $param) {
+            if (is_array($param)) {
+                $escaped[] = implode(',', $this->escapeParams($param));
+            } else {
+                $escaped[] = $this->db->esc($param);
+            }
+        }
+        return $escaped;
     }
 
     /**

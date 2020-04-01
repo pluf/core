@@ -110,7 +110,7 @@ class SQLiteSchema extends Schema
                 $_tmp = sprintf($this->mappings[$type], $val['max_digits'], $val['decimal_places']);
             }
             $sql .= $_tmp;
-            if (empty($val['is_null'])) {
+            if (isset($val['is_null']) && $val['is_null'] == false) {
                 $sql .= ' not null';
             }
             if (isset($val['default'])) {
