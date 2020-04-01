@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Cache;
+
+use Pluf\Options;
 
 /**
  * Cache in memory
@@ -27,64 +30,60 @@
  * Example of configuration:
  *
  * <pre>
- * $cfg['cache_engine'] = 'Pluf_Cache_Memcached';
- * $cfg['cache_timeout'] = 300;
+ * $cfg['cache_engine'] = 'memcached';
+ *
+ * $cfg['cache_memcached_timeout'] = 300;
  * $cfg['cache_memcached_keyprefix'] = 'uniqueforapp';
  * $cfg['cache_memcached_server'] = 'localhost';
  * $cfg['cache_memcached_port'] = 11211;
  * $cfg['cache_memcached_compress'] = 0; (or MEMCACHE_COMPRESSED)
  * </pre>
  */
-class Pluf_Cache_Memcached extends Pluf_Cache
+class Memcached extends \Pluf\Cache
 {
+    use \Pluf\DiContainerTrait;
 
     private $memcache = null;
 
     private $keyprefix = '';
 
-    public function __construct ()
+    private $server = 'localhost';
+
+    private $port = 11211;
+
+    private $timeout = null;
+
+    private $compress = 0;
+
+    /**
+     * Creates new instance of the cache
+     */
+    public function __construct(?Options $options = null)
     {
-        $this->memcache = memcache_connect(
-                Pluf::f('cache_memcached_server', 'localhost'), 
-                Pluf::f('cache_memcached_port', 11211));
-        if (false === $this->memcache) {
-            $this->memcache = null;
-        }
-        $this->keyprefix = Pluf::f('cache_memcached_keyprefix', '');
+        $this->setDefaults($options);
     }
 
     /**
-     * Set a value in the cache.
      *
-     * @param
-     *            string Key to store the information
-     * @param
-     *            mixed Value to store
-     * @param
-     *            int Timeout in seconds (null)
-     * @return bool Success
+     * {@inheritdoc}
+     * @see \Pluf\Cache::set()
      */
-    public function set ($key, $value, $timeout = null)
+    public function set($key, $value, $timeout = null)
     {
         if ($this->memcache) {
-            if ($timeout == null)
-                $timeout = Pluf::f('cache_timeout', 300);
-            $this->memcache->set($this->keyprefix . $key, serialize($value), 
-                    Pluf::f('cache_memcached_compress', 0), $timeout);
+            if ($timeout == null) {
+                $timeout = $this->timeout;
+            }
+            $this->memcache->set($this->keyprefix . $key, serialize($value), $this->compress, $timeout);
         }
     }
 
     /**
-     * Get value from the cache.
      *
-     * @param
-     *            string Key to get the information
-     * @param
-     *            mixed Default value to return if cache miss (null)
-     * @param
-     *            mixed Stored value or default
+     * {@inheritdoc}
+     * @see \Pluf\Cache::get()
      */
-    public function get ($key, $default = null)
+    public function get($key, $default = null)
     {
         if ($this->memcache) {
             $val = $this->memcache->get($this->keyprefix . $key);

@@ -110,6 +110,27 @@ $cfg['log_appender'] = '\Pluf\LoggerAppender\Console';
 
 
 // -------------------------------------------------------------------------
+// cache
+// -------------------------------------------------------------------------
+
+$cfg['cache_engine'] = 'array';
+
+
+$cfg['cache_file_folder'] = '/tmp';
+$cfg['cache_file_timeout'] = null;
+
+$cfg['cache_apcu_keyprefix'] = '/tmp';
+$cfg['cache_apcu_compress'] = false;
+$cfg['cache_apcu_timeout'] = null;
+
+
+$cfg['cache_memcached_timeout'] = 300;
+$cfg['cache_memcached_keyprefix'] = 'uniqueforapp';
+$cfg['cache_memcached_server'] = 'localhost';
+$cfg['cache_memcached_port'] = 11211;
+$cfg['cache_memcached_compress'] = 0; // (or MEMCACHE_COMPRESSED)
+
+// -------------------------------------------------------------------------
 // Tenants
 // -------------------------------------------------------------------------
 

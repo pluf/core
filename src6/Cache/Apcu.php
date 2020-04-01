@@ -17,12 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Cache;
+
+use Pluf\Options;
 
 /**
  * APC cache
  *
- * Warning: This extension is considered unmaintained and dead. However, 
- * the source code for this extension is still available within PECL 
+ * Warning: This extension is considered unmaintained and dead. However,
+ * the source code for this extension is still available within PECL
  * GIT here: http://git.php.net/?p=pecl/caching/apc.git.
  *
  * You need APC installed on your server for this cache system to
@@ -46,8 +49,10 @@
  * @see http://www.php.net/gzdeflate
  * @see http://www.php.net/gzinflate
  */
-class Pluf_Cache_Apc extends Pluf_Cache
+class Apcu extends \Pluf\Cache
 {
+
+    use \Pluf\DiContainerTrait;
 
     /**
      * پیشوندی که به تمام کلیدهای کش اضافه می‌شود.
@@ -63,55 +68,50 @@ class Pluf_Cache_Apc extends Pluf_Cache
      */
     private $compress = false;
 
+    private $timeout = null;
+
     /**
-     * یک نمونه جدید از این کلاس ایجاد می‌کند
+     * Creates new instance of the class
      *
      * نمونه ایجاد شده با استفاده از تنظیم‌هایی که در تنظیم‌های سرور تعیین شده\
      * است مقدار دهی و راه اندازی می‌شود.
      */
-    public function __construct()
+    public function __construct(?Options $options = null)
     {
-        $this->keyprefix = Pluf::f('cache_apc_keyprefix', '');
-        $this->compress = Pluf::f('cache_apc_compress', false);
+        $this->setDefaults($options);
     }
 
     /**
-     * یک مقدار را در کش قرار می‌دهد
      *
-     * @param
-     *            string Key کلیدی که برای ذخیره سازی استفاده می‌شود
-     * @param
-     *            mixed Value مقداری که باید کش شود
-     * @param
-     *            int Timeout زمان انقضا را بر اساس ثانیه تعیین می‌کند
-     * @return bool حالت موفقیت انجام این عمل را تعیین می‌کند.
+     * {@inheritdoc}
+     * @see \Pluf\Cache::set()
      */
     public function set($key, $value, $timeout = null)
     {
-        if ($timeout == null)
-            $timeout = Pluf::f('cache_timeout', 300);
+        if ($timeout == null) {
+            $timeout = $this->timeout;
+        }
         $value = serialize($value);
-        if ($this->compress)
+        if ($this->compress) {
             $value = gzdeflate($value, 9);
-        return apc_store($this->keyprefix . $key, $value, $timeout);
+        }
+        return apcu_store($this->keyprefix . $key, $value, $timeout);
     }
 
     /**
-     * Get value from the cache.
      *
-     * @param
-     *            string Key to get the information
-     * @param
-     *            mixed Default value to return if cache miss (null)
-     * @return mixed Stored value or default
+     * {@inheritdoc}
+     * @see \Pluf\Cache::get()
      */
     public function get($key, $default = null)
     {
-        $value = apc_fetch($this->keyprefix . $key);
-        if ($value === FALSE)
+        $value = apcu_fetch($this->keyprefix . $key);
+        if ($value === FALSE) {
             return $default;
-        if ($this->compress)
+        }
+        if ($this->compress) {
             $value = gzinflate($value);
+        }
         return unserialize($value);
     }
 }

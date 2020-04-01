@@ -34,7 +34,8 @@
 		"squizlabs/php_codesniffer" : "~3.3",
 		"slevomat/coding-standard" : "~4.5",
 		"mediawiki/mediawiki-codesniffer" : "~23.0",
-		"phpstan/phpstan" : "~0.10.6"
+		"phpstan/phpstan" : "~0.10.6",
+		"phpunit/dbunit" : "*"
 	},
 	"support" : {
 		"wiki" : "https://github.com/pluf/core/wiki",

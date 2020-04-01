@@ -19,6 +19,7 @@
 use Pluf\ModelUtils;
 use Pluf\Module;
 use Pluf\Options;
+use Pluf\Cache;
 
 /**
  * The main class of the framework.
@@ -28,6 +29,10 @@ use Pluf\Options;
  */
 class Pluf
 {
+
+    public static ?Options $options = null;
+
+    public static ?Cache $cache = null;
 
     /**
      * Start the framework
@@ -43,53 +48,66 @@ class Pluf
         $GLOBALS['_PX_signal'] = array();
         $GLOBALS['_PX_locale'] = array();
 
-        Pluf::loadConfig($config);
+        // Load options
+        if (is_array($config)) {
+            $GLOBALS['_PX_config'] = $config;
+        } else if (false !== ($file = Pluf::fileExists($config))) {
+            $GLOBALS['_PX_config'] = require $file;
+        } else {
+            throw new Exception('Configuration file does not exist: ' . $config);
+        }
+        self::$options = new Options($GLOBALS['_PX_config']);
 
-        date_default_timezone_set(Pluf::f('time_zone', 'UTC'));
-        mb_internal_encoding(Pluf::f('encoding', 'UTF-8'));
-        mb_regex_encoding(Pluf::f('encoding', 'UTF-8'));
+        // load cache
+        self::$cache = Cache::getInstance(self::getConfigByPrefix('cache_', true));
+
+        // Load the relations for each installed application. Each
+        // application folder must be in the include path.
+        ModelUtils::loadRelations(! Pluf::getConfig('debug', false));
+
+        date_default_timezone_set(Pluf::getConfig('time_zone', 'UTC'));
+        mb_internal_encoding(Pluf::getConfig('encoding', 'UTF-8'));
+        mb_regex_encoding(Pluf::getConfig('encoding', 'UTF-8'));
 
         // Load modules
         Module::loadModules();
     }
 
     /**
-     * Load the given configuration file.
      *
-     * The configuration is saved in the $GLOBALS['_PX_config'] array.
-     * The relations between the models are loaded in $GLOBALS[ModelUtils::MODEL_KEY].
-     *
-     * @param
-     *            string Configuration file to load.
-     */
-    static function loadConfig($config_file)
-    {
-        if (is_array($config_file)) {
-            $GLOBALS['_PX_config'] = $config_file;
-        } else if (false !== ($file = Pluf::fileExists($config_file))) {
-            $GLOBALS['_PX_config'] = require $file;
-        } else {
-            throw new Exception('Configuration file does not exist: ' . $config_file);
-        }
-
-        // Load the relations for each installed application. Each
-        // application folder must be in the include path.
-        ModelUtils::loadRelations(! Pluf::f('debug', false));
-    }
-
-    /**
-     * Gets system configuration
-     *
-     * @param
-     *            string Configuration variable
-     * @param
-     *            mixed Possible default value if value is not set ('')
-     * @return mixed Configuration variable or default value if not defined.
+     * @deprecated
      */
     public static function f($cfg, $default = '')
     {
         if (isset($GLOBALS['_PX_config'][$cfg])) {
             return $GLOBALS['_PX_config'][$cfg];
+        }
+        return $default;
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+    public static function pf(string $prefix, $strip = false)
+    {
+        return self::getConfigByPrefix($prefix, $strip);
+    }
+
+    /**
+     * Gets system configuration
+     *
+     * @param string $key
+     *            Configuration key
+     * @param
+     *            mixed Possible default value if value is not set ('')
+     * @return mixed Configuration variable or default value if not defined.
+     */
+    public static function getConfig(string $key, $default = '')
+    {
+        $val = self::$options->$key;
+        if (isset($val)) {
+            return $val;
         }
         return $default;
     }
@@ -104,20 +122,9 @@ class Pluf
      *            bool Strip the prefix from the keys (false).
      * @return array Configuration variables.
      */
-    static function pf($pfx, $strip = false)
+    public static function getConfigByPrefix(string $prefix, bool $strip = false)
     {
-        $ret = array();
-        $pfx_len = strlen($pfx);
-        foreach ($GLOBALS['_PX_config'] as $key => $val) {
-            if (0 === strpos($key, $pfx)) {
-                if (! $strip) {
-                    $ret[$key] = $val;
-                } else {
-                    $ret[substr($key, $pfx_len)] = $val;
-                }
-            }
-        }
-        return $ret;
+        return self::$options->startsWith($prefix, $strip);
     }
 
     /**

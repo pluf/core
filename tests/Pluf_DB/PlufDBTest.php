@@ -85,7 +85,7 @@ class PlufDBTest extends TestCase
         );
         foreach ($tests as $test) {
             $ok = current($res);
-            $this->assertEquals($ok, \Pluf\Db\Engine::booleanToDb($test, $this->db));
+            $this->assertEquals($ok, \Pluf\Db\Engine::booleanToDb($test, $this->db), 'Fail to convert :', $test);
             next($res);
         }
     }

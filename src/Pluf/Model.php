@@ -27,7 +27,7 @@ use Pluf\Db\Engine;
  *         به عنوان نتیجه از یک مدل
  *         استفاده شود.
  */
-class Pluf_Model implements JsonSerializable
+class Pluf_Model extends \Pluf\Data\Model
 {
 
     /**
@@ -117,7 +117,6 @@ class Pluf_Model implements JsonSerializable
     // added by some fields
     function __construct($pk = null, $values = array())
     {
-
         // -->
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
@@ -136,7 +135,7 @@ class Pluf_Model implements JsonSerializable
      * کلاس‌ها
      * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
      */
-    function init()
+    function init(): void
     {
         // Define it yourself.
     }
@@ -749,29 +748,29 @@ class Pluf_Model implements JsonSerializable
         return true;
     }
 
-    /**
-     * Get models affected by delete.
-     *
-     * @return array Models deleted if deleting current model.
-     */
-    function getDeleteSideEffect()
-    {
-        $affected = array();
-        foreach ($this->_m['list'] as $method => $details) {
-            if (is_array($details)) {
-                // foreignkey
-                $related = $this->$method();
-                $affected = array_merge($affected, (array) $related);
-                foreach ($related as $rel) {
-                    if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
-                        continue; // $rel == $this
-                    }
-                    $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
-                }
-            }
-        }
-        return Pluf_Model_RemoveDuplicates($affected);
-    }
+//     /**
+//      * Get models affected by delete.
+//      *
+//      * @return array Models deleted if deleting current model.
+//      */
+//     function getDeleteSideEffect()
+//     {
+//         $affected = array();
+//         foreach ($this->_m['list'] as $method => $details) {
+//             if (is_array($details)) {
+//                 // foreignkey
+//                 $related = $this->$method();
+//                 $affected = array_merge($affected, (array) $related);
+//                 foreach ($related as $rel) {
+//                     if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
+//                         continue; // $rel == $this
+//                     }
+//                     $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
+//                 }
+//             }
+//         }
+//         return Pluf_Model_RemoveDuplicates($affected);
+//     }
 
     /**
      * Delete the current model from the database.
@@ -910,27 +909,27 @@ class Pluf_Model implements JsonSerializable
         return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
     }
 
-    /**
-     * Display value.
-     *
-     * When you have a list of choices for a field and you want to get
-     * the display value of the current stored value.
-     *
-     * @param
-     *            string Field to display the value.
-     * @return mixed Display value, if not available default to the value.
-     */
-    function displayVal($col)
-    {
-        if (! isset($this->_a['cols'][$col]['choices'])) {
-            return $this->_data[$col]; // will on purposed failed if not set
-        }
-        $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
-        if ($val !== false) {
-            return $val;
-        }
-        return $this->_data[$col];
-    }
+//     /**
+//      * Display value.
+//      *
+//      * When you have a list of choices for a field and you want to get
+//      * the display value of the current stored value.
+//      *
+//      * @param
+//      *            string Field to display the value.
+//      * @return mixed Display value, if not available default to the value.
+//      */
+//     function displayVal($col)
+//     {
+//         if (! isset($this->_a['cols'][$col]['choices'])) {
+//             return $this->_data[$col]; // will on purposed failed if not set
+//         }
+//         $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
+//         if ($val !== false) {
+//             return $val;
+//         }
+//         return $this->_data[$col];
+//     }
 
     /**
      * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
@@ -1017,29 +1016,6 @@ class Pluf_Model implements JsonSerializable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * (non-PHPdoc)
-     *
-     * @see JsonSerializable::jsonSerialize()
-     */
-    public function jsonSerialize()
-    {
-        $coded = array();
-        foreach ($this->_data as $col => $val) {
-            /*
-             * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
-             */
-            if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
-                continue;
-            /*
-             * If parameter ins null, zero, empty, ... we will not encode
-             */
-            if ($val)
-                $coded[$col] = $val;
-        }
-        return $coded;
     }
 
     public function getName()
@@ -1183,46 +1159,46 @@ class Pluf_Model implements JsonSerializable
     }
 }
 
-/**
- * Check if a model is already in an array of models.
- *
- * It is not possible to override the == function in PHP to directly
- * use in_array.
- *
- * @param
- *            Pluf_Model The model to test
- * @param
- *            Array The models
- * @return bool
- */
-function Pluf_Model_InArray($model, $array)
-{
-    if ($model->id == '') {
-        return false;
-    }
-    foreach ($array as $modelin) {
-        if ($modelin->_a['model'] == $model->_a['model'] and $modelin->id == $model->id) {
-            return true;
-        }
-    }
-    return false;
-}
+// /**
+//  * Check if a model is already in an array of models.
+//  *
+//  * It is not possible to override the == function in PHP to directly
+//  * use in_array.
+//  *
+//  * @param
+//  *            Pluf_Model The model to test
+//  * @param
+//  *            Array The models
+//  * @return bool
+//  */
+// function Pluf_Model_InArray($model, $array)
+// {
+//     if ($model->id == '') {
+//         return false;
+//     }
+//     foreach ($array as $modelin) {
+//         if ($modelin->_a['model'] == $model->_a['model'] and $modelin->id == $model->id) {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
-/**
- * Return a list of unique models.
- *
- * @param
- *            array Models with duplicates
- * @return array Models with duplicates.
- */
-function Pluf_Model_RemoveDuplicates($array)
-{
-    $res = array();
-    foreach ($array as $model) {
-        if (! Pluf_Model_InArray($model, $res)) {
-            $res[] = $model;
-        }
-    }
-    return $res;
-}
+// /**
+//  * Return a list of unique models.
+//  *
+//  * @param
+//  *            array Models with duplicates
+//  * @return array Models with duplicates.
+//  */
+// function Pluf_Model_RemoveDuplicates($array)
+// {
+//     $res = array();
+//     foreach ($array as $model) {
+//         if (! Pluf_Model_InArray($model, $res)) {
+//             $res[] = $model;
+//         }
+//     }
+//     return $res;
+// }
 

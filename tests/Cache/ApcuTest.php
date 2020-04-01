@@ -20,54 +20,18 @@ use PHPUnit\Framework\TestCase;
 use Pluf\Cache;
 use Pluf\Options;
 
-class FileTest extends TestCase
+class ApceTest extends TestCase
 {
-
-    private $_config;
-
-    private $_arrayData = array(
-        'hello' => 'world',
-        'foo' => false,
-        0 => array(
-            'foo',
-            'bar'
-        )
-    );
-
-    /**
-     *
-     * @before
-     */
-    public function setUpTest()
-    {
-        if (! array_key_exists('_PX_config', $GLOBALS)) {
-            $GLOBALS['_PX_config'] = array();
-        }
-        $this->_config = $GLOBALS['_PX_config']; // backup
-        $GLOBALS['_PX_config']['cache_engine'] = 'Pluf_Cache_File';
-        $GLOBALS['_PX_config']['cache_timeout'] = 5;
-        $GLOBALS['_PX_config']['cache_file_folder'] = '/tmp/pluf_unittest_cache';
-    }
-
-    /**
-     *
-     * @after
-     */
-    public function tearDownTest()
-    {
-        $GLOBALS['_PX_config'] = $this->_config;
-    }
 
     /**
      *
      * @test
      */
-    public function testConstructor()
+    public function createNewInstance()
     {
-        $options = new Options([
-            'engine' => 'file'
-        ]);
-        $cache = Cache::getInstance($options);
+        $cache = Cache::getInstance(new Options([
+            'engine' => 'apcu'
+        ]));
         $this->assertNotNull($cache);
     }
 
@@ -78,9 +42,9 @@ class FileTest extends TestCase
     public function testBasic()
     {
         $options = new Options([
-            'engine' => 'file'
+            'timeout' => 300
         ]);
-        $cache = Cache::getInstance($options);
+        $cache = new Cache\Apcu($options);
         $this->assertNotNull($cache);
 
         $var = 'foo1';
@@ -97,9 +61,9 @@ class FileTest extends TestCase
     public function testGetUnknownKey()
     {
         $options = new Options([
-            'engine' => 'file'
+            'timeout' => 300
         ]);
-        $cache = Cache::getInstance($options);
+        $cache = new Cache\Apcu($options);
         $this->assertNotNull($cache);
 
         $this->assertNull($cache->get('unknown'));
@@ -112,9 +76,9 @@ class FileTest extends TestCase
     public function testGetDefault()
     {
         $options = new Options([
-            'engine' => 'file'
+            'timeout' => 300
         ]);
-        $cache = Cache::getInstance($options);
+        $cache = new Cache\Apcu($options);
         $this->assertNotNull($cache);
 
         $this->assertEquals('default', $cache->get('unknown', 'default'));
@@ -126,15 +90,22 @@ class FileTest extends TestCase
      */
     public function testSerialized()
     {
+        $arrayData = [
+            'hello' => 'world',
+            'foo' => false,
+            0 => array(
+                'foo',
+                'bar'
+            )
+        ];
         $options = new Options([
-            'engine' => 'file'
+            'timeout' => 300
         ]);
-        $cache = Cache::getInstance($options);
+        $cache = new Cache\Apcu($options);
         $this->assertNotNull($cache);
 
-        $success = $cache->set('array', $this->_arrayData);
-        $this->assertTrue($success);
-        $this->assertEquals($this->_arrayData, $cache->get('array'));
+        $cache->set('array', $arrayData);
+        $this->assertEquals($arrayData, $cache->get('array'));
 
         $obj = new stdClass();
         $obj->foo = 'bar';
@@ -146,5 +117,49 @@ class FileTest extends TestCase
         unset($obj);
         $this->assertInstanceOf(stdClass::class, $cache->get('object'));
         $this->assertEquals('world', $cache->get('object')->hello);
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testSerializedObject()
+    {
+        $object = new MyObject();
+        $options = new Options([
+            'timeout' => 300
+        ]);
+        $cache = new Cache\Apcu($options);
+        $this->assertNotNull($cache);
+
+        $cache->set('obj', $object);
+        $this->assertEquals($object, $cache->get('obj'));
+    }
+}
+
+class MyObject
+{
+
+    private $var1 = 'hi';
+
+    protected $var2 = 'me';
+
+    public $v3 = [
+        'hello' => 'world',
+        'foo' => false,
+        0 => array(
+            'foo',
+            'bar'
+        )
+    ];
+
+    function getVar1()
+    {
+        return $this->var1;
+    }
+
+    function getVar2()
+    {
+        return $this->var2;
     }
 }

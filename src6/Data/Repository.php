@@ -16,9 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Model;
+namespace Pluf\Data;
 
 use Pluf_Model;
+
+use Pluf\Db;
 
 /**
  * Repositories are object or components that encapsulate the logic required to access data sources.
@@ -56,6 +58,7 @@ class Repository
      * @var \Pluf_Model
      */
     private Pluf_Model $model;
+    private ?Db\Connection $dbConnection = null;
 
     private static array $repositoryMap = [];
 
@@ -105,10 +108,20 @@ class Repository
      *            int Id of the item.
      * @return mixed Item or false if not found.
      */
-    public function get($id): ?Pluf_Model
+    public function get($id): ?Model
     {
+        // Create and exec query
+        $res = $this->dbConnection->query()
+            ->table($this->tableName)
+            ->where('id', $id)
+            ->getOne();
+        
+        // create model
         $modelClassName = get_class($this->model);
-        $model = new $modelClassName($id);
+        $model = new $modelClassName();
+        $model->fillFromData($res);
+        
+        // return result
         return $model;
     }
 
@@ -132,6 +145,24 @@ class Repository
         return $this->model->getOne($query->toArray());
     }
 
+    public function create(Pluf_Model $model): ?Pluf_Model
+    {}
+
+    public function update(Pluf_Model $model): ?Pluf_Model
+    {}
+
+    public function delete(Pluf_Model $model): ?Pluf_Model
+    {}
+
+    public function createList(?array $models = []): array
+    {}
+
+    public function updateList(?array $models = []): array
+    {}
+
+    public function deleteList(?array $models = []): array
+    {}
+
     /**
      * Gets list of object
      *
@@ -146,7 +177,16 @@ class Repository
      * @return array of items or through an exception if
      *         database failure
      */
-    public function getList(Query $query): array
+    public function getListByQuery(Query $query): array
+    {
+        $res = $this->model->getList($query->toArray());
+        if ($res instanceof \ArrayObject) {
+            return $res->getArrayCopy();
+        }
+        return [];
+    }
+
+    public function deleteListByQuery(Query $query): array
     {
         $res = $this->model->getList($query->toArray());
         if ($res instanceof \ArrayObject) {
@@ -195,7 +235,7 @@ class Repository
      *            to run on related objects if the result is many objects
      * @return array Array of items
      */
-    public function getRelated(\Pluf_Model $model, string $relationName = null, Query $query): array
+    public function getRelated(Pluf_Model $model, string $relationName = null, Query $query): array
     {
         if ($this->isForignKeyRelation($relationName)) {
             // TODO: support foring key
