@@ -128,9 +128,12 @@ class SQLiteEngine extends Engine
         return $this->con_id->quote($str);
     }
     
-    
+    /**
+     * {@inheritDoc}
+     * @see \Pluf\Db\Engine::quote()
+     */
     public function quote(string $string, int $parameter_type = null){
-        return $his->con_id->qoute($string, $parameter_type);
+        return $this->con_id->qoute($string, $parameter_type);
     }
 
     /**
