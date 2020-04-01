@@ -255,7 +255,7 @@ abstract class Engine
     public static function identityToDb($val, $db)
     {
         if (null === $val) {
-            return 'NULL';
+            return null;
         }
         return $val;
     }
@@ -271,7 +271,7 @@ abstract class Engine
     public static function serializedToDb($val, $db)
     {
         if (null === $val) {
-            return 'NULL';
+            return null;
         }
         return $db->esc(serialize($val));
     }
@@ -283,7 +283,7 @@ abstract class Engine
 
     public static function compressedToDb($val, $db)
     {
-        return (null === $val) ? 'NULL' : $db->esc(gzdeflate($val, 9));
+        return (null === $val) ? null : $db->esc(gzdeflate($val, 9));
     }
 
     public static function booleanFromDb($val)
@@ -297,7 +297,7 @@ abstract class Engine
     public static function booleanToDb($val, $db)
     {
         if (null === $val) {
-            return 'NULL';
+            return null;
         }
         if ($val) {
             return $db->esc('1');
@@ -312,7 +312,7 @@ abstract class Engine
 
     public static function integerToDb($val, $db)
     {
-        return (null === $val) ? 'NULL' : (string) (int) $val;
+        return (null === $val) ? null : (string) (int) $val;
     }
 
     public static function floatFromDb($val)
@@ -322,7 +322,7 @@ abstract class Engine
 
     public static function floatToDb($val, $db)
     {
-        return (null === $val) ? 'NULL' : (string) (float) $val;
+        return (null === $val) ? null : (string) (float) $val;
     }
 
     public static function passwordToDb($val, $db)
@@ -386,9 +386,9 @@ abstract class Engine
         // SEE: https://github.com/phayes/geoPHP
         // TODO: hadi 1397-06-16: Here $val should be encoded
         // if($db->engine === 'SQLite'){
-        // return (null === $val || empty($val)) ? 'NULL' : "'" . $val . "'";
+        // return (null === $val || empty($val)) ? null : "'" . $val . "'";
         // }
-        return (null === $val || empty($val)) ? 'NULL' : (string) "GeometryFromText('" . $val . "')";
+        return (null === $val || empty($val)) ? null : (string) "GeometryFromText('" . $val . "')";
     }
 }
 

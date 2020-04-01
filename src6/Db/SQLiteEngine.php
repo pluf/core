@@ -173,7 +173,7 @@ class SQLiteEngine extends Engine
     public static function compressedToDb($val, $con)
     {
         if (is_null($val)) {
-            return 'NULL';
+            return null;
         }
         return 'X' . $con->esc(bin2hex(gzdeflate($val, 9)));
     }
