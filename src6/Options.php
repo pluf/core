@@ -1,8 +1,14 @@
 <?php
 namespace Pluf;
 
-class Options
+use ArrayAccess;
+use Iterator;
+use Serializable;
+
+class Options implements ArrayAccess, Iterator, Serializable
 {
+
+    private $position = 0;
 
     private array $values = [];
 
@@ -66,13 +72,142 @@ class Options
         $this->values[$key] = $value;
     }
 
-    public function startsWith($pfx, $strip = false)
+    /**
+     * Gets subset of options by prefix
+     *
+     * @param string $prefix
+     *            A prefix key of all configs
+     * @param boolean $strip
+     *            To cut key or not
+     * @return \Pluf\Options subset
+     */
+    public function startsWith(string $prefix, $strip = false)
     {
         $options = new Options();
         $options->parent = $this;
-        $options->prefix = $pfx;
+        $options->prefix = $prefix;
         $options->strip = $strip;
         return $options;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see ArrayAccess::offsetSet()
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset)) {
+            $this->values[] = $value;
+        } else {
+            $this->values[$offset] = $value;
+        }
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see ArrayAccess::offsetExists()
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->values[$offset]);
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see ArrayAccess::offsetUnset()
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->values[$offset]);
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see ArrayAccess::offsetGet()
+     */
+    public function offsetGet($offset)
+    {
+        return isset($this->values[$offset]) ? $this->values[$offset] : null;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Iterator::rewind()
+     */
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Iterator::current()
+     */
+    public function current()
+    {
+        return $this->values[$this->position];
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Iterator::key()
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Iterator::next()
+     */
+    public function next()
+    {
+        ++ $this->position;
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Iterator::valid()
+     */
+    public function valid()
+    {
+        return isset($this->values[$this->position]);
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Serializable::serialize()
+     */
+    public function serialize()
+    {
+        $data = [
+            'values' => $this->values,
+            'default' => $this->defaultValues
+        ];
+        return serialize($data);
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see Serializable::unserialize()
+     */
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+        $this->defaultValues = $data['default'];
+        $this->values = $data['values'];
     }
 }
 

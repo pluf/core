@@ -2,6 +2,7 @@
 namespace Pluf\NoteBook;
 
 use Pluf_Model;
+use Pluf\Data\Schema;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -59,7 +60,14 @@ class Item extends Pluf_Model
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
-            )
+            ),
+            'book_id' =>[
+                'type' => Schema::MANY_TO_ONE,
+                'model' => '\Pluf\NoteBook\Book',
+                'blank' => true,
+                'editable' => true,
+                'readable' => true
+            ]
         );
     }
 

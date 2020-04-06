@@ -671,6 +671,7 @@ class Query extends Expression
         // arguments means that we either have a string expression or embedded condition.
         if ($num_args === 2 && is_string($field) && ! preg_match('/^[.a-zA-Z0-9_]*$/', $field)) {
             // field contains non-alphanumeric values. Look for condition
+            $matches = [];
             preg_match('/^([^ <>!=]*)([><!=]*|( *(not|is|in|like))*) *$/', $field, $matches);
 
             // matches[2] will contain the condition, but $cond will contain the value

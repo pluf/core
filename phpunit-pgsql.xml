@@ -1,7 +1,7 @@
 <phpunit 
 	colors="true" 
 	bootstrap="vendor/autoload.php" 
-	printerClass="Pluf\Test\ResultPrinter">
+	printerClass="Pluf\Test\PlufResultPrinter">
     <php>
         <var name="DB_DSN" value="pgsql:dbname=atk4-dsql-test;host=localhost" />
         <var name="DB_USER" value="postgres" />

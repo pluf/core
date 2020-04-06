@@ -18,6 +18,9 @@
  */
 use Pluf\ModelUtils;
 use Pluf\Db\Engine;
+use Pluf\Data\Repository;
+use Pluf\Data\Query;
+use Pluf\Data\ModelDescription;
 
 /**
  * Sort of Active Record Class
@@ -27,7 +30,7 @@ use Pluf\Db\Engine;
  *         به عنوان نتیجه از یک مدل
  *         استفاده شود.
  */
-class Pluf_Model extends \Pluf\Data\Model
+class Pluf_Model implements JsonSerializable
 {
 
     /**
@@ -117,6 +120,7 @@ class Pluf_Model extends \Pluf\Data\Model
     // added by some fields
     function __construct($pk = null, $values = array())
     {
+
         // -->
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
@@ -135,7 +139,7 @@ class Pluf_Model extends \Pluf\Data\Model
      * کلاس‌ها
      * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
      */
-    function init(): void
+    function init()
     {
         // Define it yourself.
     }
@@ -419,22 +423,8 @@ class Pluf_Model extends \Pluf\Data\Model
      */
     function get($id)
     {
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-        $res = $engine->select($schema->selectByIdQuery($this, $id));
-        if (false === $res) {
-            throw new Exception($engine->getError());
-        }
-        if (count($res) == 0) {
-            return false;
-        }
-        foreach ($this->_a['cols'] as $col => $description) {
-            if (array_key_exists($col, $res[0])) {
-                $this->_data[$col] = $engine->fromDb($res[0][$col], $description['type']);
-            }
-        }
-        $this->restore();
-        return $this;
+        $model = Pluf::getDataRepository($this)->getById($id);
+        $this->_data = $model->_data;
     }
 
     /**
@@ -456,8 +446,8 @@ class Pluf_Model extends \Pluf\Data\Model
      * $m = Pluf::factory(My_Model::class)->getOne('id=1');
      * </pre>
      *
-     * @param
-     *            array|string Filter string or array given to getList
+     * @param array|string $pFilter
+     *            string or array given to getList
      * @see self::getList
      * @return Pluf_Model|null find model
      * @deprecated use \Pluf\Model\Repository::getList
@@ -470,17 +460,17 @@ class Pluf_Model extends \Pluf\Data\Model
             );
         }
         $items = $this->getList($p);
-        if ($items->count() == 1) {
+        if (count($items) == 1) {
             return $items[0];
         }
-        if ($items->count() == 0) {
+        if (count($items) == 0) {
             return null;
         }
         throw new \Pluf\Exception(__('Error: More than one matching item found.'));
     }
 
     /**
-     * یک فهرست از موجودیت‌ها را تعیین می‌کند
+     * Gets list of model with the parameters
      *
      * The filter should be used only for simple filtering. If you want
      * a complex query, you should create a new view.
@@ -494,75 +484,25 @@ class Pluf_Model extends \Pluf\Data\Model
      *
      * This is modelled on the DB_Table pear module interface.
      *
+     * keys:
+     *
+     * - 'view': The view to use
+     * - 'filter': The where clause to use
+     * - 'order': The ordering of the result set
+     * - 'start': The number of skipped rows in the result set
+     * - 'limit': The number of items to get in the result set
+     * - 'count': Run a count query and not a select if set to true
+     *
      * @param
      *            array Associative array with the possible following
-     *            keys:
-     *            'view': The view to use
-     *            'filter': The where clause to use
-     *            'order': The ordering of the result set
-     *            'start': The number of skipped rows in the result set
-     *            'nb': The number of items to get in the result set
-     *            'count': Run a count query and not a select if set to true
      * @return ArrayObject of items or through an exception if
      *         database failure
      * @deprecated use \Pluf\Model\Repository::getList
      */
     function getList($p = array())
     {
-        $default = array(
-            'view' => null,
-            'group' => null,
-            'filter' => null,
-            'order' => null,
-            'start' => null,
-            'select' => null,
-            'nb' => null,
-            'count' => false
-        );
-        $p = array_merge($default, $p);
-
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-        $query = $schema->selectListQuery($this, $p);
-
-        $rs = $engine->select($query);
-        if (false === $rs) {
-            throw new Exception($engine->getError());
-        }
-        if (count($rs) == 0) {
-            return new ArrayObject();
-        }
-
-        if ($p['count'] == true) {
-            return $rs;
-        }
-        $res = new ArrayObject();
-
-        // load properties
-        $props = [];
-        if (isset($p['view'])) {
-            $view = $this->getView($p['view']);
-            if (isset($view['props'])) {
-                $props = $view['props'];
-            }
-        }
-
-        // Convert to a lis of Objects
-        foreach ($rs as $row) {
-            $this->_reset();
-            foreach ($this->_a['cols'] as $col => $description) {
-                if (isset($row[$col])) {
-                    $this->_data[$col] = $engine->fromDb($row[$col], $description['type']);
-                }
-            }
-            // FIXME: The associated properties need to be converted too.
-            foreach ($props as $prop => $key) {
-                $this->_data[$key] = (isset($row[$prop])) ? $row[$prop] : null;
-            }
-            $this->restore();
-            $res[] = clone ($this);
-        }
-        return $res;
+        $query = new Query($p);
+        return Pluf::getDataRepository($this)->getListByQuery($query);
     }
 
     /**
@@ -575,14 +515,14 @@ class Pluf_Model extends \Pluf\Data\Model
      * @return int The number of items
      * @deprecated use \Pluf\Model\Repository::getCount
      */
-    function getCount($p = array())
+    function getCount($p = array()): int
     {
         $p['count'] = true;
         $count = $this->getList($p);
-        if (empty($count) or count($count) == 0) {
+        if (! isset($count)) {
             return 0;
         } else {
-            return (int) $count[0]['nb_items'];
+            return (int) $count;
         }
     }
 
@@ -658,25 +598,25 @@ class Pluf_Model extends \Pluf\Data\Model
         return $model->getList($p);
     }
 
-    /**
-     * Generate the SQL select from the columns
-     */
-    function getSelect()
-    {
-        if (isset($this->_cache['getSelect'])) {
-            return $this->_cache['getSelect'];
-        }
-        $schema = $this->getEngine()->getSchema();
-        $select = array();
-        $table = $schema->getTableName($this);
-        foreach ($this->_a['cols'] as $col => $val) {
-            if ($val['type'] != Engine::MANY_TO_MANY) {
-                $select[] = $table . '.' . $schema->qn($col) . ' AS ' . $schema->qn($col);
-            }
-        }
-        $this->_cache['getSelect'] = implode(', ', $select);
-        return $this->_cache['getSelect'];
-    }
+    // /**
+    // * Generate the SQL select from the columns
+    // */
+    // function getSelect()
+    // {
+    // if (isset($this->_cache['getSelect'])) {
+    // return $this->_cache['getSelect'];
+    // }
+    // $schema = $this->getEngine()->getSchema();
+    // $select = array();
+    // $table = $schema->getTableName($this);
+    // foreach ($this->_a['cols'] as $col => $val) {
+    // if ($val['type'] != Engine::MANY_TO_MANY) {
+    // $select[] = $table . '.' . $schema->qn($col) . ' AS ' . $schema->qn($col);
+    // }
+    // }
+    // $this->_cache['getSelect'] = implode(', ', $select);
+    // return $this->_cache['getSelect'];
+    // }
 
     /**
      * Update the model into the database.
@@ -731,15 +671,7 @@ class Pluf_Model extends \Pluf\Data\Model
             $this->preSave(true);
         }
 
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-        $engine->execute($schema->createQuery($this));
-        if (! $raw) {
-            if (false === ($id = $engine->getLastID())) {
-                throw new Exception($engine->getError());
-            }
-            $this->_data['id'] = $id;
-        }
+        Pluf::getDataRepository($this)->create($this);
 
         if (! $raw) {
             $this->postSave(true);
@@ -748,29 +680,29 @@ class Pluf_Model extends \Pluf\Data\Model
         return true;
     }
 
-//     /**
-//      * Get models affected by delete.
-//      *
-//      * @return array Models deleted if deleting current model.
-//      */
-//     function getDeleteSideEffect()
-//     {
-//         $affected = array();
-//         foreach ($this->_m['list'] as $method => $details) {
-//             if (is_array($details)) {
-//                 // foreignkey
-//                 $related = $this->$method();
-//                 $affected = array_merge($affected, (array) $related);
-//                 foreach ($related as $rel) {
-//                     if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
-//                         continue; // $rel == $this
-//                     }
-//                     $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
-//                 }
-//             }
-//         }
-//         return Pluf_Model_RemoveDuplicates($affected);
-//     }
+    // /**
+    // * Get models affected by delete.
+    // *
+    // * @return array Models deleted if deleting current model.
+    // */
+    // function getDeleteSideEffect()
+    // {
+    // $affected = array();
+    // foreach ($this->_m['list'] as $method => $details) {
+    // if (is_array($details)) {
+    // // foreignkey
+    // $related = $this->$method();
+    // $affected = array_merge($affected, (array) $related);
+    // foreach ($related as $rel) {
+    // if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
+    // continue; // $rel == $this
+    // }
+    // $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
+    // }
+    // }
+    // }
+    // return Pluf_Model_RemoveDuplicates($affected);
+    // }
 
     /**
      * Delete the current model from the database.
@@ -780,11 +712,13 @@ class Pluf_Model extends \Pluf\Data\Model
      */
     function delete()
     {
-        if (false === $this->get($this->_data['id'])) {
+        if ($this->isAnonymous()) {
             return false;
         }
         $this->preDelete();
-        $this->_con->execute('DELETE FROM ' . $this->getSqlTable() . ' WHERE id = ' . $this->_toDb($this->_data['id'], 'id'));
+
+        Pluf::getDataRepository($this)->delete($this);
+
         $this->_reset();
         return true;
     }
@@ -878,58 +812,58 @@ class Pluf_Model extends \Pluf\Data\Model
         }
     }
 
-    /**
-     * Prepare the value to be put in the DB.
-     *
-     * @param
-     *            mixed Value.
-     * @param
-     *            string Column name.
-     * @return string SQL ready string.
-     */
-    function _toDb($val, $col)
-    {
-        return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
-    }
+    // /**
+    // * Prepare the value to be put in the DB.
+    // *
+    // * @param
+    // * mixed Value.
+    // * @param
+    // * string Column name.
+    // * @return string SQL ready string.
+    // */
+    // function _toDb($val, $col)
+    // {
+    // return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
+    // }
 
-    /**
-     * Get the value from the DB.
-     *
-     * Create DB field and returns. The field type is used as the output
-     * value type.
-     *
-     * @param
-     *            mixed Value.
-     * @param
-     *            string Column name.
-     * @return mixed Value.
-     */
-    function _fromDb($val, $col)
-    {
-        return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
-    }
+    // /**
+    // * Get the value from the DB.
+    // *
+    // * Create DB field and returns. The field type is used as the output
+    // * value type.
+    // *
+    // * @param
+    // * mixed Value.
+    // * @param
+    // * string Column name.
+    // * @return mixed Value.
+    // */
+    // function _fromDb($val, $col)
+    // {
+    // return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
+    // }
 
-//     /**
-//      * Display value.
-//      *
-//      * When you have a list of choices for a field and you want to get
-//      * the display value of the current stored value.
-//      *
-//      * @param
-//      *            string Field to display the value.
-//      * @return mixed Display value, if not available default to the value.
-//      */
-//     function displayVal($col)
-//     {
-//         if (! isset($this->_a['cols'][$col]['choices'])) {
-//             return $this->_data[$col]; // will on purposed failed if not set
-//         }
-//         $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
-//         if ($val !== false) {
-//             return $val;
-//         }
-//         return $this->_data[$col];
-//     }
+    // /**
+    // * Display value.
+    // *
+    // * When you have a list of choices for a field and you want to get
+    // * the display value of the current stored value.
+    // *
+    // * @param
+    // * string Field to display the value.
+    // * @return mixed Display value, if not available default to the value.
+    // */
+    // function displayVal($col)
+    // {
+    // if (! isset($this->_a['cols'][$col]['choices'])) {
+    // return $this->_data[$col]; // will on purposed failed if not set
+    // }
+    // $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
+    // if ($val !== false) {
+    // return $val;
+    // }
+    // return $this->_data[$col];
+    // }
 
     /**
      * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
@@ -1018,53 +952,76 @@ class Pluf_Model extends \Pluf\Data\Model
         return $this->id;
     }
 
+    /**
+     * (non-PHPdoc)
+     *
+     * @see JsonSerializable::jsonSerialize()
+     */
+    public function jsonSerialize()
+    {
+        $coded = array();
+        foreach ($this->_data as $col => $val) {
+            /*
+             * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
+             */
+            if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
+                continue;
+            /*
+             * If parameter ins null, zero, empty, ... we will not encode
+             */
+            if ($val)
+                $coded[$col] = $val;
+        }
+        return $coded;
+    }
+
     public function getName()
     {
         return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass();
     }
 
-    public function getSchema()
-    {
-        $mainInfo = array(
-            "type" => $this->getClass(),
-            "unit" => null,
-            "name" => $this->getName(),
-            "title" => $this->getName(),
-            "description" => null,
-            "defaultValue" => null,
-            "required" => false,
-            "visible" => false,
-            "editable" => false,
-            "priority" => 0,
-            "validators" => [],
-            "tags" => [],
-            "children" => []
-        );
-        foreach ($this->_a['cols'] as $name => $field) {
-            $fieldInfo = $this->getFieldInfo($name, $field);
-            array_push($mainInfo['children'], $fieldInfo);
-        }
-        return $mainInfo;
-    }
-
-    private function getFieldInfo($name, $field)
-    {
-        return array(
-            "type" => $field['type'],
-            "unit" => null,
-            "name" => $name,
-            "title" => $name,
-            "description" => null,
-            "defaultValue" => array_key_exists('default', $field) ? $field['default'] : null,
-            "required" => array_key_exists('is_null', $field) ? $field['is_null'] : true,
-            "visible" => array_key_exists('readable', $field) ? $field['readable'] : true,
-            "editable" => array_key_exists('editable', $field) ? $field['editable'] : false,
-            "priority" => 0,
-            "validators" => [],
-            "tags" => [],
-            "children" => []
-        );
-    }
+    // public function getSchema()
+    // {
+    // $mainInfo = array(
+    // "type" => $this->getclass(),
+    // "unit" => null,
+    // "name" => $this->getname(),
+    // "title" => $this->getname(),
+    // "description" => null,
+    // "defaultvalue" => null,
+    // "required" => false,
+    // "visible" => false,
+    // "editable" => false,
+    // "priority" => 0,
+    // "validators" => [],
+    // "tags" => [],
+    // "children" => []
+    // );
+    // foreach ($this->_a['cols'] as $name => $field) {
+    // $fieldInfo = $this->getFieldInfo($name, $field);
+    // array_push($mainInfo['children'], $fieldInfo);
+    // }
+    // return $mainInfo;
+    // }
+    //
+    // private function getFieldInfo($name, $field)
+    // {
+    // return array(
+    // "type" => $field['type'],
+    // "unit" => null,
+    // "name" => $name,
+    // "title" => $name,
+    // "description" => null,
+    // "defaultValue" => array_key_exists('default', $field) ? $field['default'] : null,
+    // "required" => array_key_exists('is_null', $field) ? $field['is_null'] : true,
+    // "visible" => array_key_exists('readable', $field) ? $field['readable'] : true,
+    // "editable" => array_key_exists('editable', $field) ? $field['editable'] : false,
+    // "priority" => 0,
+    // "validators" => [],
+    // "tags" => [],
+    // "children" => []
+    // );
+    // }
 
     /**
      * Gets engine where this model is managed
@@ -1072,37 +1029,27 @@ class Pluf_Model extends \Pluf\Data\Model
      *
      * @return Engine|NULL
      */
-    public function getEngine(): ?Engine
+    public function getRepository(): ?Repository
     {
-        static $con = null;
-        if ($this->_con !== null) {
-            return $this->_con;
-        }
-        if ($con !== null) {
-            $this->_con = $con;
-            return $this->_con;
-        }
-        $this->_con = &Pluf::db($this);
-        $con = $this->_con;
-        return $this->_con;
+        return Pluf::getDataRepository($this);
     }
 
+    /**
+     *
+     * @deprecated
+     * @param string $name
+     * @return array
+     */
     public function getView(string $name): array
     {
-        $views = ModelUtils::loadViewsFromCache($this);
-        if (! $views) {
-            $views = $this->loadViews();
-            ModelUtils::putViewsToCache($this, $views);
-        }
-        if (! isset($views[$name])) {
-            throw new Exception('View ' . $name . ' not found in ' . $this);
-        }
-        return $views[$name];
+        $md = ModelDescription::getInstance($this);
+        return $md->getView($name);
     }
 
     /**
      * Set a view.
      *
+     * @deprecated
      * @param string $name
      *            Name of the view.
      * @param array $view
@@ -1110,25 +1057,20 @@ class Pluf_Model extends \Pluf\Data\Model
      */
     public function setView(string $name, array $view): void
     {
-        $views = ModelUtils::loadViewsFromCache($this);
-        if (! $views) {
-            $views = $this->loadViews();
-        }
-        $views[$name] = $view;
-        ModelUtils::putViewsToCache($this, $views);
+        $md = ModelDescription::getInstance($this);
+        $md->setView($name, $view);
     }
 
+    /**
+     *
+     * @deprecated
+     * @param string $name
+     * @return bool
+     */
     public function hasView(?string $name = null): bool
     {
-        try {
-            if (! isset($name)) {
-                return false;
-            }
-            $this->getView($name);
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+        $md = ModelDescription::getInstance($this);
+        return $md->hasView($name);
     }
 
     /**

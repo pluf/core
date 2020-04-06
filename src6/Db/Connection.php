@@ -238,10 +238,12 @@ class Connection
     }
 
     /**
-     * 
+     *
      * @deprecated use query
      * @param array $properties
      * @return \Pluf\Db\Query
+     *
+     * @deprecated use query
      */
     public function dsql($properties = [])
     {

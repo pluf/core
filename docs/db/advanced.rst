@@ -2,15 +2,15 @@
 Advanced Topics
 ===============
 
-DSQL has huge capabilities in terms of extending. This chapter explains just
+Pluf DB has huge capabilities in terms of extending. This chapter explains just
 some of the ways how you can extend this already incredibly powerful library.
 
 Advanced Connections
 ====================
-:php:class:`Connection` is incredibly lightweight and powerful in DSQL.
+:php:class:`Connection` is incredibly lightweight and powerful in Pluf DB.
 The class tries to get out of your way as much as possible.
 
-Using DSQL without Connection
+Using Pluf DB without Connection
 -----------------------------
 You can use :php:class:`Query` and :php:class:`Expression` without connection
 at all. Simply create expression::

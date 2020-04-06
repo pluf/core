@@ -25,33 +25,33 @@ class Model implements JsonSerializable
 {
     
     
-    function __construct($pk = null, $values = array()){}
+//     function __construct($pk = null, $values = array()){}
     
     
-    //-----------------------------------------------------------
-    // Old API
-    //-----------------------------------------------------------
-    public function init(): void {}
-    public function getRelationKeysToModel($model, $type): array {}
-    public function getData(): array {}
-    public function setAssoc(Model $model, ?string $assocName = null) {}
-    public function delAssoc(Model $model, ?string $assocName = null) {}
-    public function batchAssoc($model_name, $ids) {}
-    public function getOne($p = array()): ?Model {}
-    public function getList($p = array()) : array{}
-    public function getCount($p = array()) {}
-    public function getRelated($model, $method = null, $p = array()) {}
-    public function update($where = '') {}
-    public function create($raw = false) {}
-    public function delete() {}
-    public function setFromFormData($cleaned_values) {}
-    public function isAnonymous() {}
-    public function getSchema() {}
+//     //-----------------------------------------------------------
+//     // Old API
+//     //-----------------------------------------------------------
+//     public function init(): void {}
+//     public function getRelationKeysToModel($model, $type): array {}
+//     public function getData(): array {}
+//     public function setAssoc(Model $model, ?string $assocName = null) {}
+//     public function delAssoc(Model $model, ?string $assocName = null) {}
+//     public function batchAssoc($model_name, $ids) {}
+//     public function getOne($p = array()): ?Model {}
+//     public function getList($p = array()) : array{}
+//     public function getCount($p = array()) {}
+//     public function getRelated($model, $method = null, $p = array()) {}
+//     public function update($where = '') {}
+//     public function create($raw = false) {}
+//     public function delete() {}
+//     public function setFromFormData($cleaned_values) {}
+//     public function isAnonymous() {}
+//     public function getSchema() {}
     
-    public function getView(string $name): array {}
-    public function setView(string $name, array $view): void {}
-    public function hasView(?string $name = null): bool {}
-    public function getIndexes(): array {}
+//     public function getView(string $name): array {}
+//     public function setView(string $name, array $view): void {}
+//     public function hasView(?string $name = null): bool {}
+//     public function getIndexes(): array {}
     
     
 

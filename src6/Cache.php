@@ -76,6 +76,10 @@ use Pluf;
 abstract class Cache
 {
 
+    use \Pluf\DiContainerTrait;
+
+    protected $timeout = null;
+
     /**
      * Creates new instance of Cache
      *
@@ -92,7 +96,7 @@ abstract class Cache
         }
         switch ($type) {
             case 'array':
-                $engine = new Cache\Apcu($options->startsWith('array_', true));
+                $engine = new Cache\ArrayCache($options->startsWith('array_', true));
                 break;
             case 'apcu':
                 $engine = new Cache\Apcu($options->startsWith('apcu_', true));
@@ -101,13 +105,23 @@ abstract class Cache
                 $engine = new Cache\File($options->startsWith('file_', true));
                 break;
             case 'memcached':
-                $engine = new Cache\Apcu($options->startsWith('memcached_', true));
+                $engine = new Cache\Memcached($options->startsWith('memcached_', true));
                 break;
             default:
                 throw new Exception('Unsupported cache engine: ' . $options->engine);
         }
 
         return $engine;
+    }
+
+    /**
+     * Returns timeout to this class
+     *
+     * @return mixed
+     */
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 
     /**

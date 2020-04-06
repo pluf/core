@@ -18,9 +18,10 @@
  */
 namespace Pluf\Data;
 
+use Pluf\Db\Connection;
+use PDOStatement;
 use Pluf_Model;
-
-use Pluf\Db;
+use Pluf\Db\Expression;
 
 /**
  * Repositories are object or components that encapsulate the logic required to access data sources.
@@ -52,15 +53,28 @@ use Pluf\Db;
 class Repository
 {
 
+    private static array $repositoryMap = [];
+
     /**
      * Stores an instance of the model type
      *
      * @var \Pluf_Model
      */
-    private Pluf_Model $model;
-    private ?Db\Connection $dbConnection = null;
+    private $model;
 
-    private static array $repositoryMap = [];
+    private ?Connection $dbConnection = null;
+
+    private ?Schema $schema = null;
+
+    /**
+     * Store the model description of current model
+     *
+     * This is a virtual attribute and is build from the current model. It will
+     * be updated automatically.
+     *
+     * @var ModelDescription
+     */
+    private ?ModelDescription $modelDescription = null;
 
     /**
      * Defines one repository per aggregate
@@ -86,6 +100,7 @@ class Repository
         if (array_key_exists($modelType, self::$repositoryMap)) {
             return self::$repositoryMap[$modelType];
         }
+        // create
         $repo = new Repository($modelType);
         self::$repositoryMap[$modelType] = $repo;
         return $repo;
@@ -101,6 +116,19 @@ class Repository
         $this->model = new $modelType();
     }
 
+    public function setSchema(Schema $schema): Repository
+    {
+        $this->schema = $schema;
+        $this->clean();
+        return $this;
+    }
+
+    public function setConnection(Connection $connection): Repository
+    {
+        $this->dbConnection = $connection;
+        return $this;
+    }
+
     /**
      * Get a given item.
      *
@@ -108,21 +136,15 @@ class Repository
      *            int Id of the item.
      * @return mixed Item or false if not found.
      */
-    public function get($id): ?Model
+    public function getById($id)
     {
-        // Create and exec query
-        $res = $this->dbConnection->query()
-            ->table($this->tableName)
+        $stm = $this->dbConnection->query()
+            ->table($this->getTableName())
             ->where('id', $id)
-            ->getOne();
-        
-        // create model
-        $modelClassName = get_class($this->model);
-        $model = new $modelClassName();
-        $model->fillFromData($res);
-        
-        // return result
-        return $model;
+            ->select();
+
+        $this->checkStatement($stm);
+        return $this->createInstanceModel($stm->fetch());
     }
 
     /**
@@ -140,18 +162,31 @@ class Repository
      *            A query to run on db
      * @return Pluf_Model|null find model
      */
-    public function getOne(Query $query): ?Pluf_Model
+    public function getOne(Query $query)
     {
         return $this->model->getOne($query->toArray());
     }
 
-    public function create(Pluf_Model $model): ?Pluf_Model
+    public function create($model)
+    {
+        $md = ModelDescription::getInstance($model);
+        $schema = $this->schema;
+
+        $stm = $this->dbConnection->query()
+            ->mode('insert')
+            ->table($schema->getTableName($md))
+            ->set($schema->getValues($md, $model))
+            ->execute();
+
+        $this->checkStatement($stm);
+        $model->id = $this->dbConnection->lastInsertID();
+        return $model;
+    }
+
+    public function update($model)
     {}
 
-    public function update(Pluf_Model $model): ?Pluf_Model
-    {}
-
-    public function delete(Pluf_Model $model): ?Pluf_Model
+    public function delete($model)
     {}
 
     public function createList(?array $models = []): array
@@ -174,16 +209,141 @@ class Repository
      *
      * @param Query $query
      *            to run on db
-     * @return array of items or through an exception if
+     * @return array|int The result of items or through an exception if
      *         database failure
      */
-    public function getListByQuery(Query $query): array
+    public function getListByQuery(Query $query)
     {
-        $res = $this->model->getList($query->toArray());
-        if ($res instanceof \ArrayObject) {
-            return $res->getArrayCopy();
+        // TODO: maso, 2020: support cache
+        $schema = $this->schema;
+        $md = $this->getModelDescription();
+
+        // fields
+        $view = [
+            'filter' => [],
+            'field' => [],
+            'order' => [],
+            'join' => [],
+            'group' => [],
+            'having' => []
+        ];
+
+        if ($query->hasView()) {
+            $dataView = $md->getView($query->getView());
+
+            // Filter
+            if (array_key_exists('filter', $dataView)) {
+                $view['filter'] = array_merge( //
+                $schema->getViewFilters($md, $dataView), //
+                $schema->getQueryFilters($md, $query) //
+                );
+            } else {
+                $view['filter'] = $schema->getQueryFilters($md, $query);
+            }
+
+            // Field
+            if (array_key_exists('field', $dataView)) {
+                $view['field'] = $schema->getViewFields($md, $dataView);
+            } else {
+                $view['field'] = $schema->getFields($md);
+            }
+
+            // Order
+            $allDataOrders = $query->getOrder();
+            if (isset($dataView['order'])) {
+                $allDataOrders = array_merge($allDataOrders, $dataView['order']);
+            }
+            foreach ($allDataOrders as $name => $order) {
+                $view['order'][] = [
+                    $schema->getField($md, $name),
+                    $order == Query::ORDER_DESC
+                ];
+            }
+
+            // Join
+            if (isset($dataView['join'])) {
+                $view['join'] = $schema->getViewJoins($md, $dataView);
+            }
+
+            // Group
+            $view['group'] = $schema->getViewGroupBy($md, $dataView);
+            $view['having'] = $schema->getViewHaving($md, $dataView);
+        } else {
+            $view['field'] = $schema->getFields($md);
+            $view['filter'] = $schema->getQueryFilters($md, $query);
+
+            // Order
+            foreach ($query->getOrder() as $name => $order) {
+                $view['order'][] = [
+                    $schema->getField($md, $name),
+                    $order == Query::ORDER_DESC
+                ];
+            }
         }
-        return [];
+
+        $dbQuery = $this->dbConnection->query()
+            ->mode('select')
+            ->table($this->getTableName())
+            ->group($view['group']);
+        // add where
+        foreach ($view['filter'] as $filter) {
+            if ($filter instanceof Expression) {
+                $dbQuery->where($filter);
+                continue;
+            }
+            call_user_func_array([
+                $dbQuery,
+                'where'
+            ], $filter);
+        }
+        // add having
+        foreach ($view['having'] as $filter) {
+            if ($filter instanceof Expression) {
+                $dbQuery->having($filter);
+                continue;
+            }
+            call_user_func_array([
+                $dbQuery,
+                'have'
+            ], $filter);
+        }
+
+        // add join
+        foreach ($view['join'] as $join) {
+            call_user_func_array([
+                $dbQuery,
+                'join'
+            ], $join);
+        }
+
+        if ($query->getCount()) {
+            $dbQuery->field('count(*)', 'count');
+        } else {
+            // add order
+            foreach ($view['order'] as $order) {
+                call_user_func_array([
+                    $dbQuery,
+                    'order'
+                ], $order);
+            }
+            // limit
+            $dbQuery->field($view['field'])->limit($query->getLimit(), $query->getStart());
+        }
+
+        // Checks the query statement
+        $stm = $dbQuery->execute();
+        $this->checkStatement($stm);
+
+        if ($query->getCount()) {
+            return $stm->fetch()['count'];
+        }
+        // Convert to new items
+        $result = $stm->fetchAll();
+        $items = [];
+        foreach ($result as $data) {
+            $items[] = $this->createInstanceModel($data);
+        }
+        return $items;
     }
 
     public function deleteListByQuery(Query $query): array
@@ -254,6 +414,58 @@ class Repository
     private function isManyToManyRelation(string $relationName): bool
     {
         return true;
+    }
+
+    private function checkStatement(PDOStatement $stm): void
+    {
+        $info = $stm->errorInfo();
+        if ($info[0] != 0) {
+            throw new Exception([
+                'code' => $info[0],
+                'driverCode' => $info[1],
+                'message' => $info[2]
+            ]);
+        }
+    }
+
+    private function createInstanceModel($data)
+    {
+        $md = $this->getModelDescription();
+        return $this->schema->newInstance($md, $data);
+    }
+
+    private function getModelDescription(): ModelDescription
+    {
+        // Check if it is exist
+        if (isset($this->modelDescription)) {
+            return $this->modelDescription;
+        }
+
+        // create new description
+        if (! isset($this->model)) {
+            throw new Exception([
+                'message' => 'Model is not defined for the repository',
+                'code' => 2222
+            ]);
+        }
+        $this->modelDescription = ModelDescription::getInstance($this->model);
+        return $this->modelDescription;
+    }
+
+    private function getTableName()
+    {
+        $md = $this->getModelDescription();
+        return $this->schema->getTableName($md);
+    }
+
+    private function clean()
+    {
+        // load model description
+        if ($this->model) {
+            $this->modelDescription = ModelDescription::getInstance($this->model);
+        } else {
+            $this->modelDescription = null;
+        }
     }
 }
 

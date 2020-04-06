@@ -51,17 +51,14 @@ trait DiContainerTrait
             $properties = [];
         }
 
-        foreach ($properties as $key => $val) {
-            if (!is_numeric($key) && property_exists($this, $key)) {
-                if ($passively && $this->$key !== null) {
-                    continue;
-                }
-
-                if ($val !== null) {
-                    $this->$key = $val;
-                }
-            } else {
-                $this->setMissingProperty($key, $val);
+        if(is_array($properties)){
+            $properties = new Options($properties);
+        }
+        $vars = get_object_vars($this);
+        foreach ($vars as $key => $type) {
+            $value = $properties->$key;
+            if(isset($value)){
+                $this->$key = $value;
             }
         }
     }

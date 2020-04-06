@@ -2,6 +2,7 @@
 namespace Pluf\Db;
 
 use Pluf\Options;
+use Pluf\Data\Schema;
 use Pluf_Utils;
 use WKT;
 use geoPHP;

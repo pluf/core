@@ -20,11 +20,15 @@
 namespace Pluf\NoteBook;
 
 use Pluf_Model;
+use Pluf\Data\Schema;
+use Pluf\Db\Expression;
 
 /**
  *
  * @author maso
- *        
+ * @ModelDescription(
+ *  table='notebook_book'
+ * )
  */
 class Book extends Pluf_Model
 {
@@ -41,13 +45,20 @@ class Book extends Pluf_Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
-                'type' => 'Sequence',
+                'type' => Schema::SEQUENCE,
                 // It is automatically added.
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
             ),
-            'title' => array(
+            'title' => [
+                'type' => Schema::VARCHAR,
+                'size' => 100,
+                'blank' => false,
+                'editable' => false,
+                'readable' => true
+            ],
+            'description' => array(
                 'type' => 'Text',
                 'blank' => false,
                 'editable' => false,
@@ -72,5 +83,45 @@ class Book extends Pluf_Model
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
         }
+    }
+
+    public function loadViews(): array
+    {
+        return [
+            'nonEmpty' => [
+                'join' => [
+                    [
+                        'model' => '\Pluf\NoteBook\Item',
+                        'property' => 'book_id',
+                        'alias' => 'item',
+                        'masterProperty' => 'id',
+                        'kind' => Schema::INNER_JOIN
+                    ]
+                ],
+                'group' => [
+                    'item.book_id'
+                ],
+                'having' => [
+                    new Expression('count(*) > 0')
+                ]
+            ],
+            'empty' => [
+                'join' => [
+                    [
+                        'model' => '\Pluf\NoteBook\Item',
+                        'property' => 'book_id',
+                        'alias' => 'item',
+                        'masterProperty' => 'id',
+                        'kind' => Schema::INNER_JOIN
+                    ]
+                ],
+                'group' => [
+                    'item.book_id'
+                ],
+                'having' => [
+                    new Expression('count(*) < 0')
+                ]
+            ]
+        ];
     }
 }

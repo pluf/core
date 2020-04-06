@@ -52,8 +52,6 @@ use Pluf\Options;
 class Apcu extends \Pluf\Cache
 {
 
-    use \Pluf\DiContainerTrait;
-
     /**
      * پیشوندی که به تمام کلیدهای کش اضافه می‌شود.
      * این کلید در تنظیم‌های
@@ -67,8 +65,6 @@ class Apcu extends \Pluf\Cache
      * یک مقدار سربار محاسباتی داریم اما حجم استفاده شده کاهش پیدا می‌کنه.
      */
     private $compress = false;
-
-    private $timeout = null;
 
     /**
      * Creates new instance of the class

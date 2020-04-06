@@ -2,11 +2,12 @@
 namespace Pluf\Test;
 
 use PHPUnit\Framework\TestFailure;
+use PHPUnit\TextUI\ResultPrinter;
 
 /**
  * Generic ResultPrinter for PHPUnit tests of ATK4 repos.
  */
-class PlufPlufResultPrinter extends PlufResultPrinter
+class PlufResultPrinter extends ResultPrinter
 {
 
     protected function printDefectTrace(TestFailure $defect): void

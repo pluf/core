@@ -8,7 +8,7 @@ Expressions
 
 Expression class implements a flexible way for you to define any custom
 expression then execute it as-is or as a part of another query or expression.
-Expression is supported anywhere in DSQL to allow you to express SQL syntax
+Expression is supported anywhere in Pluf DB to allow you to express SQL syntax
 properly.
 
 Quick Example::
@@ -29,7 +29,7 @@ Another use of expression is to supply field instead of value and vice versa::
 
     // Produces: where :a between time_from and time_to
 
-Yet another curious use for the DSQL library is if you have certain object in
+Yet another curious use for the Pluf DB library is if you have certain object in
 your ORM implementing :php:class:`Expressionable` interface. Then you can also
 use it within expressions::
 
@@ -70,7 +70,7 @@ Parameters
 Because some values are un-safe to use in the query and can contain dangerous
 values they are kept outside of the SQL query string and are using
 `PDO's bindParam <http://php.net/manual/en/pdostatement.bindparam.php>`_
-instead. DSQL can consist of multiple objects and each object may have
+instead. Pluf DB can consist of multiple objects and each object may have
 some parameters. During `rendering`_ those parameters are joined together to
 produce one complete query.
 
@@ -86,7 +86,7 @@ Creating Expression
 
 ::
 
-    use atk4\dsql\Expression;
+    use Pluf\Db\Expression;
 
     $expr = new Expression("NOW()");
 

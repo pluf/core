@@ -18,7 +18,13 @@
  */
 namespace Pluf;
 
-use Pluf;
+use Pluf\ExceptionRenderer\Console;
+use Pluf\ExceptionRenderer\HTML;
+use Pluf\ExceptionRenderer\HTMLText;
+use Pluf\ExceptionRenderer\JSON;
+use Pluf\ExceptionRenderer\RendererAbstract;
+use Pluf\Translator\ITranslatorAdapter;
+use Throwable;
 
 /**
  * Pluf root exception type
@@ -28,87 +34,294 @@ use Pluf;
  *
  *
  * @author Mostafa Barmshory<mostafa.barmshory@dpq.co.ir>
- * @since Pluf6 
- *        
+ * @since Pluf6
+ *       
  */
-class Exception extends \Exception implements \JsonSerializable
+class Exception extends \Exception /* implements \JsonSerializable */
 {
 
-    protected $status;
+    /** @var array */
+    public $params = [];
 
-    protected $link;
+    /** @var string */
+    protected $custom_exception_title = 'Critical Error';
 
-    protected $developerMessage;
-
-    protected $data;
+    /** @var string The name of the Exception for custom naming */
+    protected $custom_exception_name = null;
 
     /**
-     * یک نمونه از این کلاس ایجاد می‌کند.
+     * Most exceptions would be a cause by some other exception, Agile
+     * Core will encapsulate them and allow you to access them anyway.
+     *
+     * @var array
+     */
+    private $trace2;
+
+    // because PHP's use of final() sucks!
+
+    /** @var string[] */
+    private $solutions = [];
+
+    // store solutions
+
+    /** @var ITranslatorAdapter */
+    private $adapter;
+
+    /**
+     * Constructor.
+     *
+     * @param string|array $message
+     * @param int $code
+     * @param Throwable $previous
+     */
+    public function __construct($message = '', ?int $code = null, Throwable $previous = null)
+    {
+        if (is_array($message)) {
+            // message contain additional parameters
+            $this->params = $message;
+            $message = array_shift($this->params);
+        }
+
+        parent::__construct($message, $code ?? 0, $previous);
+        $this->trace2 = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
+    }
+
+    /**
+     * Change message (subject) of a current exception.
+     * Primary use is
+     * for localization purposes.
      *
      * @param string $message
-     * @param string $code
-     * @param string $previous
+     *
+     * @return $this
      */
-    public function __construct($message = "Unknown exception", $code = 5000, $previous = null, $status = 500, $link = null, $developerMessage = null)
+    public function setMessage($message): self
     {
-        parent::__construct($message, $code, $previous);
-        $this->status = $status;
-        $this->link = $link;
-        $this->developerMessage = $developerMessage;
+        $this->message = $message;
+
+        return $this;
     }
 
-    public function getDeveloperMessage()
+    /**
+     * Return trace array.
+     *
+     * @return array
+     */
+    public function getMyTrace()
     {
-        return $this->developerMessage;
+        return $this->trace2;
     }
 
-    public function setDeveloperMessage($message)
+    /**
+     * Return exception message using color sequences.
+     *
+     * <exception name>: <string>
+     * <info>
+     *
+     * trace
+     *
+     * --
+     * <triggered by>
+     *
+     * @return string
+     */
+    public function getColorfulText(): string
     {
-        $this->developerMessage = $message;
+        return (string) new Console($this, $this->adapter);
     }
 
-    public function getStatus()
+    /**
+     * Similar to getColorfulText() but will use raw HTML for outputting colors.
+     *
+     * @return string
+     */
+    public function getHTMLText(): string
     {
-        return $this->status;
+        return (string) new HTMLText($this, $this->adapter);
     }
 
-    public function setStatus($status)
+    /**
+     * Return exception message using HTML block and Semantic UI formatting.
+     * It's your job
+     * to put it inside boilerplate HTML and output, e.g:.
+     *
+     * $l = new \atk4\ui\App();
+     * $l->initLayout('Centered');
+     * $l->layout->template->setHTML('Content', $e->getHTML());
+     * $l->run();
+     * exit;
+     *
+     * @return string
+     */
+    public function getHTML(): string
     {
-        $this->status = $status;
+        return (string) new HTML($this, $this->adapter);
     }
 
-    public function setData($data)
+    /**
+     * Return exception in JSON Format.
+     *
+     * @return string
+     */
+    public function getJSON(): string
     {
-        $this->data = $data;
+        return (string) new JSON($this, $this->adapter);
     }
 
-    public function getData()
+    /**
+     * Safely converts some value to string.
+     *
+     * @param mixed $val
+     *
+     * @return string
+     */
+    public function toString($val): string
     {
-        return $this->data;
+        return RendererAbstract::toSafeString($val);
     }
 
-    public function jsonSerialize()
+    /**
+     * Follow the getter-style of PHP Exception.
+     *
+     * @return array
+     */
+    public function getParams()
     {
-        if (Pluf::f('debug', false)) {
-            return array(
-                'code' => $this->code,
-                'status' => $this->status,
-                'link' => $this->link,
-                'message' => $this->message,
-                'data' => $this->data,
-                'developerMessage' => $this->developerMessage,
-                'stack' => $this->getTrace()
-            );
-        } else {
-            return array(
-                'code' => $this->code,
-                'status' => $this->status,
-                'link' => $this->link,
-                'message' => $this->message,
-                'data' => $this->data
-            );
-        }
+        return $this->params;
     }
+
+    /**
+     * Augment existing exception with more info.
+     *
+     * @param string $param
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function addMoreInfo($param, $value): self
+    {
+        $this->params[$param] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Add a suggested/possible solution to the exception.
+     *
+     * @todo can be added more features? usually we are out of App
+     *      
+     * @param string $solution
+     *
+     * @return Exception
+     */
+    public function addSolution(string $solution)
+    {
+        $this->solutions[] = $solution;
+
+        return $this;
+    }
+
+    /**
+     * Get the solutions array.
+     */
+    public function getSolutions(): array
+    {
+        return $this->solutions;
+    }
+
+    /**
+     * Get the custom Exception name, if defined in $custom_exception_name.
+     *
+     * @return string
+     */
+    public function getCustomExceptionName(): string
+    {
+        return $this->custom_exception_name ?? get_class($this);
+    }
+
+    /**
+     * Get the custom Exception title, if defined in $custom_exception_title.
+     *
+     * @return string
+     */
+    public function getCustomExceptionTitle(): string
+    {
+        return $this->custom_exception_title;
+    }
+
+    /**
+     * Set Custom Translator adapter.
+     *
+     * @param ITranslatorAdapter|null $adapter
+     *
+     * @return Exception
+     */
+    public function setTranslatorAdapter(?ITranslatorAdapter $adapter = null): self
+    {
+        $this->adapter = $adapter;
+
+        return $this;
+    }
+
+    // use DiContainerTrait;
+
+    // protected $status;
+
+    // protected $link;
+
+    // protected $developerMessage;
+
+    // protected $data;
+
+    // /**
+    // * یک نمونه از این کلاس ایجاد می‌کند.
+    // *
+    // * @param string $message
+    // * @param string $code
+    // * @param string $previous
+    // */
+    // public function __construct($options)
+    // {
+    // $this->setDefaults($options);
+    // }
+
+    // public function getDeveloperMessage()
+    // {
+    // return $this->developerMessage;
+    // }
+
+    // public function getStatus()
+    // {
+    // return $this->status;
+    // }
+
+    // public function setData($data)
+    // {
+    // $this->data = $data;
+    // }
+
+    // public function jsonSerialize()
+    // {
+    // if (Pluf::f('debug', false)) {
+    // return array(
+    // 'code' => $this->code,
+    // 'status' => $this->status,
+    // 'link' => $this->link,
+    // 'message' => $this->message,
+    // 'data' => $this->data,
+    // 'developerMessage' => $this->developerMessage,
+    // 'stack' => $this->getTrace()
+    // );
+    // } else {
+    // return array(
+    // 'code' => $this->code,
+    // 'status' => $this->status,
+    // 'link' => $this->link,
+    // 'message' => $this->message,
+    // 'data' => $this->data
+    // );
+    // }
+    // }
 }
 
 

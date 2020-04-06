@@ -574,7 +574,17 @@ class Expression implements \ArrayAccess, \IteratorAggregate, ResultSet
             $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             // We support PDO
             $query = $this->render();
-            $statement = $connection->prepare($query);
+            try {
+                $statement = $connection->prepare($query);
+            } catch (\Exception $e) {
+                $new = new Exception([
+                    'Pluf got Exception when preparing this {query}',
+                    'error' => $e->getMessage(),
+                    'query' => $this->getDebugQuery()
+                ]);
+                $new->by_exception = $e;
+                throw $new;
+            }
             foreach ($this->params as $key => $val) {
                 if (is_int($val)) {
                     $type = \PDO::PARAM_INT;
@@ -621,12 +631,11 @@ class Expression implements \ArrayAccess, \IteratorAggregate, ResultSet
                 $statement->execute();
             } catch (\Exception $e) {
                 $new = new Exception([
-                    'DSQL got Exception when executing this query',
+                    'Pluf got Exception when executing this query',
                     'error' => $e->getMessage(),
                     'query' => $this->getDebugQuery()
                 ]);
                 $new->by_exception = $e;
-
                 throw $new;
             }
 

@@ -20,6 +20,10 @@ use Pluf\ModelUtils;
 use Pluf\Module;
 use Pluf\Options;
 use Pluf\Cache;
+use Pluf\Db\Connection;
+use Pluf\Data\Schema;
+use Pluf\Data\Repository;
+use Pluf\Data\ModelDescription;
 
 /**
  * The main class of the framework.
@@ -34,6 +38,10 @@ class Pluf
 
     public static ?Cache $cache = null;
 
+    public static ?Connection $dbConnection = null;
+
+    public static ?Schema $dataSchema = null;
+
     /**
      * Start the framework
      *
@@ -42,6 +50,11 @@ class Pluf
      */
     public static function start($config)
     {
+        self::$cache = null;
+        self::$dbConnection = null;
+        self::$options = null;
+        self::$dataSchema = null;
+
         // Load configurations
         $GLOBALS['_PX_starttime'] = microtime(true);
         $GLOBALS['_PX_uniqid'] = uniqid($GLOBALS['_PX_starttime'], true);
@@ -57,9 +70,6 @@ class Pluf
             throw new Exception('Configuration file does not exist: ' . $config);
         }
         self::$options = new Options($GLOBALS['_PX_config']);
-
-        // load cache
-        self::$cache = Cache::getInstance(self::getConfigByPrefix('cache_', true));
 
         // Load the relations for each installed application. Each
         // application folder must be in the include path.
@@ -283,25 +293,11 @@ class Pluf
      */
     public static function &db($extra = null)
     {
-        $db = null;
-        if (isset($GLOBALS['_PX_db'])) {
-            $db = $GLOBALS['_PX_db'];
-            if ($db->isLive()) {
-                return $db;
-            }
+        if (! isset(self::$dbConnection)) {
+            $options = self::getConfigByPrefix('db_', true);
+            self::$dbConnection = Connection::connect($options->dsn, $options->user, $options->passwd);
         }
-        $db = \Pluf\Db\Engine::getInstance(new Options(array_merge( //
-        array(
-            'engine' => '\Pluf\Db\SQLiteEngine',
-            'login' => 'root',
-            'password' => 'root',
-            'database' => '/tmp/pluf.test.sqlite.db'
-        ), // default value
-        Pluf::pf('db_', true) // from config
-        )));
-
-        $GLOBALS['_PX_db'] = $db;
-        return $db;
+        return self::$dbConnection;
     }
 
     /**
@@ -313,6 +309,37 @@ class Pluf
     public static function getCurrentRequest()
     {
         return Pluf_HTTP_Request::getCurrent();
+    }
+
+    public static function getCache()
+    {
+        if (! isset(self::$cache)) {
+            // load cache
+            self::$cache = Cache::getInstance(self::getConfigByPrefix('cache_', true));
+        }
+        return self::$cache;
+    }
+
+    public static function getDataSchema()
+    {
+        if (! isset(self::$dataSchema)) {
+            self::$dataSchema = Schema::getInstance(self::getConfigByPrefix('data_schema_', true));
+        }
+        return self::$dataSchema;
+    }
+
+    public static function getDataRepository($model): Repository
+    {
+        $modelType = $model;
+        if ($model instanceof ModelDescription) {
+            $modelType = $model->model;
+        }
+        if (! is_string($model)) {
+            $modelType = get_class($model);
+        }
+        return Repository::getInstance($modelType)
+            ->setSchema(self::getDataSchema())
+            ->setConnection(self::db());
     }
 }
 

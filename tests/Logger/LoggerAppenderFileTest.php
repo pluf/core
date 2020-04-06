@@ -1,5 +1,5 @@
 <?php
-namespace PlufTest\Logger;
+namespace Pluf\Test\Logger;
 
 require_once 'Pluf.php';
 

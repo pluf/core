@@ -16,11 +16,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace Pluf\Data;
 
+/**
+ *
+ * Here is list of attributes to build a query
+ *
+ *
+ * - view
+ * - filter
+ * - order
+ * - start
+ * - limit
+ * - select
+ * - count
+ *
+ *
+ * ## View
+ *
+ * View is named Model View which must be defined in the model descriptions.
+ * For example suppose there is a view 'viewName' in the model and you are
+ * about to run a query:
+ *
+ * ```PHP
+ * $query = new Query([
+ * 'view' => 'viewName',
+ * ...
+ * ]);
+ * ```
+ *
+ * @author maso
+ *        
+ */
 class Query
 {
+
+    const ORDER_ASC = 'asc';
+
+    const ORDER_DESC = 'desc';
+
+    const MAX_RESULT_SIZE = 300;
+
+    use \Pluf\DiContainerTrait;
 
     private ?string $view = null;
 
@@ -40,28 +77,37 @@ class Query
      *
      * @var int
      */
-    private int $limit = - 1;
+    private ?int $limit = null;
 
     private bool $count = false;
 
+    /**
+     * Creates new instance of the Query
+     *
+     * To build a query:
+     *
+     * - view
+     * - filter
+     * - order
+     * - start
+     * - limit
+     * - select
+     * - count
+     *
+     * @param array $param
+     */
     function __construct(?array $param = [])
     {
         $param = array_merge(array(
             'view' => null,
-            'filter' => null,
-            'order' => null,
-            'start' => 0,
+            'filter' => [],
+            'order' => [],
             'select' => null,
-            'nb' => - 1,
+            'start' => 0,
+            'limit' => - 1,
             'count' => false
         ), $param);
-
-        $this->view = $param['view'];
-        $this->filter = $param['filter'];
-        $this->order = $param['order'];
-        $this->start = $param['start'];
-        $this->limit = $param['nb'];
-        $this->count = $param['count'];
+        $this->setDefaults($param);
     }
 
     /**
@@ -76,29 +122,11 @@ class Query
 
     /**
      *
-     * @param mixed $view
-     */
-    public function setView($view)
-    {
-        $this->view = $view;
-    }
-
-    /**
-     *
      * @return array of filters
      */
     public function getFilter()
     {
         return $this->filter;
-    }
-
-    /**
-     *
-     * @param array $filter
-     */
-    public function setFilter($filter)
-    {
-        $this->filter = $filter;
     }
 
     /**
@@ -112,16 +140,6 @@ class Query
 
     /**
      *
-     * @param
-     *            array orders
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-    }
-
-    /**
-     *
      * @return number
      */
     public function getStart()
@@ -131,29 +149,14 @@ class Query
 
     /**
      *
-     * @param number $start
-     */
-    public function setStart($start)
-    {
-        $this->start = $start;
-    }
-
-    /**
-     *
      * @return number
      */
     public function getLimit()
     {
+        if ($this->limit < 1) {
+            return Query::MAX_RESULT_SIZE;
+        }
         return $this->limit;
-    }
-
-    /**
-     *
-     * @param number $limit
-     */
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
     }
 
     /**
@@ -166,42 +169,13 @@ class Query
     }
 
     /**
+     * Checks if there is a view in the query
      *
-     * @param
-     *            Ambigous <boolean, mixed> $count
+     * @return bool true if there is a veiw
      */
-    public function setCount($count)
+    public function hasView(): bool
     {
-        $this->count = $count;
-    }
-
-    /**
-     * Converts the query object to the old query model of Pluf
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        // general value
-        $res = array(
-            'view' => $this->view,
-            'filter' => $this->filter
-        );
-
-        // check count query
-        if ($this->count) {
-            $res['count'] = true;
-        } else {
-            $res['count'] = false;
-            $res['order'] = $this->order;
-            $res['start'] = $this->start;
-            if ($this->limit > 0) {
-                $res['nb'] = $this->limit;
-            }
-        }
-
-        // result
-        return $res;
+        return isset($this->view) && strlen($this->view) > 0;
     }
 }
 

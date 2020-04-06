@@ -41,8 +41,6 @@ use Pluf\Options;
  */
 class Memcached extends \Pluf\Cache
 {
-    use \Pluf\DiContainerTrait;
-
     private $memcache = null;
 
     private $keyprefix = '';
@@ -50,8 +48,6 @@ class Memcached extends \Pluf\Cache
     private $server = 'localhost';
 
     private $port = 11211;
-
-    private $timeout = null;
 
     private $compress = 0;
 

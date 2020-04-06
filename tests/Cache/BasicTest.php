@@ -16,8 +16,8 @@ class BasicTest extends TestCase
     public function gettingDefaultCache()
     {
         Pluf::start([]);
-        $this->assertNotNull(Pluf::$cache);
-        $this->assertTrue(Pluf::$cache instanceof Pluf\Cache);
+        $this->assertNotNull(Pluf::getCache());
+        $this->assertTrue(Pluf::getCache() instanceof Pluf\Cache);
     }
 }
 

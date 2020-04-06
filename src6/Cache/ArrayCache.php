@@ -1,6 +1,8 @@
 <?php
 namespace Pluf\Cache;
 
+use Pluf\Options;
+
 /**
  * A basic cache to put objects into the memory
  *
@@ -13,6 +15,11 @@ class ArrayCache extends \Pluf\Cache
 {
 
     private $cache = [];
+    
+    public function __construct(?Options $options = null)
+    {
+        $this->setDefaults($options);
+    }
 
     /**
      *

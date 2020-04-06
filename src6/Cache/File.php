@@ -36,8 +36,6 @@ use Pluf;
 class File extends \Pluf\Cache
 {
 
-    use \Pluf\DiContainerTrait;
-
     /**
      * Mapping key => md5.
      *
@@ -46,8 +44,6 @@ class File extends \Pluf\Cache
     private $keymap = array();
 
     private $folder = '/tmp';
-
-    private $timeout = null;
 
     /**
      * Creates new instance of the file cache

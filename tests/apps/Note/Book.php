@@ -1,4 +1,7 @@
 <?php
+
+use Pluf\Data\Schema;
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -18,52 +21,58 @@
  */
 
 /**
- * 
- * @author maso
  *
+ * @author maso
+ *        
  */
 class Note_Book extends Pluf_Model
 {
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see Pluf_Model::init()
      */
-    function init ()
+    function init()
     {
         $this->_a['table'] = 'note_book';
         $this->_a['verbose'] = 'Note book';
         $this->_a['cols'] = array(
-                // It is mandatory to have an "id" column.
-                'id' => array(
-                        'type' => 'Sequence',
-                        // It is automatically added.
-                        'blank' => true,
-                        'editable' => false,
-                        'readable' => true
-                ),
-                'title' => array(
-                        'type' => 'Text',
-                        'blank' => false,
-                        'editable' => false,
-                        'readable' => true
-                ),
-                'creation_dtime' => array(
-                        'type' => 'Datetime',
-                        'blank' => true,
-                        'editable' => false,
-                        'readable' => true
-                )
+            // It is mandatory to have an "id" column.
+            'id' => array(
+                'type' => 'Sequence',
+                // It is automatically added.
+                'blank' => true,
+                'editable' => false,
+                'readable' => true
+            ),
+            'title' => array(
+                'type' => Schema::VARCHAR,
+                'blank' => false,
+                'editable' => false,
+                'readable' => true
+            ),
+            'description' => array(
+                'type' => 'Text',
+                'blank' => false,
+                'editable' => false,
+                'readable' => true
+            ),
+            'creation_dtime' => array(
+                'type' => 'Datetime',
+                'blank' => true,
+                'editable' => false,
+                'readable' => true
+            )
         );
     }
 
-
     /**
-     * 
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      * @see Pluf_Model::preSave()
      */
-    function preSave ($create = false)
+    function preSave($create = false)
     {
         if ($this->id == '') {
             $this->creation_dtime = gmdate('Y-m-d H:i:s');
