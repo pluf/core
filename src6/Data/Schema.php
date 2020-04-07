@@ -486,6 +486,25 @@ abstract class Schema
     }
 
     /**
+     * Retrieve key relationships of a given model.
+     *
+     * @param string $model
+     * @param string $type
+     *            Relation Schema::MANY_TO_ONE or Schema::MANY_TO_MANY
+     * @return array Key relationships.
+     */
+    public function getRelationKeysTo(ModelDescription $from, ModelDescription $to, $type)
+    {
+        $properies = [];
+        foreach ($from as $name => $property) {
+            if ($property->type === $type && $property->model === $to->type) {
+                $properies[] = $name;
+            }
+        }
+        return $properies;
+    }
+
+    /**
      * Creates new model and fill with data
      *
      * @param ModelDescription $md

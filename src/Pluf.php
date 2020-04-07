@@ -328,18 +328,35 @@ class Pluf
         return self::$dataSchema;
     }
 
-    public static function getDataRepository($model): Repository
+    public static function getDataRepository($option): Repository
     {
-        $modelType = $model;
-        if ($model instanceof ModelDescription) {
-            $modelType = $model->model;
+        // XXX: maso, 2020: adding cache manager for repository
+        if (is_array($option)) {
+            $options = new Options($option);
+        } else if ($option instanceof \Pluf\Options) {
+            $options = $option;
+        } else {
+            $options = new Options();
         }
-        if (! is_string($model)) {
-            $modelType = get_class($model);
+
+        if (is_string($option)) {
+            $options->type = 'model';
+            $options->model = $option;
         }
-        return Repository::getInstance($modelType)
-            ->setSchema(self::getDataSchema())
-            ->setConnection(self::db());
+
+        if ($option instanceof ModelDescription) {
+            $options->model = $option->type;
+            $options->type = 'model';
+        }
+        if ($option instanceof Pluf_Model) {
+            $options->model = get_class($option);
+            $options->type = 'model';
+        }
+
+        $options->connection = self::db();
+        $options->schema = self::getDataSchema();
+
+        return Repository::getInstance($options);
     }
 }
 

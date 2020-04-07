@@ -177,5 +177,59 @@ class Query
     {
         return isset($this->view) && strlen($this->view) > 0;
     }
+
+    /**
+     *
+     * @param mixed $view
+     */
+    public function setView($view)
+    {
+        $this->view = $view;
+    }
+
+    /**
+     *
+     * @param mixed $filter
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     *
+     * @param mixed $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     *
+     * @param number $start
+     */
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    /**
+     *
+     * @param number $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     *
+     * @param boolean $count
+     */
+    public function setCount($count)
+    {
+        $this->count = $count;
+    }
 }
 

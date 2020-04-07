@@ -416,6 +416,46 @@ class OldPlufModelTest extends TestCase
         $this->assertEquals(1, $count);
     }
 
+    /**
+     *
+     * @test
+     */
+    public function testUpdateModel()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        // crate 5 item
+        $book->title = 'title xxx' . rand();
+        $this->assertTrue($book->create());
+
+        $book->title = 'title yyy' . rand();
+        $this->assertTrue($book->update());
+
+        $book2 = new \Pluf\NoteBook\Book($book->id);
+
+        $this->assertEquals($book->title, $book2->title);
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testDeleteModel()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        // crate 5 item
+        $book->title = 'title xxx' . rand();
+        $this->assertTrue($book->create());
+        $this->assertTrue($book->delete());
+
+        $bookList = $book->getList();
+
+        $this->assertEquals(0, count($bookList));
+    }
+
     /*
      * TODO:
      *
@@ -425,10 +465,13 @@ class OldPlufModelTest extends TestCase
      * - create ........................... ok
      * - count ............................ ok
      * - getList .......................... ok
-     * - update
-     * - delete
+     * - update ........................... ok
+     * - delete ........................... ok
      * - setAssoc
      * - delAssoc
+     * - get_xxx
+     * - get_xxx_list
+     * - sef forign key
      *
      */
 }

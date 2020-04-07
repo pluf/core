@@ -21,6 +21,8 @@ use Pluf\Db\Engine;
 use Pluf\Data\Repository;
 use Pluf\Data\Query;
 use Pluf\Data\ModelDescription;
+use Pluf\Data\ModelProperty;
+use Pluf\Data\Schema;
 
 /**
  * Sort of Active Record Class
@@ -133,18 +135,6 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * ساختار داده‌ای را ایجاد می‌کند.
-     *
-     * این فراخوانی تمام ساختارهای داده‌ای اصلی را ایجاد می‌کند. تمام زیر
-     * کلاس‌ها
-     * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
-     */
-    function init()
-    {
-        // Define it yourself.
-    }
-
-    /**
      * Load and init the model
      */
     function _init()
@@ -202,41 +192,40 @@ class Pluf_Model implements JsonSerializable
         ModelUtils::putModelToCache($this);
     }
 
-    /**
-     * Retrieve key relationships of a given model.
-     *
-     * @param string $model
-     * @param string $type
-     *            Relation Engine::FOREIGNKEY or Engine::MANY_TO_MANY
-     * @return array Key relationships.
-     */
-    public function getRelationKeysToModel($model, $type)
-    {
-        $keys = array();
-        foreach ($this->_a['cols'] as $col => $description) {
-            if (isset($description['model']) && $model === $description['model']) {
-                // $field = new $val['type']();
-                if ($type === $description['type']) {
-                    $keys[$col] = $description;
-                }
-            }
-        }
+    // /**
+    // * Retrieve key relationships of a given model.
+    // *
+    // * @param string $model
+    // * @param string $type
+    // * Relation Engine::FOREIGNKEY or Engine::MANY_TO_MANY
+    // * @return array Key relationships.
+    // */
+    // public function getRelationKeysToModel($model, $type)
+    // {
+    // $keys = array();
+    // foreach ($this->_a['cols'] as $col => $description) {
+    // if (isset($description['model']) && $model === $description['model']) {
+    // // $field = new $val['type']();
+    // if ($type === $description['type']) {
+    // $keys[$col] = $description;
+    // }
+    // }
+    // }
+    // return $keys;
+    // }
 
-        return $keys;
-    }
-
-    /**
-     * Get the foreign keys relating to a given model.
-     *
-     * @deprecated Use {@link self::getRelationKeysToModel()} instead.
-     * @param
-     *            string Model
-     * @return array Foreign keys
-     */
-    function getForeignKeysToModel($model)
-    {
-        return $this->getRelationKeysToModel($model, Engine::FOREIGNKEY);
-    }
+    // /**
+    // * Get the foreign keys relating to a given model.
+    // *
+    // * @deprecated Use {@link self::getRelationKeysToModel()} instead.
+    // * @param
+    // * string Model
+    // * @return array Foreign keys
+    // */
+    // function getForeignKeysToModel($model)
+    // {
+    // return $this->getRelationKeysToModel($model, Engine::FOREIGNKEY);
+    // }
 
     /**
      * Get the raw data of the object.
@@ -261,70 +250,44 @@ class Pluf_Model implements JsonSerializable
         return $this->_data;
     }
 
-    /**
-     * Set the association of a model to another in many to many.
-     *
-     * @param
-     *            object Object to associate to the current object
-     */
-    function setAssoc(Pluf_Model $model, ?string $assocName = null)
-    {
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-        return $engine->execute($schema->createRelationQuery($this, $model, $assocName));
-    }
+    // /**
+    // * Bulk association of models to the current one.
+    // *
+    // * @param
+    // * string Model name
+    // * @param
+    // * array Ids of Model name
+    // * @return bool Success
+    // */
+    // function batchAssoc($model_name, $ids)
+    // {
+    // $currents = $this->getRelated($model_name);
+    // foreach ($currents as $cur) {
+    // $this->delAssoc($cur);
+    // }
+    // foreach ($ids as $id) {
+    // $m = new $model_name($id);
+    // if ($m->id == $id) {
+    // $this->setAssoc($m);
+    // }
+    // }
+    // return true;
+    // }
 
-    /**
-     * Set the association of a model to another in many to many.
-     *
-     * @param
-     *            object Object to associate to the current object
-     */
-    function delAssoc(Pluf_Model $model, ?string $assocName = null)
-    {
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-        return $engine->execute($schema->deleteRelationQuery($this, $model, $assocName));
-    }
-
-    /**
-     * Bulk association of models to the current one.
-     *
-     * @param
-     *            string Model name
-     * @param
-     *            array Ids of Model name
-     * @return bool Success
-     */
-    function batchAssoc($model_name, $ids)
-    {
-        $currents = $this->getRelated($model_name);
-        foreach ($currents as $cur) {
-            $this->delAssoc($cur);
-        }
-        foreach ($ids as $id) {
-            $m = new $model_name($id);
-            if ($m->id == $id) {
-                $this->setAssoc($m);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Get the table of the model.
-     *
-     * Avoid doing the concatenation of the prefix and the table
-     * manually.
-     *
-     * @deprecated
-     */
-    function getSqlTable()
-    {
-        return $this->getEngine()
-            ->getSchema()
-            ->getTableName($this);
-    }
+    // /**
+    // * Get the table of the model.
+    // *
+    // * Avoid doing the concatenation of the prefix and the table
+    // * manually.
+    // *
+    // * @deprecated
+    // */
+    // function getSqlTable()
+    // {
+    // return $this->getEngine()
+    // ->getSchema()
+    // ->getTableName($this);
+    // }
 
     /**
      * Overloading of the get method.
@@ -539,14 +502,13 @@ class Pluf_Model implements JsonSerializable
      *            array Parameters, see getList() for the definition of
      *            the keys
      * @return array Array of items
-     *        
-     * @deprecated use \Pluf\Model\Repository::getRelated
      */
-    function getRelated($model, $method = null, $p = array())
+    private function getRelated(string $modelClass, $relationName, $p = array())
     {
         if ($this->isAnonymous()) {
             return new ArrayObject();
         }
+
         $default = array(
             'view' => null,
             'filter' => null,
@@ -555,68 +517,41 @@ class Pluf_Model implements JsonSerializable
             'nb' => null,
             'count' => false
         );
-        $p = array_merge($default, $p);
+        $query = new Query(array_merge($default, $p));
 
-        if (! ($model instanceof Pluf_Model)) {
-            $model = new $model();
-        }
+//         $toMd = ModelDescription::getInstance($modelClass);
+//         $fromMd = ModelDescription::getInstance($this);
+        
+        $rep = Pluf::getDataRepository([
+            'owner' => $this,
+            'target' => $modelClass,
+            'name' => $relationName
+        ]);
+        
+        return $repo->get([
+            
+        ]);
 
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
+//         $property = $fromMd->$relationName;
+//         switch ($property->type) {
+//             case Schema::MANY_TO_ONE:
 
-        if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
-            $foreignkey = $this->_m['list'][$method][1];
-            if (strlen($foreignkey) == 0) {
-                throw new Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
-            }
-            if (! is_null($p['filter'])) {
-                if (is_array($p['filter'])) {
-                    $p['filter'] = implode(' AND ', $p['filter']);
-                }
-                $p['filter'] .= ' AND ';
-            } else {
-                $p['filter'] = '';
-            }
-            $p['filter'] .= $schema->qn($foreignkey) . '=' . $engine->toDb($this->_data['id'], Engine::SEQUENCE);
-        } else {
-            $manyToManyView = array(
-                'join' => '',
-                'where' => ''
-            );
+//             case Schema::MANY_TO_MANY:
+//             case Schema::ONE_TO_MANY:
+//                 $view = '__px__view_' . $relationName;
+//                 $query->view
+//             default:
+//                 throw new Exception([
+//                     'message' => 'Property {relation} is not a relation field',
+//                     'relation' => $relationName,
+//                     'model' => get_class($this)
+//                 ]);
+//         }
 
-            if ($model->hasView($p['view'])) {
-                $manyToManyView = array_merge($manyToManyView, $model->getView($p['view']));
-            }
-
-            $manyToManyView['join'] .= ' LEFT JOIN ' . $schema->getRelationTable($this, $model) . ' ON ' . $schema->getAssocField($model) . ' = ' . $schema->getTableName($model) . '.id';
-            $manyToManyView['where'] = $schema->getAssocField($this) . '=' . $this->id;
-
-            $manyToManyViewName = $p['view'] . '__manytomany__';
-            $model->setView($manyToManyViewName, $manyToManyView);
-            $p['view'] = $manyToManyViewName;
-        }
-        return $model->getList($p);
+        
+//         return Pluf::getDataRepository($modelClass)
+//             ->getRelations(, $relationName, $query);
     }
-
-    // /**
-    // * Generate the SQL select from the columns
-    // */
-    // function getSelect()
-    // {
-    // if (isset($this->_cache['getSelect'])) {
-    // return $this->_cache['getSelect'];
-    // }
-    // $schema = $this->getEngine()->getSchema();
-    // $select = array();
-    // $table = $schema->getTableName($this);
-    // foreach ($this->_a['cols'] as $col => $val) {
-    // if ($val['type'] != Engine::MANY_TO_MANY) {
-    // $select[] = $table . '.' . $schema->qn($col) . ' AS ' . $schema->qn($col);
-    // }
-    // }
-    // $this->_cache['getSelect'] = implode(', ', $select);
-    // return $this->_cache['getSelect'];
-    // }
 
     /**
      * Update the model into the database.
@@ -629,26 +564,16 @@ class Pluf_Model implements JsonSerializable
      *            string Where clause to update specific items. ('')
      * @return bool Success
      */
-    function update($where = '')
+    function update($where = null)
     {
-        $this->preSave();
-
-        $engine = $this->getEngine();
-        $schema = $engine->getSchema();
-
-        $req = $schema->updateQuery($this, $where);
-        $res = $engine->execute($req);
-        if (false === $res) {
-            throw new Exception($engine->getError());
+        if (isset($where)) {
+            throw new Exception([
+                'message' => 'Bulky update is not supported in old Pluf Model.'
+            ]);
         }
 
-        // if (false === $this->get($this->_data['id'])) {
-        // return false;
-        // }
-        // foreach ($assoc as $model => $ids) {
-        // $this->batchAssoc($model, $ids);
-        // }
-
+        $this->preSave();
+        Pluf::getDataRepository($this)->update($this);
         $this->postSave();
         return true;
     }
@@ -671,7 +596,10 @@ class Pluf_Model implements JsonSerializable
             $this->preSave(true);
         }
 
-        Pluf::getDataRepository($this)->create($this);
+        Pluf::getDataRepository([
+            'type' => 'model',
+            'model' => get_class($this)
+        ])->create($this);
 
         if (! $raw) {
             $this->postSave(true);
@@ -679,30 +607,6 @@ class Pluf_Model implements JsonSerializable
 
         return true;
     }
-
-    // /**
-    // * Get models affected by delete.
-    // *
-    // * @return array Models deleted if deleting current model.
-    // */
-    // function getDeleteSideEffect()
-    // {
-    // $affected = array();
-    // foreach ($this->_m['list'] as $method => $details) {
-    // if (is_array($details)) {
-    // // foreignkey
-    // $related = $this->$method();
-    // $affected = array_merge($affected, (array) $related);
-    // foreach ($related as $rel) {
-    // if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
-    // continue; // $rel == $this
-    // }
-    // $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
-    // }
-    // }
-    // }
-    // return Pluf_Model_RemoveDuplicates($affected);
-    // }
 
     /**
      * Delete the current model from the database.
@@ -716,17 +620,39 @@ class Pluf_Model implements JsonSerializable
             return false;
         }
         $this->preDelete();
-
         Pluf::getDataRepository($this)->delete($this);
-
         $this->_reset();
+        return true;
+    }
+
+    /**
+     * Set the association of a model to another in many to many.
+     *
+     * @param
+     *            object Object to associate to the current object
+     */
+    function setAssoc(Pluf_Model $model, ?string $assocName = null)
+    {
+        Pluf::getDataRepository($this)->createRelation($this, $model, $assocName);
+        return true;
+    }
+
+    /**
+     * Set the association of a model to another in many to many.
+     *
+     * @param
+     *            object Object to associate to the current object
+     */
+    function delAssoc(Pluf_Model $model, ?string $assocName = null)
+    {
+        Pluf::getDataRepository($this)->deleteRelation($this, $model, $assocName);
         return true;
     }
 
     /**
      * Reset the fields to default values.
      */
-    function _reset()
+    private function _reset()
     {
         foreach ($this->_a['cols'] as $col => $val) {
             if (isset($val['default'])) {
@@ -753,53 +679,6 @@ class Pluf_Model implements JsonSerializable
     }
 
     /**
-     * Hook run just after loading a model from the database.
-     *
-     * Just overwrite it into your model to perform custom actions.
-     */
-    function restore()
-    {}
-
-    /**
-     * دستگیره‌ای که درست قبل از ذخیره شدن در پایگاه داده اجرا می‌شود.
-     *
-     * در صورتی که نیاز به انجام پردازش‌هایی قبل از ذخیره شدن مدل داده‌ای دارید،
-     * این فراخوانی
-     * را بازنویسی کنید.
-     *
-     * @param
-     *            bool Create.
-     */
-    function preSave($create = false)
-    {
-        // TODO: maso, 1395: بررسی داده‌های پیش فرض و به روز رسانی آنها
-        //
-        // برخی داده‌ها در تمام مدلهای داده‌ای به صورت تکراری استفاده می‌شود.
-        // بهتر است که
-        // وجود این داده‌ها بررسی شود و در صورت وجود همین جا به روز رسانی انجام
-        // شود.
-        //
-        // - creation_dtime
-        // - modif_dtime
-    }
-
-    /**
-     * فراخوانی پس از ذخیره شدن
-     *
-     * @param string $create
-     */
-    function postSave($create = false)
-    {}
-
-    /**
-     * Hook run just before deleting a model from the database.
-     *
-     * Just overwrite it into your model to perform custom actions.
-     */
-    function preDelete()
-    {}
-
-    /**
      * مقادیر مدل را بر اساس یک فرم تعیین می‌کند
      *
      * این مقادیر به صورت یک آرایه به عنوان ورودی دریافت شده و بر اساس
@@ -809,108 +688,6 @@ class Pluf_Model implements JsonSerializable
     {
         foreach ($cleaned_values as $key => $val) {
             $this->_data[$key] = $val;
-        }
-    }
-
-    // /**
-    // * Prepare the value to be put in the DB.
-    // *
-    // * @param
-    // * mixed Value.
-    // * @param
-    // * string Column name.
-    // * @return string SQL ready string.
-    // */
-    // function _toDb($val, $col)
-    // {
-    // return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
-    // }
-
-    // /**
-    // * Get the value from the DB.
-    // *
-    // * Create DB field and returns. The field type is used as the output
-    // * value type.
-    // *
-    // * @param
-    // * mixed Value.
-    // * @param
-    // * string Column name.
-    // * @return mixed Value.
-    // */
-    // function _fromDb($val, $col)
-    // {
-    // return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
-    // }
-
-    // /**
-    // * Display value.
-    // *
-    // * When you have a list of choices for a field and you want to get
-    // * the display value of the current stored value.
-    // *
-    // * @param
-    // * string Field to display the value.
-    // * @return mixed Display value, if not available default to the value.
-    // */
-    // function displayVal($col)
-    // {
-    // if (! isset($this->_a['cols'][$col]['choices'])) {
-    // return $this->_data[$col]; // will on purposed failed if not set
-    // }
-    // $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
-    // if ($val !== false) {
-    // return $val;
-    // }
-    // return $this->_data[$col];
-    // }
-
-    /**
-     * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
-     *
-     * Adds the get_xx_list method when the methods of the model
-     * contains custom names.
-     *
-     * @param string $type
-     *            Relation type: Engine::FORINKEY or ENGINE::MANY_TO_MANY
-     */
-    protected function _setupAutomaticListMethods($type)
-    {
-        $current_model = ModelUtils::getModelCacheKey($this);
-        $relations = ModelUtils::getRelatedModels($this, $type);
-
-        foreach ($relations as $related) {
-            if ($related != $current_model) {
-                $model = new $related();
-            } else {
-                $model = clone $this;
-            }
-            $fkeys = $model->getRelationKeysToModel($current_model, $type);
-            foreach ($fkeys as $fkey => $val) {
-                $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
-                $mname = 'get_' . strtolower($mname) . '_list';
-                if (Engine::FOREIGNKEY === $type) {
-                    $this->_m['list'][$mname] = array(
-                        $related,
-                        $fkey
-                    );
-                } else {
-                    $this->_m['list'][$mname] = $related;
-                    $this->_m['many'][$related] = $type;
-                }
-            }
-        }
-    }
-
-    /**
-     * Add tenant required fields
-     *
-     * Adds extra fields if multi-tenant is enabled
-     */
-    protected function _setupMultitenantFields()
-    {
-        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
-            $this->_a['cols']['tenant'] = $this->tenant_field;
         }
     }
 
@@ -979,49 +756,6 @@ class Pluf_Model implements JsonSerializable
     {
         return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass();
     }
-
-    // public function getSchema()
-    // {
-    // $mainInfo = array(
-    // "type" => $this->getclass(),
-    // "unit" => null,
-    // "name" => $this->getname(),
-    // "title" => $this->getname(),
-    // "description" => null,
-    // "defaultvalue" => null,
-    // "required" => false,
-    // "visible" => false,
-    // "editable" => false,
-    // "priority" => 0,
-    // "validators" => [],
-    // "tags" => [],
-    // "children" => []
-    // );
-    // foreach ($this->_a['cols'] as $name => $field) {
-    // $fieldInfo = $this->getFieldInfo($name, $field);
-    // array_push($mainInfo['children'], $fieldInfo);
-    // }
-    // return $mainInfo;
-    // }
-    //
-    // private function getFieldInfo($name, $field)
-    // {
-    // return array(
-    // "type" => $field['type'],
-    // "unit" => null,
-    // "name" => $name,
-    // "title" => $name,
-    // "description" => null,
-    // "defaultValue" => array_key_exists('default', $field) ? $field['default'] : null,
-    // "required" => array_key_exists('is_null', $field) ? $field['is_null'] : true,
-    // "visible" => array_key_exists('readable', $field) ? $field['readable'] : true,
-    // "editable" => array_key_exists('editable', $field) ? $field['editable'] : false,
-    // "priority" => 0,
-    // "validators" => [],
-    // "tags" => [],
-    // "children" => []
-    // );
-    // }
 
     /**
      * Gets engine where this model is managed
@@ -1098,6 +832,261 @@ class Pluf_Model implements JsonSerializable
             return $this->_a['idx'];
         }
         return [];
+    }
+
+    // /**
+    // * Generate the SQL select from the columns
+    // */
+    // function getSelect()
+    // {
+    // if (isset($this->_cache['getSelect'])) {
+    // return $this->_cache['getSelect'];
+    // }
+    // $schema = $this->getEngine()->getSchema();
+    // $select = array();
+    // $table = $schema->getTableName($this);
+    // foreach ($this->_a['cols'] as $col => $val) {
+    // if ($val['type'] != Engine::MANY_TO_MANY) {
+    // $select[] = $table . '.' . $schema->qn($col) . ' AS ' . $schema->qn($col);
+    // }
+    // }
+    // $this->_cache['getSelect'] = implode(', ', $select);
+    // return $this->_cache['getSelect'];
+    // }
+
+    // /**
+    // * Get models affected by delete.
+    // *
+    // * @return array Models deleted if deleting current model.
+    // */
+    // function getDeleteSideEffect()
+    // {
+    // $affected = array();
+    // foreach ($this->_m['list'] as $method => $details) {
+    // if (is_array($details)) {
+    // // foreignkey
+    // $related = $this->$method();
+    // $affected = array_merge($affected, (array) $related);
+    // foreach ($related as $rel) {
+    // if ($details[0] == $this->_a['model'] and $rel->id == $this->_data['id']) {
+    // continue; // $rel == $this
+    // }
+    // $affected = array_merge($affected, (array) $rel->getDeleteSideEffect());
+    // }
+    // }
+    // }
+    // return Pluf_Model_RemoveDuplicates($affected);
+    // }
+
+    // public function getSchema()
+    // {
+    // $mainInfo = array(
+    // "type" => $this->getclass(),
+    // "unit" => null,
+    // "name" => $this->getname(),
+    // "title" => $this->getname(),
+    // "description" => null,
+    // "defaultvalue" => null,
+    // "required" => false,
+    // "visible" => false,
+    // "editable" => false,
+    // "priority" => 0,
+    // "validators" => [],
+    // "tags" => [],
+    // "children" => []
+    // );
+    // foreach ($this->_a['cols'] as $name => $field) {
+    // $fieldInfo = $this->getFieldInfo($name, $field);
+    // array_push($mainInfo['children'], $fieldInfo);
+    // }
+    // return $mainInfo;
+    // }
+    //
+    // private function getFieldInfo($name, $field)
+    // {
+    // return array(
+    // "type" => $field['type'],
+    // "unit" => null,
+    // "name" => $name,
+    // "title" => $name,
+    // "description" => null,
+    // "defaultValue" => array_key_exists('default', $field) ? $field['default'] : null,
+    // "required" => array_key_exists('is_null', $field) ? $field['is_null'] : true,
+    // "visible" => array_key_exists('readable', $field) ? $field['readable'] : true,
+    // "editable" => array_key_exists('editable', $field) ? $field['editable'] : false,
+    // "priority" => 0,
+    // "validators" => [],
+    // "tags" => [],
+    // "children" => []
+    // );
+    // }
+
+    // /**
+    // * Prepare the value to be put in the DB.
+    // *
+    // * @param
+    // * mixed Value.
+    // * @param
+    // * string Column name.
+    // * @return string SQL ready string.
+    // */
+    // function _toDb($val, $col)
+    // {
+    // return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
+    // }
+
+    // /**
+    // * Get the value from the DB.
+    // *
+    // * Create DB field and returns. The field type is used as the output
+    // * value type.
+    // *
+    // * @param
+    // * mixed Value.
+    // * @param
+    // * string Column name.
+    // * @return mixed Value.
+    // */
+    // function _fromDb($val, $col)
+    // {
+    // return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
+    // }
+
+    // /**
+    // * Display value.
+    // *
+    // * When you have a list of choices for a field and you want to get
+    // * the display value of the current stored value.
+    // *
+    // * @param
+    // * string Field to display the value.
+    // * @return mixed Display value, if not available default to the value.
+    // */
+    // function displayVal($col)
+    // {
+    // if (! isset($this->_a['cols'][$col]['choices'])) {
+    // return $this->_data[$col]; // will on purposed failed if not set
+    // }
+    // $val = array_search($this->_data[$col], $this->_a['cols'][$col]['choices']);
+    // if ($val !== false) {
+    // return $val;
+    // }
+    // return $this->_data[$col];
+    // }
+
+    // ------------------------------------------------------------------------
+    // Function and automated part
+    // ------------------------------------------------------------------------
+    /**
+     * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
+     *
+     * Adds the get_xx_list method when the methods of the model
+     * contains custom names.
+     *
+     * @param string $type
+     *            Relation type: Engine::FORINKEY or ENGINE::MANY_TO_MANY
+     */
+    protected function _setupAutomaticListMethods($type)
+    {
+        $current_model = ModelUtils::getModelCacheKey($this);
+        $relations = ModelUtils::getRelatedModels($this, $type);
+
+        foreach ($relations as $related) {
+            if ($related != $current_model) {
+                $model = new $related();
+            } else {
+                $model = clone $this;
+            }
+            $fkeys = $model->getRelationKeysToModel($current_model, $type);
+            foreach ($fkeys as $fkey => $val) {
+                $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+                $mname = 'get_' . strtolower($mname) . '_list';
+                if (Engine::FOREIGNKEY === $type) {
+                    $this->_m['list'][$mname] = array(
+                        $related,
+                        $fkey
+                    );
+                } else {
+                    $this->_m['list'][$mname] = $related;
+                    $this->_m['many'][$related] = $type;
+                }
+            }
+        }
+    }
+
+    /**
+     * Add tenant required fields
+     *
+     * Adds extra fields if multi-tenant is enabled
+     */
+    protected function _setupMultitenantFields()
+    {
+        if (Pluf::f('multitenant', false) && $this->_a['multitenant']) {
+            $this->_a['cols']['tenant'] = $this->tenant_field;
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // TO override
+    // ------------------------------------------------------------------------
+
+    /**
+     * Hook run just after loading a model from the database.
+     *
+     * Just overwrite it into your model to perform custom actions.
+     */
+    function restore()
+    {}
+
+    /**
+     * دستگیره‌ای که درست قبل از ذخیره شدن در پایگاه داده اجرا می‌شود.
+     *
+     * در صورتی که نیاز به انجام پردازش‌هایی قبل از ذخیره شدن مدل داده‌ای دارید،
+     * این فراخوانی
+     * را بازنویسی کنید.
+     *
+     * @param
+     *            bool Create.
+     */
+    function preSave($create = false)
+    {
+        // TODO: maso, 1395: بررسی داده‌های پیش فرض و به روز رسانی آنها
+        //
+        // برخی داده‌ها در تمام مدلهای داده‌ای به صورت تکراری استفاده می‌شود.
+        // بهتر است که
+        // وجود این داده‌ها بررسی شود و در صورت وجود همین جا به روز رسانی انجام
+        // شود.
+        //
+        // - creation_dtime
+        // - modif_dtime
+    }
+
+    /**
+     * فراخوانی پس از ذخیره شدن
+     *
+     * @param string $create
+     */
+    function postSave($create = false)
+    {}
+
+    /**
+     * Hook run just before deleting a model from the database.
+     *
+     * Just overwrite it into your model to perform custom actions.
+     */
+    function preDelete()
+    {}
+
+    /**
+     * ساختار داده‌ای را ایجاد می‌کند.
+     *
+     * این فراخوانی تمام ساختارهای داده‌ای اصلی را ایجاد می‌کند. تمام زیر
+     * کلاس‌ها
+     * باید این کلاس را پیاده سازی کنند و ساختارهای داده‌ای خود را ایجاد کنند.
+     */
+    function init()
+    {
+        // Define it yourself.
     }
 }
 

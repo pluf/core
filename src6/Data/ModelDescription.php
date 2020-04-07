@@ -8,7 +8,7 @@ class ModelDescription extends ArrayObject
 {
 
     use \Pluf\DiContainerTrait;
-    
+
     public bool $mapped = false;
 
     public bool $multitinant = true;
@@ -16,6 +16,10 @@ class ModelDescription extends ArrayObject
     public ?string $table = null;
 
     public ?string $model = null;
+
+    public ?string $type = null;
+
+    public ?ModelProperty $identifier = null;
 
     public array $views = [];
 
@@ -43,7 +47,7 @@ class ModelDescription extends ArrayObject
      */
     public function newInstance()
     {
-        return new $this->model();
+        return new $this->type();
     }
 
     private function loadFromOldModel(Pluf_Model $model)
@@ -59,12 +63,20 @@ class ModelDescription extends ArrayObject
         // load descriptions
         $this->setDefaults($model->_a);
         $this->model = get_class($model);
+        $this->type = get_class($model);
         $this->views = $model->loadViews();
+
+        // Set identifier
+        $identifier = $this->id;
+        $this->identifier = $identifier;
     }
 
     public static function getInstance($model): ModelDescription
     {
         // XXX: maso, 2020: use pluf cache to improve performance
+        if (is_string($model)) {
+            $model = new $model();
+        }
         /*
          * Support old
          */
@@ -80,6 +92,34 @@ class ModelDescription extends ArrayObject
         }
 
         return $modelDescription;
+    }
+
+    /**
+     * Checks if the model is anonymous or not
+     *
+     * @param ModelDescription $md
+     * @param mixed $model
+     * @return bool
+     */
+    public function isAnonymous($model): bool
+    {
+        if ($model instanceof \Pluf_Model) {
+            return $model->isAnonymous();
+        }
+
+        $idProp = $this->getIdentifier();
+        $id = $model->$idProp;
+        return isset($id);
+    }
+
+    /**
+     * Gets identifier property
+     *
+     * @return ModelProperty identifier
+     */
+    public function getIdentifier(): ModelProperty
+    {
+        return $this->identifier;
     }
 
     /**

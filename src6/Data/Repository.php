@@ -18,10 +18,11 @@
  */
 namespace Pluf\Data;
 
+use Pluf\Options;
+use Pluf\Data\Repository\ModelRepository;
+use Pluf\Data\Repository\RelationRepository;
 use Pluf\Db\Connection;
 use PDOStatement;
-use Pluf_Model;
-use Pluf\Db\Expression;
 
 /**
  * Repositories are object or components that encapsulate the logic required to access data sources.
@@ -50,31 +51,16 @@ use Pluf\Db\Expression;
  * @see https://docs.microsoft.com/en-us/previous-versions/msp-n-p/ff649690(v=pandp.10)
  *
  */
-class Repository
+abstract class Repository
 {
+
+    use \Pluf\DiContainerTrait;
 
     private static array $repositoryMap = [];
 
-    /**
-     * Stores an instance of the model type
-     *
-     * @var \Pluf_Model
-     */
-    private $model;
-
-    private ?Connection $dbConnection = null;
+    private ?Connection $connection = null;
 
     private ?Schema $schema = null;
-
-    /**
-     * Store the model description of current model
-     *
-     * This is a virtual attribute and is build from the current model. It will
-     * be updated automatically.
-     *
-     * @var ModelDescription
-     */
-    private ?ModelDescription $modelDescription = null;
 
     /**
      * Defines one repository per aggregate
@@ -95,14 +81,22 @@ class Repository
      *
      * Creates a repository to mange Books.
      */
-    public static function getInstance(string $modelType): Repository
+    public static function getInstance(Options $options): Repository
     {
-        if (array_key_exists($modelType, self::$repositoryMap)) {
-            return self::$repositoryMap[$modelType];
+        switch ($options->type) {
+            case 'model':
+                $repo = new ModelRepository($options);
+                break;
+            case 'relation':
+                $repo = new RelationRepository($options);
+                break;
+            default:
+                throw new Exception([
+                    'message' => 'Unsupported repository type.'
+                ]);
         }
+
         // create
-        $repo = new Repository($modelType);
-        self::$repositoryMap[$modelType] = $repo;
         return $repo;
     }
 
@@ -111,11 +105,19 @@ class Repository
      *
      * @param string $modelType
      */
-    public function __construct(string $modelType)
+    public function __construct(Options $optionss)
     {
-        $this->model = new $modelType();
+        $this->setDefaults($optionss);
+        $this->clean();
     }
 
+    /**
+     * Sets repository schema
+     *
+     * @param Schema $schema
+     *            to use in the repository.
+     * @return Repository current repository
+     */
     public function setSchema(Schema $schema): Repository
     {
         $this->schema = $schema;
@@ -123,300 +125,57 @@ class Repository
         return $this;
     }
 
+    /**
+     * Sets new DB connection into the repository
+     *
+     * DB connection is used to store or fetch data from DB. It is easy to replace
+     * current DB Connection with new one.
+     *
+     * @param Connection $connection
+     * @return Repository
+     */
     public function setConnection(Connection $connection): Repository
     {
-        $this->dbConnection = $connection;
+        $this->connection = $connection;
         return $this;
     }
 
     /**
-     * Get a given item.
+     * Gets current connection
      *
-     * @param
-     *            int Id of the item.
-     * @return mixed Item or false if not found.
+     * @return \Pluf\Db\Connection
      */
-    public function getById($id)
+    public function getConnection()
     {
-        $stm = $this->dbConnection->query()
-            ->table($this->getTableName())
-            ->where('id', $id)
-            ->select();
-
-        $this->checkStatement($stm);
-        return $this->createInstanceModel($stm->fetch());
+        return $this->connection;
     }
 
     /**
-     * Get one item.
+     * Gets current schema
      *
-     * The parameters are the same as the ones of the getList method,
-     * but, the return value is either:
-     *
-     * - The object
-     * - null if no match
-     * - Exception if the match results in more than one item.
-     *
-     * @see self::getList
-     * @param Query $query)
-     *            A query to run on db
-     * @return Pluf_Model|null find model
+     * @return \Pluf\Data\Schema
      */
-    public function getOne(Query $query)
+    public function getSchema(): Schema
     {
-        return $this->model->getOne($query->toArray());
-    }
-
-    public function create($model)
-    {
-        $md = ModelDescription::getInstance($model);
-        $schema = $this->schema;
-
-        $stm = $this->dbConnection->query()
-            ->mode('insert')
-            ->table($schema->getTableName($md))
-            ->set($schema->getValues($md, $model))
-            ->execute();
-
-        $this->checkStatement($stm);
-        $model->id = $this->dbConnection->lastInsertID();
-        return $model;
-    }
-
-    public function update($model)
-    {}
-
-    public function delete($model)
-    {}
-
-    public function createList(?array $models = []): array
-    {}
-
-    public function updateList(?array $models = []): array
-    {}
-
-    public function deleteList(?array $models = []): array
-    {}
-
-    /**
-     * Gets list of object
-     *
-     * Note: all object will be fetched in the memory
-     *
-     * The filter should be used only for simple filtering. If you want
-     * a complex query, you should create a new view.
-     * Both filter and order accept an array or a string in case of multiple
-     *
-     * @param Query $query
-     *            to run on db
-     * @return array|int The result of items or through an exception if
-     *         database failure
-     */
-    public function getListByQuery(Query $query)
-    {
-        // TODO: maso, 2020: support cache
-        $schema = $this->schema;
-        $md = $this->getModelDescription();
-
-        // fields
-        $view = [
-            'filter' => [],
-            'field' => [],
-            'order' => [],
-            'join' => [],
-            'group' => [],
-            'having' => []
-        ];
-
-        if ($query->hasView()) {
-            $dataView = $md->getView($query->getView());
-
-            // Filter
-            if (array_key_exists('filter', $dataView)) {
-                $view['filter'] = array_merge( //
-                $schema->getViewFilters($md, $dataView), //
-                $schema->getQueryFilters($md, $query) //
-                );
-            } else {
-                $view['filter'] = $schema->getQueryFilters($md, $query);
-            }
-
-            // Field
-            if (array_key_exists('field', $dataView)) {
-                $view['field'] = $schema->getViewFields($md, $dataView);
-            } else {
-                $view['field'] = $schema->getFields($md);
-            }
-
-            // Order
-            $allDataOrders = $query->getOrder();
-            if (isset($dataView['order'])) {
-                $allDataOrders = array_merge($allDataOrders, $dataView['order']);
-            }
-            foreach ($allDataOrders as $name => $order) {
-                $view['order'][] = [
-                    $schema->getField($md, $name),
-                    $order == Query::ORDER_DESC
-                ];
-            }
-
-            // Join
-            if (isset($dataView['join'])) {
-                $view['join'] = $schema->getViewJoins($md, $dataView);
-            }
-
-            // Group
-            $view['group'] = $schema->getViewGroupBy($md, $dataView);
-            $view['having'] = $schema->getViewHaving($md, $dataView);
-        } else {
-            $view['field'] = $schema->getFields($md);
-            $view['filter'] = $schema->getQueryFilters($md, $query);
-
-            // Order
-            foreach ($query->getOrder() as $name => $order) {
-                $view['order'][] = [
-                    $schema->getField($md, $name),
-                    $order == Query::ORDER_DESC
-                ];
-            }
-        }
-
-        $dbQuery = $this->dbConnection->query()
-            ->mode('select')
-            ->table($this->getTableName())
-            ->group($view['group']);
-        // add where
-        foreach ($view['filter'] as $filter) {
-            if ($filter instanceof Expression) {
-                $dbQuery->where($filter);
-                continue;
-            }
-            call_user_func_array([
-                $dbQuery,
-                'where'
-            ], $filter);
-        }
-        // add having
-        foreach ($view['having'] as $filter) {
-            if ($filter instanceof Expression) {
-                $dbQuery->having($filter);
-                continue;
-            }
-            call_user_func_array([
-                $dbQuery,
-                'have'
-            ], $filter);
-        }
-
-        // add join
-        foreach ($view['join'] as $join) {
-            call_user_func_array([
-                $dbQuery,
-                'join'
-            ], $join);
-        }
-
-        if ($query->getCount()) {
-            $dbQuery->field('count(*)', 'count');
-        } else {
-            // add order
-            foreach ($view['order'] as $order) {
-                call_user_func_array([
-                    $dbQuery,
-                    'order'
-                ], $order);
-            }
-            // limit
-            $dbQuery->field($view['field'])->limit($query->getLimit(), $query->getStart());
-        }
-
-        // Checks the query statement
-        $stm = $dbQuery->execute();
-        $this->checkStatement($stm);
-
-        if ($query->getCount()) {
-            return $stm->fetch()['count'];
-        }
-        // Convert to new items
-        $result = $stm->fetchAll();
-        $items = [];
-        foreach ($result as $data) {
-            $items[] = $this->createInstanceModel($data);
-        }
-        return $items;
-    }
-
-    public function deleteListByQuery(Query $query): array
-    {
-        $res = $this->model->getList($query->toArray());
-        if ($res instanceof \ArrayObject) {
-            return $res->getArrayCopy();
-        }
-        return [];
+        return $this->schema;
     }
 
     /**
-     * Get the number of items.
-     *
-     * @see getList() for definition of the keys
-     *     
-     * @param Query $query
-     *            with associative keys 'view' and 'filter'
-     * @return int The number of items
+     * If a fundemental attribute of a repository changed then this function is called to clean
+     * the virtual attributes.
      */
-    public function getCount(Query $query): int
-    {
-        return $this->model->getCount($query->toArray());
-    }
+    protected abstract function clean();
 
+    // ---------------------------------------------------------------------------------------
+    // Utility functions
+    // ---------------------------------------------------------------------------------------
     /**
-     * Get a list of related items.
+     * Checks if the last statement is executed successfully
      *
-     * See the getList() method for usage of the view and filters.
-     *
-     *
-     *
-     *
-     * ```php
-     * <?php
-     *
-     * $repository = new Repository('\Pluf\Cms\Content');
-     *
-     * $content = $repository->get(1);
-     * $parent = $repository->getRelated($content, 'parent');
-     * $children = $repository->getRelated($content, 'children', $query);
-     * ```
-     *
-     * @param \Pluf_Model $model
-     *            The root of the relation
-     * @param string $relationName
-     *            name of ther relation to
-     * @param Query $query
-     *            to run on related objects if the result is many objects
-     * @return array Array of items
+     * @param PDOStatement $stm
+     * @throws Exception
      */
-    public function getRelated(Pluf_Model $model, string $relationName = null, Query $query): array
-    {
-        if ($this->isForignKeyRelation($relationName)) {
-            // TODO: support foring key
-        } elseif ($this->isManyToManyRelation($relationName)) {
-            $this->model->getRelated($model, null, $query->toArray());
-        } else {
-            throw new InvalidRelationKeyException($this->model, $model, $relationName);
-        }
-    }
-
-    private function isForignKeyRelation(string $relationName): bool
-    {
-        return false;
-    }
-
-    private function isManyToManyRelation(string $relationName): bool
-    {
-        return true;
-    }
-
-    private function checkStatement(PDOStatement $stm): void
+    protected function checkStatement(PDOStatement $stm): void
     {
         $info = $stm->errorInfo();
         if ($info[0] != 0) {
@@ -425,46 +184,6 @@ class Repository
                 'driverCode' => $info[1],
                 'message' => $info[2]
             ]);
-        }
-    }
-
-    private function createInstanceModel($data)
-    {
-        $md = $this->getModelDescription();
-        return $this->schema->newInstance($md, $data);
-    }
-
-    private function getModelDescription(): ModelDescription
-    {
-        // Check if it is exist
-        if (isset($this->modelDescription)) {
-            return $this->modelDescription;
-        }
-
-        // create new description
-        if (! isset($this->model)) {
-            throw new Exception([
-                'message' => 'Model is not defined for the repository',
-                'code' => 2222
-            ]);
-        }
-        $this->modelDescription = ModelDescription::getInstance($this->model);
-        return $this->modelDescription;
-    }
-
-    private function getTableName()
-    {
-        $md = $this->getModelDescription();
-        return $this->schema->getTableName($md);
-    }
-
-    private function clean()
-    {
-        // load model description
-        if ($this->model) {
-            $this->modelDescription = ModelDescription::getInstance($this->model);
-        } else {
-            $this->modelDescription = null;
         }
     }
 }
