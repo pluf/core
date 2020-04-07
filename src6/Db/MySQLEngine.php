@@ -150,18 +150,11 @@ class MySQLEngine extends Engine
         throw new \Pluf\Exception($message, $errorno);
     }
 
-    function esc($str)
-    {
-        if (is_array($str)) {
-            $res = array();
-            foreach ($str as $s) {
-                $res[] = '\'' . mysqli_real_escape_string($this->con_id, $s) . '\'';
-            }
-            return implode(', ', $res);
-        }
-        return '\'' . mysqli_real_escape_string($this->con_id, $str) . '\'';
+    public function quote(string $string, int $parameter_type = null){
+        return '\'' . mysqli_real_escape_string($this->con_id, $string) . '\'';
     }
-
+    
+    
     /**
      * Start a transaction.
      */
