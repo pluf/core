@@ -120,6 +120,10 @@ abstract class Schema
             } elseif ($type === Engine::MANY_TO_MANY) {
                 continue;
             }
+            if($val === null && !self::isNullable($description)
+                && array_key_exists('default', $description)){
+                $val = $description['default'];
+            }
             $icols[] = $this->qn($col);
             $ivals[] = $this->con->toDb($val, $type);
         }
@@ -127,6 +131,10 @@ abstract class Schema
         return new Pluf_SQL('INSERT INTO ' . $this->getTableName($model) . '(' . implode(',', $icols) . ') VALUES (' . implode(', ', array_fill(0, sizeof($ivals), '%s')) . ')', $ivals);
     }
 
+    private static function isNullable($description){
+        return (!array_key_exists('is_null', $description) || $description['is_null'] === true);
+    }
+    
     public function selectByIdQuery(Pluf_Model $model, $id)
     {
         $engine = $model->getEngine();
@@ -156,7 +164,7 @@ abstract class Schema
                 continue;
             }
             $fields[] = $this->qn($col) . '=%s';
-            $params[] = $model->$col;
+            $params[] = $this->con->toDb($model->$col, $type);
         }
 
         $req = 'UPDATE ' . $this->getTableName($model) . ' SET ' . implode(',', $fields);
