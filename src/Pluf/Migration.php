@@ -43,6 +43,9 @@
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
  */
+use Pluf\Db\Engine;
+use Pluf\Db\Schema;
+
 class Pluf_Migration
 {
 
@@ -102,7 +105,7 @@ class Pluf_Migration
     public function install()
     {
         foreach ($this->apps as $app) {
-            $this->installApp($app);
+            $this->installAppFromConfig($app);
         }
         return true;
     }
@@ -133,7 +136,7 @@ class Pluf_Migration
     {
         $apps = array_reverse($this->apps);
         foreach ($apps as $app) {
-            $this->installApp($app, true);
+            $this->uninstallAppFromConfig($app);
         }
         return true;
     }
@@ -201,21 +204,21 @@ class Pluf_Migration
         return true;
     }
 
-    /**
-     * Un/Install the given application.
-     *
-     * @param
-     *            string Application to install.
-     * @param
-     *            bool Uninstall (false)
-     */
-    public function installApp($app, $uninstall = false)
-    {
-        if ($uninstall) {
-            return $this->uninstallAppFromConfig($app);
-        }
-        return $this->installAppFromConfig($app);
-    }
+    // /**
+    // * Un/Install the given application.
+    // *
+    // * @param
+    // * string Application to install.
+    // * @param
+    // * bool Uninstall (false)
+    // */
+    // public function installApp($app)
+    // {
+    // // if ($uninstall) {
+    // // return $this->uninstallAppFromConfig($app);
+    // // }
+    // return $this->installAppFromConfig($app);
+    // }
 
     /**
      * Find the migrations for the current app.
@@ -248,16 +251,115 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new \Pluf\Exception('Module file not found in path');
+            throw new Exception('Module file not found in path');
         }
-        $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $engine = Pluf::db();
+        $schema = $engine->getSchema();
         // Create modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
             foreach ($models as $model) {
-                $schema->model = new $model();
-                $schema->createTables();
+                $modelObj = new $model();
+                self::createTables($engine, $schema, $modelObj);
+                // self::createConstraints($engine, $schema, $modelObj);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Create the tables and indexes for the current model.
+     *
+     * If the model is a mapped model ($model->_a['mapped'] == true) then only tables for its
+     * many to many relations will be created and table for the model will not be created.
+     *
+     * A mapped model is a model which have not a separate table. In other word, a mapped model is
+     * a specific view to another model and is not a real model.
+     *
+     * A mapped model may defines some new many to many relations which was not defined in the main model.
+     *
+     * @return mixed True if success or database error.
+     */
+    public static function createTables(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    {
+        $sql = $schema->createTableQueries($model);
+        // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
+        if ($model->_a['mapped']) {
+            $modelTableName = $schema->getTableName($model);
+            // remove sql to create main table
+            $sql = array_diff_key($sql, array(
+                $modelTableName => ''
+            ));
+        }
+        foreach ($sql as $query) {
+            if (false === $engine->execute($query)) {
+                throw new \Pluf\Exception($engine->getError());
+            }
+        }
+        if (! $model->_a['mapped']) {
+            $sql = $schema->createIndexQueries($model);
+            foreach ($sql as $query) {
+                if (false === $engine->execute($query)) {
+                    throw new Exception($engine->getError());
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Drop the tables and indexes for the current model.
+     *
+     * @return mixed True if success or database error.
+     */
+    public static function dropTables(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    {
+        $sql = $schema->dropTableQueries($model);
+        // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
+        if ($model->_a['mapped']) {
+            $modelTableName = $schema->getTableName($model);
+            // remove sql to create main table
+            $sql = array_diff_key($sql, array(
+                $modelTableName => ''
+            ));
+        }
+        foreach ($sql as $query) {
+            if (false === $engine->execute($query)) {
+                throw new Exception($engine->getError());
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Creates the constraints for the current model.
+     * This should be done _after_ all tables of all models have been created.
+     *
+     * @throws \Pluf\Exception
+     */
+    public static function createConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    {
+        $sql = $schema->createConstraintQueries($model);
+        foreach ($sql as $query) {
+            if (false === $engine->execute($query)) {
+                throw new Exception($$engine->getError());
+            }
+        }
+    }
+
+    /**
+     * Drops the constraints for the current model.
+     * This should be done _before_ all tables of all models are dropped.
+     *
+     * @throws \Pluf\Exception
+     * @return boolean
+     */
+    public static function dropConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    {
+        $sql = $schema->dropConstraintQueries($model);
+        foreach ($sql as $query) {
+            if (false === $engine->execute($query)) {
+                throw new Exception($engine->getError());
             }
         }
         return true;
@@ -293,22 +395,22 @@ class Pluf_Migration
             }
         }
 
-        // Init Releations
-        if (array_key_exists('init_assoc', $module)) {
-            $relations = $module['init_assoc'];
-            foreach ($relations as $models => $relates) {
-                $model = explode('|', $models);
-                $model0 = trim($model[0]);
-                $model1 = trim($model[1]);
-                $p0 = new $model0();
-                $p1 = new $model1();
-                foreach ($relates as $rel) {
-                    $p0 = $p0->getOne($rel['from']);
-                    $p1 = $p1->getOne($rel['to']);
-                    $p0->setAssoc($p1);
-                }
-            }
-        }
+//         // Init Releations
+//         if (array_key_exists('init_assoc', $module)) {
+//             $relations = $module['init_assoc'];
+//             foreach ($relations as $models => $relates) {
+//                 $model = explode('|', $models);
+//                 $model0 = trim($model[0]);
+//                 $model1 = trim($model[1]);
+//                 $p0 = new $model0();
+//                 $p1 = new $model1();
+//                 foreach ($relates as $rel) {
+//                     $p0 = $p0->getOne($rel['from']);
+//                     $p1 = $p1->getOne($rel['to']);
+//                     $p0->setAssoc($p1);
+//                 }
+//             }
+//         }
     }
 
     /**
@@ -320,16 +422,18 @@ class Pluf_Migration
     {
         $module = self::getModuleConfig($app);
         if ($module === false) {
-            throw new \Pluf\Exception('Module file not found in path');
+            throw new Exception('Module file not found in path');
         }
-        $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $engine = Pluf::db();
+        $schema = $engine->getSchema();
         // Delete modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
+//             foreach ($models as $model) {
+//                 self::dropConstraints($engine, $schema, new $model());
+//             }
             foreach ($models as $model) {
-                $schema->model = new $model();
-                $schema->dropTables();
+                self::dropTables($engine, $schema, new $model());
             }
         }
         // TODO: delete permissions

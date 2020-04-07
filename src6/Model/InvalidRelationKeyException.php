@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,17 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Model;
 
-class Pluf_DB_Field_Text extends Pluf_DB_Field
+use Pluf\Exception;
+
+/**
+ * Invalid Relation Key
+ *
+ * If you try to get a related object with wrong key/name, then this exception
+ * will be thrown.
+ *
+ * @author maso
+ *        
+ */
+class InvalidRelationKeyException extends Exception
 {
 
-    public $type = 'text';
-
-    function formField($def, $form_field = 'Pluf_Form_Field_Varchar')
+    // TODO: add error code
+    public function __construct($from, $to, $relationName)
     {
-        if (! isset($def['widget'])) {
-            $def['widget'] = 'Pluf_Form_Widget_TextareaInput';
-        }
-        return parent::formField($def, $form_field);
+        parent::__construct('Invalid relation name from:' . $from . ', to:' . $to . ', relation:' . $relationName);
+        $this->from = $from;
+        $this->to = $to;
+        $this->relation = $relationName;
     }
 }
+

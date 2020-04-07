@@ -292,7 +292,7 @@ class Pluf_Paginator_Builder
         $this->visibleVariablesName = array();
         foreach ($this->model->_a['cols'] as $key => $col) {
             // hadi, 2019: continue if feild is a many to many relation
-            if($col['type']=='Pluf_DB_Field_Manytomany'){
+            if($col['type']=='Manytomany'){
                 continue;
             }
             // maso, 2018: continue if is not readable

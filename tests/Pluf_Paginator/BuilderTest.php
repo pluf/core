@@ -17,7 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
 require_once 'Pluf.php';
 require_once dirname(__FILE__) . '/MyModel.php';
 
@@ -36,13 +35,15 @@ class Pluf_Paginator_BuilderTest extends TestCase
      */
     protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
-        $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        Pluf::start(__DIR__ . '/../conf/config.php');
+        $engine = Pluf::db();
+        $schema = $engine->getSchema();
+
         $m1 = new Pluf_Paginator_MyModel();
-        $schema->model = $m1;
-        $schema->dropTables();
-        $schema->createTables();
+
+        Pluf_Migration::dropTables($engine, $schema, $m1);
+        Pluf_Migration::createTables($engine, $schema, $m1);
+
         for ($i = 1; $i < 11; $i ++) {
             $m = new Pluf_Paginator_MyModel();
             $m->title = 'My title ' . $i;
@@ -51,17 +52,17 @@ class Pluf_Paginator_BuilderTest extends TestCase
         }
     }
 
-
     /**
+     *
      * @after
      */
     protected function tearDownTest()
     {
         $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $schema = $db->getSchema();
+
         $m1 = new Pluf_Paginator_MyModel();
-        $schema->model = $m1;
-        $schema->dropTables();
+        Pluf_Migration::dropTables($db, $schema, $m1);
     }
 
     /**
@@ -136,12 +137,13 @@ class Pluf_Paginator_BuilderTest extends TestCase
      */
     public function testWhereClause()
     {
-        $sql = new Pluf_SQL('id=%s',
-            array(
-                'id' => '1'
-            ));
+        $sql = new Pluf_SQL('id=%s', array(
+            'id' => '1'
+        ));
         $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
-        $pag = $builder->setView('test_view')->setWhereClause($sql)->build();
+        $pag = $builder->setView('test_view')
+            ->setWhereClause($sql)
+            ->build();
         $this->assertTrue(isset($pag));
         $this->assertEquals($sql->gen(), $pag->forced_where->gen(), 'Where clause dose not matsh');
     }

@@ -31,17 +31,17 @@ class Test_ManyToManyTwo extends Pluf_Model
         $this->_a['table'] = 'test_manytomanytwo';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => 'Sequence',
                 'blank' => true
             ), 
             // It is automatically added.
 //             'two' => array(
-//                 'type' => 'Pluf_DB_Field_Manytomany',
+//                 'type' => 'Manytomany',
 //                 'blank' => true,
 //                 'model' => 'Test_ManyToManyTwo'
 //             ),
             'two' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => 'Varchar',
                 'blank' => false,
                 'size' => 100
             )

@@ -19,7 +19,7 @@ class Module extends \Pluf\Module
     public function init(\Pluf $bootstrap): void
     {
         /**
-         * For each model having a 'foreignkey' or a 'manytomany' colum, details
+         * For each model having a Engine::FOREIGNKEY or a Engine::Many_TO_MANY colum, details
          * must be added here.
          * These details are used to generated the methods
          * to retrieve related models from each model.

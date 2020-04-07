@@ -1,6 +1,7 @@
 <?php
 namespace Pluf;
 
+use Pluf\Db\Engine;
 use Pluf;
 use Pluf_Model;
 
@@ -16,6 +17,8 @@ class ModelUtils
     public const MODEL_CACHE_KEY = '_PX_models_init_cache';
 
     public const MODEL_KEY = '_PX_models';
+
+    public const MODEL_VIEW_CACHE_KEY = '_PX_models_views';
 
     public static function getModelCacheKey(Pluf_Model $model)
     {
@@ -122,8 +125,8 @@ class ModelUtils
                 }
             }
         }
-        $_r['foreignkey'] = $_r['relate_to'];
-        $_r['manytomany'] = $_r['relate_to_many'];
+        $_r[Engine::FOREIGNKEY] = $_r['relate_to'];
+        $_r[Engine::MANY_TO_MANY] = $_r['relate_to_many'];
         $GLOBALS['_PX_models_related'] = $_r;
 
         // $GLOBALS['_PX_signal'] is automatically set by the require
@@ -161,6 +164,21 @@ class ModelUtils
             return [];
         }
         return $moduel['model'];
+    }
+
+    public static function loadViewsFromCache(Pluf_Model $model)
+    {
+        $key = self::getModelCacheKey($model);
+        if (isset($GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key])) {
+            return $GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key];
+        }
+        return false;
+    }
+
+    public static function putViewsToCache(Pluf_Model $model, array $views)
+    {
+        $key = self::getModelCacheKey($model);
+        $GLOBALS[self::MODEL_VIEW_CACHE_KEY][$key] = $views;
     }
 }
 

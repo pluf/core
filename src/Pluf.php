@@ -18,6 +18,7 @@
  */
 use Pluf\ModelUtils;
 use Pluf\Module;
+use Pluf\Options;
 
 /**
  * The main class of the framework.
@@ -41,11 +42,13 @@ class Pluf
         $GLOBALS['_PX_uniqid'] = uniqid($GLOBALS['_PX_starttime'], true);
         $GLOBALS['_PX_signal'] = array();
         $GLOBALS['_PX_locale'] = array();
+
         Pluf::loadConfig($config);
+
         date_default_timezone_set(Pluf::f('time_zone', 'UTC'));
         mb_internal_encoding(Pluf::f('encoding', 'UTF-8'));
         mb_regex_encoding(Pluf::f('encoding', 'UTF-8'));
-        
+
         // Load modules
         Module::loadModules();
     }
@@ -68,28 +71,10 @@ class Pluf
         } else {
             throw new Exception('Configuration file does not exist: ' . $config_file);
         }
+
         // Load the relations for each installed application. Each
         // application folder must be in the include path.
-        self::loadRelations(! Pluf::f('debug', false));
-    }
-
-    /**
-     * Get the model relations and signals.
-     *
-     * If not in debug mode, it will automatically cache the
-     * information. This allows one include file when many
-     * applications and thus many includes are needed.
-     *
-     * Signals and relations are cached in the same file as the way to
-     * go for signals is to put them in the relations.php file.
-     *
-     * @deprecated use ModelUtils::loadRelations instead
-     * @param
-     *            bool Use the cache (true)
-     */
-    public static function loadRelations($usecache = true)
-    {
-        ModelUtils::loadRelations($usecache);
+        ModelUtils::loadRelations(! Pluf::f('debug', false));
     }
 
     /**
@@ -201,7 +186,7 @@ class Pluf
         array_pop($elts);
         $file = implode(DIRECTORY_SEPARATOR, $elts) . '.php';
         if (false !== ($file = Pluf::fileExists($file))) {
-            include $file;
+            include_once $file;
         }
         if (! function_exists($function)) {
             throw new Exception('Impossible to load the function: ' . $function);
@@ -273,12 +258,43 @@ class Pluf
      *            mixed Extra parameters.
      * @return resource DB connection.
      */
+    /**
+     * Get the default DB connection.
+     *
+     * The default database connection is defined in the configuration file
+     * through the following configuration variables:
+     * - db_login : Login to connect to the database
+     * - db_password : Password to the database
+     * - db_server : Name of the server
+     * - db_database : Name of the database
+     * - db_table_prefix : Prefix for the table names
+     * - db_version : Version of the database engine
+     * - db_engine : Engine for exampe 'MySQL', 'SQLite'
+     *
+     * Once the first connection is created the following calls to Pluf::db()
+     * are getting the same connection.
+     */
     public static function &db($extra = null)
     {
-        $func = Pluf::f('db_get_connection', 'Pluf_DB_getConnection');
-        Pluf::loadFunction($func);
-        $a = $func($extra);
-        return $a;
+        $db = null;
+        if (isset($GLOBALS['_PX_db'])) {
+            $db = $GLOBALS['_PX_db'];
+            if ($db->isLive()) {
+                return $db;
+            }
+        }
+        $db = \Pluf\Db\Engine::getInstance(new Options(array_merge( //
+        array(
+            'engine' => '\Pluf\Db\SQLiteEngine',
+            'login' => 'root',
+            'password' => 'root',
+            'database' => '/tmp/pluf.test.sqlite.db'
+        ), // default value
+        Pluf::pf('db_', true) // from config
+        )));
+
+        $GLOBALS['_PX_db'] = $db;
+        return $db;
     }
 
     /**

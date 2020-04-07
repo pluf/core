@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -25,21 +26,23 @@
  */
 class Pluf_Text_Lang
 {
+
     /**
      * Given a string, returns the language.
      *
      * Algorithm by Cavnar et al. 94.
      *
-     * @param string
-     * @param bool Is the string clean (false)
+     * @param
+     *            string
+     * @param
+     *            bool Is the string clean (false)
      * @return array Language, Confidence
      */
-    public static function detect($string, $is_clean=false)
+    public static function detect($string, $is_clean = false)
     {
-        if (!$is_clean) {
+        if (! $is_clean) {
             $string = Pluf_Text::cleanString($string);
         }
-        
     }
 
     /**
@@ -49,25 +52,30 @@ class Pluf_Text_Lang
      * characters and switch to unigram instead of n-grams if the
      * proportion is greater than 50%.
      *
-     * @param string The clean document.
-     * @param int Maximum size of the n grams (3)
+     * @param
+     *            string The clean document.
+     * @param
+     *            int Maximum size of the n grams (3)
      * @return array N-Grams
      */
-    public static function docNgrams($string, $n=3)
+    public static function docNgrams($string, $n = 3)
     {
-        // do not remove the accents 
-        $words = Pluf_Text::tokenize($string, false); 
+        // do not remove the accents
+        $words = Pluf_Text::tokenize($string, false);
         $ngrams = array();
-        for ($i=2;$i<=$n;$i++) {
-            foreach ($words as $word=>$occ) {
+        for ($i = 2; $i <= $n; $i ++) {
+            foreach ($words as $word => $occ) {
                 foreach (self::makeNgrams($word, $i) as $ngram) {
-                    $ngrams[] = array($ngram, $occ);
+                    $ngrams[] = array(
+                        $ngram,
+                        $occ
+                    );
                 }
             }
         }
         $out = array();
         foreach ($ngrams as $ngram) {
-            if (!isset($out[$ngram[0]])) {
+            if (! isset($out[$ngram[0]])) {
                 $out[$ngram[0]] = $ngram[1];
             } else {
                 $out[$ngram[0]] += $ngram[1];
@@ -75,16 +83,18 @@ class Pluf_Text_Lang
         }
         // split the ngrams by occurence.
         $ngrams = array();
-        foreach ($out as $ngram=>$occ) {
+        foreach ($out as $ngram => $occ) {
             if (isset($ngrams[$occ])) {
                 $ngrams[$occ][] = $ngram;
             } else {
-                $ngrams[$occ] = array($ngram);
+                $ngrams[$occ] = array(
+                    $ngram
+                );
             }
         }
         krsort($ngrams);
         $res = array();
-        foreach ($ngrams as $occ=>$list) {
+        foreach ($ngrams as $occ => $list) {
             sort($list);
             foreach ($list as $ngram) {
                 $res[] = $ngram;
@@ -96,24 +106,27 @@ class Pluf_Text_Lang
     /**
      * Returns the n-grams of rank n of the word.
      *
-     * @param string Word.
+     * @param
+     *            string Word.
      * @return array N-grams
      */
-    public static function makeNgrams($word, $n=3)
+    public static function makeNgrams($word, $n = 3)
     {
-        $chars = array('_');
+        $chars = array(
+            '_'
+        );
         $chars = $chars + Pluf_Text::stringToChars($word);
         $chars[] = '_';
         $l = count($chars);
         $ngrams = array();
-        for ($i=0;$i<$l+1-$n;$i++) {
+        for ($i = 0; $i < $l + 1 - $n; $i ++) {
             $ngrams[$i] = array();
         }
-        $n_ngrams = $l+1-$n;
-        for ($i=0;$i<$l;$i++) {
-            for ($j=0;$j<$n;$j++) {
-                if (isset($ngrams[$i-$j])) {
-                    $ngrams[$i-$j][] = $chars[$i];
+        // $n_ngrams = $l+1-$n;
+        for ($i = 0; $i < $l; $i ++) {
+            for ($j = 0; $j < $n; $j ++) {
+                if (isset($ngrams[$i - $j])) {
+                    $ngrams[$i - $j][] = $chars[$i];
                 }
             }
         }
@@ -130,8 +143,10 @@ class Pluf_Text_Lang
     /**
      * Return the distance between two document ngrams.
      *
-     * @param array n-gram
-     * @param array n-gram
+     * @param
+     *            array n-gram
+     * @param
+     *            array n-gram
      * @return integer distance
      */
     public static function ngramDistance($n1, $n2)
@@ -140,10 +155,16 @@ class Pluf_Text_Lang
         $n_n1 = count($n1);
         $n_n2 = count($n2);
         if ($n_n1 > $n_n2) {
-            list($n_n1, $n_n2) = array($n_n2, $n_n1);
-            list($n1, $n2) = array($n2, $n1);
+            list ($n_n1, $n_n2) = array(
+                $n_n2,
+                $n_n1
+            );
+            list ($n1, $n2) = array(
+                $n2,
+                $n1
+            );
         }
-        for ($i=0;$i<$n_n1;$i++) {
+        for ($i = 0; $i < $n_n1; $i ++) {
             if (false !== ($index = array_search($n1[$i], $n2))) {
                 $offset = abs($index - $i);
                 $res += ($offset > 3) ? 3 : $offset;

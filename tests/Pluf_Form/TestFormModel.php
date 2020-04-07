@@ -27,17 +27,17 @@ class TestFormModel extends Pluf_Model
         $this->_a['model'] = 'TestFormModel';
         $this->_a['cols'] = array(
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         'blank' => true
                 ), // It is automatically added.
                 'title' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 100,
                         'verbose' => 'Title of the item'
                 ),
                 'description' => array(
-                        'type' => 'Pluf_DB_Field_Text',
+                        'type' => 'Text',
                         'blank' => true,
                         'help_text' => 'This is a small description'
                 )

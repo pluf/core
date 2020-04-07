@@ -192,14 +192,4 @@ class Pluf_Encoder
         return (float) $val;
     }
     
-    /*
-     * 'file' => "''",
-     * 'manytomany' => null,
-     * 'foreignkey' => 0,
-     * 'text' => "''",
-     * 'html' => "''",
-     * 'time' => 0,
-     * 'integer' => 0,
-     * );
-     */
 }

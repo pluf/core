@@ -65,7 +65,7 @@ class Pluf_Form_Field
     /**
      * < Predefined choices for the field.
      */
-    
+
     /*
      * Following member variables are more for internal cooking.
      */
@@ -82,9 +82,9 @@ class Pluf_Form_Field
     public $multiple = false;
 
     protected $empty_values = array(
-            '',
-            null,
-            array()
+        '',
+        null,
+        array()
     );
 
     /**
@@ -100,7 +100,7 @@ class Pluf_Form_Field
      * @param
      *            array Params of the field.
      */
-    function __construct ($params = array())
+    function __construct($params = array())
     {
         // We basically take the parameters, for each one we grab the
         // corresponding member variable and populate the $default
@@ -143,10 +143,9 @@ class Pluf_Form_Field
      *            mixed Value to clean.
      * @return mixed Cleaned data or throw a Pluf_Form_Invalid exception.
      */
-    function clean ($value)
+    function clean($value)
     {
-        if (! $this->multiple and $this->required and
-                 in_array($value, $this->empty_values)) {
+        if (! $this->multiple and $this->required and in_array($value, $this->empty_values)) {
             throw new Pluf_Form_Invalid(__('This field is required.'));
         }
         if ($this->multiple and $this->required and empty($value)) {
@@ -162,7 +161,7 @@ class Pluf_Form_Field
      *            mixed Value
      * @return mixed Value
      */
-    function setDefaultEmpty ($value)
+    function setDefaultEmpty($value)
     {
         if (in_array($value, $this->empty_values) and ! $this->multiple) {
             $value = '';
@@ -192,7 +191,7 @@ class Pluf_Form_Field
      *            array Values
      * @return array Values
      */
-    public function multiClean ($value)
+    public function multiClean($value)
     {
         $field = clone ($this);
         $field->multiple = false;
@@ -213,9 +212,62 @@ class Pluf_Form_Field
      *            object Widget
      * @return array HTML attributes.
      */
-    public function widgetAttrs ($widget)
+    public function widgetAttrs($widget)
     {
         return array();
+    }
+
+    /**
+     * Get the form field for this field definitions.
+     *
+     * We put this method at the field level as it allows us to easily
+     * create a new DB field and a new Form field and use them without
+     * the need to modify another place where the mapping would be
+     * performed.
+     *
+     * @param array $def
+     *            Definition of the data field.
+     * @param string $form_field
+     *            Form field class.
+     */
+    public static function getInstance(array $def, $form_field = 'Pluf_Form_Field_Varchar')
+    {
+        Pluf::loadClass('Pluf_Form_BoundField'); // To get mb_ucfirst
+        $defaults = array(
+            'required' => ! $def['blank'],
+            'label' => mb_ucfirst($def['verbose']),
+            'help_text' => $def['help_text']
+        );
+        unset($def['blank'], $def['verbose'], $def['help_text']);
+        if (isset($def['default'])) {
+            $defaults['initial'] = $def['default'];
+            unset($def['default']);
+        }
+        if (isset($def['choices'])) {
+            $defaults['widget'] = 'Pluf_Form_Widget_SelectInput';
+            if (isset($def['widget_attrs'])) {
+                $def['widget_attrs']['choices'] = $def['choices'];
+            } else {
+                $def['widget_attrs'] = array(
+                    'choices' => $def['choices']
+                );
+            }
+        }
+        foreach (array_keys($def) as $key) {
+            if (! in_array($key, array(
+                'widget',
+                'label',
+                'required',
+                'multiple',
+                'initial',
+                'choices',
+                'widget_attrs'
+            ))) {
+                unset($def[$key]);
+            }
+        }
+        $params = array_merge($defaults, $def);
+        return new $form_field($params);
     }
 }
 

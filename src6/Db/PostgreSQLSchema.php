@@ -1,72 +1,61 @@
 <?php
+namespace Pluf\Db;
 
-/*
- * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+use Pluf_Model;
+use Pluf_ModelUtils;
 
 /**
+ *
  * Generator of the schemas corresponding to a given model.
  *
  * This class is for PostgreSQL, you can create a class on the same
  * model for another database engine.
+ *
+ * @author maso
+ *        
  */
-class Pluf_DB_Schema_PostgreSQL
-
+class PostgreSQLSchema extends schema
 {
 
     /**
      * Mapping of the fields.
      */
     public $mappings = array(
-        'varchar' => 'character varying',
-        'sequence' => 'serial',
-        'boolean' => 'boolean',
-        'date' => 'date',
-        'datetime' => 'timestamp',
-        'file' => 'character varying',
-        'manytomany' => null,
-        'foreignkey' => 'integer',
-        'text' => 'text',
-        'html' => 'text',
-        'time' => 'time',
-        'integer' => 'integer',
-        'email' => 'character varying',
-        'password' => 'character varying',
-        'float' => 'real',
-        'blob' => 'bytea'
+        Engine::VARCHAR => 'character varying',
+        Engine::SEQUENCE => 'serial',
+        Engine::BOOLEAN => 'boolean',
+        Engine::DATE => 'date',
+        Engine::DATETIME => 'timestamp',
+        Engine::FILE => 'character varying',
+        Engine::MANY_TO_MANY => null,
+        Engine::FOREIGNKEY => 'integer',
+        Engine::TEXT => 'text',
+        Engine::HTML => 'text',
+        Engine::TIME => 'time',
+        Engine::INTEGER => 'integer',
+        Engine::EMAIL => 'character varying',
+        Engine::PASSWORD => 'character varying',
+        Engine::FLOAT => 'real',
+        Engine::BLOB => 'bytea'
     );
 
     public $defaults = array(
-        'varchar' => "''",
-        'sequence' => null,
-        'boolean' => 'FALSE',
-        'date' => "'0001-01-01'",
-        'datetime' => "'0001-01-01 00:00:00'",
-        'file' => "''",
-        'manytomany' => null,
-        'foreignkey' => 0,
-        'text' => "''",
-        'html' => "''",
-        'time' => "'00:00:00'",
-        'integer' => 0,
-        'email' => "''",
-        'password' => "''",
-        'float' => 0.0,
-        'blob' => "''"
+        Engine::VARCHAR => "''",
+        Engine::SEQUENCE => null,
+        Engine::BOOLEAN => 'FALSE',
+        Engine::DATE => "'0001-01-01'",
+        Engine::DATETIME => "'0001-01-01 00:00:00'",
+        Engine::FILE => "''",
+        Engine::MANY_TO_MANY => null,
+        Engine::FOREIGNKEY => 0,
+        Engine::TEXT => "''",
+        Engine::HTMLL => "''",
+        Engine::TIME => "'00:00:00'",
+        Engine::DATETIME => 0,
+        Engine::EMAIL => "''",
+        Engine::PASSWORD => "''",
+        Engine::FLOAT => 0.0,
+        Engine::BLOB => "''"
     );
 
     private $con = null;
@@ -122,8 +111,8 @@ class Pluf_DB_Schema_PostgreSQL
             $rb = Pluf_ModelUtils::getAssocField($omodel);
 
             $sql = 'CREATE TABLE ' . $table . ' (';
-            $sql .= "\n" . $ra . ' ' . $this->mappings['foreignkey'] . ' default 0,';
-            $sql .= "\n" . $rb . ' ' . $this->mappings['foreignkey'] . ' default 0,';
+            $sql .= "\n" . $ra . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
+            $sql .= "\n" . $rb . ' ' . $this->mappings[Engine::FOREIGNKEY] . ' default 0,';
             $sql .= "\n" . 'CONSTRAINT ' . $this->getShortenedIdentifierName($this->con->pfx . $table . '_pkey') . ' PRIMARY KEY (' . $ra . ', ' . $rb . ')';
             $sql .= "\n" . ');';
             $tables[$this->con->pfx . $table] = $sql;
@@ -151,12 +140,11 @@ class Pluf_DB_Schema_PostgreSQL
                 $unique = '';
             }
 
-            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($val['col'], $this->con));
+            $index[$this->con->pfx . $model->_a['table'] . '_' . $idx] = sprintf('CREATE ' . $unique . 'INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $idx, $this->con->pfx . $model->_a['table'], self::quoteColumn($val['col'], $this->con));
         }
         foreach ($model->_a['cols'] as $col => $val) {
-            $field = new $val['type']();
             if (isset($val['unique']) and $val['unique'] == true) {
-                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], Pluf_DB_Schema::quoteColumn($col, $this->con));
+                $index[$this->con->pfx . $model->_a['table'] . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $this->con->pfx . $model->_a['table'] . '_' . $col . '_unique_idx', $this->con->pfx . $model->_a['table'], self::quoteColumn($col, $this->con));
             }
         }
         return $index;
@@ -198,7 +186,7 @@ class Pluf_DB_Schema_PostgreSQL
             if ($field->type == 'manytomany') {
                 $manytomany[] = $col;
             }
-            if ($field->type == 'foreignkey') {
+            if ($field->type == Engine::FOREIGNKEY) {
                 // Add the foreignkey constraints
                 $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedIdentifierName($table . '_' . $col . '_fkey') . '
@@ -276,9 +264,9 @@ class Pluf_DB_Schema_PostgreSQL
             if ($field->type == 'manytomany') {
                 $manytomany[] = $col;
             }
-            if ($field->type == 'foreignkey') {
+            if ($field->type == Engine::FOREIGNKEY) {
                 // Add the foreignkey constraints
-                $referto = new $val['model']();
+//                 $referto = new $val['model']();
                 $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedIdentifierName($table . '_' . $col . '_fkey');
             }
         }
@@ -293,5 +281,32 @@ class Pluf_DB_Schema_PostgreSQL
         }
         return $constraints;
     }
+
+    /**
+     * Quote the column name.
+     *
+     * @param
+     *            string Name of the column
+     * @return string Escaped name
+     */
+    function qn($col)
+    {
+        return '"' . $col . '"';
+    }
+
+    public function dropTableQueries(Pluf_Model $model): array
+    {}
+
+    public function createConstraintQueries(Pluf_Model $model): array
+    {}
+
+    public function dropConstraintQueries(Pluf_Model $model): array
+    {}
+
+    public function createTableQueries(Pluf_Model $model): array
+    {}
+
+    public function createIndexQueries(Pluf_Model $model): array
+    {}
 }
 

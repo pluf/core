@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
+use Pluf\Db\SQLiteSchema;
 require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
@@ -48,10 +49,9 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema3()
     {
         $model = new Test_Model();
-        $schema = new Pluf_DB_Schema(Pluf::db());
-        $schema->model = $model;
-        $gen = $schema->getGenerator();
-        $sql = $gen->getSqlCreate($model);
+        $schema = new SQLiteSchema(Pluf::db());
+
+        $sql = $schema->createTableQueries($model);
 
         // CREATE TABLE pluf_unit_tests_testmodel (
         // id integer primary key autoincrement,
@@ -59,7 +59,7 @@ class PlufDBSchemaSQLiteTest extends TestCase
         // description text not null default ''
         // );
 
-        $tablename = Pluf_ModelUtils::getTable($model);
+        $tablename = $schema->getTableName($model);
         $this->assertEquals(true, strpos($sql[$tablename], 'CREATE TABLE') !== false);
         $this->assertEquals(true, strpos($sql[$tablename], 'integer') !== false);
         $this->assertEquals(true, strpos($sql[$tablename], 'varchar(100)') !== false);
@@ -74,12 +74,11 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testDeleteSchemaTestModel()
     {
         $model = new Test_Model();
-        $schema = new Pluf_DB_Schema(Pluf::db());
-        $schema->model = $model;
-        $gen = $schema->getGenerator();
-        $del = $gen->getSqlDelete($model);
+        $schema = new SQLiteSchema(Pluf::db());
 
-        $tablename = Pluf_ModelUtils::getTable($model);
+        $del = $schema->dropTableQueries($model);
+
+        $tablename = $schema->getTableName($model);
         $this->assertEquals('DROP TABLE IF EXISTS ' . $tablename, $del[0]);
     }
 
@@ -90,26 +89,31 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema()
     {
         $model = new Test_Model();
-        $schema = new Pluf_DB_Schema(Pluf::db());
-        $schema->model = $model;
-        $gen = $schema->getGenerator();
-        $this->assertEquals(true, $schema->dropTables());
-        $sql = $gen->getSqlCreate($model);
-        foreach ($sql as $query) {
-            Pluf::db()->execute($query);
-        }
-        $sql = $gen->getSqlIndexes($model);
-        foreach ($sql as $query) {
-            Pluf::db()->execute($query);
-        }
+
+        $engine = Pluf::db();
+
+        // create new schema
+        $schema = new SQLiteSchema($engine, $engine->getOptions()->startsWith('schema_', true));
+
+        Pluf_Migration::dropTables($engine, $schema, $model);
+        Pluf_Migration::createTables($engine, $schema, $model);
+
+        // $this->assertEquals(true, $schema->dropTables());
+        // $sql = $gen->getSqlCreate($model);
+        // foreach ($sql as $query) {
+        // Pluf::db()->execute($query);
+        // }
+        // $sql = $gen->getSqlIndexes($model);
+        // foreach ($sql as $query) {
+        // Pluf::db()->execute($query);
+        // }
+
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $this->assertEquals(true, $model->create());
         $this->assertEquals(1, (int) $model->id);
-        $del = $gen->getSqlDelete($model);
-        foreach ($del as $sql) {
-            Pluf::db()->execute($sql);
-        }
+
+        Pluf_Migration::dropTables($engine, $schema, $model);
     }
 
     /**
@@ -119,14 +123,17 @@ class PlufDBSchemaSQLiteTest extends TestCase
     public function testGenerateSchema2()
     {
         $model = new Test_Model();
-        $schema = new Pluf_DB_Schema(Pluf::db());
-        $schema->model = $model;
-        $this->assertEquals(true, $schema->dropTables());
-        $this->assertEquals(true, $schema->createTables());
+        $engine = Pluf::db();
+        $schema = new SQLiteSchema($engine, $engine->getOptions()->startsWith('schema_', true));
+
+        Pluf_Migration::dropTables($engine, $schema, $model);
+        Pluf_Migration::createTables($engine, $schema, $model);
+
         $model->title = 'my title';
         $model->description = 'A small desc.';
         $this->assertEquals(true, $model->create());
         $this->assertEquals(1, (int) $model->id);
-        $this->assertEquals(true, $schema->dropTables());
+
+        Pluf_Migration::dropTables($engine, $schema, $model);
     }
 }

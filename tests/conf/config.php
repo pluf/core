@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------------
 // Database Configurations
 // -------------------------------------------------------------------------
-// $var = include 'mysql.conf.php';
+// $cfg = include 'mysql.conf.php';
 $cfg = include 'sqlite.conf.php';
 
 $cfg['test'] = true;

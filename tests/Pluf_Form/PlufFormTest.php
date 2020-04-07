@@ -34,7 +34,6 @@ class PlufFormTest extends TestCase
 //         $this->markTestSkipped('Need to rewrite the form handling.');
 //         Pluf::start(__DIR__ . '/../conf/config.php');
 //         $db = Pluf::db();
-//         $schema = new Pluf_DB_Schema($db);
 //         $m1 = new TestFormModel();
 //         $schema->model = $m1;
 //         $schema->dropTables();
@@ -44,7 +43,6 @@ class PlufFormTest extends TestCase
 //     protected function tearDown()
 //     {
 //         $db = Pluf::db();
-//         $schema = new Pluf_DB_Schema($db);
 //         $m1 = new TestFormModel();
 //         $schema->model = $m1;
 //         $schema->dropTables();

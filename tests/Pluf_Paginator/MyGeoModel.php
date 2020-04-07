@@ -26,17 +26,17 @@ class Pluf_Paginator_MyGeoModel extends Pluf_Model
         $this->_a['table'] = 'testforgeomodels';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Pluf_DB_Field_Sequence',
+                'type' => 'Sequence',
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => 'Pluf_DB_Field_Varchar',
+                'type' => 'Varchar',
                 'blank' => false,
                 'size' => 100,
                 'verbose' => 'Title of the item'
             ),
             'location' => array(
-                'type' => 'Pluf_DB_Field_Geometry',
+                'type' => 'Geometry',
                 'blank' => true,
                 'is_null' => false,
                 'editable' => false,

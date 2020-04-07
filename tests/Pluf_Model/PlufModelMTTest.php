@@ -54,10 +54,11 @@ class Pluf_Model_PlufModelMTTest extends TestCase
         $tenant->domain = 'localhost';
         $tenant->subdomain = 'www';
         $tenant->validate = true;
-        if (true !== $tenant->create()) {
-            throw new \Pluf\Exception('Faile to create new tenant');
-        }
+        $tenant->create();
+        self::assertFalse($tenant->isAnonymous());
         $m->init($tenant);
+        
+        Pluf_Tenant::setCurrent($tenant);
     }
 
     /**
@@ -98,7 +99,8 @@ class Pluf_Model_PlufModelMTTest extends TestCase
         $model2 = new Test_ModelRecurse();
         $model2->title = 'child';
         $model2->parent_id = $model;
-        $this->assertEquals(true, $model2->create());
+        $model2->create();
+        $this->assertFalse($model2->isAnonymous());
 
         $a = $model->get_children_list();
         $this->assertEquals($a[0]->title, 'child');
@@ -113,7 +115,8 @@ class Pluf_Model_PlufModelMTTest extends TestCase
         $model = new Test_Model();
         $model->title = 'my title';
         $model->description = 'A small desc.';
-        $this->assertEquals(true, $model->create());
+        $model->create();
+        $this->assertFalse($model->isAnonymous());
         $this->assertEquals(1, (int) $model->id);
     }
 

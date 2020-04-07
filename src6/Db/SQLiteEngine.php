@@ -17,43 +17,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Db;
+
+use Pluf\Options;
+use Exception;
+use PDO;
+use PDOException;
+use Pluf_SQL;
 
 /**
  * SQLite connection class
  */
-class Pluf_DB_SQLite
+class SQLiteEngine extends Engine
 {
 
-    public $con_id;
-
-    public $pfx = '';
-
-    private $debug = false;
-
-    /**
-     * The last query, set with debug().
-     * Used when an error is returned.
-     */
-    public $lastquery = '';
+    public ?PDO $con_id;
 
     public $engine = 'SQLite';
 
-    public $type_cast = array();
-
-    function __construct($user, $pwd, $server, $dbname, $pfx = '', $debug = false)
+    function __construct(Options $options)
     {
-        Pluf::loadFunction('Pluf_DB_defaultTypecast');
-        $this->type_cast = Pluf_DB_defaultTypecast();
-        $this->debug = $debug;
-        $this->pfx = $pfx;
-        $this->debug('* SQLITE OPEN');
-        $this->type_cast['Pluf_DB_Field_Compressed'] = array(
-            'Pluf_DB_CompressedFromDb',
-            'Pluf_DB_SQLite_CompressedToDb'
+        parent::__construct($options);
+
+        $this->type_cast[Engine::COMPRESSED] = $this->type_cast['Compressed'] = array(
+            '\Pluf\Db\SQLiteEngine::compressedFromDb',
+            '\Pluf\Db\SQLiteEngine::compressedToDb'
         );
+        $this->type_cast[Engine::GEOMETRY] = $this->type_cast['Compressed'] = array(
+            '\Pluf\Db\SQLiteEngine::geometryFromDb',
+            '\Pluf\Db\SQLiteEngine::geometryToDb'
+        );
+
         // Connect and let the Exception be thrown in case of problem
         try {
-            $this->con_id = new PDO('sqlite:' . $dbname);
+            $this->con_id = new PDO('sqlite:' . $options->dbname);
         } catch (PDOException $e) {
             throw $e;
         }
@@ -69,27 +66,6 @@ class Pluf_DB_SQLite
         return $this->con_id->getAttribute(PDO::ATTR_SERVER_INFO);
     }
 
-    /**
-     * Log the queries.
-     * Keep track of the last query and if in debug mode
-     * keep track of all the queries in
-     * $GLOBALS['_PX_debug_data']['sql_queries']
-     *
-     * @param
-     *            string Query to keep track
-     * @return bool true
-     */
-    function debug($query)
-    {
-        $this->lastquery = $query;
-        if (! $this->debug)
-            return true;
-        if (! isset($GLOBALS['_PX_debug_data']['sql_queries']))
-            $GLOBALS['_PX_debug_data']['sql_queries'] = array();
-        $GLOBALS['_PX_debug_data']['sql_queries'][] = $query;
-        return true;
-    }
-
     function close()
     {
         $this->con_id = null;
@@ -98,27 +74,35 @@ class Pluf_DB_SQLite
 
     function select($query)
     {
-        $this->debug($query);
+        if ($query instanceof Pluf_SQL) {
+            $query = $query->gen();
+        }
         if (false === ($cur = $this->con_id->query($query))) {
             throw new Exception($this->getError());
         }
         return $cur->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function execute($query)
+    public function execute($query)
     {
-        $this->debug($query);
-        if (false === ($cur = $this->con_id->exec($query))) {
+        $queryStr = $query;
+        if ($query instanceof Pluf_SQL) {
+            $queryStr = $query->gen($this);
+        }
+        if (false === ($cur = $this->con_id->exec($queryStr))) {
             throw new \Pluf\Exception($this->getError());
         }
         return $cur;
     }
 
-    function getLastID()
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Db\Engine::getLastID()
+     */
+    public function getLastID(): int
     {
-        $this->debug('* GET LAST ID');
         return (int) $this->con_id->lastInsertId();
-        ;
     }
 
     /**
@@ -129,32 +113,29 @@ class Pluf_DB_SQLite
     function getError()
     {
         $err = $this->con_id->errorInfo();
-        $err[] = $this->lastquery;
         return implode(' - ', $err);
     }
 
-    function esc($str)
-    {
-        if (is_array($str)) {
-            $res = array();
-            foreach ($str as $s) {
-                $res[] = $this->con_id->quote($s);
-            }
-            return implode(', ', $res);
-        }
-        return $this->con_id->quote($str);
-    }
+//     function esc($str)
+//     {
+//         if (is_array($str)) {
+//             $res = array();
+//             foreach ($str as $s) {
+//                 $res[] = $this->con_id->quote($s);
+//             }
+//             return implode(', ', $res);
+//         }
+//         return $this->con_id->quote($str);
+//     }
 
     /**
-     * Quote the column name.
      *
-     * @param
-     *            string Name of the column
-     * @return string Escaped name
+     * {@inheritdoc}
+     * @see \Pluf\Db\Engine::quote()
      */
-    function qn($col)
+    public function quote(string $string, int $parameterType = null)
     {
-        return '"' . $col . '"';
+        return $this->con_id->quote($string, $parameterType);
     }
 
     /**
@@ -185,12 +166,47 @@ class Pluf_DB_SQLite
     {
         return '<Pluf_DB_SQLite(' . $this->con_id . ')>';
     }
-}
 
-function Pluf_DB_SQLite_CompressedToDb($val, $con)
-{
-    if (is_null($val)) {
-        return 'NULL';
+    public static function compressedFromDb($val)
+    {
+        return ($val) ? gzinflate($val) : $val;
     }
-    return 'X' . $con->esc(bin2hex(gzdeflate($val, 9)));
+
+    public static function compressedToDb($val, $con)
+    {
+        if (is_null($val)) {
+            return null;
+        }
+        return 'X' . $con->esc(bin2hex(gzdeflate($val, 9)));
+    }
+
+    /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Db\Engine::isLive()
+     */
+    public function isLive(): bool
+    {
+        return isset($this->con_id);
+    }
+
+    /**
+     *
+     * @param Object $val
+     * @return string
+     */
+    public static function geometryFromDb($val)
+    {
+        return $val;
+    }
+
+    /**
+     * Convert text to geometry
+     *
+     * @return string
+     */
+    public static function geometryToDb($val, $db)
+    {
+        return self::identityToDb($val, $db);
+    }
 }

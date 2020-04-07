@@ -10,16 +10,21 @@ class Pluf_ModelUtils extends \Pluf\ModelUtils
         return $modelName;
     }
 
-    public static function getAssocTable($from, $to): String
+    /**
+     *
+     * @deprecated
+     */
+    public static function getAssocTable(Pluf_Model $from, Pluf_Model $to): String
     {
         $hay = array(
             strtolower($from->_a['model']),
             strtolower($to->_a['model'])
         );
         sort($hay);
-        $table = $from->_con->pfx . $hay[0] . '_' . $hay[1] . '_assoc';
-        $table = self::skipeName($table);
-        return $table;
+        $prefix = $from->getEngine()
+            ->getSchema()
+            ->getPrefix();
+        return self::skipeName($prefix . $hay[0] . '_' . $hay[1] . '_assoc');
     }
 
     public static function getTable($model): String
@@ -32,7 +37,9 @@ class Pluf_ModelUtils extends \Pluf\ModelUtils
     public static function getAssocField($model): String
     {
         $name = self::skipeName(strtolower($model->_a['model']) . '_id');
-        $name = $model->_con->qn($name);
+        $name = $model->getEngine()
+            ->getSchema()
+            ->qn($name);
         return $name;
     }
 

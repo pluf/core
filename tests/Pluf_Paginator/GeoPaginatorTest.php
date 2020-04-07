@@ -43,7 +43,7 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
         }
         
         $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $schema = $db->getSchema();
         $m1 = new Pluf_Paginator_MyGeoModel();
         $schema->model = $m1;
         $schema->dropTables();
@@ -62,7 +62,7 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
     protected function tearDownTest()
     {
         $db = Pluf::db();
-        $schema = new Pluf_DB_Schema($db);
+        $schema = $db->getSchema();
         $m1 = new Pluf_Paginator_MyGeoModel();
         $schema->model = $m1;
         $schema->dropTables();

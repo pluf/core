@@ -46,26 +46,23 @@ class Pluf_Form_UpdateModel extends Pluf_Form_Model
             $cols = $this->model->_a['cols'];
         }
         foreach ($cols as $name => $def) {
-            $db_field = new $def['type']('', $name);
-            $def = array_merge(
-                array(
-                    'verbose' => $name,
-                    'help_text' => '',
-                    'editable' => true
-                ), 
-                $def,
+            // $db_field = new $def['type']('', $name);
+            $def = array_merge(array(
+                'verbose' => $name,
+                'help_text' => '',
+                'editable' => true
+            ), $def, 
                 // @note: hadi, all fields are optional to update,
                 // so this attribute is added to all fields.
                 array(
                     'blank' => true
-                )
-            );
+                ));
             if ($def['editable']) {
                 // The 'model_instance' and 'name' are used by the
                 // ManyToMany field.
                 $def['model_instance'] = $this->model;
                 $def['name'] = $name;
-                if (null !== ($form_field = $db_field->formField($def))) {
+                if (null !== ($form_field = Pluf_Form_Field::getInstance($def))) {
                     $this->fields[$name] = $form_field;
                 }
             }

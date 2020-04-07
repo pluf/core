@@ -28,12 +28,10 @@ class Pluf_Form_Model extends Pluf_Form
 
     /**
      * The model for which the form applies.
-     * 
-     * 
      */
     public $model = null;
 
-    function initFields ($extra = array())
+    function initFields($extra = array())
     {
         $this->model = $extra['model'];
         if (isset($extra['fields'])) {
@@ -46,22 +44,19 @@ class Pluf_Form_Model extends Pluf_Form
             $cols = $this->model->_a['cols'];
         }
         foreach ($cols as $name => $def) {
-            $db_field = new $def['type']('', $name);
-            $def = array_merge(
-                    array(
-                            'blank' => true,
-                            'verbose' => $name,
-                            'help_text' => '',
-                            'editable' => true
-                    ), $def);
+            // $db_field = new $def['type']('', $name);
+            $def = array_merge(array(
+                'blank' => true,
+                'verbose' => $name,
+                'help_text' => '',
+                'editable' => true
+            ), $def);
             if ($def['editable']) {
                 // The 'model_instance' and 'name' are used by the
                 // ManyToMany field.
                 $def['model_instance'] = $this->model;
                 $def['name'] = $name;
-                if (null !== ($form_field = $db_field->formField($def))) {
-                    $this->fields[$name] = $form_field;
-                }
+                $this->fields[$name] = Pluf_Form_Field::getInstance($def);
             }
         }
     }
@@ -74,7 +69,7 @@ class Pluf_Form_Model extends Pluf_Form
      *            is returned but not saved in the database.
      * @return Object Model with data set from the form.
      */
-    function save ($commit = true)
+    function save($commit = true)
     {
         if ($this->isValid()) {
             $this->model->setFromFormData($this->cleaned_data);
@@ -85,7 +80,6 @@ class Pluf_Form_Model extends Pluf_Form
             }
             return $this->model;
         }
-        throw new Pluf_Exception_Form(
-                __('Cannot save the model from an invalid form.'), $this);
+        throw new Pluf_Exception_Form(__('Cannot save the model from an invalid form.'), $this);
     }
 }

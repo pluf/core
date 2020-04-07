@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -24,13 +25,15 @@ class Pluf_SQL
 {
 
     protected $db;
+
     protected $where = '';
+
     public $ands = array();
 
     /**
      * Construct the constructor with a default condition.
      */
-    function __construct($base='', $args=array())
+    function __construct($base = '', $args = array())
     {
         $this->db = Pluf::db();
         if (strlen($base) > 0) {
@@ -51,26 +54,46 @@ class Pluf_SQL
     /**
      * Add a condition.
      *
-     * @param string String to 'interpolate'
-     * @param mixed String or array of parameters (array())
+     * @param
+     *            string String to 'interpolate'
+     * @param
+     *            mixed String or array of parameters (array())
      */
-    function Q($base, $args=array()) 
+    function Q($base, $args = array())
     {
-        $escaped = array();
-        if (!is_array($args)) {
-            $args = array($args);
+        if (! is_array($args)) {
+            $args = array(
+                $args
+            );
         }
-        foreach ($args as $arg) {
-            $escaped[] = $this->db->esc($arg);
-        }
-        $this->ands[] = vsprintf($base, $escaped);
+        $this->ands[] = vsprintf($base, $this->escapeParams($args));
         return $this;
+    }
+
+    public function escapeParams(array $params)
+    {
+        $escaped = [];
+        foreach ($params as $param) {
+            if (is_array($param)) {
+                $escaped[] = implode(',', $this->escapeParams($param));
+            } else {
+                if (! isset($param)) {
+                    $escaped[] = 'NULL';
+                } else if (is_string($param)) {
+                    $escaped[] = $this->db->quote($param);
+                } else {
+                    $escaped[] = $param;
+                }
+            }
+        }
+        return $escaped;
     }
 
     /**
      * Add another SQL as a AND.
      *
-     * @param Pluf_SQL Other object to add to the current.
+     * @param
+     *            Pluf_SQL Other object to add to the current.
      */
     function SAnd($sql)
     {
@@ -80,7 +103,8 @@ class Pluf_SQL
     /**
      * Add another SQL as a OR
      *
-     * @param Pluf_SQL Other object to add to the current.
+     * @param
+     *            Pluf_SQL Other object to add to the current.
      */
     function SOr($sql)
     {
@@ -90,10 +114,12 @@ class Pluf_SQL
     /**
      * Add another SQL to the current
      *
-     * @param Pluf_SQL Other object to add to the current.
-     * @param string Type of addition
+     * @param
+     *            Pluf_SQL Other object to add to the current.
+     * @param
+     *            string Type of addition
      */
-    function SDef($sql, $k='AND')
+    function SDef($sql, $k = 'AND')
     {
         if (empty($this->ands)) {
             $this->ands = $sql->ands;
@@ -102,7 +128,7 @@ class Pluf_SQL
             $current = $this->gen();
             if (strlen($othersql)) {
                 $this->ands = array();
-                $this->ands[] = '('.$current.') '.$k.' ('.$othersql.')';
+                $this->ands[] = '(' . $current . ') ' . $k . ' (' . $othersql . ')';
             }
         }
         return $this;
@@ -114,11 +140,13 @@ class Pluf_SQL
      * Considering a query string, explode the query string in
      * keywords given a defined delimiter.
      *
-     * @param string Query string
-     * @param string delimiter (' ')
+     * @param
+     *            string Query string
+     * @param
+     *            string delimiter (' ')
      * @return array Array of keywords
      */
-    function keywords($string, $del=' ')
+    function keywords($string, $del = ' ')
     {
         $keys = array();
         $args = explode($del, $string);
@@ -129,6 +157,12 @@ class Pluf_SQL
             }
         }
         return $keys;
+    }
+
+    public static function cleanString(string $str): string
+    {
+        return str_replace('%', '%%', $str);
+        ;
     }
 }
 

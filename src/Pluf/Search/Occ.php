@@ -31,34 +31,34 @@ class Pluf_Search_Occ extends Pluf_Model
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
-                        'type' => 'Pluf_DB_Field_Sequence',
+                        'type' => 'Sequence',
                         // It is automatically added.
                         'blank' => true
                 ),
                 'word' => array(
-                        'type' => 'Pluf_DB_Field_Foreignkey',
+                        'type' => 'Foreignkey',
                         'model' => 'Pluf_Search_Word',
                         'blank' => false,
                         'verbose' => __('word')
                 ),
                 'model_class' => array(
-                        'type' => 'Pluf_DB_Field_Varchar',
+                        'type' => 'Varchar',
                         'blank' => false,
                         'size' => 150,
                         'verbose' => __('model class')
                 ),
                 'model_id' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('model id')
                 ),
                 'occ' => array(
-                        'type' => 'Pluf_DB_Field_Integer',
+                        'type' => 'Integer',
                         'blank' => false,
                         'verbose' => __('occurences')
                 ),
                 'pondocc' => array(
-                        'type' => 'Pluf_DB_Field_Float',
+                        'type' => 'Float',
                         'blank' => false,
                         'verbose' => __('weighted occurence')
                 )
