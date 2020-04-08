@@ -65,24 +65,24 @@ class Pluf_Session extends Pluf_Model
             'id' => array(
                 'type' => 'Sequence',
                 // It is automatically added.
-                'blank' => true
+                'is_null' => false
             ),
             'version' => array(
                 'type' => 'Integer',
-                'blank' => true
+                'is_null' => true
             ),
             'session_key' => array(
                 'type' => 'Varchar',
-                'blank' => false,
+                'is_null' => false,
                 'size' => 100
             ),
             'session_data' => array(
                 'type' => 'Text',
-                'blank' => false
+                'is_null' => false
             ),
             'expire' => array(
                 'type' => 'Datetime',
-                'blank' => false
+                'is_null' => false
             )
         );
         $this->_a['idx'] = array(
