@@ -1,10 +1,13 @@
 <?php
 namespace Pluf\Data\Repository;
 
+use Pluf\Options;
+use Pluf\Data\Exception;
 use Pluf\Data\ModelDescription;
 use Pluf\Data\ModelProperty;
 use Pluf\Data\Query;
 use Pluf\Data\Repository;
+use Pluf\Data\Schema;
 
 /**
  * A relation repository
@@ -12,6 +15,19 @@ use Pluf\Data\Repository;
  * In pluf all relations will be stored in a repository and you are free to query them.
  * For example you can select all related chapter to a book with a query or finds all itmes in a shop order.
  *
+ * There are three main concepts:
+ *
+ * - source
+ * - relation
+ * - target
+ *
+ * Which is mean a source has a relation to a target. To map standard repository CRUDE we
+ * suppose following functionalities:
+ *
+ * - get: list all targets with
+ * - create: a new relation (target as extra param)
+ * - delete: a relation (target as extra param)
+ * - update: not supported
  *
  * @author maso(mostafa.barmshory@gmail.com)
  * @since 6.0 Adding first version of relation repository
@@ -20,103 +36,226 @@ use Pluf\Data\Repository;
 class RelationRepository extends Repository
 {
 
-    private ?ModelDescription $targetMd;
+    public ?string $source = null;
 
-    private ?string $targetType;
+    public ?string $target = null;
 
-    private ?string $relationName;
+    public ?string $relation = null;
 
-    private ?ModelProperty $relationPd;
-
-    public function getTargets($source, Query $query): array
+    /**
+     * Creates new instance of the repository
+     *
+     * NOTE: Relation name and property will be loaded and checked.
+     *
+     * @param Options $optionss
+     * @throws Exception
+     */
+    public function __construct(Options $optionss)
     {
-        return [];
+        parent::__construct($optionss);
+
+        // cehck relation name
+        if (! isset($this->relation)) {
+            throw new Exception([
+                'message' => 'Relation name is required'
+            ]);
+        }
+
+        // cheach relation property
+        $relationName = $this->relation;
+        $smd = $this->getModelDescription($this->source);
+        $this->relationPd = $smd->$relationName;
+        if (! isset($this->relationPd)) {
+            throw new Exception([
+                'message' => 'Relation property is not defined in srouce relation'
+            ]);
+        }
     }
 
     /**
-     * Get a list of related items.
+     * Get a list of targets
      *
-     * See the getList() method for usage of the view and filters.
+     * See the get() method for usage of the view and filters.
      *
-     *
-     *
+     * For example, to find a book which is related to a item from NoteBook application
+     * you have to get relation repository as follow:
      *
      * ```php
      * <?php
      *
-     * $repository = new Repository('\Pluf\Cms\Content');
+     * $repository = new RelationRepository(new Options([
+     * 'source' => '\Pluf\NoteBook\Item',
+     * 'target' => '\Pluf\NoteBook\Book',
+     * 'relation' => 'items',
+     * ]));
      *
-     * $content = $repository->get(1);
-     * $parent = $repository->getRelated($content, 'parent');
-     * $children = $repository->getRelated($content, 'children', $query);
+     * $query->setFilter('id', $item->id);
+     * $books = $repository->get($query);
+     * ```
+     * As you can see, the get is responsible to list all targets item which is
+     * joined to the source model based on query.
+     *
+     * In the other hand to get list of items from a book:
+     *
+     * ```php
+     * <?php
+     *
+     * $repository = new RelationRepository(new Options([
+     * 'source' => '\Pluf\NoteBook\Book',
+     * 'target' => '\Pluf\NoteBook\Item',
+     * 'relation' => 'items',
+     * ]));
+     *
+     * $query->setFilter('book', $book);
+     * $items = $repository->get($query);
      * ```
      *
-     * @param \Pluf_Model $model
-     *            The root of the relation
-     * @param string $relationName
-     *            name of ther relation to
-     * @param Query $query
-     *            to run on related objects if the result is many objects
-     * @return array Array of items
+     * ## Query
+     *
+     * You are free to use both target and source attributes in the query at
+     * the same time. How ever there may be same attributes in both source and
+     * target. To cover this condition, the relation name will be assuemd as
+     * alias for all target objects.
+     *
+     * For example, here is a code to get all chapters of a book which is published:
+     *
+     * ```php
+     * <?php
+     *
+     * $repository = new RelationRepository(new Options([
+     * 'source' => '\Pluf\NoteBook\Book',
+     * 'target' => '\Pluf\NoteBook\Item',
+     * 'relation' => 'items', // is used as alias
+     * ]));
+     *
+     * $query->setFilter('book', $book);
+     * $query->setFilter('items.status', 'published');
+     * $items = $repository->get($query);
+     * ```
+     *
+     *
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Data\Repository::get()
      */
-    public function getSources($target, Query $query): array
+    public function get(?Query $query = null)
     {
+        if (! isset($query)) {
+            $query = new Query();
+        }
+        if ($query->hasView()) {
+            throw new Exception([
+                'message' => 'Query view is not supported in relation repository'
+            ]);
+        }
 
-        // if (isset($this->_m['list'][$method]) and is_array($this->_m['list'][$method])) {
-        // $foreignkey = $this->_m['list'][$method][1];
-        // if (strlen($foreignkey) == 0) {
-        // throw new Exception(sprintf('No matching foreign key found in model: %s for model %s', $model, $this->_a['model']));
-        // }
-        // if (! is_null($p['filter'])) {
-        // if (is_array($p['filter'])) {
-        // $p['filter'] = implode(' AND ', $p['filter']);
-        // }
-        // $p['filter'] .= ' AND ';
-        // } else {
-        // $p['filter'] = '';
-        // }
-        // $p['filter'] .= $schema->qn($foreignkey) . '=' . $engine->toDb($this->_data['id'], Engine::SEQUENCE);
-        // } else {
-        // $manyToManyView = array(
-        // 'join' => '',
-        // 'where' => ''
-        // );
+        $query->setView([
+            'join' => [
+                [
+                    'joinProperty' => $this->relation,
+                    'alias' => $this->relation
+                ]
+            ]
+        ]);
 
-        // if ($model->hasView($p['view'])) {
-        // $manyToManyView = array_merge($manyToManyView, $model->getView($p['view']));
-        // }
-
-        // $manyToManyView['join'] .= ' LEFT JOIN ' . $schema->getRelationTable($this, $model) . ' ON ' . $schema->getAssocField($model) . ' = ' . $schema->getTableName($model) . '.id';
-        // $manyToManyView['where'] = $schema->getAssocField($this) . '=' . $this->id;
-
-        // $manyToManyViewName = $p['view'] . '__manytomany__';
-        // $model->setView($manyToManyViewName, $manyToManyView);
-        // $p['view'] = $manyToManyViewName;
-        // }
-        // return $model->getList($p);
+        $repo = Repository::getInstance([
+            'model' => $this->source,
+            'connection' => $this->getConnection(),
+            'schema' => $this->getSchema()
+        ]);
+        return $repo->get($query);
     }
 
-    public function createRelation($source, $target): array
+    /**
+     * Creates new relation from $srouce to $target
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Data\Repository::create()
+     */
+    public function create($source, $target = null)
     {
-        // $fromMd = $this->getModelDescription();
-        // $toMd = ModelDescription::getInstance($to);
+        if (! isset($target)) {
+            throw new Exception([
+                'message' => 'It is not possible to put null object into relation repository'
+            ]);
+        }
+        $schema = $this->getSchema();
 
-        // $schema = $this->schema;
+        $smd = $this->getModelDescription($this->source);
+        $tmd = $this->getModelDescription($this->target);
+        $relation = $this->relation;
 
-        // if (! isset($relationName)) {
-        // $relationName = $this->getRelationName($fromMd, $toMd);
-        // }
+        // 1. define table:
+        $relationTable = $schema->getRelationTable($smd, $tmd, $relation);
+
+        // 2. get relation fields
+        $relationSourceField = $schema->getRelationSourceField($smd, $tmd, $relation);
+        $relationTargetField = $schema->getRelationSourceField($smd, $tmd, $relation);
+
+        $connection = $this->getConnection();
+        // NOTE: suppose the id is unique for source
+        // NOTE: suppose the id is unique for target
+        $stm = $connection->query()
+            ->mode('insert')
+            ->table($relationTable)
+            ->set($relationSourceField, $source->id)
+            ->set($relationTargetField, $target->id)
+            ->execute();
+
+        $this->checkStatement($stm);
     }
 
-    public function deleteRelation($source, $target): array
+    /**
+     * Deletes the relation from $srouce to $target
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Data\Repository::delete()
+     */
+    public function delete($source, $target = null)
     {
-        // if ($this->isForignKeyRelation($relationName)) {
-        // // TODO: support foring key
-        // } elseif ($this->isManyToManyRelation($relationName)) {
-        // $this->sourceModelType->getRelated($model, null, $query->toArray());
-        // } else {
-        // throw new InvalidRelationKeyException($this->sourceModelType, $model, $relationName);
-        // }
+        if (! isset($target)) {
+            throw new Exception([
+                'message' => 'It is not possible to put null object into relation repository'
+            ]);
+        }
+
+        $smd = $this->getModelDescription($this->source);
+        $tmd = $this->getModelDescription($this->target);
+        $rp = $this->getRelationProperty($smd, $tmd, $this->relation);
+
+        // 1. define table:
+        $relationTable = $this->getRelationTable($smd, $tmd, $rp);
+
+        // 2. get relation fields
+        $relationSourceField = $this->getRelationSourceField($smd, $tmd, $rp);
+        $relationTargetField = $this->getRelationTargetField($smd, $tmd, $rp);
+
+        $connection = $this->getConnection();
+        // NOTE: suppose the id is unique for source
+        // NOTE: suppose the id is unique for target
+        $stm = $connection->query()
+            ->mode('delete')
+            ->table($relationTable)
+            ->where($relationSourceField, $source->id)
+            ->where($relationTargetField, $target->id)
+            ->execute();
+
+        $this->checkStatement($stm);
+    }
+
+    /**
+     * Updates the relation.
+     *
+     * NOTE: it is not common fro relations
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Data\Repository::update()
+     */
+    public function update($source, $target = null)
+    {
+        throw new Exception([
+            'message' => 'It is not possible to update a relation'
+        ]);
     }
 
     /**
@@ -127,11 +266,44 @@ class RelationRepository extends Repository
     protected function clean()
     {
         // load model description
-        if ($this->sourceType) {
-            $this->sourceMd = ModelDescription::getInstance($this->sourceType);
-        } else {
-            $this->sourceMd = null;
+        $this->sourceMd = null;
+        $this->targetMd = null;
+        $this->relationPd = null;
+    }
+
+    private function getRelationProperty(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation): ModelProperty
+    {
+        // check relation
+        $relationProperty = $smd->$relation;
+        if (! isset($relationProperty)) {
+            throw new Exception([
+                'message' => 'The property wtih name {name} does not exist in type {type}',
+                'type' => $smd->type,
+                'name' => $relation->name
+            ]);
         }
+        // check type
+        $type = $relationProperty->type;
+        if (! ($type == Schema::MANY_TO_MANY || $type == Schema::MANY_TO_ONE || $type == Schema::ONE_TO_MANY)) {
+            throw new Exception([
+                'message' => 'The property wtih name {name} is not a relation type in {type}',
+                'type' => $smd->type,
+                'name' => $relation->name
+            ]);
+        }
+        // check target model
+        if (! $smd->isInstanceOf($tmd)) {
+            throw new Exception([
+                'message' => 'The type {target} does not match with relation type {type} from {source}',
+                'type' => $relationProperty->model,
+                'source' => $smd->type,
+                'target' => $tmd->type
+            ]);
+        }
+
+        return $relationProperty;
     }
 }
+
+
 

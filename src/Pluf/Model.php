@@ -17,11 +17,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use Pluf\ModelUtils;
-use Pluf\Db\Engine;
-use Pluf\Data\Repository;
-use Pluf\Data\Query;
 use Pluf\Data\ModelDescription;
-use Pluf\Data\ModelProperty;
+use Pluf\Data\Query;
+use Pluf\Data\Repository;
+use Pluf\Db\Engine;
 use Pluf\Data\Schema;
 
 /**
@@ -151,43 +150,43 @@ class Pluf_Model implements JsonSerializable
         foreach ($this->_a['cols'] as $col => $description) {
 
             // $field = new $val['type']('', $col);
-            $col_lower = strtolower($col);
+            // $col_lower = strtolower($col);
 
-            if ($description['type'] === Engine::FOREIGNKEY) {
-                $this->_m['get']['get_' . $col_lower] = array(
-                    $description['model'],
-                    $col
-                );
-                $this->_cache['fk'][$col] = Engine::FOREIGNKEY;
-                $this->_fk[$col] = Engine::FOREIGNKEY;
-                /*
-                 * TODO: maso, 2018: this model will replace the old one in the
-                 * next major version
-                 */
-                if (array_key_exists('name', $description)) {
-                    $this->_m['get']['get_' . $description['name']] = $this->_m['get']['get_' . $col_lower];
-                }
-            }
+            // if ($description['type'] === Engine::FOREIGNKEY) {
+            // $this->_m['get']['get_' . $col_lower] = array(
+            // $description['model'],
+            // $col
+            // );
+            // $this->_cache['fk'][$col] = Engine::FOREIGNKEY;
+            // $this->_fk[$col] = Engine::FOREIGNKEY;
+            // /*
+            // * TODO: maso, 2018: this model will replace the old one in the
+            // * next major version
+            // */
+            // if (array_key_exists('name', $description)) {
+            // $this->_m['get']['get_' . $description['name']] = $this->_m['get']['get_' . $col_lower];
+            // }
+            // }
 
-            if ($description['type'] === Engine::MANY_TO_MANY) {
-                $this->_m['list']['get_' . $col_lower . '_list'] = $description['model'];
-                $this->_m['many'][$description['model']] = Engine::MANY_TO_MANY;
-                /*
-                 * TODO: maso, 2018: this model will replace the old one in the
-                 * next major version
-                 */
-                if (array_key_exists('name', $description)) {
-                    $this->_m['list']['get_' . $description['name'] . '_list'] = $description['model'];
-                }
-            }
+            // if ($description['type'] === Engine::MANY_TO_MANY) {
+            // $this->_m['list']['get_' . $col_lower . '_list'] = $description['model'];
+            // $this->_m['many'][$description['model']] = Engine::MANY_TO_MANY;
+            // /*
+            // * TODO: maso, 2018: this model will replace the old one in the
+            // * next major version
+            // */
+            // if (array_key_exists('name', $description)) {
+            // $this->_m['list']['get_' . $description['name'] . '_list'] = $description['model'];
+            // }
+            // }
 
-            if (array_key_exists('default', $description)) {
-                $this->_data[$col] = $description['default'];
+            if (array_key_exists('defaultValue', $description)) {
+                $this->_data[$col] = $description['defaultValue'];
             }
         }
 
-        $this->_setupAutomaticListMethods(Engine::FOREIGNKEY);
-        $this->_setupAutomaticListMethods(Engine::MANY_TO_MANY);
+        // $this->_setupAutomaticListMethods(Engine::FOREIGNKEY);
+        // $this->_setupAutomaticListMethods(Engine::MANY_TO_MANY);
 
         ModelUtils::putModelToCache($this);
     }
@@ -335,45 +334,96 @@ class Pluf_Model implements JsonSerializable
      */
     function __call($method, $args)
     {
-        // The foreign keys of the current object.
-        if (isset($this->_m['get'][$method])) {
-            if (isset($this->_cache[$method])) {
-                return $this->_cache[$method];
-            } else {
-                $model = $this->_m['get'][$method][0];
-                $id = $this->_data[$this->_m['get'][$method][1]];
-                $this->_cache[$method] = new $model($id);
-                if ($this->_cache[$method]->id == '') {
-                    $this->_cache[$method] = null;
-                }
-                return $this->_cache[$method];
-            }
-        }
-        // Many to many or foreign keys on the other objects.
-        if (isset($this->_m['list'][$method])) {
-            if (is_array($this->_m['list'][$method])) {
-                $model = $this->_m['list'][$method][0];
-            } else {
-                $model = $this->_m['list'][$method];
-            }
-            $params = [];
-            if (sizeof($args) > 0) {
-                $params = $args[0];
-            }
-            return $this->getRelated($model, $method, $params);
+        $match = [];
+        // Schema::MANY_TO_MANY
+        // SCHEMA::ONE_TO_MANY
+        if (preg_match('#^get_(?P<property>.+)_list$#', $method, $match)) {
+            $propertyName = $match['property'];
+            $md = ModelDescription::getInstance($this);
+            $property = $md->$propertyName;
+        } // Schema::MANY_TO_ONE
+        else if (preg_match('#^get_(?P<property>.+)$#', $method, $match)) {
+            $propertyName = $match['property'];
+            $md = ModelDescription::getInstance($this);
+            $property = $md->$propertyName;
+        } else {
+            // no slousion found
+            throw new \Pluf\Exception([
+                'message' => sprintf('Method "%s" not available in model.', $method, get_class($this))
+            ]);
         }
 
-        // Extra methods added by fields
-        if (isset($this->_m['extra'][$method])) {
-            $args = array_merge(array(
-                $this->_m['extra'][$method][0],
-                $method,
-                $this
-            ), $args);
-            Pluf::loadFunction($this->_m['extra'][$method][1]);
-            return call_user_func_array($this->_m['extra'][$method][1], $args);
+        // create query from args
+        if (isset($args[0])) {
+            $queryValue = $args[0];
+        } else {
+            $queryValue = [];
         }
-        throw new \Pluf\Exception(sprintf('Method "%s" not available in model.', $method, $this->_a['model']));
+        if ($queryValue instanceof \Pluf\Db\Query) {
+            $query = $queryValue;
+        } else {
+            $query = new Query($queryValue);
+        }
+
+        if (isset($property)) {
+            switch ($property->type) {
+                case Schema::MANY_TO_ONE:
+                    // FK Value
+                    $fkvName = $property->joinProperty;
+                    if (! isset($fkvName)) {
+                        $fkvName = $propertyName . '_id';
+                    }
+                    $fkValue = $this->$fkvName;
+
+                    // FK
+                    $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
+                    $fkName = $property->inverseJoinProperty;
+                    if (! isset($fkName)) {
+                        $fkName = 'id';
+                    }
+                    $fk = $fkModel->$fkName;
+
+                    $query->addFilter([
+                        $fk->name,
+                        $fkValue
+                    ]);
+                    $repo = Pluf::getDataRepository([
+                        'model' => $property->inverseJoinModel
+                    ]);
+                    return $repo->getOne($query);
+                case Schema::ONE_TO_MANY:
+                    // FK Value
+                    $fkvName = $property->joinProperty;
+                    if (! isset($fkvName)) {
+                        $fkvName = 'id';
+                    }
+                    $fkValue = $this->$fkvName;
+
+                    // FK
+                    $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
+                    $fkName = $property->inverseJoinProperty;
+                    if (! isset($fkName)) {
+                        $fkName = 'id';
+                    }
+                    $fk = $fkModel->$fkName;
+
+                    $query->addFilter([
+                        $fk->name,
+                        $fkValue
+                    ]);
+                    $repo = Pluf::getDataRepository([
+                        'model' => $property->inverseJoinModel
+                    ]);
+                    return $repo->get($query);
+                case Schema::MANY_TO_MANY:
+                default:
+                    throw new Exception([
+                        'message' => 'the property {name} in model {model} is not relation',
+                        'name' => $property->name,
+                        'model' => $md->type
+                    ]);
+            }
+        }
     }
 
     /**
@@ -413,7 +463,6 @@ class Pluf_Model implements JsonSerializable
      *            string or array given to getList
      * @see self::getList
      * @return Pluf_Model|null find model
-     * @deprecated use \Pluf\Model\Repository::getList
      */
     public function getOne($p = array())
     {
@@ -429,7 +478,9 @@ class Pluf_Model implements JsonSerializable
         if (count($items) == 0) {
             return null;
         }
-        throw new \Pluf\Exception(__('Error: More than one matching item found.'));
+        throw new \Pluf\Data\Exception([
+            'message' => 'More than one matching item found.'
+        ]);
     }
 
     /**
@@ -460,12 +511,11 @@ class Pluf_Model implements JsonSerializable
      *            array Associative array with the possible following
      * @return ArrayObject of items or through an exception if
      *         database failure
-     * @deprecated use \Pluf\Model\Repository::getList
      */
     function getList($p = array())
     {
         $query = new Query($p);
-        return Pluf::getDataRepository($this)->getListByQuery($query);
+        return Pluf::getDataRepository($this)->get($query);
     }
 
     /**
@@ -476,7 +526,7 @@ class Pluf_Model implements JsonSerializable
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
-     * @deprecated use \Pluf\Model\Repository::getCount
+     * @see \Pluf\Data\Repository#getCount
      */
     function getCount($p = array()): int
     {
@@ -489,69 +539,66 @@ class Pluf_Model implements JsonSerializable
         }
     }
 
-    /**
-     * Get a list of related items.
-     *
-     * See the getList() method for usage of the view and filters.
-     *
-     * @param
-     *            string Class of the related items
-     * @param
-     *            string Method call in a many to many related
-     * @param
-     *            array Parameters, see getList() for the definition of
-     *            the keys
-     * @return array Array of items
-     */
-    private function getRelated(string $modelClass, $relationName, $p = array())
-    {
-        if ($this->isAnonymous()) {
-            return new ArrayObject();
-        }
+    // /**
+    // * Get a list of related items.
+    // *
+    // * See the getList() method for usage of the view and filters.
+    // *
+    // * @param
+    // * string Class of the related items
+    // * @param
+    // * string Method call in a many to many related
+    // * @param
+    // * array Parameters, see getList() for the definition of
+    // * the keys
+    // * @return array Array of items
+    // */
+    // private function getRelated(string $modelClass, $relationName, $p = array())
+    // {
+    // if ($this->isAnonymous()) {
+    // return new ArrayObject();
+    // }
 
-        $default = array(
-            'view' => null,
-            'filter' => null,
-            'order' => null,
-            'start' => null,
-            'nb' => null,
-            'count' => false
-        );
-        $query = new Query(array_merge($default, $p));
+    // $default = array(
+    // 'view' => null,
+    // 'filter' => null,
+    // 'order' => null,
+    // 'start' => null,
+    // 'nb' => null,
+    // 'count' => false
+    // );
+    // $query = new Query(array_merge($default, $p));
 
-//         $toMd = ModelDescription::getInstance($modelClass);
-//         $fromMd = ModelDescription::getInstance($this);
-        
-        $rep = Pluf::getDataRepository([
-            'owner' => $this,
-            'target' => $modelClass,
-            'name' => $relationName
-        ]);
-        
-        return $repo->get([
-            
-        ]);
+    // // $toMd = ModelDescription::getInstance($modelClass);
+    // // $fromMd = ModelDescription::getInstance($this);
 
-//         $property = $fromMd->$relationName;
-//         switch ($property->type) {
-//             case Schema::MANY_TO_ONE:
+    // $rep = Pluf::getDataRepository([
+    // 'owner' => $this,
+    // 'target' => $modelClass,
+    // 'name' => $relationName
+    // ]);
 
-//             case Schema::MANY_TO_MANY:
-//             case Schema::ONE_TO_MANY:
-//                 $view = '__px__view_' . $relationName;
-//                 $query->view
-//             default:
-//                 throw new Exception([
-//                     'message' => 'Property {relation} is not a relation field',
-//                     'relation' => $relationName,
-//                     'model' => get_class($this)
-//                 ]);
-//         }
+    // return $repo->get([]);
 
-        
-//         return Pluf::getDataRepository($modelClass)
-//             ->getRelations(, $relationName, $query);
-    }
+    // // $property = $fromMd->$relationName;
+    // // switch ($property->type) {
+    // // case Schema::MANY_TO_ONE:
+
+    // // case Schema::MANY_TO_MANY:
+    // // case Schema::ONE_TO_MANY:
+    // // $view = '__px__view_' . $relationName;
+    // // $query->view
+    // // default:
+    // // throw new Exception([
+    // // 'message' => 'Property {relation} is not a relation field',
+    // // 'relation' => $relationName,
+    // // 'model' => get_class($this)
+    // // ]);
+    // // }
+
+    // // return Pluf::getDataRepository($modelClass)
+    // // ->getRelations(, $relationName, $query);
+    // }
 
     /**
      * Update the model into the database.
@@ -633,7 +680,15 @@ class Pluf_Model implements JsonSerializable
      */
     function setAssoc(Pluf_Model $model, ?string $assocName = null)
     {
-        Pluf::getDataRepository($this)->createRelation($this, $model, $assocName);
+        if (! isset($assocName)) {
+            $property = Pluf::getDataSchema()->getRelationProperty($this, $model);
+            $assocName = $property->name;
+        }
+        Pluf::getDataRepository([
+            'relation' => $assocName,
+            'source' => get_class($this),
+            'target' => get_class($model)
+        ])->create($this, $model);
         return true;
     }
 
@@ -977,42 +1032,42 @@ class Pluf_Model implements JsonSerializable
     // ------------------------------------------------------------------------
     // Function and automated part
     // ------------------------------------------------------------------------
-    /**
-     * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
-     *
-     * Adds the get_xx_list method when the methods of the model
-     * contains custom names.
-     *
-     * @param string $type
-     *            Relation type: Engine::FORINKEY or ENGINE::MANY_TO_MANY
-     */
-    protected function _setupAutomaticListMethods($type)
-    {
-        $current_model = ModelUtils::getModelCacheKey($this);
-        $relations = ModelUtils::getRelatedModels($this, $type);
+    // /**
+    // * متدهای اتوماتیک را برای مدل ورودی ایجاد می‌کند.
+    // *
+    // * Adds the get_xx_list method when the methods of the model
+    // * contains custom names.
+    // *
+    // * @param string $type
+    // * Relation type: Engine::FORINKEY or ENGINE::MANY_TO_MANY
+    // */
+    // protected function _setupAutomaticListMethods($type)
+    // {
+    // $current_model = ModelUtils::getModelCacheKey($this);
+    // $relations = ModelUtils::getRelatedModels($this, $type);
 
-        foreach ($relations as $related) {
-            if ($related != $current_model) {
-                $model = new $related();
-            } else {
-                $model = clone $this;
-            }
-            $fkeys = $model->getRelationKeysToModel($current_model, $type);
-            foreach ($fkeys as $fkey => $val) {
-                $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
-                $mname = 'get_' . strtolower($mname) . '_list';
-                if (Engine::FOREIGNKEY === $type) {
-                    $this->_m['list'][$mname] = array(
-                        $related,
-                        $fkey
-                    );
-                } else {
-                    $this->_m['list'][$mname] = $related;
-                    $this->_m['many'][$related] = $type;
-                }
-            }
-        }
-    }
+    // foreach ($relations as $related) {
+    // if ($related != $current_model) {
+    // $model = new $related();
+    // } else {
+    // $model = clone $this;
+    // }
+    // $fkeys = $model->getRelationKeysToModel($current_model, $type);
+    // foreach ($fkeys as $fkey => $val) {
+    // $mname = (isset($val['relate_name'])) ? $val['relate_name'] : $related;
+    // $mname = 'get_' . strtolower($mname) . '_list';
+    // if (Engine::FOREIGNKEY === $type) {
+    // $this->_m['list'][$mname] = array(
+    // $related,
+    // $fkey
+    // );
+    // } else {
+    // $this->_m['list'][$mname] = $related;
+    // $this->_m['many'][$related] = $type;
+    // }
+    // }
+    // }
+    // }
 
     /**
      * Add tenant required fields

@@ -24,10 +24,14 @@ use Pluf\Data\Schema;
 use Pluf\Db\Expression;
 
 /**
+ * Data model of a book
  *
  * @author maso
- * @ModelDescription(
- *  table='notebook_book'
+ * @Model(
+ *  table='notebook_book',
+ *  title='Book',
+ *  multitinant=true,
+ *  mapped=false,
  * )
  */
 class Book extends Pluf_Model
@@ -42,15 +46,16 @@ class Book extends Pluf_Model
     {
         $this->_a['table'] = 'notebook_book';
         $this->_a['verbose'] = 'Note book';
-        $this->_a['cols'] = array(
+        $this->_a['cols'] = [
             // It is mandatory to have an "id" column.
-            'id' => array(
+            'id' => [
                 'type' => Schema::SEQUENCE,
+                'primary' => true,
                 // It is automatically added.
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
-            ),
+            ],
             'title' => [
                 'type' => Schema::VARCHAR,
                 'size' => 100,
@@ -58,19 +63,31 @@ class Book extends Pluf_Model
                 'editable' => false,
                 'readable' => true
             ],
-            'description' => array(
+            'description' => [
                 'type' => 'Text',
                 'blank' => false,
                 'editable' => false,
                 'readable' => true
-            ),
-            'creation_dtime' => array(
+            ],
+            'creation_dtime' => [
                 'type' => 'Datetime',
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
-            )
-        );
+            ],
+            'items' => [
+                'type' => Schema::ONE_TO_MANY,
+                // 'joinProperty' => 'id',
+                'inverseJoinModel' => Item::class,
+                'inverseJoinProperty' => 'book_id'
+            ],
+            'tags' => [
+                'type' => Schema::MANY_TO_MANY,
+                'joinProperty' => 'id',
+                'inverseJoinModel' => Tag::class,
+                'inverseJoinProperty' => 'id'
+            ]
+        ];
     }
 
     /**
@@ -91,11 +108,11 @@ class Book extends Pluf_Model
             'nonEmpty' => [
                 'join' => [
                     [
-                        'model' => '\Pluf\NoteBook\Item',
-                        'property' => 'book_id',
+                        'joinProperty' => 'id',
+                        'inverseJoinModel' => Item::class,
+                        'inverseJoinProperty' => 'book_id',
                         'alias' => 'item',
-                        'masterProperty' => 'id',
-                        'kind' => Schema::INNER_JOIN
+                        'type' => Schema::INNER_JOIN
                     ]
                 ],
                 'group' => [
@@ -108,18 +125,15 @@ class Book extends Pluf_Model
             'empty' => [
                 'join' => [
                     [
-                        'model' => '\Pluf\NoteBook\Item',
-                        'property' => 'book_id',
-                        'alias' => 'item',
-                        'masterProperty' => 'id',
-                        'kind' => Schema::INNER_JOIN
+                        'joinProperty' => 'items',
+                        'alias' => 'item'
                     ]
                 ],
-                'group' => [
-                    'item.book_id'
-                ],
                 'having' => [
-                    new Expression('count(*) < 0')
+                    [
+                        'item.book_id',
+                        null
+                    ]
                 ]
             ]
         ];

@@ -59,7 +59,14 @@ class Query
 
     use \Pluf\DiContainerTrait;
 
-    private ?string $view = null;
+    /**
+     * A view to used in query.
+     *
+     * You are free to create a new view or call an existed view from the repository.
+     *
+     * @var array|string
+     */
+    private $view = null;
 
     private ?array $filter = null;
 
@@ -115,7 +122,7 @@ class Query
      *
      * @return string view
      */
-    public function getView(): string
+    public function getView()
     {
         return $this->view;
     }
@@ -175,6 +182,9 @@ class Query
      */
     public function hasView(): bool
     {
+        if (is_array($this->view)) {
+            return true;
+        }
         return isset($this->view) && strlen($this->view) > 0;
     }
 
@@ -194,6 +204,19 @@ class Query
     public function setFilter($filter)
     {
         $this->filter = $filter;
+    }
+
+    /**
+     * Adds filter into the filter list
+     *
+     * @param mixed $filter
+     */
+    public function addFilter($filter)
+    {
+        if (! isset($this->filter)) {
+            $this->filter = [];
+        }
+        $this->filter[] = $filter;
     }
 
     /**

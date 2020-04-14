@@ -28,6 +28,8 @@ class SQLiteSchema extends \Pluf\Data\Schema
         self::DATETIME => 'datetime',
         self::FILE => 'varchar(250)',
         self::MANY_TO_MANY => null,
+        self::MANY_TO_ONE => 'integer',
+        self::ONE_TO_MANY => null,
         self::FOREIGNKEY => 'integer',
         self::TEXT => 'text',
         self::HTML => 'text',
@@ -48,6 +50,8 @@ class SQLiteSchema extends \Pluf\Data\Schema
         self::DATETIME => 0,
         self::FILE => "''",
         self::MANY_TO_MANY => null,
+        self::MANY_TO_ONE => 0,
+        self::ONE_TO_MANY => null,
         self::FOREIGNKEY => 0,
         self::TEXT => "''",
         self::HTML => "''",
@@ -97,6 +101,10 @@ class SQLiteSchema extends \Pluf\Data\Schema
             $type = $property->type;
             $name = $property->name;
 
+            if ($type == self::ONE_TO_MANY) {
+                // will be created on other side
+                continue;
+            }
             if ($type == self::MANY_TO_MANY) {
                 $manytomany[] = $property;
                 continue;
@@ -106,7 +114,7 @@ class SQLiteSchema extends \Pluf\Data\Schema
             switch ($type) {
                 case self::VARCHAR:
                     $size = $property->size;
-                    if (!isset($size)) {
+                    if (! isset($size)) {
                         $size = 150;
                     }
                     $_tmp = sprintf($this->mappings[$type], $size);
@@ -138,15 +146,14 @@ class SQLiteSchema extends \Pluf\Data\Schema
         $tables[$table] = 'CREATE TABLE ' . $table . ' (' . implode(",", $sql_col) . ');';
 
         // Now for the many to many
-        foreach ($manytomany as $property) {
-            $omodel = ModelDescription::getInstance($property->model);
-            $relationName = $property->name;
+        foreach ($manytomany as $relation) {
+            $tmd = ModelDescription::getInstance($relation->inverseJoinModel);
 
-            $table = $this->getRelationTable($model, $omodel, $relationName);
-            $ra = $this->getAssocField($model, $relationName);
-            $rb = $this->getAssocField($omodel, $relationName);
+            $table = $this->getRelationTable($model, $tmd, $relation);
+            $ra = $this->getRelationSourceField($model, $tmd, $relation);
+            $rb = $this->getRelationTargetField($model, $tmd, $relation);
 
-            $sql = 'CREATE TABLE ' . $table . ' (';
+            $sql = 'CREATE TABLE IF NOT EXISTS ' . $table . ' (';
             $sql .= $ra . $this->mappings[self::FOREIGNKEY] . ' default 0,';
             $sql .= $rb . $this->mappings[self::FOREIGNKEY] . ' default 0,';
             $sql .= 'primary key (' . $ra . ', ' . $rb . ')';

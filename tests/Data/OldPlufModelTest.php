@@ -346,14 +346,14 @@ class OldPlufModelTest extends TestCase
         // 3
         // XXX: maso,
         $list = $book->getList([
+            'view' => 'empty'
+        ]);
+        $this->assertEquals(1, count($list));
+
+        $list = $book->getList([
             'view' => 'nonEmpty'
         ]);
         $this->assertEquals(0, count($list));
-
-        // $list = $book->getList([
-        // 'view' => 'empty'
-        // ]);
-        // $this->assertEquals(1, count($list));
     }
 
     /**
@@ -454,6 +454,47 @@ class OldPlufModelTest extends TestCase
         $bookList = $book->getList();
 
         $this->assertEquals(0, count($bookList));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function gettingBookFromItem()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        // crate 5 item
+        $item->title = 'title xxx' . rand();
+        $this->assertTrue($item->create());
+
+        $book = $item->get_book();
+        $this->assertNull($book);
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function gettingListOfItemsFromBook()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        // crate 5 item
+        $book->title = 'title xxx' . rand();
+        $this->assertTrue($book->create());
+
+        $items = $book->get_items_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(0, count($items));
     }
 
     /*

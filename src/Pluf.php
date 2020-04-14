@@ -328,6 +328,12 @@ class Pluf
         return self::$dataSchema;
     }
 
+    /**
+     * Gets new instance of repository
+     *
+     * @param mixed $option
+     * @return \Pluf\Data\Repository\ModelRepository | \Pluf\Data\Repository\RelationRepository
+     */
     public static function getDataRepository($option): Repository
     {
         // XXX: maso, 2020: adding cache manager for repository
@@ -341,16 +347,13 @@ class Pluf
 
         if (is_string($option)) {
             $options->type = 'model';
-            $options->model = $option;
         }
 
         if ($option instanceof ModelDescription) {
             $options->model = $option->type;
-            $options->type = 'model';
         }
         if ($option instanceof Pluf_Model) {
             $options->model = get_class($option);
-            $options->type = 'model';
         }
 
         $options->connection = self::db();

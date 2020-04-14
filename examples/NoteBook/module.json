@@ -3,7 +3,8 @@
 	"title": "A test module with model",
 	"model": [
 		"\\Pluf\\NoteBook\\Book",
-		"\\Pluf\\NoteBook\\Item"
+		"\\Pluf\\NoteBook\\Item",
+		"\\Pluf\\NoteBook\\Tag"
 	],
 	"init": {
 		"\\Pluf\\NoteBook\\Book": [

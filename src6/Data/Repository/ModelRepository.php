@@ -42,6 +42,16 @@ class ModelRepository extends \Pluf\Data\Repository
     public ?ModelDescription $modelDescription = null;
 
     /**
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Data\Repository::get()
+     */
+    public function get(?Query $query = null)
+    {
+        return $this->getListByQuery($query);
+    }
+
+    /**
      * Get a given item.
      *
      * @param
@@ -80,7 +90,16 @@ class ModelRepository extends \Pluf\Data\Repository
      */
     public function getOne(Query $query)
     {
-        return $this->sourceModel->getOne($query->toArray());
+        $items = $this->get($query);
+        if (count($items) == 1) {
+            return $items[0];
+        }
+        if (count($items) == 0) {
+            return null;
+        }
+        throw new \Pluf\Exception([
+            'message' => 'More than one matching item found.'
+        ]);
     }
 
     /**
@@ -186,15 +205,6 @@ class ModelRepository extends \Pluf\Data\Repository
         return $model;
     }
 
-    public function createList(?array $models = []): array
-    {}
-
-    public function updateList(?array $models = []): array
-    {}
-
-    public function deleteList(?array $models = []): array
-    {}
-
     /**
      * Gets list of object
      *
@@ -227,7 +237,13 @@ class ModelRepository extends \Pluf\Data\Repository
         ];
 
         if ($query->hasView()) {
-            $dataView = $md->getView($query->getView());
+            // load the view
+            $viewName = $query->getView();
+            if (is_string($viewName)) {
+                $dataView = $md->getView($query->getView());
+            } else {
+                $dataView = $viewName;
+            }
 
             // Filter
             if (array_key_exists('filter', $dataView)) {
@@ -302,7 +318,7 @@ class ModelRepository extends \Pluf\Data\Repository
             }
             call_user_func_array([
                 $dbQuery,
-                'have'
+                'having'
             ], $filter);
         }
 
@@ -382,10 +398,11 @@ class ModelRepository extends \Pluf\Data\Repository
      *
      * @return \Pluf\Data\ModelDescription
      */
-    protected function getModelDescription(): ModelDescription
+    protected function getModelDescription(?string $type = null): ModelDescription
     {
         if (! isset($this->modelDescription)) {
-            $this->modelDescription = ModelDescription::getInstance($this->model);
+            $type = $this->model;
+            $this->modelDescription = parent::getModelDescription($type);
         }
         return $this->modelDescription;
     }

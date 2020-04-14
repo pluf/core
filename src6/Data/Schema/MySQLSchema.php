@@ -8,6 +8,7 @@ use Pluf_Model;
 use Pluf_ModelUtils;
 use WKT;
 use geoPHP;
+use Pluf\Data\ModelDescription;
 
 class MySQLSchema extends \Pluf\Data\Schema
 {
@@ -23,6 +24,8 @@ class MySQLSchema extends \Pluf\Data\Schema
         self::DATETIME => 'datetime',
         self::FILE => 'varchar(250)',
         self::MANY_TO_MANY => null,
+        self::ONE_TO_MANY => null,
+        self::MANY_TO_ONE => 'mediumint(9) unsigned',
         self::FOREIGNKEY => 'mediumint(9) unsigned',
         self::TEXT => 'longtext',
         self::HTML => 'longtext',
@@ -43,6 +46,8 @@ class MySQLSchema extends \Pluf\Data\Schema
         self::DATETIME => 0,
         self::FILE => "''",
         self::MANY_TO_MANY => null,
+        self::MANY_TO_ONE => 0,
+        self::ONE_TO_MANY => null,
         self::FOREIGNKEY => 0,
         self::TEXT => "''",
         self::HTML => "''",
@@ -59,7 +64,7 @@ class MySQLSchema extends \Pluf\Data\Schema
 
     /**
      * Creates new instance of the schema
-     * 
+     *
      * @param Options $options
      */
     public function __construct(?Options $options = null)
@@ -92,42 +97,46 @@ class MySQLSchema extends \Pluf\Data\Schema
      */
     public function createConstraintQueries(Pluf_Model $model): array
     {
-        $table = $this->prefix . $model->_a['table'];
-        $constraints = array();
+        $smd = ModelDescription::getInstance($model);
+        $table = $this->getTableName($smd);
         $alter_tbl = 'ALTER TABLE ' . $table;
-        $cols = $model->_a['cols'];
-        $manytomany = array();
+        // $cols = $model->_a['cols'];
+        $constraints = [];
+        $manytomany = [];
+        $manytooen = [];
 
-        foreach ($cols as $col => $val) {
-            $type = $val['type'];
-            // remember these for later
-            if ($type == self::MANY_TO_MANY) {
-                $manytomany[] = $col;
+        foreach ($smd as $property) {
+            if ($property->type == self::MANY_TO_MANY) {
+                $manytomany[] = $property;
             }
-            if ($field->type == self::FOREIGNKEY) {
-                // Add the foreignkey constraints
-                $referto = new $val['model']();
-                $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $col . '_fkey') . '
-                    FOREIGN KEY (' . $this->qn($col) . ')
-                    REFERENCES ' . $this->getTableName($referto) . ' (id)
-                    ON DELETE NO ACTION ON UPDATE NO ACTION';
+            if ($property->type == self::MANY_TO_ONE) {
+                $manytooen[] = $property;
             }
         }
 
-        // Now for the many to many
-        foreach ($manytomany as $many) {
-            $omodel = new $cols[$many]['model']();
-            $table = $this->getRelationTable($model, $omodel);
-            $modelTable = $this->getTableName($model);
+        // Forigne Keys
+        foreach ($manytooen as $property) {
+            $tmd = ModelDescription::getInstance($property->model);
+            $referto = $this->getTableName($tmd);
+            // Add the foreignkey constraints
+            $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_' . $property->name . '_fkey') . '
+                    FOREIGN KEY (' . $this->qn($property->name) . ')
+                    REFERENCES ' . $this->getTableName($referto) . ' (id)
+                    ON DELETE NO ACTION ON UPDATE NO ACTION';
+        }
 
+        // Now for the many to many
+        foreach ($manytomany as $relation) {
+            $tmd = ModelDescription::getInstance($relation->model);
+            $table = $this->getRelationTable($smd, $tmd, $relation);
             $alter_tbl = 'ALTER TABLE ' . $table;
             $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1') . '
-                FOREIGN KEY (' . $this->getAssocField($model) . ')
-                REFERENCES ' . $modelTable . ' (id)
+                FOREIGN KEY (' . $this->getRelationSourceField($smd, $tmd, $relation) . ')
+                REFERENCES ' . $this->getTableName($smd) . ' (id)
                 ON DELETE NO ACTION ON UPDATE NO ACTION';
             $constraints[] = $alter_tbl . ' ADD CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2') . '
-                FOREIGN KEY (' . $this->getAssocField($omodel) . ')
-                REFERENCES ' . $this->getTableName($omodel) . ' (id)
+                FOREIGN KEY (' . $this->getRelationTargetField($smd, $tmd, $relation) . ')
+                REFERENCES ' . $this->getTableName($tmd) . ' (id)
                 ON DELETE NO ACTION ON UPDATE NO ACTION';
         }
         return $constraints;
@@ -182,7 +191,7 @@ class MySQLSchema extends \Pluf\Data\Schema
     function qn(string $col): string
     {
         $cols = explode(',', $col);
-        $colArray = array();
+        // $colArray = array();
         foreach ($cols as $myCol) {
             $colsArray[] = '`' . trim($myCol) . '`';
         }

@@ -7,22 +7,22 @@ class ModelProperty
 {
     use \Pluf\DiContainerTrait;
 
-//     "unit" => null,
-//     "defaultValue" => null,
-//     "required" => false,
-//     "visible" => false,
-//     "priority" => 0,
-//     "validators" => [],
-//     "tags" => [],
-    
-    public string $name = 'noname';
-
     public $type = Schema::TEXT;
+
+    public string $name = 'noname';
 
     public ?string $title = null;
 
     public ?string $description = null;
 
+    // "unit" => null,
+    // "defaultValue" => null,
+    // "required" => false,
+    // "visible" => false,
+    // "priority" => 0,
+
+    // public array $validators" => ['NotNull', 'MaxSize:20', 'MinSize:2'],
+    // public array $tags => [],
     public bool $editable = false;
 
     public bool $nullable = true;
@@ -33,12 +33,53 @@ class ModelProperty
 
     public int $max_digits = 32;
 
-    public ?string $model = null;
-
     public ?int $size = 256;
 
     public bool $unique = false;
 
+    public ?string $columne = null;
+
+    /**
+     * Relation properties
+     *
+     * These are used to define a relation property for a model
+     * {
+     */
+    public ?string $joinProperty = null;
+
+    /**
+     * Defines a model which is related to the current one
+     *
+     * @var string
+     */
+    public ?string $inverseJoinModel = null;
+
+    /**
+     * Defines the property of the related model.
+     *
+     * NOTE: property must be defined, and the inverse of the property must be current one.
+     *
+     * @var string
+     */
+    public ?string $inverseJoinProperty = null;
+
+    /**
+     * }
+     */
+
+    /**
+     * Relation DB field
+     * {
+     */
+    public ?string $joinTable = null;
+
+    public ?string $joinColumne = null;
+
+    public ?string $inverseJoinColumne = null;
+
+    /**
+     * }
+     */
     /**
      * Creates new instance of model property
      *

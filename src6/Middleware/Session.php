@@ -19,10 +19,10 @@
 namespace Pluf\Middleware;
 
 use Pluf\Exception;
+use Pluf\Data\Query;
 use Pluf;
 use Pluf_HTTP_Request;
 use Pluf_HTTP_Response;
-use Pluf_SQL;
 use Pluf_Session;
 use Pluf_Signal;
 
@@ -43,6 +43,11 @@ class Session implements \Pluf\Middleware
      */
     function process_request(Pluf_HTTP_Request &$request)
     {
+        $repo = Pluf::getDataRepository([
+            'type' => 'model',
+            'model' => '\Pluf_Session'
+        ]);
+
         $session = new Pluf_Session();
         if (! isset($request->COOKIE[$session->cookie_name])) {
             // No session is defined. We set empty session.
@@ -62,10 +67,15 @@ class Session implements \Pluf\Middleware
             return false;
         }
         if (isset($data['Pluf_Session_key'])) {
-            $sql = new Pluf_SQL('session_key=%s', $data['Pluf_Session_key']);
-            $found_session = Pluf::factory(Pluf_Session::class)->getList(array(
-                'filter' => $sql->gen()
-            ));
+            $found_session = $repo->getList(new Query([
+                'filter' => [
+                    [
+                        'session_key',
+                        $data['Pluf_Session_key']
+                    ]
+                ]
+            ]));
+
             if (isset($found_session[0])) {
                 $request->session = $found_session[0];
             } else {

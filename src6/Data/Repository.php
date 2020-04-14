@@ -58,9 +58,9 @@ abstract class Repository
 
     private static array $repositoryMap = [];
 
-    private ?Connection $connection = null;
+    public ?Connection $connection = null;
 
-    private ?Schema $schema = null;
+    public ?Schema $schema = null;
 
     /**
      * Defines one repository per aggregate
@@ -81,23 +81,28 @@ abstract class Repository
      *
      * Creates a repository to mange Books.
      */
-    public static function getInstance(Options $options): Repository
+    public static function getInstance($options): Repository
     {
-        switch ($options->type) {
-            case 'model':
-                $repo = new ModelRepository($options);
-                break;
-            case 'relation':
-                $repo = new RelationRepository($options);
-                break;
-            default:
-                throw new Exception([
-                    'message' => 'Unsupported repository type.'
-                ]);
+        if (is_array($options)) {
+            $options = new Options($options);
+        }
+        // model repository
+        $model = $options->model;
+        if (isset($model)) {
+            $repo = new ModelRepository($options);
+            return $repo;
         }
 
-        // create
-        return $repo;
+        // realtion repository
+        $relation = $options->relation;
+        if (isset($relation)) {
+            $repo = new RelationRepository($options);
+            return $repo;
+        }
+
+        throw new Exception([
+            'message' => 'Unsupported repository type.'
+        ]);
     }
 
     /**
@@ -155,14 +160,50 @@ abstract class Repository
      *
      * @return \Pluf\Data\Schema
      */
-    public function getSchema(): Schema
+    public function getSchema(): ?Schema
     {
         return $this->schema;
     }
 
     /**
-     * If a fundemental attribute of a repository changed then this function is called to clean
-     * the virtual attributes.
+     * Gets list of model matches with query.
+     *
+     * If the query is not given, then all items will match with it.
+     *
+     * @param Query $query
+     *            to match
+     * @return array|int|mixed The count, list or a selected item
+     */
+    public abstract function get(?Query $query = null);
+
+    /**
+     * Delete the model
+     *
+     * If the $modal is a query, then all matched items will be removed
+     *
+     * @param mixed|\Pluf_Model|Query $model
+     */
+    public abstract function delete($model);
+
+    /**
+     * Crates the model in repository
+     *
+     * @param mixed|array|\Pluf_Model $model
+     *            to create into the db
+     */
+    public abstract function create($model);
+
+    /**
+     * Updates the model in repository
+     *
+     * @param mixed|array|\Pluf_Model $model
+     *            to create into the db
+     */
+    public abstract function update($model);
+
+    /**
+     * If a fundemental attribute of a repository changed then this function is
+     * called to clean the virtual attributes.
      */
     protected abstract function clean();
 
@@ -185,6 +226,17 @@ abstract class Repository
                 'message' => $info[2]
             ]);
         }
+    }
+
+    /**
+     * Gets related type
+     *
+     * @param string $type
+     * @return ModelDescription
+     */
+    protected function getModelDescription(string $type): ModelDescription
+    {
+        return ModelDescription::getInstance($type);
     }
 }
 

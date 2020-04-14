@@ -164,5 +164,17 @@ class ModelDescription extends ArrayObject
         $this->views[$name] = $view;
         // XXX: maso, 2020: update cache
     }
+
+    /**
+     * Checks if the $target is insance of this description
+     *
+     * @param
+     *            Object | ModelDescription | string $target
+     * @return boolean
+     */
+    public function isInstanceOf($target): bool
+    {
+        return is_a($target, $this->type, true);
+    }
 }
 

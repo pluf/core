@@ -34,41 +34,47 @@ class Item extends Pluf_Model
     {
         $this->_a['table'] = 'notebook_item';
         $this->_a['verbose'] = 'Note item';
-        $this->_a['cols'] = array(
+        $this->_a['cols'] = [
             // It is mandatory to have an "id" column.
-            'id' => array(
+            'id' => [
                 'type' => 'Sequence',
                 // It is automatically added.
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
-            ),
-            'title' => array(
+            ],
+            'title' => [
                 'type' => 'Text',
                 'blank' => false,
                 'editable' => true,
                 'readable' => true
-            ),
-            'body' => array(
+            ],
+            'body' => [
                 'type' => 'Text',
                 'blank' => false,
                 'editable' => true,
                 'readable' => true
-            ),
-            'creation_dtime' => array(
+            ],
+            'creation_dtime' => [
                 'type' => 'Datetime',
                 'blank' => true,
                 'editable' => false,
                 'readable' => true
-            ),
-            'book_id' =>[
-                'type' => Schema::MANY_TO_ONE,
-                'model' => '\Pluf\NoteBook\Book',
+            ],
+            'book_id' => [
+                'type' => Schema::FOREIGNKEY,
+                'columne' => 'book_id',
                 'blank' => true,
                 'editable' => true,
                 'readable' => true
+            ],
+            'book' => [
+                'type' => Schema::MANY_TO_ONE,
+                'joinProperty' => 'book_id',
+                'inverseJoinModel' => Book::class,
+                'inverseJoinProperty' => 'id'
             ]
-        );
+        ];
     }
 
     /**
