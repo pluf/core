@@ -16,8 +16,10 @@
          <testsuite name="Core">
             <directory>tests/Cache/</directory>
             <directory>tests/Logger/</directory>
-            <directory>tests/PlufTest.php</directory>
-            <directory>tests/OptionsTest.php</directory>
+            <file>tests/PlufTest.php</file>
+            <file>tests/OptionsTest.php</file>
+            <file>tests/PlufUtilsTest.php</file>
+            <file>tests/PlufCryptTest.php</file>
          </testsuite>
         <testsuite name="DB">
             <directory>tests/Db/</directory>
@@ -28,7 +30,6 @@
 <!--         <testsuite name="Pluf2Suit"> -->
 <!--             <directory>tests/Pluf/</directory> -->
 <!--             <directory>tests/Pluf_Crypt/</directory> -->
-<!--             <directory>tests/Pluf_Utils/</directory> -->
 <!--             <directory>tests/Pluf_Encoder/</directory> -->
 <!--             <directory>tests/Pluf_Tenant/</directory> -->
 <!--             <directory>tests/Pluf_Tenant_Template/</directory> -->
