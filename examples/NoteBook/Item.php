@@ -72,7 +72,9 @@ class Item extends Pluf_Model
                 'type' => Schema::MANY_TO_ONE,
                 'joinProperty' => 'book_id',
                 'inverseJoinModel' => Book::class,
-                'inverseJoinProperty' => 'id'
+                'inverseJoinProperty' => 'id',
+                // do not create columne
+                'mapped' => true,
             ]
         ];
     }

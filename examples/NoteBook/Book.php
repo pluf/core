@@ -129,7 +129,7 @@ class Book extends Pluf_Model
                         'alias' => 'item'
                     ]
                 ],
-                'having' => [
+                'where' => [
                     [
                         'item.book_id',
                         null

@@ -347,11 +347,12 @@ class Pluf_Dispatcher
     private static function logError($req, $exception)
     {
         // return if is not internal error
-        if ($exception instanceof \Pluf\Exception) {
-            if ($exception->getStatus() !== 500) {
-                return;
-            }
-        }
+        // XXX: maso, 2020: handle view error
+        // if ($exception instanceof \Pluf\Exception) {
+        // // if ($exception->getStatus() !== 500) {
+        // // return;
+        // // }
+        // }
         try {
             // 1- Add to log
             Pluf_Log::fatal('Fail to handle the request', array(

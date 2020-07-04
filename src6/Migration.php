@@ -44,14 +44,10 @@ namespace Pluf;
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
  */
-use Pluf\Db\Engine;
-use Pluf\Data\Schema;
-use DirectoryIterator;
-use Pluf;
-use Pluf_Model;
-use Pluf_Tenant;
-use Pluf\Data\Repository;
 use Pluf\Data\ModelDescription;
+use Pluf\Data\Schema;
+use Pluf;
+use Pluf_Tenant;
 
 class Migration
 {
@@ -368,6 +364,9 @@ class Migration
             throw new Exception('Module file not found in path');
         }
 
+        $schema = Pluf::getDataSchema();
+        $connection = Pluf::db();
+
         // Delete modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
@@ -375,8 +374,7 @@ class Migration
             // self::dropConstraints($engine, $schema, new $model());
             // }
             foreach ($models as $model) {
-                $repo = Repository::getInstance($model);
-                $repo->dropTables();
+                $schema->dropTables($connection, ModelDescription::getInstance($model));
             }
         }
         // TODO: delete permissions

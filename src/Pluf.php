@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use Pluf\ModelUtils;
+use Pluf\Cache;
 use Pluf\Module;
 use Pluf\Options;
-use Pluf\Cache;
-use Pluf\Db\Connection;
-use Pluf\Data\Schema;
-use Pluf\Data\Repository;
 use Pluf\Data\ModelDescription;
+use Pluf\Data\Repository;
+use Pluf\Data\Schema;
+use Pluf\Db\Connection;
+use Pluf\Db\Connection\Dumper;
 
 /**
  * The main class of the framework.
@@ -73,7 +73,7 @@ class Pluf
 
         // Load the relations for each installed application. Each
         // application folder must be in the include path.
-        ModelUtils::loadRelations(! Pluf::getConfig('debug', false));
+        // ModelUtils::loadRelations(! Pluf::getConfig('debug', false));
 
         date_default_timezone_set(Pluf::getConfig('time_zone', 'UTC'));
         mb_internal_encoding(Pluf::getConfig('encoding', 'UTF-8'));
@@ -296,6 +296,11 @@ class Pluf
         if (! isset(self::$dbConnection)) {
             $options = self::getConfigByPrefix('db_', true);
             self::$dbConnection = Connection::connect($options->dsn, $options->user, $options->passwd);
+            if ($options->dumper) {
+                $optionsDumper = $options->startsWith('dumber_', true);
+                $optionsDumper->connection = self::$dbConnection;
+                self::$dbConnection = new Dumper($optionsDumper);
+            }
         }
         return self::$dbConnection;
     }
@@ -346,7 +351,7 @@ class Pluf
         }
 
         if (is_string($option)) {
-            $options->type = 'model';
+            $options->model = $option;
         }
 
         if ($option instanceof ModelDescription) {

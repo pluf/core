@@ -7,6 +7,8 @@ class ModelProperty
 {
     use \Pluf\DiContainerTrait;
 
+    public ?bool $mapped = false;
+
     public $type = Schema::TEXT;
 
     public string $name = 'noname';
@@ -88,6 +90,16 @@ class ModelProperty
     public function __construct($options)
     {
         $this->setDefaults($options);
+    }
+
+    /**
+     * Checks if the property is mapped one.
+     *
+     * @return bool true if the property is mapped.
+     */
+    public function isMapped(): bool
+    {
+        return isset($this->mapped) && $this->mapped;
     }
 }
 

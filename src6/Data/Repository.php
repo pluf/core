@@ -83,20 +83,24 @@ abstract class Repository
      */
     public static function getInstance($options): Repository
     {
+        // TODO: maso, 2019: catche the repository in ArrayCache
         if (is_array($options)) {
             $options = new Options($options);
         }
+
         // model repository
         $model = $options->model;
         if (isset($model)) {
             $repo = new ModelRepository($options);
-            return $repo;
         }
 
         // realtion repository
         $relation = $options->relation;
         if (isset($relation)) {
             $repo = new RelationRepository($options);
+        }
+
+        if (isset($repo)) {
             return $repo;
         }
 
@@ -110,9 +114,9 @@ abstract class Repository
      *
      * @param string $modelType
      */
-    public function __construct(Options $optionss)
+    public function __construct(Options $options)
     {
-        $this->setDefaults($optionss);
+        $this->setDefaults($options);
         $this->clean();
     }
 

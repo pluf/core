@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,34 +16,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Relation;
+
+use Pluf\Data\Schema;
+use Pluf_Model;
 
 /**
  *
  * @author maso
  *        
  */
-class Test_ManyToManyOne extends Pluf_Model
+class ModelCount extends Pluf_Model
 {
 
+    /**
+     *
+     * {@inheritdoc}
+     * @see Pluf_Model::init()
+     */
     function init()
     {
-        $this->_a['table'] = 'test_manytomanyone';
+        $this->_a['table'] = 'test_model_count';
         $this->_a['cols'] = array(
-            'id' => array(
-                'type' => 'Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'twos' => array(
-                'type' => 'Manytomany',
-                'blank' => true,
-                'model' => 'Test_ManyToManyTwo',
-                'relate_name' => 'ones'
-            ),
-            'one' => array(
-                'type' => 'Varchar',
-                'blank' => false,
+            'id' => [
+                'type' => Schema::SEQUENCE,
+                'nullable' => true
+            ],
+            'title' => [
+                'type' => Schema::VARCHAR,
+                'nullable' => false,
                 'size' => 100
-            )
+            ],
+            'description' => [
+                'type' => Schema::TEXT,
+                'nullable' => true
+            ],
+            'degr' => [
+                'type' => Schema::FLOAT,
+                'nullable' => true
+            ]
         );
     }
 }
+

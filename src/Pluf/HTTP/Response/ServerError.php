@@ -21,7 +21,8 @@
 /**
  * Error response
  */
-class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
+class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response
+{
 
     /**
      * یک نمونه جدید از این شئی ایجاد می‌کند
@@ -32,30 +33,30 @@ class Pluf_HTTP_Response_ServerError extends Pluf_HTTP_Response {
      * در صورتی که خطایی رخ دهد، یک متن پیش فرض به عنوان خطای نتیجه نمایش داده
      * خواهد شد.
      *
-     * @param Pluf_HTTP_Request $request            
+     * @param Pluf_HTTP_Request $request
      */
-    function __construct($exception, $mimetype = null, $request = null) {
+    function __construct($exception, $mimetype = null, $request = null)
+    {
         /*
          * ایجاد پیام مناسب برای کاربر
          */
-        $mimetype = Pluf::f('mimetype_json', 'application/json') .
-                '; charset=utf-8';
-        if (!($exception instanceof \Pluf\Exception)) {
-            parent::__construct(json_encode(array(
-                    'code' => 5000,
-                    'status' => 500,
-//                    'link' => $this->link,
-                    'message' => $exception->getMessage(),
-//                    'data' => $this->data,
-//                    'developerMessage' => $this->developerMessage,
-                    'stack' => Pluf::f('debug', false)? $exception->getTrace() : array()
-            )), $mimetype);
+        $mimetype = Pluf::f('mimetype_json', 'application/json') . '; charset=utf-8';
+        if (! ($exception instanceof \Pluf\Exception)) {
+            parent::__construct(json_encode([
+                'code' => 5000,
+                'status' => 500,
+                // 'link' => $this->link,
+                'message' => $exception->getMessage(),
+                // 'data' => $this->data,
+                // 'developerMessage' => $this->developerMessage,
+                'stack' => Pluf::f('debug', false) ? $exception->getTrace() : array()
+            ]), $mimetype);
             $this->status_code = 500;
         } else {
             parent::__construct(json_encode($exception), $mimetype);
-            $this->status_code = $exception->getStatus();
+            // XXX: maso, 2020: convert pluf exception into response
+            $this->status_code = $exception->getCode();
         }
         return;
     }
-    
 }

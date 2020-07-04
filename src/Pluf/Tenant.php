@@ -122,7 +122,7 @@ class Pluf_Tenant extends Pluf_Model
                 'type' => 'Foreignkey',
                 'model' => 'Pluf_Tenant',
                 'blank' => true,
-                'name' => 'parent',
+                // 'name' => 'parent', // Used to override columen name
                 'graphql_name' => 'parent',
                 'relate_name' => 'children',
                 'editable' => true,

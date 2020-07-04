@@ -16,28 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-$m = array();
-$m['Test_ModelRecurse'] = array(
-    'relate_to' => array(
-        'Test_ModelRecurse',
-    )
-);
-$m['Test_RelatedToTestModel'] = array(
-    'relate_to' => array(
-        'Test_Model'
-    )
-);
-$m['Test_RelatedToTestModel2'] = array(
-    'relate_to' => array(
-        'Test_Model'
-    )
-);
-$m['Test_ManyToManyOne'] = array(
-    'relate_to_many' => array(
-        'Test_ManyToManyTwo'
-    )
-);
-return $m;
+namespace Pluf\Relation;
 
+use Pluf;
 
+class Module extends \Pluf\Module
+{
 
+    const moduleJsonPath = __DIR__ . '/module.json';
+
+    const urlsPath = __DIR__ . '/urls.php';
+
+    /**
+     * Load relation test module
+     *
+     * {@inheritdoc}
+     * @see \Pluf\Module::init()
+     */
+    public function init(Pluf $bootstrap): void
+    {
+        // Do nothing
+    }
+}

@@ -183,26 +183,34 @@ class RelationRepository extends Repository
 
         $smd = $this->getModelDescription($this->source);
         $tmd = $this->getModelDescription($this->target);
-        $relation = $this->relation;
+        $relation = $this->getRelationProperty($smd, $tmd, $this->relation);
 
-        // 1. define table:
-        $relationTable = $schema->getRelationTable($smd, $tmd, $relation);
+        switch ($relation->type) {
+            case Schema::MANY_TO_MANY:
+                // 1. define table:
+                $relationTable = $schema->getRelationTable($smd, $tmd, $relation);
 
-        // 2. get relation fields
-        $relationSourceField = $schema->getRelationSourceField($smd, $tmd, $relation);
-        $relationTargetField = $schema->getRelationSourceField($smd, $tmd, $relation);
+                // 2. get relation fields
+                $relationSourceField = $schema->getRelationSourceField($smd, $tmd, $relation, false);
+                $relationTargetField = $schema->getRelationTargetField($smd, $tmd, $relation, false);
 
-        $connection = $this->getConnection();
-        // NOTE: suppose the id is unique for source
-        // NOTE: suppose the id is unique for target
-        $stm = $connection->query()
-            ->mode('insert')
-            ->table($relationTable)
-            ->set($relationSourceField, $source->id)
-            ->set($relationTargetField, $target->id)
-            ->execute();
+                $connection = $this->getConnection();
+                // NOTE: suppose the id is unique for source
+                // NOTE: suppose the id is unique for target
+                $stm = $connection->query()
+                    ->mode('insert')
+                    ->table($relationTable)
+                    ->set($relationSourceField, $source->id)
+                    ->set($relationTargetField, $target->id)
+                    ->execute();
 
-        $this->checkStatement($stm);
+                $this->checkStatement($stm);
+                break;
+            default:
+                throw new Exception([
+                    'message' => 'Relation type {type} is not supported in Create from relation repository.'
+                ]);
+        }
     }
 
     /**
@@ -221,14 +229,16 @@ class RelationRepository extends Repository
 
         $smd = $this->getModelDescription($this->source);
         $tmd = $this->getModelDescription($this->target);
+        $schema = $this->getSchema();
+
         $rp = $this->getRelationProperty($smd, $tmd, $this->relation);
 
         // 1. define table:
-        $relationTable = $this->getRelationTable($smd, $tmd, $rp);
+        $relationTable = $schema->getRelationTable($smd, $tmd, $rp);
 
         // 2. get relation fields
-        $relationSourceField = $this->getRelationSourceField($smd, $tmd, $rp);
-        $relationTargetField = $this->getRelationTargetField($smd, $tmd, $rp);
+        $relationSourceField = $schema->getRelationSourceField($smd, $tmd, $rp);
+        $relationTargetField = $schema->getRelationTargetField($smd, $tmd, $rp);
 
         $connection = $this->getConnection();
         // NOTE: suppose the id is unique for source
@@ -236,8 +246,8 @@ class RelationRepository extends Repository
         $stm = $connection->query()
             ->mode('delete')
             ->table($relationTable)
-            ->where($relationSourceField, $source->id)
-            ->where($relationTargetField, $target->id)
+            ->where($relationSourceField, '=', $source->id)
+            ->where($relationTargetField, '=', $target->id)
             ->execute();
 
         $this->checkStatement($stm);
@@ -271,7 +281,7 @@ class RelationRepository extends Repository
         $this->relationPd = null;
     }
 
-    private function getRelationProperty(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation): ModelProperty
+    private function getRelationProperty(ModelDescription $smd, ModelDescription $tmd, string $relation): ModelProperty
     {
         // check relation
         $relationProperty = $smd->$relation;
@@ -292,10 +302,10 @@ class RelationRepository extends Repository
             ]);
         }
         // check target model
-        if (! $smd->isInstanceOf($tmd)) {
+        if (! $tmd->isInstanceOf($relationProperty->inverseJoinModel)) {
             throw new Exception([
                 'message' => 'The type {target} does not match with relation type {type} from {source}',
-                'type' => $relationProperty->model,
+                'type' => $relationProperty->inverseJoinModel,
                 'source' => $smd->type,
                 'target' => $tmd->type
             ]);

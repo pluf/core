@@ -15,8 +15,6 @@ class ModelDescription extends ArrayObject
 
     public ?string $table = null;
 
-    public ?string $model = null;
-
     public ?string $type = null;
 
     public ?ModelProperty $identifier = null;
@@ -62,7 +60,6 @@ class ModelDescription extends ArrayObject
 
         // load descriptions
         $this->setDefaults($model->_a);
-        $this->model = get_class($model);
         $this->type = get_class($model);
         $this->views = $model->loadViews();
 
@@ -174,7 +171,11 @@ class ModelDescription extends ArrayObject
      */
     public function isInstanceOf($target): bool
     {
-        return is_a($target, $this->type, true);
+        $model = $target;
+        if ($target instanceof ModelDescription) {
+            $model = $target->type;
+        }
+        return is_a($model, $this->type, true);
     }
 }
 

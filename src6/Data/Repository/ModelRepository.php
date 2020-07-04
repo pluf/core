@@ -48,6 +48,9 @@ class ModelRepository extends \Pluf\Data\Repository
      */
     public function get(?Query $query = null)
     {
+        if (! isset($query)) {
+            $query = new Query();
+        }
         return $this->getListByQuery($query);
     }
 
@@ -62,11 +65,11 @@ class ModelRepository extends \Pluf\Data\Repository
     {
         $connection = $this->getConnection();
         $schema = $this->getSchema();
-        $md = $this->getModelDescription();
+        $md = $this->getModelDescription($this->model);
 
         $stm = $connection->query()
             ->table($schema->getTableName($md))
-            ->where('id', $id)
+            ->where('id', '=', $id)
             ->select();
 
         $this->checkStatement($stm);
@@ -110,7 +113,15 @@ class ModelRepository extends \Pluf\Data\Repository
      */
     public function create($model)
     {
-        $md = ModelDescription::getInstance($model);
+        if (! is_a($model, $this->model)) {
+            throw new Exception([
+                'message' => 'Trying to store model {model} in reposiotory type {type}.',
+                'model' => get_class($model),
+                'type' => $this->model
+            ]);
+        }
+        // TODO: maso, 2019: pre create
+        $md = $this->getModelDescription($this->model);
         $schema = $this->getSchema();
         $connection = $this->getConnection();
 
@@ -121,6 +132,8 @@ class ModelRepository extends \Pluf\Data\Repository
             ->execute();
 
         $this->checkStatement($stm);
+        // TODO: maso, 2019: post create
+        // Setting ID must move into post create from Pluf_Model
         $model->id = $connection->lastInsertID();
         return $model;
     }
@@ -145,10 +158,13 @@ class ModelRepository extends \Pluf\Data\Repository
             ]);
         }
 
+        // TODO: maso, 2019: pre update
+
         $query = new Query([
             'filter' => [
                 [
                     'id',
+                    '=',
                     $model->id
                 ]
             ]
@@ -162,6 +178,7 @@ class ModelRepository extends \Pluf\Data\Repository
             ->execute();
 
         $this->checkStatement($stm);
+        // TODO: maso, 2019: post update
         return $model;
     }
 
@@ -219,11 +236,11 @@ class ModelRepository extends \Pluf\Data\Repository
      * @return array|int The result of items or through an exception if
      *         database failure
      */
-    public function getListByQuery(Query $query)
+    private function getListByQuery(Query $query)
     {
         // TODO: maso, 2020: support cache
         $schema = $this->getSchema();
-        $md = $this->getModelDescription();
+        $md = $this->getModelDescription($this->model);
         $connection = $this->getConnection();
 
         // fields
@@ -391,20 +408,6 @@ class ModelRepository extends \Pluf\Data\Repository
     protected function clean()
     {
         $this->modelDescription = null;
-    }
-
-    /**
-     * Gets model descriptions related to the current type
-     *
-     * @return \Pluf\Data\ModelDescription
-     */
-    protected function getModelDescription(?string $type = null): ModelDescription
-    {
-        if (! isset($this->modelDescription)) {
-            $type = $this->model;
-            $this->modelDescription = parent::getModelDescription($type);
-        }
-        return $this->modelDescription;
     }
 }
 

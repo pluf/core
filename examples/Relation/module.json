@@ -1,0 +1,13 @@
+{
+	"name": "Relation",
+	"title": "A test module with model",
+	"model": [
+		"\\Pluf\\Relation\\Model",
+		"\\Pluf\\Relation\\ModelRecurse",
+		"\\Pluf\\Relation\\ModelCount",
+		"\\Pluf\\Relation\\RelatedToTestModel",
+		"\\Pluf\\Relation\\RelatedToTestModel2",
+		"\\Pluf\\Relation\\ManyToManyOne",
+		"\\Pluf\\Relation\\ManyToManyTwo"
+	]
+}

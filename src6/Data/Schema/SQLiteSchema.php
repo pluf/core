@@ -101,6 +101,12 @@ class SQLiteSchema extends \Pluf\Data\Schema
             $type = $property->type;
             $name = $property->name;
 
+            if ($property->isMapped()) {
+                continue;
+            }
+            if ($type == self::MANY_TO_ONE && isset($property->joinProperty)) {
+                continue;
+            }
             if ($type == self::ONE_TO_MANY) {
                 // will be created on other side
                 continue;
@@ -190,7 +196,7 @@ class SQLiteSchema extends \Pluf\Data\Schema
             }
             if ($property->unique) {
                 // Add tenant column to index if config and table are multitenant.
-                $columns = (Pluf::f('multitenant', false) && $model->_a['multitenant']) ? 'tenant,' . $col : $col;
+                $columns = (Pluf::getConfig('multitenant', false) && $model->multitinant) ? 'tenant,' . $col : $col;
                 $index[$table . '_' . $col . '_unique'] = sprintf('CREATE UNIQUE INDEX %s ON %s (%s);', $table . '_' . $col . '_unique_idx', $table, self::qn($columns));
             }
         }
@@ -222,8 +228,8 @@ class SQLiteSchema extends \Pluf\Data\Schema
 
         // Now for the many to many
         foreach ($manytomany as $many) {
-            $omodel = ModelDescription::getInstance($many->model);
-            $table = $this->getRelationTable($model, $omodel, $many->name);
+            $omodel = ModelDescription::getInstance($many->inverseJoinModel);
+            $table = $this->getRelationTable($model, $omodel, $many);
             $sql[] = 'DROP TABLE IF EXISTS ' . $table;
         }
         return $sql;

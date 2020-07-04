@@ -35,7 +35,8 @@ return [
         'Pluf',
         'HelloWord',
         'NoteBook',
-        'Smallest'
+        'Smallest',
+        'Relation'
     ),
 
     // Temporary folder where the script is writing the compiled templates,
@@ -53,18 +54,23 @@ return [
      * Connection allow a data layer to connect directly into a DB and store data
      * into.
      */
-    'db_dsn' => '\Pluf\Db\SQLiteEngine',
+    'db_dsn' => 'sqlite::memory:',
     'db_user' => 'testpluf',
     'db_password' => 'testpluf',
 
+    /*
+     * Enables Pluf default database dumper
+     */
+    'db_dumper' => true,
+    
     /*
      * Data Schema
      * 
      * Data Schema defines a mechanisme to map Object to Data base table and 
      * attributes.
      */
-    'db_schema' => '\Pluf\Data\Schema\SQLiteSchema',
-    'db_schema_table_prefix' => 'pluf_unit_tests_' . rand() . '_',
+    'db_schema_engine' => 'sqlite',
+    'db_schema_table_prefix' => rand() . '_',
 
     // -------------------------------------------------------------------------
     // Template manager and compiler

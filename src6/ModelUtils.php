@@ -1,7 +1,6 @@
 <?php
 namespace Pluf;
 
-use Pluf\Db\Engine;
 use Pluf;
 use Pluf_Model;
 
@@ -72,76 +71,76 @@ class ModelUtils
         return $relations;
     }
 
-    /**
-     * Get the model relations and signals.
-     *
-     * If not in debug mode, it will automatically cache the
-     * information. This allows one include file when many
-     * applications and thus many includes are needed.
-     *
-     * Signals and relations are cached in the same file as the way to
-     * go for signals is to put them in the relations.php file.
-     *
-     * @param
-     *            bool Use the cache (true)
-     */
-    public static function loadRelations($usecache = true)
-    {
-        $GLOBALS[ModelUtils::MODEL_KEY] = array();
-        $GLOBALS[ModelUtils::MODEL_CACHE_KEY] = array();
+//     /**
+//      * Get the model relations and signals.
+//      *
+//      * If not in debug mode, it will automatically cache the
+//      * information. This allows one include file when many
+//      * applications and thus many includes are needed.
+//      *
+//      * Signals and relations are cached in the same file as the way to
+//      * go for signals is to put them in the relations.php file.
+//      *
+//      * @param
+//      *            bool Use the cache (true)
+//      */
+//     public static function loadRelations($usecache = true)
+//     {
+//         $GLOBALS[ModelUtils::MODEL_KEY] = array();
+//         $GLOBALS[ModelUtils::MODEL_CACHE_KEY] = array();
 
-        $apps = Pluf::f('installed_apps', array());
-        $cache = Pluf::f('tmp_folder', '/tmp') . '/Pluf_relations_cache_' . md5(serialize($apps)) . '.phps';
+//         $apps = Pluf::f('installed_apps', array());
+//         $cache = Pluf::f('tmp_folder', '/tmp') . '/Pluf_relations_cache_' . md5(serialize($apps)) . '.phps';
 
-        if ($usecache and file_exists($cache)) {
-            list ($GLOBALS[ModelUtils::MODEL_KEY], $GLOBALS['_PX_models_related'], $GLOBALS['_PX_signal']) = include $cache;
-            return;
-        }
+//         if ($usecache and file_exists($cache)) {
+//             list ($GLOBALS[ModelUtils::MODEL_KEY], $GLOBALS['_PX_models_related'], $GLOBALS['_PX_signal']) = include $cache;
+//             return;
+//         }
 
-        $m = $GLOBALS[ModelUtils::MODEL_KEY];
-        foreach ($apps as $app) {
-            $moduleName = "\\Pluf\\" . $app . "\\Module";
-            if (class_exists($moduleName)) {
-                // Load PSR4 modules
-                $m = array_merge_recursive($m, $moduleName::relations);
-            } else {
-                // Load PSR1 modules
-                $m = array_merge_recursive($m, require $app . '/relations.php');
-            }
-        }
-        $GLOBALS[ModelUtils::MODEL_KEY] = $m;
+//         $m = $GLOBALS[ModelUtils::MODEL_KEY];
+//         foreach ($apps as $app) {
+//             $moduleName = "\\Pluf\\" . $app . "\\Module";
+//             if (class_exists($moduleName)) {
+//                 // Load PSR4 modules
+//                 $m = array_merge_recursive($m, $moduleName::relations);
+//             } else {
+//                 // Load PSR1 modules
+//                 $m = array_merge_recursive($m, require $app . '/relations.php');
+//             }
+//         }
+//         $GLOBALS[ModelUtils::MODEL_KEY] = $m;
 
-        $_r = array(
-            'relate_to' => array(),
-            'relate_to_many' => array()
-        );
-        foreach ($GLOBALS[ModelUtils::MODEL_KEY] as $model => $relations) {
-            foreach ($relations as $type => $related) {
-                foreach ($related as $related_model) {
-                    if (! isset($_r[$type][$related_model])) {
-                        $_r[$type][$related_model] = array();
-                    }
-                    $_r[$type][$related_model][] = $model;
-                }
-            }
-        }
-        $_r[Engine::FOREIGNKEY] = $_r['relate_to'];
-        $_r[Engine::MANY_TO_MANY] = $_r['relate_to_many'];
-        $GLOBALS['_PX_models_related'] = $_r;
+//         $_r = array(
+//             'relate_to' => array(),
+//             'relate_to_many' => array()
+//         );
+//         foreach ($GLOBALS[ModelUtils::MODEL_KEY] as $model => $relations) {
+//             foreach ($relations as $type => $related) {
+//                 foreach ($related as $related_model) {
+//                     if (! isset($_r[$type][$related_model])) {
+//                         $_r[$type][$related_model] = array();
+//                     }
+//                     $_r[$type][$related_model][] = $model;
+//                 }
+//             }
+//         }
+//         $_r[Engine::FOREIGNKEY] = $_r['relate_to'];
+//         $_r[Engine::MANY_TO_MANY] = $_r['relate_to_many'];
+//         $GLOBALS['_PX_models_related'] = $_r;
 
-        // $GLOBALS['_PX_signal'] is automatically set by the require
-        // statement and possibly in the configuration file.
-        if ($usecache) {
-            $s = var_export(array(
-                $GLOBALS[ModelUtils::MODEL_KEY],
-                $GLOBALS['_PX_models_related'],
-                $GLOBALS['_PX_signal']
-            ), true);
-            if (@file_put_contents($cache, '<?php return ' . $s . ';' . "\n", LOCK_EX)) {
-                chmod($cache, 0755);
-            }
-        }
-    }
+//         // $GLOBALS['_PX_signal'] is automatically set by the require
+//         // statement and possibly in the configuration file.
+//         if ($usecache) {
+//             $s = var_export(array(
+//                 $GLOBALS[ModelUtils::MODEL_KEY],
+//                 $GLOBALS['_PX_models_related'],
+//                 $GLOBALS['_PX_signal']
+//             ), true);
+//             if (@file_put_contents($cache, '<?php return ' . $s . ';' . "\n", LOCK_EX)) {
+//                 chmod($cache, 0755);
+//             }
+//         }
+//     }
 
     public static function getModelsFromModule(string $app): array
     {

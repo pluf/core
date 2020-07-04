@@ -43,10 +43,11 @@
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
  */
+use Pluf\Migration;
+use Pluf\Data\Schema;
 use Pluf\Db\Engine;
-use Pluf\Db\Schema;
 
-class Pluf_Migration
+class Pluf_Migration extends Migration
 {
 
     protected $app = '';
@@ -75,71 +76,71 @@ class Pluf_Migration
      * < Display on the console what is done.
      */
 
-    /**
-     * Create a new migration.
-     *
-     * @param
-     *            mixed Application or array of applications to migrate.
-     */
-    public function __construct($app = null)
-    {
-        if (! is_null($app)) {
-            if (is_array($app)) {
-                $this->apps = $app;
-            } else {
-                $this->apps = array(
-                    $app
-                );
-            }
-        } else {
-            $this->apps = Pluf::f('installed_apps');
-        }
-    }
+    // /**
+    // * Create a new migration.
+    // *
+    // * @param
+    // * mixed Application or array of applications to migrate.
+    // */
+    // public function __construct($app = null)
+    // {
+    // if (! is_null($app)) {
+    // if (is_array($app)) {
+    // $this->apps = $app;
+    // } else {
+    // $this->apps = array(
+    // $app
+    // );
+    // }
+    // } else {
+    // $this->apps = Pluf::f('installed_apps');
+    // }
+    // }
 
-    /**
-     * Install the application.
-     *
-     * Basically run the base install function for each application
-     * and then set the version to the latest migration.
-     */
-    public function install()
-    {
-        foreach ($this->apps as $app) {
-            $this->installAppFromConfig($app);
-        }
-        return true;
-    }
+    // /**
+    // * Install the application.
+    // *
+    // * Basically run the base install function for each application
+    // * and then set the version to the latest migration.
+    // */
+    // public function install()
+    // {
+    // foreach ($this->apps as $app) {
+    // $this->installAppFromConfig($app);
+    // }
+    // return true;
+    // }
 
-    /**
-     * Init app from data
-     *
-     * @return boolean
-     */
-    public function init(?Pluf_Tenant $tenant = null): bool
-    {
-        $current = Pluf_Tenant::getCurrent();
-        try {
-            Pluf_Tenant::setCurrent($tenant);
-            foreach ($this->apps as $app) {
-                $this->initAppFromConfig($app);
-            }
-        } finally {
-            Pluf_Tenant::setCurrent($current);
-        }
-        return true;
-    }
+    // /**
+    // * Init app from data
+    // *
+    // * @return boolean
+    // */
+    // public function init(?Pluf_Tenant $tenant = null): bool
+    // {
+    // $current = Pluf_Tenant::getCurrent();
+    // try {
+    // Pluf_Tenant::setCurrent($tenant);
+    // foreach ($this->apps as $app) {
+    // $this->initAppFromConfig($app);
+    // }
+    // } finally {
+    // Pluf_Tenant::setCurrent($current);
+    // }
+    // return true;
+    // }
 
-    /**
-     * Uninstall the application.
-     */
-    public function uninstall(): bool
-    {
-        $apps = array_reverse($this->apps);
-        foreach ($apps as $app) {
-            $this->uninstallAppFromConfig($app);
-        }
-        return true;
-    }
+    // /**
+    // * Uninstall the application.
+    // */
+    // public function uninstall(): bool
+    // {
+    // $apps = array_reverse($this->apps);
+    // foreach ($apps as $app) {
+    // $this->uninstallAppFromConfig($app);
+    // }
+    // return true;
+    // }
 
     /**
      * Backup the application.
@@ -254,7 +255,7 @@ class Pluf_Migration
             throw new Exception('Module file not found in path');
         }
         $engine = Pluf::db();
-        $schema = $engine->getSchema();
+        $schema = Pluf::getDataSchema();
         // Create modules
         if (array_key_exists('model', $module)) {
             $models = $module['model'];
@@ -395,71 +396,71 @@ class Pluf_Migration
             }
         }
 
-//         // Init Releations
-//         if (array_key_exists('init_assoc', $module)) {
-//             $relations = $module['init_assoc'];
-//             foreach ($relations as $models => $relates) {
-//                 $model = explode('|', $models);
-//                 $model0 = trim($model[0]);
-//                 $model1 = trim($model[1]);
-//                 $p0 = new $model0();
-//                 $p1 = new $model1();
-//                 foreach ($relates as $rel) {
-//                     $p0 = $p0->getOne($rel['from']);
-//                     $p1 = $p1->getOne($rel['to']);
-//                     $p0->setAssoc($p1);
-//                 }
+        // // Init Releations
+        // if (array_key_exists('init_assoc', $module)) {
+        // $relations = $module['init_assoc'];
+        // foreach ($relations as $models => $relates) {
+        // $model = explode('|', $models);
+        // $model0 = trim($model[0]);
+        // $model1 = trim($model[1]);
+        // $p0 = new $model0();
+        // $p1 = new $model1();
+        // foreach ($relates as $rel) {
+        // $p0 = $p0->getOne($rel['from']);
+        // $p1 = $p1->getOne($rel['to']);
+        // $p0->setAssoc($p1);
+        // }
+        // }
+        // }
+    }
+
+//     /**
+//      * Delete application
+//      *
+//      * @param string $app
+//      */
+//     public function uninstallAppFromConfig($app)
+//     {
+//         $module = self::getModuleConfig($app);
+//         if ($module === false) {
+//             throw new Exception('Module file not found in path');
+//         }
+//         $engine = Pluf::db();
+//         $schema = $engine->getSchema();
+//         // Delete modules
+//         if (array_key_exists('model', $module)) {
+//             $models = $module['model'];
+//             // foreach ($models as $model) {
+//             // self::dropConstraints($engine, $schema, new $model());
+//             // }
+//             foreach ($models as $model) {
+//                 self::dropTables($engine, $schema, new $model());
 //             }
 //         }
-    }
+//         // TODO: delete permissions
+//         // TODO: delete monitors
+//         return true;
+//     }
 
-    /**
-     * Delete application
-     *
-     * @param string $app
-     */
-    public function uninstallAppFromConfig($app)
-    {
-        $module = self::getModuleConfig($app);
-        if ($module === false) {
-            throw new Exception('Module file not found in path');
-        }
-        $engine = Pluf::db();
-        $schema = $engine->getSchema();
-        // Delete modules
-        if (array_key_exists('model', $module)) {
-            $models = $module['model'];
-//             foreach ($models as $model) {
-//                 self::dropConstraints($engine, $schema, new $model());
-//             }
-            foreach ($models as $model) {
-                self::dropTables($engine, $schema, new $model());
-            }
-        }
-        // TODO: delete permissions
-        // TODO: delete monitors
-        return true;
-    }
-
-    /**
-     * Load module configuration
-     *
-     * @param string $app
-     * @return boolean|mixed
-     */
-    public static function getModuleConfig($app)
-    {
-        $moduleName = "Pluf\\" . $app . "\\Module";
-        if (class_exists($moduleName)) {
-            $file = $moduleName::moduleJsonPath;
-        } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
-            return false;
-        }
-        $myfile = fopen($file, "r") or die("Unable to open module.json!");
-        $json = fread($myfile, filesize($file));
-        fclose($myfile);
-        return json_decode($json, true);
-    }
+//     /**
+//      * Load module configuration
+//      *
+//      * @param string $app
+//      * @return boolean|mixed
+//      */
+//     public static function getModuleConfig($app)
+//     {
+//         $moduleName = "Pluf\\" . $app . "\\Module";
+//         if (class_exists($moduleName)) {
+//             $file = $moduleName::moduleJsonPath;
+//         } else if (false == ($file = Pluf::fileExists($app . '/module.json'))) {
+//             return false;
+//         }
+//         $myfile = fopen($file, "r") or die("Unable to open module.json!");
+//         $json = fread($myfile, filesize($file));
+//         fclose($myfile);
+//         return json_decode($json, true);
+//     }
 
     /**
      * Run the migrations.
@@ -543,73 +544,73 @@ class Pluf_Migration
         }
     }
 
-    /**
-     * Set the application version.
-     *
-     * @param
-     *            string Application
-     * @param
-     *            int Version
-     * @return true
-     */
-    public function setAppVersion($app, $version)
-    {
-        $gschema = new Pluf_DB_SchemaInfo();
-        $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array(
-            'filter' => $sql->gen()
-        ));
-        if ($appinfo->count() == 1) {
-            $appinfo[0]->version = $version;
-            $appinfo[0]->update();
-        } else {
-            $schema = new Pluf_DB_SchemaInfo();
-            $schema->application = $app;
-            $schema->version = $version;
-            $schema->create();
-        }
-        return true;
-    }
+//     /**
+//      * Set the application version.
+//      *
+//      * @param
+//      *            string Application
+//      * @param
+//      *            int Version
+//      * @return true
+//      */
+//     public function setAppVersion($app, $version)
+//     {
+//         $gschema = new Pluf_DB_SchemaInfo();
+//         $sql = new Pluf_SQL('application=%s', $app);
+//         $appinfo = $gschema->getList(array(
+//             'filter' => $sql->gen()
+//         ));
+//         if ($appinfo->count() == 1) {
+//             $appinfo[0]->version = $version;
+//             $appinfo[0]->update();
+//         } else {
+//             $schema = new Pluf_DB_SchemaInfo();
+//             $schema->application = $app;
+//             $schema->version = $version;
+//             $schema->create();
+//         }
+//         return true;
+//     }
 
-    /**
-     * Remove the application information.
-     *
-     * @param
-     *            string Application
-     * @return true
-     */
-    public function delAppInfo($app)
-    {
-        $gschema = new Pluf_DB_SchemaInfo();
-        $sql = new Pluf_SQL('application=%s', $app);
-        $appinfo = $gschema->getList(array(
-            'filter' => $sql->gen()
-        ));
-        if ($appinfo->count() == 1) {
-            $appinfo[0]->delete();
-        }
-        return true;
-    }
+//     /**
+//      * Remove the application information.
+//      *
+//      * @param
+//      *            string Application
+//      * @return true
+//      */
+//     public function delAppInfo($app)
+//     {
+//         $gschema = new Pluf_DB_SchemaInfo();
+//         $sql = new Pluf_SQL('application=%s', $app);
+//         $appinfo = $gschema->getList(array(
+//             'filter' => $sql->gen()
+//         ));
+//         if ($appinfo->count() == 1) {
+//             $appinfo[0]->delete();
+//         }
+//         return true;
+//     }
 
-    /**
-     * Get the current version of the app.
-     *
-     * @param
-     *            string Application.
-     * @return int Version.
-     */
-    public function getAppVersion($app)
-    {
-        try {
-            $db = &Pluf::db();
-            $res = $db->select('SELECT version FROM ' . $db->pfx . 'schema_info WHERE application=' . $db->esc($app));
-            return (int) $res[0]['version'];
-        } catch (Exception $e) {
-            // We should not be here, only in the case of nothing
-            // installed. I am not sure if this is a good way to
-            // handle this border case anyway. Maybe better to have an
-            // 'install' method to run all the migrations in order.
-            return 0;
-        }
-    }
+//     /**
+//      * Get the current version of the app.
+//      *
+//      * @param
+//      *            string Application.
+//      * @return int Version.
+//      */
+//     public function getAppVersion($app)
+//     {
+//         try {
+//             $db = &Pluf::db();
+//             $res = $db->select('SELECT version FROM ' . $db->pfx . 'schema_info WHERE application=' . $db->esc($app));
+//             return (int) $res[0]['version'];
+//         } catch (Exception $e) {
+//             // We should not be here, only in the case of nothing
+//             // installed. I am not sure if this is a good way to
+//             // handle this border case anyway. Maybe better to have an
+//             // 'install' method to run all the migrations in order.
+//             return 0;
+//         }
+//     }
 }

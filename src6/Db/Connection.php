@@ -1,6 +1,8 @@
 <?php
 namespace Pluf\Db;
 
+use Pluf\Options;
+
 /**
  * Class for establishing and maintaining connection with your database.
  */
@@ -37,7 +39,7 @@ class Connection
      */
     public function __construct($properties = [])
     {
-        if (! is_array($properties)) {
+        if (! (is_array($properties) || ($properties instanceof Options))) {
             throw new Exception([
                 'Invalid properties for "new Connection()". Did you mean to call Connection::connect()?',
                 'properties' => $properties

@@ -10,6 +10,22 @@ use Pluf;
 
 /**
  *
+ * Here is list of all Pluf_Model supports.
+ *
+ * - create by id ..................... ok
+ * - get .............................. ok
+ * - getOne ........................... ok
+ * - create ........................... ok
+ * - count ............................ ok
+ * - getList .......................... ok
+ * - update ........................... ok
+ * - delete ........................... ok
+ * - get_xxx .......................... ok
+ * - get_xxx_list ..................... ok
+ * - setAssoc ......................... ok
+ * - delAssoc ......................... ok
+ * - set forign key ................... ok
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -26,6 +42,7 @@ class OldPlufModelTest extends TestCase
             'db_dsn' => 'sqlite::memory:',
             'db_user' => null,
             'db_password' => null,
+            'db_dumper' => false,
             'data_schema_engine' => 'sqlite',
             'data_schema_sqlite_prefix' => 'db' . rand() . '_'
         ]);
@@ -497,23 +514,144 @@ class OldPlufModelTest extends TestCase
         $this->assertEquals(0, count($items));
     }
 
-    /*
-     * TODO:
+    /**
      *
-     * - create by id ..................... ok
-     * - get .............................. ok
-     * - getOne ........................... ok
-     * - create ........................... ok
-     * - count ............................ ok
-     * - getList .......................... ok
-     * - update ........................... ok
-     * - delete ........................... ok
-     * - setAssoc
-     * - delAssoc
-     * - get_xxx
-     * - get_xxx_list
-     * - sef forign key
-     *
+     * @test
      */
+    public function gettingListOfTagsFromBook()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        $tag = new \Pluf\NoteBook\Tag();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($tag));
+
+        // crate 5 item
+        $tag->title = 'tag xxx' . rand();
+        $this->assertTrue($tag->create());
+
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(0, count($items));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function gettingSetAssocOfTagsFromBook()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        $tag = new \Pluf\NoteBook\Tag();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($tag));
+
+        // crate 5 item
+        $tag->title = 'tag xxx' . rand();
+        $this->assertTrue($tag->create());
+
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(0, count($items));
+
+        $book = new \Pluf\NoteBook\Book();
+        $book->title = 'book xxx' . rand();
+        $this->assertTrue($book->create());
+
+        $tag->setAssoc($book, 'books');
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(1, count($items));
+
+        $book = new \Pluf\NoteBook\Book();
+        $book->title = 'book xxx' . rand();
+        $this->assertTrue($book->create());
+
+        $tag->setAssoc($book, 'books');
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(2, count($items));
+
+        $items = $book->get_tags_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(1, count($items));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function gettingDelAssocOfTagsFromBook()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        $tag = new \Pluf\NoteBook\Tag();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($tag));
+
+        // crate 5 item
+        $tag->title = 'tag xxx' . rand();
+        $this->assertTrue($tag->create());
+
+        $book1 = new \Pluf\NoteBook\Book();
+        $book1->title = 'book xxx' . rand();
+        $this->assertTrue($book1->create());
+        $tag->setAssoc($book1, 'books');
+
+        $book2 = new \Pluf\NoteBook\Book();
+        $book2->title = 'book xxx' . rand();
+        $this->assertTrue($book2->create());
+        $tag->setAssoc($book2, 'books');
+
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(2, count($items));
+
+        $tag->delAssoc($book1, 'books');
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(1, count($items));
+
+        $tag->delAssoc($book2, 'books');
+        $items = $tag->get_books_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(0, count($items));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function settingItemsBookWithObjectAndId()
+    {
+        $book = new \Pluf\NoteBook\Book();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($book));
+
+        $item = new \Pluf\NoteBook\Item();
+        Pluf::getDataSchema()->createTables(Pluf::db(), ModelDescription::getInstance($item));
+
+        // crate 5 item
+        $book->title = 'title xxx' . rand();
+        $this->assertTrue($book->create());
+
+        // crate 5 item
+        $item->title = 'title xxx' . rand();
+        $item->book = $book;
+        $this->assertTrue($item->create());
+
+        $items = $book->get_items_list();
+        $this->assertTrue(is_array($items));
+        $this->assertEquals(1, count($items));
+    }
 }
 

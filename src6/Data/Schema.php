@@ -120,12 +120,12 @@ abstract class Schema
             '\Pluf\Data\Schema::floatToDb'
         ),
         self::MANY_TO_ONE => array(
-            '\Pluf\Data\Schema::integerFromDb',
-            '\Pluf\Data\Schema::integerToDb'
+            '\Pluf\Data\Schema::sequenceFromDb',
+            '\Pluf\Data\Schema::sequenceToDb'
         ),
         self::FOREIGNKEY => array(
-            '\Pluf\Data\Schema::integerFromDb',
-            '\Pluf\Data\Schema::integerToDb'
+            '\Pluf\Data\Schema::sequenceFromDb',
+            '\Pluf\Data\Schema::sequenceToDb'
         ),
         self::INTEGER => array(
             '\Pluf\Data\Schema::integerFromDb',
@@ -136,8 +136,8 @@ abstract class Schema
             '\Pluf\Data\Schema::passwordToDb'
         ),
         self::SEQUENCE => array(
-            '\Pluf\Data\Schema::integerFromDb',
-            '\Pluf\Data\Schema::integerToDb'
+            '\Pluf\Data\Schema::sequenceFromDb',
+            '\Pluf\Data\Schema::sequenceToDb'
         ),
         self::SLUG => array(
             '\Pluf\Data\Schema::identityFromDb',
@@ -269,16 +269,16 @@ abstract class Schema
             ]);
         }
 
-        // joineModel
-        $joineModel = $relation->inverseJoinModel;
-        if (isset($joineModel)) {
-            $joineModelDescription = ModelDescription::getInstance($joineModel);
-            return $this->getTableName($joineModelDescription);
-        }
+        // // joineModel
+        // $joineModel = $relation->inverseJoinModel;
+        // if (isset($joineModel)) {
+        // $joineModelDescription = ModelDescription::getInstance($joineModel);
+        // return $this->getTableName($joineModelDescription);
+        // }
 
         // joineTable
-        $joineTable = $relation->joineTable;
-        if (isset($joineModel)) {
+        $joineTable = $relation->joinTable;
+        if (isset($joineTable)) {
             return $this->prefix . $joineTable;
         }
 
@@ -302,13 +302,15 @@ abstract class Schema
      *            The relation description
      * @return string name of the columne in the relation
      */
-    public function getRelationSourceField(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation): string
+    public function getRelationSourceField(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation, ?bool $qn = true): string
     {
         $name = $relation->joinColumne;
         if (! isset($name)) {
             $name = self::skipeName(strtolower($smd->type) . '_id');
         }
-        $name = $this->qn($name);
+        if ($qn) {
+            $name = $this->qn($name);
+        }
         return $name;
     }
 
@@ -323,13 +325,15 @@ abstract class Schema
      *            The relation description
      * @return string name of the columne in the relation
      */
-    public function getRelationTargetField(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation): string
+    public function getRelationTargetField(ModelDescription $smd, ModelDescription $tmd, ModelProperty $relation, ?bool $qut = true): string
     {
         $name = $relation->inverseJoinColumne;
         if (! isset($name)) {
             $name = self::skipeName(strtolower($tmd->type) . '_id');
         }
-        $name = $this->qn($name);
+        if ($qut) {
+            $name = $this->qn($name);
+        }
         return $name;
     }
 
@@ -369,7 +373,9 @@ abstract class Schema
             $alias = $alias . '.';
         }
         foreach ($md as $name => $property) {
-            if ($property->type == self::MANY_TO_MANY || $property->type == self::ONE_TO_MANY) {
+            if ($property->type == self::MANY_TO_MANY ||
+                $property->type == self::MANY_TO_ONE ||
+                $property->type == self::ONE_TO_MANY) {
                 continue;
             }
             $field[$name] = $alias . $this->getFieldName($md, $property, $autoPrefix);
@@ -480,6 +486,36 @@ abstract class Schema
             return $joins;
         }
         foreach ($view['join'] as $join) {
+            $type = self::LEFT_JOIN;
+            $alias = null;
+            if (isset($join['type'])) {
+                $type = $join['type'];
+            }
+            if (isset($join['alias'])) {
+                $alias = $join['alias'];
+            }
+
+            /*
+             * Native joing
+             *
+             * TODO: maso, 2020: support joinProperty
+             */
+            if (isset($join['joinTable'])) {
+                $ftable = $join['joinTable'] . '.' . $join['inverseJoinColumne'];
+                if (isset($alias)) {
+                    $ftable = $ftable . ' ' . $alias;
+                }
+                $joins[] = [
+                    $ftable,
+                    $join['joinColumne'],
+                    $type
+                ];
+                continue;
+            }
+
+            /*
+             * Data Join
+             */
             $jproName = $join['joinProperty'];
             if (! isset($jproName)) {
                 $jproName = 'id';
@@ -490,8 +526,6 @@ abstract class Schema
             $joinProperty = $joinModel->$jproName;
             $inverseJoinModel = null;
             $inverseJoinProperty = null;
-            $type = self::LEFT_JOIN;
-            $alias = null;
 
             /*
              * Fetch data from model
@@ -516,12 +550,6 @@ abstract class Schema
                     }
                     $inverseJoinProperty = $inverseJoinModel->$inverseJoinPropertyName;
                     break;
-            }
-            if (isset($join['type'])) {
-                $type = $join['type'];
-            }
-            if (isset($join['alias'])) {
-                $alias = $join['alias'];
             }
 
             $dbJoins = $this->createDbJoin($joinModel, $joinProperty, $inverseJoinModel, $inverseJoinProperty, $type, $alias);
@@ -671,8 +699,11 @@ abstract class Schema
             } else {
                 $groups[] = $this->getField($md, $group);
             }
-            return $groups;
         }
+        if (count($groups) == 0) {
+            return null;
+        }
+        return $groups;
     }
 
     /**
@@ -689,7 +720,9 @@ abstract class Schema
                 // DB is responsible for ID
                 continue;
             }
-            if ($property->type == self::MANY_TO_MANY || $property->type == self::ONE_TO_MANY) {
+            if ($property->type == self::MANY_TO_MANY || 
+                $property->type == self::ONE_TO_MANY ||
+                $property->isMapped()) {
                 // Virtural attributes
                 continue;
             }
@@ -779,7 +812,8 @@ abstract class Schema
     {
         $map = $this->type_cast[$property->type];
         return call_user_func_array($map[1], [
-            $value
+            $value,
+            $property
         ]);
     }
 
@@ -794,7 +828,8 @@ abstract class Schema
     {
         $map = $this->type_cast[$property->type];
         return call_user_func_array($map[0], [
-            $value
+            $value,
+            $property
         ]);
     }
 
@@ -872,7 +907,7 @@ abstract class Schema
         $dfilter = [];
         $names = explode('.', $filter[0]);
         if (count($names) == 1) {
-            $name = $names[0];
+            $name = $filter[0];
             $property = $md->$name;
             $dfilter[] = $this->getFieldName($md, $property);
         } else {
@@ -917,6 +952,15 @@ abstract class Schema
             $name = $names[1];
             foreach ($view['join'] as $join) {
                 if (isset($join['alias']) && $join['alias'] == $names[0]) {
+                    /*
+                     * Native Join
+                     */
+                    if (isset($join['joinTable'])) {
+                        return $filter;
+                    }
+                    /*
+                     * Data Join
+                     */
                     if (isset($join['inverseJoinModel'])) {
                         $cmd = ModelDescription::getInstance($join['inverseJoinModel']);
                         break;
@@ -1076,6 +1120,33 @@ abstract class Schema
             return '1';
         }
         return '0';
+    }
+
+    public static function sequenceFromDb($val, ModelProperty $property)
+    {
+        return $val;
+    }
+
+    public static function sequenceToDb($val, ModelProperty $property)
+    {
+        if (! isset($val)) {
+            return null;
+        }
+        switch ($property->type) {
+            case self::SEQUENCE:
+            case self::MANY_TO_ONE:
+            case self::FOREIGNKEY:
+                if ($val instanceof \Pluf_Model) {
+                    return $val->id;
+                }
+                if (is_numeric($val)) {
+                    return $val;
+                }
+            default:
+                throw new Exception([
+                    'message' => 'Property value is not convertable to db'
+                ]);
+        }
     }
 
     public static function integerFromDb($val)

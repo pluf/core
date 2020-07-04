@@ -949,13 +949,16 @@ class Query extends Expression
 
         if (is_array($group)) {
             foreach ($group as $g) {
-                $this->args['group'][] = $g;
+                if (($g instanceof Expression) || (isset($g) && strlen($g) > 0)) {
+                    $this->args['group'][] = $g;
+                }
             }
-
             return $this;
         }
 
-        $this->args['group'][] = $group;
+        if (($group instanceof Expression) || (isset($group) && strlen($group) > 0)) {
+            $this->args['group'][] = $group;
+        }
 
         return $this;
     }

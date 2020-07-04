@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,40 +16,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Relation;
+
+use Pluf\Data\Schema;
+use Pluf_Model;
 
 /**
  *
  * @author maso
  *        
  */
-class Test_RelatedToTestModel extends Pluf_Model
+class ManyToManyTwo extends Pluf_Model
 {
 
+    /**
+     *
+     * {@inheritdoc}
+     * @see Pluf_Model::init()
+     */
     function init()
     {
-        $this->_a['table'] = 'relatedtotestmodel';
-        $this->_a['cols'] = array(
-            'id' => array(
-                'type' => 'Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'testmodel' => array(
-                'type' => 'Foreignkey',
-                'blank' => false,
-                'model' => 'Test_Model'
-            ),
-            'dummy' => array(
-                'type' => 'Varchar',
-                'blank' => false,
+        $this->_a['table'] = 'test_manytomanytwo';
+        $this->_a['cols'] = [
+            'id' => [
+                'type' => Schema::SEQUENCE,
+                'nullable' => true
+            ],
+            'two' => [
+                'type' => Schema::VARCHAR,
+                'nullable' => false,
                 'size' => 100
-            )
-        );
-        $this->_a['idx'] = array(
-            'testmodel_id' => array(
-                'type' => 'normal',
-                'col' => 'testmodel'
-            )
-        );
+            ],
+            /*
+             * Relations:
+             * There is n*n relation with ManyToManyOne
+             */
+            'ones' => [
+                'type' => Schema::MANY_TO_MANY,
+                'inverseJoinModel' => ManyToManyOne::class
+            ]
+        ];
     }
 }
-

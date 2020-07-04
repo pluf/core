@@ -1,4 +1,5 @@
 <?php
+use Pluf\Data\Schema;
 
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
@@ -63,8 +64,7 @@ class Pluf_Session extends Pluf_Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
-                'type' => 'Sequence',
-                // It is automatically added.
+                'type' => Schema::SEQUENCE,
                 'blank' => true
             ),
             'version' => array(
@@ -91,7 +91,7 @@ class Pluf_Session extends Pluf_Model
                 'col' => 'session_key'
             )
         );
-        $this->_admin = array();
+        // $this->_admin = array();
     }
 
     /**

@@ -16,28 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Pluf\Test\Model;
+namespace Pluf\Test\Data;
 
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Module;
 use Pluf;
+use Pluf_Dispatcher;
 use Pluf_Migration;
-use Pluf\Model\QueryBuilder;
-use Pluf\Model\Repository;
-use Pluf\NoteBook\Book;
 
-class RepositoryTest extends TestCase
+class PlufModelRestAPITest extends TestCase
 {
 
     /**
      *
      * @beforeClass
      */
-    public static function installApplication()
+    public static function createDataBase()
     {
-        Pluf::start(__DIR__ . '/../conf/config.php');
+        $conf = include __DIR__ . '/../conf/config.php';
+        $conf['view_api_prefix'] = '/api/test/prefix' . rand();
+        Pluf::start($conf);
         $m = new Pluf_Migration();
         $m->install();
     }
@@ -46,30 +46,34 @@ class RepositoryTest extends TestCase
      *
      * @afterClass
      */
-    public static function deleteApplication()
+    public static function removeDatabses()
     {
         $m = new Pluf_Migration();
         $m->uninstall();
     }
 
     /**
-     * Getting list of books with repository model
-     * 
+     *
      * @test
      */
-    public function getListOfBook()
+    public function getInvalidRequestWithRandomPrefix()
     {
-        $query = QueryBuilder::getInstance()
-            ->setFilter(array(
-                'title=\'test\''
-            ))
-            ->setOrder(array(
-                'id'
-            ))
-            ->build();
-        $res = Repository::getInstance(Book::class)
-            ->getList($query);
+        $dispatcher = new Pluf_Dispatcher();
+        $res = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
         $this->assertNotNull($res);
+        $this->assertEquals($res[1]->status_code, 404);
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function getValidRequestWithRandomPrefix()
+    {
+        $dispatcher = new Pluf_Dispatcher();
+        $res = $dispatcher->dispatch(Pluf::f('view_api_prefix') . '/helloword/HelloWord', Module::loadControllers());
+        $this->assertNotNull($res);
+        $this->assertEquals($res[1]->status_code, 200);
     }
 }
 

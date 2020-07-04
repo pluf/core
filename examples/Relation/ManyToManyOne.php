@@ -17,13 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Relation;
+
+use Pluf_Model;
+use Pluf\Data\Schema;
 
 /**
  *
  * @author maso
  *        
  */
-class Test_Model extends Pluf_Model
+class ManyToManyOne extends Pluf_Model
 {
 
     /**
@@ -33,40 +37,25 @@ class Test_Model extends Pluf_Model
      */
     function init()
     {
-        $this->_a['table'] = 'test_model';
-        $this->_a['cols'] = array(
-            'id' => array(
-                'type' => 'Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'title' => array(
-                'type' => 'Varchar',
-                'blank' => false,
+        $this->_a['table'] = 'test_manytomanyone';
+        $this->_a['cols'] = [
+            'id' => [
+                'type' => Schema::SEQUENCE,
+                'nullable' => true
+            ],
+            'one' => [
+                'type' => Schema::VARCHAR,
+                'nullable' => false,
                 'size' => 100
-            ),
-            'description' => array(
-                'type' => 'Text',
-                'blank' => true
-            )
-        );
-        $this->_a['idx'] = array(
-            'title' => array(
-                'col' => 'title',
-                'type' => 'normal'
-            )
-        );
-    }
-
-    public function loadViews(): array
-    {
-        return array(
-            'simple' => array(
-                'select' => 'testmodel_id, title, description'
-            ),
-            '__unique__' => array(
-                'select' => 'testmodel_id'
-            )
-        );
+            ],
+            /*
+             * Relations:
+             * There is n*n relation with ManyToManyTwo
+             */
+            'twos' => [
+                'type' => Schema::MANY_TO_MANY,
+                'inverseJoinModel' => ManyToManyTwo::class,
+            ],
+        ];
     }
 }
-

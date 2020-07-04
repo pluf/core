@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,38 +16,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Relation;
 
-/**
- *
- * @author maso
- *        
- */
-class Test_ModelCount extends Pluf_Model
+use Pluf_Model;
+use Pluf\Data\Schema;
+
+class RelatedToTestModel2 extends Pluf_Model
 {
 
     /**
+     * Load data model
      *
      * {@inheritdoc}
      * @see Pluf_Model::init()
      */
     function init()
     {
-        $this->_a['table'] = 'test_model_count';
-        $this->_a['cols'] = array(
-            'id' => array(
-                'type' => 'Sequence',
-                'blank' => true
-            ), // It is automatically added.
-            'title' => array(
-                'type' => 'Varchar',
-                'blank' => false,
+        $this->_a['table'] = 'relatedtotestmodel2';
+        $this->_a['cols'] = [
+            'id' => [
+                'type' => Schema::SEQUENCE,
+                'nullable' => true
+            ],
+            'dummy' => [
+                'type' => Schema::VARCHAR,
+                'nullable' => false,
                 'size' => 100
-            ),
-            'description' => array(
-                'type' => 'Text',
-                'blank' => true
-            )
-        );
+            ],
+            'testmodel_1' => [
+                'type' => Schema::MANY_TO_ONE,
+                'nullable' => false,
+                'inverseJoinModel' => Model::class,
+                'columne' => 'testmodel_1'
+            ],
+            'testmodel_2' => [
+                'type' => Schema::MANY_TO_ONE,
+                'nullable' => false,
+                'inverseJoinModel' => Model::class,
+                'columne' => 'testmodel_2'
+            ]
+        ];
     }
 }
 
