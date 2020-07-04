@@ -1,0 +1,5 @@
+<?php $_extra_tag = Pluf::factory('\Pluf\Template\Tag\UrlTag', $t); $_extra_tag->start('/action/'.$t->_vars->toto.'/'); ?>
+
+<?php $_extra_tag = Pluf::factory('\Pluf\Template\Tag\Mytag', $t); $_extra_tag->start('sdfsd', 'sdfsdf'); $t->set('mytag', 'hello world!');?>
+
+<?php $_extra_tag = Pluf::factory('\Pluf\Template\Tag\Mytag', $t); $_extra_tag->end('param 1'); $t->set('mytag', '');?>

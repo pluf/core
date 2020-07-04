@@ -21,9 +21,9 @@ namespace Pluf\Test\Data;
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Dispatcher;
 use Pluf\Module;
 use Pluf;
-use Pluf_Dispatcher;
 use Pluf_Migration;
 
 class PlufModelRestAPITest extends TestCase
@@ -58,7 +58,7 @@ class PlufModelRestAPITest extends TestCase
      */
     public function getInvalidRequestWithRandomPrefix()
     {
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $res = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
         $this->assertNotNull($res);
         $this->assertEquals($res[1]->status_code, 404);
@@ -70,7 +70,7 @@ class PlufModelRestAPITest extends TestCase
      */
     public function getValidRequestWithRandomPrefix()
     {
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $res = $dispatcher->dispatch(Pluf::f('view_api_prefix') . '/helloword/HelloWord', Module::loadControllers());
         $this->assertNotNull($res);
         $this->assertEquals($res[1]->status_code, 200);

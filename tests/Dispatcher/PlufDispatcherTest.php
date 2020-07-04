@@ -18,11 +18,13 @@
  */
 namespace Pluf\PlufTest\Dispatcher;
 
-use PHPUnit\Framework\TestCase;
 use Pluf\Module;
-require_once 'Pluf.php';
+use Pluf\Test\PlufTestCase;
+use Pluf\Dispatcher;
+use Pluf\HTTP\Response;
+use Pluf\HTTP\Request;
 
-class DispatcherTest extends TestCase
+class DispatcherTest extends PlufTestCase
 {
 
     /**
@@ -42,7 +44,7 @@ class DispatcherTest extends TestCase
      */
     public function createNewInstance()
     {
-        $dispatcher = new \Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $this->assertNotNull($dispatcher);
 
         $dispatcher->loadControllers(Module::loadControllers());
@@ -56,12 +58,12 @@ class DispatcherTest extends TestCase
      */
     public function convertAResponseToResponse()
     {
-        $dispatcher = new \Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
 
         $query = '/HelloWord';
 
-        $response = new \Pluf_HTTP_Response();
-        $request = new \Pluf_HTTP_Request($query);
+        $response = new Response();
+        $request = new Request($query);
 
         $result = $dispatcher->toResponse($response, $request);
         $this->assertEquals($response, $result);
@@ -74,15 +76,15 @@ class DispatcherTest extends TestCase
      */
     public function convertAnStringIntoResponse()
     {
-        $dispatcher = new \Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
 
         $query = '/HelloWord';
 
         $response = 'HelloWord';
-        $request = new \Pluf_HTTP_Request($query);
+        $request = new Request($query);
 
         $result = $dispatcher->toResponse($response, $request);
 
-        $this->assertTrue($result instanceof \Pluf_HTTP_Response);
+        $this->assertTrue($result instanceof Response);
     }
 }

@@ -22,8 +22,10 @@
  * updates a binary model
  *
  * @author hadi <mohammad.hadi.mansouri@dpq.co.ir>
- *
+ *        
  */
+use Pluf\Pluf\Tenant;
+
 class Pluf_Form_ModelBinaryUpdate extends Pluf_Form_Model
 {
 
@@ -35,7 +37,7 @@ class Pluf_Form_ModelBinaryUpdate extends Pluf_Form_Model
             'required' => false,
             'max_size' => Pluf::f('upload_max_size', 2097152),
             'move_function_params' => array(
-                'upload_path' => Pluf_Tenant::storagePath() . '/' . strtolower(Pluf_ModelUtils::skipeName($this->model->_a['model'])),
+                'upload_path' => Tenant::storagePath() . '/' . strtolower(Pluf_ModelUtils::skipeName($this->model->_a['model'])),
                 'file_name' => $this->model->id,
                 'upload_path_create' => true,
                 'upload_overwrite' => true
@@ -58,14 +60,14 @@ class Pluf_Form_ModelBinaryUpdate extends Pluf_Form_Model
             $myFile = $this->data['file'];
             $model->file_name = $myFile['name'];
             // set mime type if not defined
-            $mimeType = Pluf_FileUtil::getMimeType($model->file_name);
-            if(is_array($mimeType)){
+            $mimeType = FileUtil::getMimeType($model->file_name);
+            if (is_array($mimeType)) {
                 $mimeType = $mimeType[0];
             }
-            if(!array_key_exists('mime_type', $this->data)){
+            if (! array_key_exists('mime_type', $this->data)) {
                 $model->mime_type = $mimeType;
             }
-            if(!array_key_exists('media_type', $this->data)){
+            if (! array_key_exists('media_type', $this->data)) {
                 $mediaType = substr($mimeType, 0, strpos($mimeType, '/'));
                 $model->media_type = $mediaType;
             }

@@ -20,10 +20,9 @@ namespace Pluf\Middleware;
 
 use Pluf\Exception;
 use Pluf\Data\Query;
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response;
 use Pluf;
-use Pluf_HTTP_Request;
-use Pluf_HTTP_Response;
-use Pluf_Session;
 use Pluf_Signal;
 
 /**
@@ -38,17 +37,17 @@ class Session implements \Pluf\Middleware
      * FIXME: We should logout everybody when the session table is emptied.
      *
      * @param
-     *            Pluf_HTTP_Request The request
+     *            Request The request
      * @return bool false
      */
-    function process_request(Pluf_HTTP_Request &$request)
+    function process_request(Request &$request)
     {
         $repo = Pluf::getDataRepository([
             'type' => 'model',
             'model' => '\Pluf_Session'
         ]);
 
-        $session = new Pluf_Session();
+        $session = new Session();
         if (! isset($request->COOKIE[$session->cookie_name])) {
             // No session is defined. We set empty session.
             $request->session = $session;
@@ -101,11 +100,11 @@ class Session implements \Pluf\Middleware
      * Add the session cookie to the response.
      *
      * @param
-     *            Pluf_HTTP_Request The request
+     *            Request The request
      * @param
-     *            Pluf_HTTP_Response The response
+     *            Response The response
      */
-    function process_response(Pluf_HTTP_Request $request, Pluf_HTTP_Response $response): Pluf_HTTP_Response
+    function process_response(Request $request, Response $response): Response
     {
         if ($request->session->touched) {
             if ($request->session->isAnonymous()) {

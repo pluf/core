@@ -116,16 +116,16 @@ class Pluf_Migration extends Migration
     // *
     // * @return boolean
     // */
-    // public function init(?Pluf_Tenant $tenant = null): bool
+    // public function init(?Tenant $tenant = null): bool
     // {
-    // $current = Pluf_Tenant::getCurrent();
+    // $current = Tenant::getCurrent();
     // try {
-    // Pluf_Tenant::setCurrent($tenant);
+    // Tenant::setCurrent($tenant);
     // foreach ($this->apps as $app) {
     // $this->initAppFromConfig($app);
     // }
     // } finally {
-    // Pluf_Tenant::setCurrent($current);
+    // Tenant::setCurrent($current);
     // }
     // return true;
     // }
@@ -556,7 +556,7 @@ class Pluf_Migration extends Migration
 //     public function setAppVersion($app, $version)
 //     {
 //         $gschema = new Pluf_DB_SchemaInfo();
-//         $sql = new Pluf_SQL('application=%s', $app);
+//         $sql = new query('application=%s', $app);
 //         $appinfo = $gschema->getList(array(
 //             'filter' => $sql->gen()
 //         ));
@@ -582,7 +582,7 @@ class Pluf_Migration extends Migration
 //     public function delAppInfo($app)
 //     {
 //         $gschema = new Pluf_DB_SchemaInfo();
-//         $sql = new Pluf_SQL('application=%s', $app);
+//         $sql = new query('application=%s', $app);
 //         $appinfo = $gschema->getList(array(
 //             'filter' => $sql->gen()
 //         ));

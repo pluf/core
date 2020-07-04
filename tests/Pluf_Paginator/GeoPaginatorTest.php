@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
+use Pluf\HTTP\Request;
 require_once 'Pluf.php';
 
 require_once dirname(__FILE__) . '/MyGeoModel.php';
@@ -36,12 +36,12 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
      */
     protected function setUpTest()
     {
-        Pluf::start(__DIR__. '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
         $dbEngine = Pluf::f('db_engine');
-        if(strcasecmp($dbEngine, 'MySQL') !== 0){
+        if (strcasecmp($dbEngine, 'MySQL') !== 0) {
             $this->markTestSkipped('Test could be run only on MySql database');
         }
-        
+
         $db = Pluf::db();
         $schema = $db->getSchema();
         $m1 = new Pluf_Paginator_MyGeoModel();
@@ -51,12 +51,13 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
         for ($i = 0; $i < 11; $i ++) {
             $m = new Pluf_Paginator_MyGeoModel();
             $m->title = 'My title ' . $i;
-            $m->location = 'POINT('.$i.' '.$i.')';
+            $m->location = 'POINT(' . $i . ' ' . $i . ')';
             $m->create();
         }
     }
 
     /**
+     *
      * @after
      */
     protected function tearDownTest()
@@ -79,7 +80,7 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
             '_px_fk' => 'location',
             '_px_fv' => 'POLYGON ((0 0, 12 0, 12 12, 0 12, 0 0))'
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyGeoModel());
         $fields = array(
@@ -97,5 +98,4 @@ class Pluf_Paginator_GeoPaginatorTest extends TestCase
         $this->assertTrue(array_key_exists('items', $result));
         $this->assertEquals(11, sizeof($result['items']));
     }
-    
 }

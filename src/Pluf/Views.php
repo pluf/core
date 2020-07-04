@@ -16,7 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
+use Pluf\SQL;
+use Pluf\Template;
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response;
+
 Pluf::loadFunction('Pluf_Shortcuts_GetFormForModel');
 Pluf::loadFunction('Pluf_Shortcuts_GetObjectOr404');
 Pluf::loadFunction('Pluf_Shortcuts_RenderToResponse');
@@ -48,7 +52,7 @@ class Pluf_Views
      */
     function redirectTo($request, $match, $url)
     {
-        return new Pluf_HTTP_Response_Redirect($url);
+        return new Response\Redirect($url);
     }
 
     /**
@@ -63,7 +67,7 @@ class Pluf_Views
      */
     function simpleContent($request, $match, $content)
     {
-        return new Pluf_HTTP_Response($content);
+        return new Response($content);
     }
 
     /**
@@ -79,18 +83,18 @@ class Pluf_Views
      * الگوها را
      * فراخوانی کرده و آن را به عنوان نتیجه برای کاربران نمایش دهید.
      *
-     * @param Pluf_HTTP_Request $request
+     * @param \Pluf\HTTP\Request $request
      * @param array $match
-     * @return Pluf_HTTP_Response
+     * @return \Pluf\HTTP\Response
      */
     function loadTemplate($request, $match)
     {
         $template = $match[1];
         $extra_context = array();
         // create and show a template
-        $context = new Pluf_Template_Context_Request($request, $extra_context);
-        $tmpl = new Pluf_Template($template);
-        return new Pluf_HTTP_Response($tmpl->render($context));
+        $context = new Template\Context\Request($request, $extra_context);
+        $tmpl = new Template($template);
+        return new Response($tmpl->render($context));
     }
 
     // TODO: maso, 2017: document
@@ -155,7 +159,7 @@ class Pluf_Views
      * - $object: Pluf_Model
      * - $parent: Pluf_Model, which is a parent of $object model
      *
-     * @param Pluf_HTTP_Request $request
+     * @param \Pluf\HTTP\Request $request
      * @param array $p
      * @param Pluf_Model $object
      * @param Pluf_Model $parent
@@ -187,12 +191,12 @@ class Pluf_Views
     /**
      * Checks if one to many relation exist between two entity
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param Pluf_Model $parent
      * @param Pluf_Model $object
      * @param array $p
      *            parameters
-     * @throws Pluf_HTTP_Error404 if relation does not exist
+     * @throws \Pluf\HTTP\Error404 if relation does not exist
      */
     private static function CRUD_assertManyToOneRelation($parent, $object, $p)
     {
@@ -201,14 +205,14 @@ class Pluf_Views
         }
         $key = $p['parentKey'];
         if ($object->__get($key) !== $parent->id) {
-            throw new Pluf_HTTP_Error404('Invalid relation');
+            throw new \Pluf\HTTP\Error404('Invalid relation');
         }
     }
 
     /**
      * List objects (Part of the CRUD series).
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @return Pluf_Paginator
      */
@@ -217,10 +221,10 @@ class Pluf_Views
         // Create page
         $builder = new Pluf_Paginator_Builder(self::CRUD_getModelInstance($p));
         if (array_key_exists('sql', $p)) {
-            if ($p['sql'] instanceof Pluf_SQL) {
+            if ($p['sql'] instanceof SQL) {
                 $builder->setWhereClause($p['sql']);
             } else {
-                $builder->setWhereClause(new Pluf_SQL($p['sql']));
+                $builder->setWhereClause(new SQL($p['sql']));
             }
         }
         if (array_key_exists('listFilters', $p)) {
@@ -245,7 +249,7 @@ class Pluf_Views
      * It there is a relation ( Many to one), you can list all child with this
      * view. The relation must be implemented with forign key in child class.
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @return Pluf_Paginator
      */
@@ -256,9 +260,9 @@ class Pluf_Views
         } else {
             $parentId = $match['parentId'];
         }
-        $sql = new Pluf_SQL($p['parentKey'] . '=%s', $parentId);
+        $sql = new SQL($p['parentKey'] . '=%s', $parentId);
         if (isset($p['sql'])) {
-            $sqlMain = new Pluf_SQL($p['sql']);
+            $sqlMain = new SQL($p['sql']);
             $sql = $sqlMain->SAnd($sql);
         }
         $p['sql'] = $sql;
@@ -268,12 +272,12 @@ class Pluf_Views
     /**
      * Clear Many to on relations
      *
-     * @param Pluf_HTTP_Request $request
+     * @param \Pluf\HTTP\Request $request
      * @param array $match
      * @param array $p
      * @return NULL
      */
-    public function clearManyToOne(Pluf_HTTP_Request $request, $match = array(), $p = array())
+    public function clearManyToOne(Request $request, $match = array(), $p = array())
     {
         // XXX: clean list
         return null;
@@ -291,12 +295,12 @@ class Pluf_Views
      * 'modelIdd' - Id of of the current model to update
      *
      * @param
-     *            Pluf_HTTP_Request Request object
+     *            Request Request object
      * @param
      *            array Match
      * @param
      *            array Extra parameters
-     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     * @return Response Response object (can be a redirect)
      */
     public function getObject($request, $match, $p)
     {
@@ -309,7 +313,7 @@ class Pluf_Views
     /**
      * Get children
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @param array $p
      * @return Pluf_Model
@@ -352,12 +356,12 @@ class Pluf_Views
      * 'template' - Template to use ('"model class"_create_form.html')
      *
      * @param
-     *            Pluf_HTTP_Request Request object
+     *            Request Request object
      * @param
      *            array Match
      * @param
      *            array Extra parameters
-     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     * @return Response Response object (can be a redirect)
      */
     public function createObject($request, $match, $p)
     {
@@ -383,10 +387,10 @@ class Pluf_Views
     /**
      * Createy a many to one object
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @param array $p
-     * @return Pluf_HTTP_Response
+     * @return Response
      */
     public function createManyToOne($request, $match, $p)
     {
@@ -431,12 +435,12 @@ class Pluf_Views
      *
      * 'template' - Template to use ('"model class"_update_form.html')
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      *            object
      * @param array $match
      * @param array $p
      *            parameters
-     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     * @return Response Response object (can be a redirect)
      */
     public function updateObject($request, $match, $p)
     {
@@ -457,10 +461,10 @@ class Pluf_Views
     /**
      * Update many to one
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @param array $p
-     * @return Pluf_HTTP_Response
+     * @return Response
      */
     public function updateManyToOne($request, $match, $p)
     {
@@ -515,12 +519,12 @@ class Pluf_Views
      * only the `deleted` field of that will be set to true. Note that this option assumes that the removing
      * object has a feild named `deleted`
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      *            object
      * @param array $match
      * @param array $p
      *            parameters
-     * @return Pluf_HTTP_Response Response object (can be a redirect)
+     * @return Response Response object (can be a redirect)
      */
     public function deleteObject($request, $match, $p)
     {
@@ -547,10 +551,10 @@ class Pluf_Views
     /**
      * Delete many to one
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @param array $p
-     * @return Pluf_HTTP_Response
+     * @return Response
      */
     public function deleteManyToOne($request, $match, $p)
     {
@@ -580,10 +584,10 @@ class Pluf_Views
 
     /**
      * Convert a model into the data schema
-     * 
+     *
      * Data schema is used to fill form in clients.
-     * 
-     * @param Pluf_HTTP_Request $request
+     *
+     * @param Request $request
      * @param array $match
      * @param array $p
      * @return array
@@ -598,16 +602,16 @@ class Pluf_Views
     /**
      * Download a content of a ModelBinary object
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
-     * @return Pluf_HTTP_Response_File
+     * @return Response\File
      */
     public function downloadObjectBinary($request, $match, $p)
     {
         // GET data
         $object = $this->getObject($request, $match, $p);
         // Do
-        $response = new Pluf_HTTP_Response_File($object->getAbsloutPath(), $object->mime_type);
+        $response = new Response\File($object->getAbsloutPath(), $object->mime_type);
         $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $object->file_name);
         return $response;
     }
@@ -615,7 +619,7 @@ class Pluf_Views
     /**
      * Upload a file as content
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @param array $match
      * @return Pluf_ModelBinary
      */

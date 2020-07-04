@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
+use Pluf\HTTP\Request;
 
 require_once 'Pluf.php';
 
@@ -212,7 +213,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             '_px_sk' => 'id',
             '_px_so' => 'd'
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -247,7 +248,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 'a'
             )
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -276,7 +277,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             '_px_fk' => 'id',
             '_px_fv' => '1'
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -310,7 +311,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
             '_px_fk' => 'id',
             '_px_fv' => $item1->id
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -358,7 +359,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 $item1->title
             )
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -407,7 +408,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 $item2->id
             )
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -468,7 +469,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
         $_REQUEST = array(
             '_px_q' => 'test'
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -519,7 +520,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 $item1->title
             )
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(
@@ -586,7 +587,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
                 'a'
             )
         );
-        $request = new Pluf_HTTP_Request('/test');
+        $request = new Request('/test');
 
         $pag = new Pluf_Paginator(new Pluf_Paginator_MyModel());
         $fields = array(

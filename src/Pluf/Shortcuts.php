@@ -17,12 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Pluf\HTTP\Error403;
+use Pluf\HTTP\Response;
+use Pluf\Template;
+
 function Pluf_Shortcuts_GetRequestParamOr403($request, $id)
 {
     if (array_key_exists($id, $request->REQUEST)) {
         return $request->REQUEST[$id];
     }
-    throw new Pluf_HTTP_Error403(sprintf("Parameter not found (name: %s).", $id));
+    throw new Error403(sprintf("Parameter not found (name: %s).", $id));
 }
 
 function Pluf_Shortcuts_GetRequestParam($request, $id)
@@ -48,38 +52,38 @@ function Pluf_Shortcuts_GetObjectOr404($object, $id)
     if ((int) $id > 0 && $item->id == $id) {
         return $item;
     }
-    throw new Pluf_HTTP_Error404("Object not found (" . $object . "," . $id . ")");
+    throw new \Pluf\HTTP\Error404("Object not found (" . $object . "," . $id . ")");
 }
 
-/**
- * Get an object by SQL or raise a 404 error.
- *
- * Usage:
- * <pre>
- * $obj = Pluf_Shortcuts_GetOneOr404('MyApp_Model',
- * 'path=%s AND status=%s',
- * array('welcome', 1));
- * </pre>
- *
- * @param
- *            string Model
- * @param
- *            string Base SQL request
- * @param
- *            string Parameters for the base SQL
- * @return Object The found object
- */
-function Pluf_Shortcuts_GetOneOr404($object, $bsql, $psql)
-{
-    $sql = new Pluf_SQL($bsql, $psql);
-    $item = Pluf::factory($object)->getOne(array(
-        'filter' => $sql->gen()
-    ));
-    if ($item != null) {
-        return $item;
-    }
-    throw new Pluf_HTTP_Error404();
-}
+// /**
+// * Get an object by SQL or raise a 404 error.
+// *
+// * Usage:
+// * <pre>
+// * $obj = Pluf_Shortcuts_GetOneOr404('MyApp_Model',
+// * 'path=%s AND status=%s',
+// * array('welcome', 1));
+// * </pre>
+// *
+// * @param
+// * string Model
+// * @param
+// * string Base SQL request
+// * @param
+// * string Parameters for the base SQL
+// * @return Object The found object
+// */
+// function Pluf_Shortcuts_GetOneOr404($object, $bsql, $psql)
+// {
+// $sql = new query($bsql, $psql);
+// $item = Pluf::factory($object)->getOne([
+// 'filter' => $sql->gen()
+// ]);
+// if ($item != null) {
+// return $item;
+// }
+// throw new \Pluf\HTTP\Error404();
+// }
 
 /**
  * Render a template file and an array as a reponse.
@@ -94,18 +98,18 @@ function Pluf_Shortcuts_GetOneOr404($object, $bsql, $psql)
  * @param
  *            array Associative array for the context
  * @param
- *            Pluf_HTTP_Request Request object (null)
- * @return Pluf_HTTP_Response The response with the rendered template
+ *            \Pluf\HTTP\Request Request object (null)
+ * @return \Pluf\HTTP\Response The response with the rendered template
  */
 function Pluf_Shortcuts_RenderToResponse($tplfile, $params, $request = null)
 {
-    $tmpl = new Pluf_Template($tplfile);
+    $tmpl = new Template($tplfile);
     if (is_null($request)) {
-        $context = new Pluf_Template_Context($params);
+        $context = new Template\Context($params);
     } else {
-        $context = new Pluf_Template_Context_Request($request, $params);
+        $context = new Template\Context\Request($request, $params);
     }
-    return new Pluf_HTTP_Response($tmpl->render($context));
+    return new Response($tmpl->render($context));
 }
 
 /**
@@ -212,7 +216,7 @@ function Pluf_Shortcuts_GetForeignKeyName($modelName)
  *
  * If count is not set in request or count is more than a threshold (50) returns a default value (50).
  *
- * @param Pluf_HTTP_Request $request
+ * @param \Pluf\HTTP\Request $request
  * @return number
  */
 function Pluf_Shortcuts_GetListCount($request)

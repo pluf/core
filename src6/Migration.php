@@ -46,8 +46,8 @@ namespace Pluf;
  */
 use Pluf\Data\ModelDescription;
 use Pluf\Data\Schema;
+use Pluf\Pluf\Tenant;
 use Pluf;
-use Pluf_Tenant;
 
 class Migration
 {
@@ -118,16 +118,16 @@ class Migration
      *
      * @return boolean
      */
-    public function init(?Pluf_Tenant $tenant = null): bool
+    public function init(?Tenant $tenant = null): bool
     {
-        $current = Pluf_Tenant::getCurrent();
+        $current = Tenant::getCurrent();
         try {
-            Pluf_Tenant::setCurrent($tenant);
+            Tenant::setCurrent($tenant);
             foreach ($this->apps as $app) {
                 $this->initAppFromConfig($app);
             }
         } finally {
-            Pluf_Tenant::setCurrent($current);
+            Tenant::setCurrent($current);
         }
         return true;
     }
@@ -156,7 +156,6 @@ class Migration
     // {
     // foreach ($this->apps as $app) {
     // $func = $app . '_Migrations_Backup_run';
-    // Pluf::loadFunction($func);
     // if ($this->display) {
     // echo ($func . "\n");
     // }
@@ -180,7 +179,6 @@ class Migration
     // {
     // foreach ($this->apps as $app) {
     // $func = $app . '_Migrations_Backup_restore';
-    // Pluf::loadFunction($func);
     // if ($this->display) {
     // echo ($func . "\n");
     // }
@@ -478,7 +476,6 @@ class Migration
     // } else {
     // $func = $this->app . '_Migrations_' . $migration[1] . '_down';
     // }
-    // Pluf::loadFunction($func);
     // $func(); // Real migration run
     // $this->setAppVersion($this->app, $target_version);
     // }
@@ -496,7 +493,7 @@ class Migration
     // public function setAppVersion($app, $version)
     // {
     // $gschema = new Pluf_DB_SchemaInfo();
-    // $sql = new Pluf_SQL('application=%s', $app);
+    // $sql = new Query(['filters' => ['application', '=', $app]]);
     // $appinfo = $gschema->getList(array(
     // 'filter' => $sql->gen()
     // ));
@@ -522,7 +519,7 @@ class Migration
     // public function delAppInfo($app)
     // {
     // $gschema = new Pluf_DB_SchemaInfo();
-    // $sql = new Pluf_SQL('application=%s', $app);
+    // $sql = new Query(['filters' => ['application', '=', $app]]);
     // $appinfo = $gschema->getList(array(
     // 'filter' => $sql->gen()
     // ));

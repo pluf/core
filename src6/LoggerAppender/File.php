@@ -25,7 +25,7 @@ use Pluf;
  *
  * This is the simplest logger. You can use it as a base to create
  * more complex loggers. The logger interface is really simple and use
- * some helper functions from the main <code>Pluf_Log</code> class.
+ * some helper functions from the main <code>Logger</code> class.
  *
  * The only required static method of a log writer is
  * <code>write</code>, which takes the stack to write as parameter.

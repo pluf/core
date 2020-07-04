@@ -4,12 +4,12 @@ namespace Pluf\Test\Middleware;
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
-use Pluf;
-use Pluf_Dispatcher;
-use Pluf_Migration;
-use Pluf_Tenant;
+use Pluf\Dispatcher;
 use Pluf\Module;
-use Pluf\Middleware;
+use Pluf\Middleware\TenantMiddleware;
+use Pluf\Pluf\Tenant;
+use Pluf;
+use Pluf_Migration;
 
 class TenantTest extends TestCase
 {
@@ -24,7 +24,7 @@ class TenantTest extends TestCase
         $config = include __DIR__ . '/../conf/config.php';
         $config['multitenant'] = true;
         $config['middleware_classes'] = array(
-            '\Pluf\Middleware\Tenant'
+            '\Pluf\Middleware\TenantMiddleware'
         );
 
         // Install
@@ -52,7 +52,7 @@ class TenantTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord');
 
         // $request = $results[0];
@@ -69,7 +69,7 @@ class TenantTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'x x x.' . rand();
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord');
 
         // $request = $results[0];
@@ -86,13 +86,13 @@ class TenantTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $tenant = new Pluf_Tenant();
+        $tenant = new Tenant();
         $tenant->domain = $_SERVER['HTTP_HOST'];
         $tenant->subdomain = 'yyy' . rand();
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
         // $request = $results[0];
@@ -110,16 +110,16 @@ class TenantTest extends TestCase
         /*
          * From Dispatcher
          */
-        $sub = 'xxx' . rand();
+        $sub = rand() . 'xxx' . rand();
         $_SERVER['HTTP_HOST'] = $sub . '.' . rand();
 
-        $tenant = new Pluf_Tenant();
+        $tenant = new Tenant();
         $tenant->domain = $_SERVER['HTTP_HOST'];
         $tenant->subdomain = $sub;
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
         $request = $results[0];
@@ -130,7 +130,7 @@ class TenantTest extends TestCase
         /*
          * Direct
          */
-        $md = new Middleware\Tenant();
+        $md = new TenantMiddleware();
         $response = $md->process_request($request);
         $this->assertFalse($response);
     }
@@ -146,13 +146,13 @@ class TenantTest extends TestCase
          */
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $tenant = new Pluf_Tenant();
-        $tenant->domain = rand();
-        $tenant->subdomain = rand();
+        $tenant = new Tenant();
+        $tenant->domain = 'xxxxsssaa' . rand();
+        $tenant->subdomain = 'wweerr' . rand();
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
         $request = $results[0];
@@ -166,7 +166,7 @@ class TenantTest extends TestCase
         $request->HEADERS = array(
             '_PX_tenant' => $tenant->id
         );
-        $md = new Middleware\Tenant();
+        $md = new TenantMiddleware();
         $response = $md->process_request($request);
         $this->assertFalse($response);
     }

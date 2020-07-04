@@ -18,6 +18,8 @@
  */
 namespace Pluf;
 
+use Pluf\HTTP\Request;
+
 /**
  * Abstract definistion of modules
  *
@@ -122,7 +124,7 @@ abstract class Module
 
     /**
      * Gets list of modules
-     * 
+     *
      * @return Module[] list of modules
      */
     public static function getModules(): array
@@ -143,10 +145,10 @@ abstract class Module
     /**
      * Loads all module controllers
      *
-     * @param \Pluf_HTTP_Request $request
+     * @param Request $request
      * @return array
      */
-    public static function loadControllers(?\Pluf_HTTP_Request $request = null): array
+    public static function loadControllers(?Request $request = null): array
     {
         $modules = self::getModules();
         $views = array();
@@ -159,7 +161,7 @@ abstract class Module
 
     /**
      * Load all modules
-     * 
+     *
      * NOTE: This method is not intend to called directlly.
      */
     public static function loadModules(): void
@@ -167,7 +169,7 @@ abstract class Module
         $modules = self::getModules();
         $bootstrap = new \Pluf();
         foreach ($modules as $module) {
-            $loaded =false;
+            $loaded = false;
             try {
                 $module->init($bootstrap);
                 $loaded = true;

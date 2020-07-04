@@ -27,32 +27,24 @@
         <testsuite name="Data">
             <directory>tests/Data/</directory>
         </testsuite>
+        <testsuite name="View">
+            <directory>tests/Dispatcher/</directory>
+            <directory>tests/HTTP</directory>
+            <directory>tests/Middleware/</directory>
+            <directory>tests/Encoder/</directory>
+            <directory>tests/Template/</directory>
+            <directory>tests/Form/</directory>
+        </testsuite>
+        <testsuite name="Util">
+            <directory>tests/Text/</directory>
+            <directory>tests/Pluf_Mail/</directory>
+        </testsuite>
 <!--         <testsuite name="Pluf2Suit"> -->
-<!--             <directory>tests/Pluf/</directory> -->
-<!--             <directory>tests/Pluf_Crypt/</directory> -->
-<!--             <directory>tests/Pluf_Encoder/</directory> -->
-<!--             <directory>tests/Pluf_Tenant/</directory> -->
-<!--             <directory>tests/Pluf_Tenant_Template/</directory> -->
-<!--             <directory>tests/Pluf_Mail/</directory> -->
+<!--             <directory>tests/Pluf tenant/</directory> -->
 <!--             <directory>tests/Pluf_Migration/</directory> -->
 <!-- 		</testsuite> -->
-<!--         <testsuite name="DB"> -->
-<!--             <directory>tests/Db/</directory> -->
-<!--             <directory>tests/Pluf_DB/</directory> -->
-<!--             <directory>tests/Pluf_DB_Schema/</directory> -->
-<!--             <directory>tests/Pluf_SQL/</directory> -->
-<!--             <directory>tests/Pluf_Model/</directory> -->
-<!--         </testsuite> -->
 <!--         <testsuite name="View"> -->
-<!--             <directory>tests/Middleware/</directory> -->
-<!--             <directory>tests/Dispatcher/</directory> -->
-<!--             <directory>tests/Pluf_Dispatcher/</directory> -->
 <!--             <directory>tests/Pluf_Paginator/</directory> -->
-<!--             <directory>tests/Pluf_Text_Wiki/</directory> -->
-<!--             <directory>tests/Pluf_Text_HTML_Filter/</directory> -->
-<!--             <directory>tests/Pluf_Form/</directory> -->
-<!--             <directory>tests/Pluf_Form_Field/</directory> -->
-<!--             <directory>tests/Pluf_HTTP_Response</directory> -->
 <!--         </testsuite> -->
 <!--         <testsuite name="GraphQl"> -->
 <!--             <directory>tests/Pluf_Graphql_Compiler/</directory> -->

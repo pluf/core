@@ -24,6 +24,7 @@ use Pluf\Data\Repository;
 use Pluf\Data\Schema;
 use Pluf\Db\Connection;
 use Pluf\Db\Connection\Dumper;
+use Pluf\HTTP\Request;
 
 /**
  * The main class of the framework.
@@ -193,6 +194,8 @@ class Pluf
      *
      * @param
      *            string Function to load.
+     *            
+     * @deprecated will ber removed in next version
      */
     public static function loadFunction($function)
     {
@@ -308,12 +311,12 @@ class Pluf
     /**
      * Get Curretn request
      *
-     * @deprecated This will removed in the next major version. Pleas use Pluf_HTTP_Request::getCurrent()
-     * @return Pluf_HTTP_Request|NULL
+     * @deprecated This will removed in the next major version. Pleas use Request::getCurrent()
+     * @return Request|NULL
      */
     public static function getCurrentRequest()
     {
-        return Pluf_HTTP_Request::getCurrent();
+        return Request::getCurrent();
     }
 
     public static function getCache()

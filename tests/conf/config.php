@@ -82,7 +82,7 @@ return [
     ],
 
     'template_tags' => [
-        'mytag' => 'Pluf_Template_Tag_Mytag'
+        'mytag' => '\\Pluf\\Template\\Tag\\Mytag'
     ],
 
     'template_modifiers' => [],

@@ -4,9 +4,9 @@ namespace Pluf\Test\Middleware;
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Dispatcher;
 use Pluf\Module;
 use Pluf;
-use Pluf_Dispatcher;
 use Pluf_Migration;
 
 class TenantSingleTest extends TestCase
@@ -22,7 +22,7 @@ class TenantSingleTest extends TestCase
         $config = include __DIR__ . '/../conf/config.php';
         $config['multitenant'] = false;
         $config['middleware_classes'] = array(
-            '\Pluf\Middleware\Tenant'
+            '\Pluf\Middleware\TenantMiddleware'
         );
 
         // Install
@@ -50,7 +50,7 @@ class TenantSingleTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
         // $request = $results[0];
@@ -67,7 +67,7 @@ class TenantSingleTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'x x x.' . rand();
 
-        $dispatcher = new Pluf_Dispatcher();
+        $dispatcher = new Dispatcher();
         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
         // $request = $results[0];

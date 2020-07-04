@@ -39,28 +39,28 @@ return [
     ],
 
     [
-        'regex' => '#^/item/(\d+]/$#',
+        'regex' => '#^/item/(\d+)/$#',
         'priority' => 4,
         'model' => 'Todo_Views',
         'method' => 'viewItem'
     ],
 
     [
-        'regex' => '#^/list/(\d+]/item/add/$#',
+        'regex' => '#^/list/(\d+)/item/add/$#',
         'priority' => 4,
         'model' => 'Todo_Views',
         'method' => 'addItem'
     ],
 
     [
-        'regex' => '#^/item/(\d+]/update/$#',
+        'regex' => '#^/item/(\d+)/update/$#',
         'priority' => 4,
         'model' => 'Todo_Views',
         'method' => 'updateItem'
     ],
 
     [
-        'regex' => '#^/item/(\d+]/delete/$#',
+        'regex' => '#^/item/(\d+)/delete/$#',
         'priority' => 4,
         'model' => 'Todo_Views',
         'method' => 'deleteItem'
@@ -74,7 +74,7 @@ return [
     ],
 
     [
-        'regex' => '#^/list/(\d+]/$#',
+        'regex' => '#^/list/(\d+)/$#',
         'priority' => 4,
         'model' => 'Todo_Views',
         'method' => 'viewList'

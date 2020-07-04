@@ -82,16 +82,6 @@ class PlufTest extends TestCase
      *
      * @test
      */
-    public function testLoadFunction()
-    {
-        Pluf::loadFunction('Pluf_HTTP_handleMagicQuotes');
-        $this->assertEquals(true, function_exists('Pluf_HTTP_handleMagicQuotes'));
-    }
-
-    /**
-     *
-     * @test
-     */
     public function phpConceptsTest()
     {
         /*
@@ -116,7 +106,7 @@ class PlufTest extends TestCase
             'cache_engine' => 'array'
         ]);
         $this->assertTrue(Pluf::getCache() instanceof \Pluf\Cache\ArrayCache);
-        
+
         Pluf::start([
             'cache_engine' => 'file',
             'cache_file_timeout' => 1234

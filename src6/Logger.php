@@ -182,8 +182,7 @@ class Logger
         self::$loggerManagers[$key] = $loggerManager;
         return $loggerManager;
     }
-    
-    
+
     /**
      * Signal handler to flush the log.
      *
@@ -199,6 +198,16 @@ class Logger
     public static function toLevelMarker(string $level): int
     {
         return self::$direct[$level];
+    }
+
+    /**
+     * Signal handler to flush the log.
+     *
+     * The name of the signal and the parameters are not used.
+     */
+    public static function flushHandler($signal, &$params)
+    {
+        self::flush();
     }
 }
 

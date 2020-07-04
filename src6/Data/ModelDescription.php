@@ -62,6 +62,7 @@ class ModelDescription extends ArrayObject
         $this->setDefaults($model->_a);
         $this->type = get_class($model);
         $this->views = $model->loadViews();
+        $this->multitinant = $model->_a['multitenant'];
 
         // Set identifier
         $identifier = $this->id;

@@ -4,6 +4,8 @@ namespace Pluf\Test\Logger;
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Logger;
+use Pluf;
 
 class LoggerTest extends TestCase
 {
@@ -14,18 +16,18 @@ class LoggerTest extends TestCase
      */
     public function callBasicFunctions()
     {
-        \Pluf::start(__DIR__ . '/../conf/config.php');
+        Pluf::start(__DIR__ . '/../conf/config.php');
 
-        \Pluf_Log::debug('hi');
-        \Pluf_Log::error('error');
-        \Pluf_Log::event('event');
-        \Pluf_Log::fatal('fatal');
-        \Pluf_Log::info('info');
-        \Pluf_Log::log('log');
-        \Pluf_Log::perf('perf');
-        \Pluf_Log::warn('warn');
+        Logger::debug('hi');
+        Logger::error('error');
+        Logger::event('event');
+        Logger::fatal('fatal');
+        Logger::info('info');
+        Logger::log('log');
+        Logger::perf('perf');
+        Logger::warn('warn');
 
-        \Pluf_Log::flush();
+        Logger::flush();
 
         $this->assertTrue(true);
     }

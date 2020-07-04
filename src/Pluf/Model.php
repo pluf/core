@@ -42,7 +42,7 @@ class Pluf_Model implements JsonSerializable
      */
     protected $tenant_field = array(
         'type' => Schema::FOREIGNKEY,
-        'model' => 'Pluf_Tenant',
+        'model' => '\\Pluf\\Pluf\\Tenant',
         'blank' => false,
         'relate_name' => 'tenant',
         'editable' => false,

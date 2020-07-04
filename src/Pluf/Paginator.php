@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadFunction('Pluf_HTTP_URL_urlForView');
 
 /**
  * Model pagination
@@ -260,7 +259,7 @@ class Pluf_Paginator
      * <ul>
      *
      * @param
-     *            Pluf_HTTP_Request The request
+     *            \Pluf\HTTP\Request The request
      */
     function setFromRequest($request)
     {

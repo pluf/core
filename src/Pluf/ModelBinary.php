@@ -110,7 +110,7 @@ class Pluf_ModelBinary extends Pluf_Model
         // mime type (based on file name)
         $mime_type = $this->mime_type;
         if (! isset($mime_type) || $mime_type === 'application/octet-stream') {
-            $fileInfo = Pluf_FileUtil::getMimeType($this->file_name);
+            $fileInfo = FileUtil::getMimeType($this->file_name);
             $this->mime_type = $fileInfo[0];
         }
     }

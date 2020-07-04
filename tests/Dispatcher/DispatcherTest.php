@@ -16,15 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
+namespace Pluf\Test\Dispatcher;
 
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
-class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
+require_once 'Pluf.php';
+
+use Pluf\Dispatcher;
+use Pluf\HTTP\Response;
+use Pluf\HTTP\URL;
+use Pluf\HTTP\Response\Redirect;
+use Pluf\Test\PlufTestCase;
+
+class DispatcherTest extends PlufTestCase
 {
 
     protected $views = array();
@@ -49,7 +51,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
 
     public function hello()
     {
-        return new Pluf_HTTP_Response('ok');
+        return new Response('ok');
     }
 
     public function hello1()
@@ -82,7 +84,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                 'method' => 'hello'
             )
         );
@@ -93,14 +95,15 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             'query' => '/hello'
         ); // match second pass
 
-        $this->assertEquals(200, Pluf_Dispatcher::match($req1)->status_code);
-        $this->assertEquals('ok', Pluf_Dispatcher::match($req1)->content);
-        $this->assertInstanceOf(Pluf_HTTP_Response_Redirect::class, Pluf_Dispatcher::match($req2));
+        $this->assertEquals(200, Dispatcher::match($req1)->status_code);
+        $this->assertEquals('ok', Dispatcher::match($req1)->content);
+        $this->assertInstanceOf(Redirect::class, Dispatcher::match($req2));
     }
+
     /**
      *
      * @test
-     * @expectedException Pluf_HTTP_Error404
+     * @expectedException Pluf\HTTP\Error404
      */
     public function testSimpleNotfound()
     {
@@ -108,7 +111,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                 'method' => 'hello'
             )
         );
@@ -116,7 +119,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             'query' => '/hello/you/'
         ); // no match
 
-        Pluf_Dispatcher::match($req3);
+        Dispatcher::match($req3);
     }
 
     /**
@@ -129,7 +132,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
             array(
                 'regex' => '#^/hello/$#',
                 'base' => '',
-                'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                 'method' => 'hello3'
             ),
             array(
@@ -139,13 +142,13 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                         'method' => 'hello'
                     ),
                     array(
                         'regex' => '#^hello/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                         'method' => 'hello4'
                     )
                 )
@@ -157,7 +160,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                         'method' => 'hello1'
                     )
                 )
@@ -169,7 +172,7 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
                     array(
                         'regex' => '#^world/$#',
                         'base' => '',
-                        'model' => 'Pluf_Tests_Dispatch_DispatcherTest',
+                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
                         'method' => 'hello2'
                     )
                 )
@@ -193,19 +196,18 @@ class Pluf_Tests_Dispatch_DispatcherTest extends TestCase
         $h4 = (object) array(
             'query' => '/hello/hello/'
         ); // match
-        $this->assertEquals(200, Pluf_Dispatcher::match($req1)->status_code);
-        $this->assertEquals('ok', Pluf_Dispatcher::match($req1)->content);
-        $this->assertEquals(1, Pluf_Dispatcher::match($h1));
-        $this->assertEquals(2, Pluf_Dispatcher::match($h2));
-        $this->assertEquals(3, Pluf_Dispatcher::match($h3));
-        $this->assertEquals(4, Pluf_Dispatcher::match($h4));
-        $this->assertInstanceOf(Pluf_HTTP_Response_Redirect::class, Pluf_Dispatcher::match($req2));
-        
-        Pluf::loadFunction('Pluf_HTTP_URL_reverse');
-        $this->assertEquals('/hello/world/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello'));
-        $this->assertEquals('/hello1/world/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello1'));
-        $this->assertEquals('/hello2/world/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello2'));
-        $this->assertEquals('/hello/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello3'));
-        $this->assertEquals('/hello/hello/', Pluf_HTTP_URL_reverse('Pluf_Tests_Dispatch_DispatcherTest::hello4'));
+        $this->assertEquals(200, Dispatcher::match($req1)->status_code);
+        $this->assertEquals('ok', Dispatcher::match($req1)->content);
+        $this->assertEquals(1, Dispatcher::match($h1));
+        $this->assertEquals(2, Dispatcher::match($h2));
+        $this->assertEquals(3, Dispatcher::match($h3));
+        $this->assertEquals(4, Dispatcher::match($h4));
+        $this->assertInstanceOf(Redirect::class, Dispatcher::match($req2));
+
+        $this->assertEquals('/hello/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello'));
+        $this->assertEquals('/hello1/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello1'));
+        $this->assertEquals('/hello2/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello2'));
+        $this->assertEquals('/hello/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello3'));
+        $this->assertEquals('/hello/hello/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello4'));
     }
 }

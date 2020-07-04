@@ -17,6 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use PHPUnit\Framework\TestCase;
+use Pluf\NoteBook\Book;
+use Pluf\Pluf\Tenant;
 require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
@@ -65,7 +67,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         ));
         $this->assertTrue($m->install());
 
-        $tenant = new Pluf_Tenant();
+        $tenant = new Tenant();
         $tenant->title = 'Default Tenant';
         $tenant->description = 'Auto generated tenant';
         $tenant->subdomain = Pluf::f('tenant_default', 'main');
@@ -114,7 +116,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         ));
         $this->assertTrue($m->install());
 
-        $tenant = new Pluf_Tenant();
+        $tenant = new Tenant();
         $tenant->title = 'Default Tenant';
         $tenant->description = 'Auto generated tenant';
         $tenant->subdomain = Pluf::f('tenant_default', 'main');
@@ -123,10 +125,10 @@ class Pluf_Migration_MtnitTest extends TestCase
         $this->assertTrue($m->init($tenant));
 
         // 1- Switch Tenant to the new one
-        Pluf_Tenant::setCurrent($tenant);
+        Tenant::setCurrent($tenant);
 
         // 2- Create new instance of book
-        $note = new Note_Book();
+        $note = new Book();
         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
 
         $this->assertTrue($m->unInstall());

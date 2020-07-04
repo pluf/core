@@ -1,5 +1,4 @@
 <?php
-
 return array(
     0 => array(
         'Pluf_Search_Occ' => array(
@@ -67,7 +66,7 @@ return array(
     2 => array(
         'Pluf_Dispatcher::postDispatch' => array(
             0 => array(
-                0 => 'Pluf_Log',
+                0 => '\\Pluf\\Logger',
                 1 => 'flushHandler',
                 2 => 'Pluf_Dispatcher'
             )

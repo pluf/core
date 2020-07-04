@@ -19,8 +19,8 @@
  */
 namespace Pluf;
 
-use Pluf_HTTP_Request;
-use Pluf_HTTP_Response;
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response;
 
 /**
  * Pluf general middleware
@@ -33,15 +33,16 @@ interface Middleware
 
     /**
      *
-     * @param Pluf_HTTP_Request $request
+     * @param Request $request
      * @return boolean false if ther is no problem otherwize ther is an error
      */
-    public function process_request(Pluf_HTTP_Request &$request);
+    public function process_request(Request &$request);
 
     /**
      *
-     * @param Pluf_HTTP_Request $request
-     * @param Pluf_HTTP_Response $response
+     * @param Request $request
+     * @param Response $response
      */
-    public function process_response(Pluf_HTTP_Request $request, Pluf_HTTP_Response $response): Pluf_HTTP_Response;
+    public function process_response(Request $request, Response $response): Response;
 }
+

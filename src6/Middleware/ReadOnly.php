@@ -18,9 +18,9 @@
  */
 namespace Pluf\Middleware;
 
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response;
 use Pluf;
-use Pluf_HTTP_Request;
-use Pluf_HTTP_Response;
 
 /**
  * Readonly middleware.
@@ -58,13 +58,13 @@ class ReadOnly implements \Pluf\Middleware
      * Process the request.
      *
      * @param
-     *            Pluf_HTTP_Request The request
+     *            Request The request
      * @return bool false
      */
-    function process_request(Pluf_HTTP_Request &$request)
+    function process_request(Request &$request)
     {
         if ($request->method == 'POST') {
-            $res = new Pluf_HTTP_Response('Server in read only mode' . "\n\n" . 'We are upgrading the system to make it better for you, please try again later...', 'text/plain');
+            $res = new Response('Server in read only mode' . "\n\n" . 'We are upgrading the system to make it better for you, please try again later...', 'text/plain');
             $res->status_code = 503;
             return $res;
         }
@@ -78,12 +78,12 @@ class ReadOnly implements \Pluf\Middleware
      * read only mode.
      *
      * @param
-     *            Pluf_HTTP_Request The request
+     *            Request The request
      * @param
-     *            Pluf_HTTP_Response The response
-     * @return Pluf_HTTP_Response The response
+     *            Response The response
+     * @return Response The response
      */
-    public function process_response(Pluf_HTTP_Request $request, Pluf_HTTP_Response $response): Pluf_HTTP_Response
+    public function process_response(Request $request, Response $response): Response
     {
         if (! Pluf::f('read_only_mode_message', false)) {
             return $response;
