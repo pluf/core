@@ -42,9 +42,6 @@
 <!--             <directory>tests/Pluf_SQL/</directory> -->
 <!--             <directory>tests/Pluf_Model/</directory> -->
 <!--         </testsuite> -->
-<!--         <testsuite name="Data"> -->
-<!--             <directory>tests/Data/</directory> -->
-<!--         </testsuite> -->
 <!--         <testsuite name="View"> -->
 <!--             <directory>tests/Middleware/</directory> -->
 <!--             <directory>tests/Dispatcher/</directory> -->

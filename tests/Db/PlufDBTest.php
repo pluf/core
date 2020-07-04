@@ -16,16 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\IncompleteTestError;
-require_once 'Pluf.php';
+namespace Pluf\Db\tests;
+
+use Pluf\Test\PlufTestCase;
+use Pluf;
 
 /**
  *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class PlufDBTest extends TestCase
+class PlufDBTest extends PlufTestCase
 {
 
     public $db;
@@ -75,17 +76,17 @@ class PlufDBTest extends TestCase
             '0'
         );
         $res = array(
-            "'1'",
-            "'1'",
-            "'1'",
-            "'1'",
-            "'1'",
-            "'0'",
-            "'0'"
+            '1',
+            '1',
+            '1',
+            '1',
+            '1',
+            '0',
+            '0'
         );
         foreach ($tests as $test) {
             $ok = current($res);
-            $this->assertEquals($ok, \Pluf\Db\Engine::booleanToDb($test, $this->db), 'Fail to convert :', $test);
+            $this->assertEquals($ok, \Pluf\Db\Engine::booleanToDb($test, $this->db), 'Fail to convert :' . $test);
             next($res);
         }
     }
