@@ -9,6 +9,7 @@ use Pluf\Data\Query;
 use Pluf\HTTP\Error404;
 use Pluf\HTTP\Error500;
 use Pluf\ObjectValidator;
+use Pluf\ObjectMapper;
 
 class ItemView extends \Pluf\Views
 {
@@ -191,14 +192,15 @@ class ItemView extends \Pluf\Views
     public function updateItem(Request $request, array $match, array $params)
     {
         $item = self::getItem($request, $match, $params);
-        $mapper = new RequestMapper($request, get_class($item));
+        $objectName = get_class($item);
+        $mapper = ObjectMapper::getInstance($request);
         if (! $mapper->hasMore()) {
             throw new Error403('No item in request to update');
         }
-        $newItem = $mapper->mapNext();
+        $newItem = $mapper->next(new $objectName());
         $newItem->id = $item->id;
         ObjectValidator::getInstance()->check($newItem);
-        $item = Pluf::getDataRepository(get_class($item))->update($newItem);
+        $item = Pluf::getDataRepository($objectName)->update($newItem);
         return $item;
     }
 }
