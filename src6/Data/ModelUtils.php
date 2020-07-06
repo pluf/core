@@ -1,8 +1,7 @@
 <?php
-namespace Pluf;
+namespace Pluf\Data;
 
 use Pluf;
-use \Pluf\Data\Model;
 
 /**
  * Utilities to work with model

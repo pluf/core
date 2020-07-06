@@ -18,43 +18,39 @@
  */
 namespace Pluf\Data;
 
-use Pluf\ModelUtils;
 use JsonSerializable;
 use Pluf;
 
 class Model implements JsonSerializable
 {
-    
-    
-//     function __construct($pk = null, $values = array()){}
-    
-    
-//     //-----------------------------------------------------------
-//     // Old API
-//     //-----------------------------------------------------------
-//     public function init(): void {}
-//     public function getRelationKeysToModel($model, $type): array {}
-//     public function getData(): array {}
-//     public function setAssoc(Model $model, ?string $assocName = null) {}
-//     public function delAssoc(Model $model, ?string $assocName = null) {}
-//     public function batchAssoc($model_name, $ids) {}
-//     public function getOne($p = array()): ?Model {}
-//     public function getList($p = array()) : array{}
-//     public function getCount($p = array()) {}
-//     public function getRelated($model, $method = null, $p = array()) {}
-//     public function update($where = '') {}
-//     public function create($raw = false) {}
-//     public function delete() {}
-//     public function setFromFormData($cleaned_values) {}
-//     public function isAnonymous() {}
-//     public function getSchema() {}
-    
-//     public function getView(string $name): array {}
-//     public function setView(string $name, array $view): void {}
-//     public function hasView(?string $name = null): bool {}
-//     public function getIndexes(): array {}
-    
-    
+
+    // function __construct($pk = null, $values = array()){}
+
+    // //-----------------------------------------------------------
+    // // Old API
+    // //-----------------------------------------------------------
+    // public function init(): void {}
+    // public function getRelationKeysToModel($model, $type): array {}
+    // public function getData(): array {}
+    // public function setAssoc(Model $model, ?string $assocName = null) {}
+    // public function delAssoc(Model $model, ?string $assocName = null) {}
+    // public function batchAssoc($model_name, $ids) {}
+    // public function getOne($p = array()): ?Model {}
+    // public function getList($p = array()) : array{}
+    // public function getCount($p = array()) {}
+    // public function getRelated($model, $method = null, $p = array()) {}
+    // public function update($where = '') {}
+    // public function create($raw = false) {}
+    // public function delete() {}
+    // public function setFromFormData($cleaned_values) {}
+    // public function isAnonymous() {}
+    // public function getSchema() {}
+
+    // public function getView(string $name): array {}
+    // public function setView(string $name, array $view): void {}
+    // public function hasView(?string $name = null): bool {}
+    // public function getIndexes(): array {}
+
     /**
      * Tenant field
      *
@@ -71,9 +67,9 @@ class Model implements JsonSerializable
         'readable' => false,
         'graphql_field' => false
     );
-    
+
     public $_model = __CLASS__;
-    
+
     /**
      * Store the attributes of the model.
      * To minimize pollution of the
@@ -98,7 +94,7 @@ class Model implements JsonSerializable
         'idx' => array(),
         'views' => array()
     );
-    
+
     /**
      * Storage of the data.
      *
@@ -106,21 +102,21 @@ class Model implements JsonSerializable
      * corresponds to a column and stores a Pluf_DB_Field_* variable.
      */
     public $_data = array();
-    
+
     /**
      * Storage cached data for methods_get
      */
     public $_cache = array();
-    
+
     // We should use a global cache.
-    
+
     /**
      * List of the foreign keys.
      *
      * Set by the init() method from the definition of the columns.
      */
     public $_fk = array();
-    
+
     /**
      * Methods available, this array is dynamically populated by init
      * method.
@@ -131,21 +127,21 @@ class Model implements JsonSerializable
         'get' => array(), // foreign keys
         'extra' => array()
     );
-    
+
     // added by some fields
     function __construct($pk = null, $values = array())
     {
         // -->
         $this->_model = get_class($this);
         $this->_a['model'] = $this->_model;
-        
+
         $this->_a['multitenant'] = true;
         $this->_init((int) $pk > 0);
         if ((int) $pk > 0) {
             $this->get($pk); // Should not have a side effect
         }
     }
-    
+
     /**
      * Load and init the model
      */
@@ -155,16 +151,16 @@ class Model implements JsonSerializable
         if (ModelUtils::loadFromCache($this)) {
             return;
         }
-        
+
         // put in catch temprory
         $this->init();
         $this->_setupMultitenantFields();
-        
+
         foreach ($this->_a['cols'] as $col => $description) {
-            
+
             // $field = new $val['type']('', $col);
             // $col_lower = strtolower($col);
-            
+
             // if ($description['type'] === Engine::FOREIGNKEY) {
             // $this->_m['get']['get_' . $col_lower] = array(
             // $description['model'],
@@ -180,7 +176,7 @@ class Model implements JsonSerializable
             // $this->_m['get']['get_' . $description['name']] = $this->_m['get']['get_' . $col_lower];
             // }
             // }
-            
+
             // if ($description['type'] === Engine::MANY_TO_MANY) {
             // $this->_m['list']['get_' . $col_lower . '_list'] = $description['model'];
             // $this->_m['many'][$description['model']] = Engine::MANY_TO_MANY;
@@ -192,18 +188,18 @@ class Model implements JsonSerializable
             // $this->_m['list']['get_' . $description['name'] . '_list'] = $description['model'];
             // }
             // }
-            
+
             if (array_key_exists('defaultValue', $description)) {
                 $this->_data[$col] = $description['defaultValue'];
             }
         }
-        
+
         // $this->_setupAutomaticListMethods(Engine::FOREIGNKEY);
         // $this->_setupAutomaticListMethods(Engine::MANY_TO_MANY);
-        
+
         ModelUtils::putModelToCache($this);
     }
-    
+
     // /**
     // * Retrieve key relationships of a given model.
     // *
@@ -225,7 +221,7 @@ class Model implements JsonSerializable
     // }
     // return $keys;
     // }
-    
+
     // /**
     // * Get the foreign keys relating to a given model.
     // *
@@ -238,7 +234,7 @@ class Model implements JsonSerializable
     // {
     // return $this->getRelationKeysToModel($model, Engine::FOREIGNKEY);
     // }
-    
+
     /**
      * Get the raw data of the object.
      *
@@ -261,7 +257,7 @@ class Model implements JsonSerializable
         }
         return $this->_data;
     }
-    
+
     // /**
     // * Bulk association of models to the current one.
     // *
@@ -285,7 +281,7 @@ class Model implements JsonSerializable
     // }
     // return true;
     // }
-    
+
     // /**
     // * Get the table of the model.
     // *
@@ -300,7 +296,7 @@ class Model implements JsonSerializable
     // ->getSchema()
     // ->getTableName($this);
     // }
-    
+
     /**
      * Overloading of the get method.
      *
@@ -315,10 +311,10 @@ class Model implements JsonSerializable
             }
             return null;
         }
-        
+
         return $this->__call($prop, array());
     }
-    
+
     /**
      * Overloading of the set method.
      *
@@ -348,7 +344,7 @@ class Model implements JsonSerializable
             'model' => get_class($this)
         ]);
     }
-    
+
     /**
      * Overloading of the method call.
      *
@@ -363,133 +359,133 @@ class Model implements JsonSerializable
         // Schema::MANY_TO_MANY
         // SCHEMA::ONE_TO_MANY
         if (preg_match('#^get_(?P<property>.+)_list$#', $method, $match) || //
-            preg_match('#^get_(?P<property>.+)$#', $method, $match)) {
-                $propertyName = $match['property'];
-                $md = ModelDescription::getInstance($this);
-                $property = $md->$propertyName;
-                
-                // create query from args
-                if (isset($args[0])) {
-                    $queryValue = $args[0];
-                } else {
-                    $queryValue = [];
-                }
-                if ($queryValue instanceof \Pluf\Db\Query) {
-                    $query = $queryValue;
-                } else {
-                    $query = new Query($queryValue);
-                }
-                
-                if (isset($property)) {
-                    switch ($property->type) {
-                        case Schema::MANY_TO_ONE:
-                            // FK Value
-                            $fkvName = $property->joinProperty;
-                            if (! isset($fkvName)) {
-                                $fkvName = $property->name;
-                            }
-                            $fkValue = $this->$fkvName;
-                            
-                            // FK
-                            $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
-                            $fkName = $property->inverseJoinProperty;
-                            if (! isset($fkName)) {
-                                $fkName = 'id';
-                            }
-                            $fk = $fkModel->$fkName;
-                            
-                            $query->addFilter([
-                                $fk->name,
-                                '=',
-                                $fkValue
-                            ]);
-                            $repo = Pluf::getDataRepository([
-                                'model' => $property->inverseJoinModel
-                            ]);
-                            return $repo->getOne($query);
-                        case Schema::ONE_TO_MANY:
-                            // FK Value
-                            $fkvName = $property->joinProperty;
-                            if (! isset($fkvName)) {
-                                $fkvName = 'id';
-                            }
-                            $fkValue = $this->$fkvName;
-                            
-                            // FK
-                            $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
-                            $fkName = $property->inverseJoinProperty;
-                            if (! isset($fkName)) {
-                                $fkName = 'id';
-                            }
-                            $fk = $fkModel->$fkName;
-                            
-                            $query->addFilter([
-                                $fk->name,
-                                '=',
-                                $fkValue
-                            ]);
-                            $repo = Pluf::getDataRepository([
-                                'model' => $property->inverseJoinModel
-                            ]);
-                            return $repo->get($query);
-                        case Schema::MANY_TO_MANY:
-                            
-                            $smd = ModelDescription::getInstance($this);
-                            $tmd = ModelDescription::getInstance($property->inverseJoinModel);
-                            $relation = $property;
-                            
-                            // FK Value
-                            $fkvName = $relation->joinProperty;
-                            if (! isset($fkvName)) {
-                                $fkvName = 'id';
-                            }
-                            $fkValue = $this->$fkvName;
-                            $tmdFk = $relation->inverseJoinProperty;
-                            if (! isset($tmdFk)) {
-                                $tmdFk = 'id';
-                            }
-                            
-                            // Repository
-                            $repo = Pluf::getDataRepository([
-                                'model' => $property->inverseJoinModel
-                            ]);
-                            $schmea = $repo->getSchema();
-                            $query->setView([
-                                'filter' => [
-                                    [
-                                        '__px_relation__.' . $schmea->getRelationSourceField($smd, $tmd, $relation),
-                                        '=',
-                                        $fkValue
-                                    ]
-                                ],
-                                'join' => [
-                                    [
-                                        'joinTable' => $schmea->getRelationTable($smd, $tmd, $relation),
-                                        'joinColumne' => $schmea->getFieldName($tmd, $tmd->$tmdFk),
-                                        'inverseJoinColumne' => $schmea->getRelationTargetField($smd, $tmd, $relation, false),
-                                        'alias' => '__px_relation__'
-                                    ]
+        preg_match('#^get_(?P<property>.+)$#', $method, $match)) {
+            $propertyName = $match['property'];
+            $md = ModelDescription::getInstance($this);
+            $property = $md->$propertyName;
+
+            // create query from args
+            if (isset($args[0])) {
+                $queryValue = $args[0];
+            } else {
+                $queryValue = [];
+            }
+            if ($queryValue instanceof \Pluf\Db\Query) {
+                $query = $queryValue;
+            } else {
+                $query = new Query($queryValue);
+            }
+
+            if (isset($property)) {
+                switch ($property->type) {
+                    case Schema::MANY_TO_ONE:
+                        // FK Value
+                        $fkvName = $property->joinProperty;
+                        if (! isset($fkvName)) {
+                            $fkvName = $property->name;
+                        }
+                        $fkValue = $this->$fkvName;
+
+                        // FK
+                        $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
+                        $fkName = $property->inverseJoinProperty;
+                        if (! isset($fkName)) {
+                            $fkName = 'id';
+                        }
+                        $fk = $fkModel->$fkName;
+
+                        $query->addFilter([
+                            $fk->name,
+                            '=',
+                            $fkValue
+                        ]);
+                        $repo = Pluf::getDataRepository([
+                            'model' => $property->inverseJoinModel
+                        ]);
+                        return $repo->getOne($query);
+                    case Schema::ONE_TO_MANY:
+                        // FK Value
+                        $fkvName = $property->joinProperty;
+                        if (! isset($fkvName)) {
+                            $fkvName = 'id';
+                        }
+                        $fkValue = $this->$fkvName;
+
+                        // FK
+                        $fkModel = ModelDescription::getInstance($property->inverseJoinModel);
+                        $fkName = $property->inverseJoinProperty;
+                        if (! isset($fkName)) {
+                            $fkName = 'id';
+                        }
+                        $fk = $fkModel->$fkName;
+
+                        $query->addFilter([
+                            $fk->name,
+                            '=',
+                            $fkValue
+                        ]);
+                        $repo = Pluf::getDataRepository([
+                            'model' => $property->inverseJoinModel
+                        ]);
+                        return $repo->get($query);
+                    case Schema::MANY_TO_MANY:
+
+                        $smd = ModelDescription::getInstance($this);
+                        $tmd = ModelDescription::getInstance($property->inverseJoinModel);
+                        $relation = $property;
+
+                        // FK Value
+                        $fkvName = $relation->joinProperty;
+                        if (! isset($fkvName)) {
+                            $fkvName = 'id';
+                        }
+                        $fkValue = $this->$fkvName;
+                        $tmdFk = $relation->inverseJoinProperty;
+                        if (! isset($tmdFk)) {
+                            $tmdFk = 'id';
+                        }
+
+                        // Repository
+                        $repo = Pluf::getDataRepository([
+                            'model' => $property->inverseJoinModel
+                        ]);
+                        $schmea = $repo->getSchema();
+                        $query->setView([
+                            'filter' => [
+                                [
+                                    '__px_relation__.' . $schmea->getRelationSourceField($smd, $tmd, $relation),
+                                    '=',
+                                    $fkValue
                                 ]
-                            ]);
-                            
-                            return $repo->get($query);
-                        default:
-                            throw new Exception([
+                            ],
+                            'join' => [
+                                [
+                                    'joinTable' => $schmea->getRelationTable($smd, $tmd, $relation),
+                                    'joinColumne' => $schmea->getFieldName($tmd, $tmd->$tmdFk),
+                                    'inverseJoinColumne' => $schmea->getRelationTargetField($smd, $tmd, $relation, false),
+                                    'alias' => '__px_relation__'
+                                ]
+                            ]
+                        ]);
+
+                        return $repo->get($query);
+                    default:
+                        throw new Exception([
                             'message' => 'the property {name} in model {model} is not relation',
                             'name' => $property->name,
                             'model' => $md->type
-                            ]);
-                    }
+                        ]);
                 }
             }
-            // no slousion found
-            throw new \Pluf\Exception([
-                'message' => 'Method "{method}" not available in model "{model}".',
-                'method' => $method,
-                'model' => get_class($this)
-            ]);
+        }
+        // no slousion found
+        throw new \Pluf\Exception([
+            'message' => 'Method "{method}" not available in model "{model}".',
+            'method' => $method,
+            'model' => get_class($this)
+        ]);
     }
-    
+
     /**
      * Get a given item.
      *
@@ -503,7 +499,7 @@ class Model implements JsonSerializable
         $model = Pluf::getDataRepository($this)->getById($id);
         $this->_data = $model->_data;
     }
-    
+
     /**
      * Get one item.
      *
@@ -546,7 +542,7 @@ class Model implements JsonSerializable
             'message' => 'More than one matching item found.'
         ]);
     }
-    
+
     /**
      * Gets list of model with the parameters
      *
@@ -581,12 +577,12 @@ class Model implements JsonSerializable
         $query = new Query($p);
         return Pluf::getDataRepository($this)->get($query);
     }
-    
+
     /**
      * Get the number of items.
      *
      * @see getList() for definition of the keys
-     *
+     *     
      * @param
      *            array with associative keys 'view' and 'filter'
      * @return int The number of items
@@ -602,7 +598,7 @@ class Model implements JsonSerializable
             return (int) $count;
         }
     }
-    
+
     // /**
     // * Get a list of related items.
     // *
@@ -622,7 +618,7 @@ class Model implements JsonSerializable
     // if ($this->isAnonymous()) {
     // return new ArrayObject();
     // }
-    
+
     // $default = array(
     // 'view' => null,
     // 'filter' => null,
@@ -632,22 +628,22 @@ class Model implements JsonSerializable
     // 'count' => false
     // );
     // $query = new Query(array_merge($default, $p));
-    
+
     // // $toMd = ModelDescription::getInstance($modelClass);
     // // $fromMd = ModelDescription::getInstance($this);
-    
+
     // $rep = Pluf::getDataRepository([
     // 'owner' => $this,
     // 'target' => $modelClass,
     // 'name' => $relationName
     // ]);
-    
+
     // return $repo->get([]);
-    
+
     // // $property = $fromMd->$relationName;
     // // switch ($property->type) {
     // // case Schema::MANY_TO_ONE:
-    
+
     // // case Schema::MANY_TO_MANY:
     // // case Schema::ONE_TO_MANY:
     // // $view = '__px__view_' . $relationName;
@@ -659,11 +655,11 @@ class Model implements JsonSerializable
     // // 'model' => get_class($this)
     // // ]);
     // // }
-    
+
     // // return Pluf::getDataRepository($modelClass)
     // // ->getRelations(, $relationName, $query);
     // }
-    
+
     /**
      * Update the model into the database.
      *
@@ -682,13 +678,13 @@ class Model implements JsonSerializable
                 'message' => 'Bulky update is not supported in old Pluf Model.'
             ]);
         }
-        
+
         $this->preSave();
         Pluf::getDataRepository($this)->update($this);
         $this->postSave();
         return true;
     }
-    
+
     /**
      * Create the model into the database.
      *
@@ -706,19 +702,19 @@ class Model implements JsonSerializable
         if (! $raw) {
             $this->preSave(true);
         }
-        
+
         Pluf::getDataRepository([
             'type' => 'model',
             'model' => get_class($this)
         ])->create($this);
-        
+
         if (! $raw) {
             $this->postSave(true);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Delete the current model from the database.
      *
@@ -735,7 +731,7 @@ class Model implements JsonSerializable
         $this->_reset();
         return true;
     }
-    
+
     /**
      * Set the association of a model to another in many to many.
      *
@@ -755,7 +751,7 @@ class Model implements JsonSerializable
         ])->create($this, $model);
         return true;
     }
-    
+
     /**
      * Set the association of a model to another in many to many.
      *
@@ -775,7 +771,7 @@ class Model implements JsonSerializable
         ])->delete($this, $model);
         return true;
     }
-    
+
     /**
      * Reset the fields to default values.
      */
@@ -791,7 +787,7 @@ class Model implements JsonSerializable
             }
         }
     }
-    
+
     /**
      * Represents the model in auto generated lists.
      *
@@ -804,7 +800,7 @@ class Model implements JsonSerializable
     {
         return $this->_a['model'] . '(' . $this->_data['id'] . ')';
     }
-    
+
     /**
      * مقادیر مدل را بر اساس یک فرم تعیین می‌کند
      *
@@ -817,7 +813,7 @@ class Model implements JsonSerializable
             $this->_data[$key] = $val;
         }
     }
-    
+
     /**
      * بررسی می‌کند که آیا مدل داده‌ای وجود دارد یا نه
      *
@@ -831,7 +827,7 @@ class Model implements JsonSerializable
     {
         return ($this->id == '' || 0 === (int) $this->id);
     }
-    
+
     /**
      * مدل داده‌ای را تعیین می‌کند
      *
@@ -845,7 +841,7 @@ class Model implements JsonSerializable
     {
         return $this->_a['model'];
     }
-    
+
     /**
      * شناسه را تعیین می‌کند.
      *
@@ -855,35 +851,34 @@ class Model implements JsonSerializable
     {
         return $this->id;
     }
-    
-//     /**
-//      * (non-PHPdoc)
-//      *
-//      * @see JsonSerializable::jsonSerialize()
-//      */
-//     public function jsonSerialize()
-//     {
-//         $coded = array();
-//         foreach ($this->_data as $col => $val) {
-//             /*
-//              * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
-//              */
-//             if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
-//                 continue;
-//                 /*
-//                  * If parameter ins null, zero, empty, ... we will not encode
-//                  */
-//                 if ($val)
-//                     $coded[$col] = $val;
-//         }
-//         return $coded;
-//     }
-    
+
+    // /**
+    // * (non-PHPdoc)
+    // *
+    // * @see JsonSerializable::jsonSerialize()
+    // */
+    // public function jsonSerialize()
+    // {
+    // $coded = array();
+    // foreach ($this->_data as $col => $val) {
+    // /*
+    // * خصوصیت‌هایی که قابل خواندن نیستن سریال نخواهند شد
+    // */
+    // if (array_key_exists($col, $this->_a['cols']) && array_key_exists('readable', $this->_a['cols'][$col]) && ! $this->_a['cols'][$col]['readable'])
+    // continue;
+    // /*
+    // * If parameter ins null, zero, empty, ... we will not encode
+    // */
+    // if ($val)
+    // $coded[$col] = $val;
+    // }
+    // return $coded;
+    // }
     public function getName()
     {
         return array_key_exists('verbose', $this->_a) ? $this->_a['verbose'] : $this->getClass();
     }
-    
+
     // /**
     // * Gets engine where this model is managed
     // */
@@ -891,7 +886,7 @@ class Model implements JsonSerializable
     // {
     // return Pluf::getDataRepository($this);
     // }
-    
+
     // /**
     // *
     // * @deprecated
@@ -903,7 +898,7 @@ class Model implements JsonSerializable
     // $md = ModelDescription::getInstance($this);
     // return $md->getView($name);
     // }
-    
+
     // /**
     // * Set a view.
     // *
@@ -918,7 +913,7 @@ class Model implements JsonSerializable
     // $md = ModelDescription::getInstance($this);
     // $md->setView($name, $view);
     // }
-    
+
     // /**
     // *
     // * @deprecated
@@ -930,7 +925,7 @@ class Model implements JsonSerializable
     // $md = ModelDescription::getInstance($this);
     // return $md->hasView($name);
     // }
-    
+
     /**
      * Loads and return views
      */
@@ -938,7 +933,7 @@ class Model implements JsonSerializable
     {
         return [];
     }
-    
+
     public function getIndexes(): array
     {
         $indexes = $this->loadIndexes();
@@ -949,7 +944,7 @@ class Model implements JsonSerializable
         }
         return $indexes;
     }
-    
+
     /**
      * Load indexes of the model
      *
@@ -962,7 +957,7 @@ class Model implements JsonSerializable
         }
         return [];
     }
-    
+
     // /**
     // * Generate the SQL select from the columns
     // */
@@ -982,7 +977,7 @@ class Model implements JsonSerializable
     // $this->_cache['getSelect'] = implode(', ', $select);
     // return $this->_cache['getSelect'];
     // }
-    
+
     // /**
     // * Get models affected by delete.
     // *
@@ -1006,7 +1001,7 @@ class Model implements JsonSerializable
     // }
     // return Pluf_Model_RemoveDuplicates($affected);
     // }
-    
+
     // public function getSchema()
     // {
     // $mainInfo = array(
@@ -1049,7 +1044,7 @@ class Model implements JsonSerializable
     // "children" => []
     // );
     // }
-    
+
     // /**
     // * Prepare the value to be put in the DB.
     // *
@@ -1063,7 +1058,7 @@ class Model implements JsonSerializable
     // {
     // return $this->getEngine()->toDb($val, $this->_a['cols'][$col]['type']);
     // }
-    
+
     // /**
     // * Get the value from the DB.
     // *
@@ -1080,7 +1075,7 @@ class Model implements JsonSerializable
     // {
     // return $this->getEngine()->_fromDb($val, $this->_a['cols'][$col]['type']);
     // }
-    
+
     // /**
     // * Display value.
     // *
@@ -1102,7 +1097,7 @@ class Model implements JsonSerializable
     // }
     // return $this->_data[$col];
     // }
-    
+
     // ------------------------------------------------------------------------
     // Function and automated part
     // ------------------------------------------------------------------------
@@ -1119,7 +1114,7 @@ class Model implements JsonSerializable
     // {
     // $current_model = ModelUtils::getModelCacheKey($this);
     // $relations = ModelUtils::getRelatedModels($this, $type);
-    
+
     // foreach ($relations as $related) {
     // if ($related != $current_model) {
     // $model = new $related();
@@ -1142,7 +1137,7 @@ class Model implements JsonSerializable
     // }
     // }
     // }
-    
+
     /**
      * Add tenant required fields
      *
@@ -1154,11 +1149,11 @@ class Model implements JsonSerializable
             $this->_a['cols']['tenant'] = $this->tenant_field;
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // TO override
     // ------------------------------------------------------------------------
-    
+
     /**
      * Hook run just after loading a model from the database.
      *
@@ -1166,7 +1161,7 @@ class Model implements JsonSerializable
      */
     function restore()
     {}
-    
+
     /**
      * دستگیره‌ای که درست قبل از ذخیره شدن در پایگاه داده اجرا می‌شود.
      *
@@ -1189,7 +1184,7 @@ class Model implements JsonSerializable
         // - creation_dtime
         // - modif_dtime
     }
-    
+
     /**
      * فراخوانی پس از ذخیره شدن
      *
@@ -1197,7 +1192,7 @@ class Model implements JsonSerializable
      */
     function postSave($create = false)
     {}
-    
+
     /**
      * Hook run just before deleting a model from the database.
      *
@@ -1205,7 +1200,7 @@ class Model implements JsonSerializable
      */
     function preDelete()
     {}
-    
+
     /**
      * ساختار داده‌ای را ایجاد می‌کند.
      *
@@ -1228,8 +1223,8 @@ class Model implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return ModelEncoder::getInstance(ModelEncoder::JSON)//
-            ->setProperties(Pluf::getConfigurationPrifix('data_', true))
+        return ModelEncoder::getInstance(ModelEncoder::JSON)-> //
+        setProperties(Pluf::getConfigurationPrifix('data_', true))
             ->setModel($this)
             ->encode($this);
     }

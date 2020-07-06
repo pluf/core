@@ -1,7 +1,7 @@
 <?php
 namespace Pluf\Data\Schema;
 
-use Pluf\ModelUtils;
+use Pluf\Data\ModelUtils;
 use Pluf\Options;
 use Pluf\Data\ModelDescription;
 use Pluf\Db\Expression;
