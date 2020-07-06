@@ -1,19 +1,20 @@
 <?php
-
 namespace Pluf;
 
 /**
  * This trait makes it possible for you to read config files and various configurations
  * use:
- * 1. use Trait in your APP Class
- *    use \Pluf\ConfigTrait;
+ * 1.
+ * use Trait in your APP Class
+ * use \Pluf\ConfigTrait;
  * 2. create config-default.php and/or config.php file and add config values like
- *    $config['key'] = 'value';
+ * $config['key'] = 'value';
  * 3. call $this->readConfig();
- *    before using config.
+ * before using config.
  */
 trait ConfigTrait
 {
+
     /**
      * Check this property to see if trait is present in the object.
      *
@@ -22,7 +23,8 @@ trait ConfigTrait
     public $_configTrait = true;
 
     /**
-     * This property stores config values. Use getConfig() method to access its values.
+     * This property stores config values.
+     * Use getConfig() method to access its values.
      *
      * @var array
      */
@@ -32,28 +34,38 @@ trait ConfigTrait
      * Read config file or files and store it in $config property.
      *
      * Supported formats:
-     *  php         - PHP file with $config['foo'] = 'bar' structure
-     *  php-inline  - PHP file with return ['foo' => 'bar'] structure
-     *  json        - JSON file with {'foo':'bar'} structure
-     *  yaml        - YAML file with yaml structure
+     * php - PHP file with $config['foo'] = 'bar' structure
+     * php-inline - PHP file with return ['foo' => 'bar'] structure
+     * json - JSON file with {'foo':'bar'} structure
+     * yaml - YAML file with yaml structure
      *
-     * @param string|array $files  One or more filenames
-     * @param string       $format Optional format for config files
-     *
+     * @param string|array $files
+     *            One or more filenames
+     * @param string $format
+     *            Optional format for config files
+     *            
      * @throws Exception
      *
      * @return $this
      */
-    public function readConfig($files = ['config.php'], $format = 'php')
+    public function readConfig($files = [
+        'config.php'
+    ], $format = 'php')
     {
-        if (!is_array($files)) {
-            $files = [$files];
+        if (! is_array($files)) {
+            $files = [
+                $files
+            ];
         }
 
         $configs = [];
         foreach ($files as $file) {
-            if (!is_readable($file)) {
-                throw new Exception(['Can not read config file', 'file' => $file, 'format' => $format]);
+            if (! is_readable($file)) {
+                throw new Exception([
+                    'Can not read config file',
+                    'file' => $file,
+                    'format' => $format
+                ]);
             }
 
             $tempConfig = [];
@@ -73,21 +85,21 @@ trait ConfigTrait
                     $tempConfig = json_decode(file_get_contents($file), true);
                     break;
 
-//                 case 'yaml':
-//                     // @codeCoverageIgnoreStart
-//                     if (!class_exists(\Symfony\Component\Yaml\Yaml::class)) {
-//                         throw new Exception(['You need Symfony\Yaml repository if you want to parse YAML files']);
-//                     }
-//                     $tempConfig = \Symfony\Component\Yaml\Yaml::parseFile($file);
-//                     // @codeCoverageIgnoreEnd
-//                     break;
+                // case 'yaml':
+                // // @codeCoverageIgnoreStart
+                // if (!class_exists(\Symfony\Component\Yaml\Yaml::class)) {
+                // throw new Exception(['You need Symfony\Yaml repository if you want to parse YAML files']);
+                // }
+                // $tempConfig = \Symfony\Component\Yaml\Yaml::parseFile($file);
+                // // @codeCoverageIgnoreEnd
+                // break;
             }
 
-            if (!is_array($tempConfig)) {
+            if (! is_array($tempConfig)) {
                 throw new Exception([
                     'File was read but has a bad format',
-                    'file'   => $file,
-                    'format' => $format,
+                    'file' => $file,
+                    'format' => $format
                 ]);
             }
 
@@ -102,21 +114,25 @@ trait ConfigTrait
     /**
      * Manually set configuration option.
      *
-     * @param string|array $paths Path to configuration element to set or array of [path=>value]
-     * @param mixed        $value Value to set
-     *
+     * @param string|array $paths
+     *            Path to configuration element to set or array of [path=>value]
+     * @param mixed $value
+     *            Value to set
+     *            
      * @return $this
      */
     public function setConfig($paths = [], $value = null)
     {
-        if (!is_array($paths)) {
-            $paths = [$paths => $value];
+        if (! is_array($paths)) {
+            $paths = [
+                $paths => $value
+            ];
         }
 
-        foreach ($paths as $path=>$value) {
+        foreach ($paths as $path => $value) {
             $pos = &$this->_lookupConfigElement($path, true);
 
-            if (is_array($pos) && !empty($pos) && is_array($value)) {
+            if (is_array($pos) && ! empty($pos) && is_array($value)) {
                 // special treatment for arrays - merge them
                 $pos = array_merge($pos, $value);
             } else {
@@ -131,9 +147,11 @@ trait ConfigTrait
     /**
      * Get configuration element.
      *
-     * @param string $path          Path to configuration element.
-     * @param mixed  $default_value Default value returned if element don't exist
-     *
+     * @param string $path
+     *            Path to configuration element.
+     * @param mixed $default_value
+     *            Default value returned if element don't exist
+     *            
      * @return mixed
      */
     public function getConfig($path, $default_value = null)
@@ -151,11 +169,13 @@ trait ConfigTrait
     /**
      * Internal method to lookup config element by given path.
      *
-     * @param string $path            Path to navigate to
-     * @param bool   $create_elements Should we create elements it they don't exist
-     *
+     * @param string $path
+     *            Path to navigate to
+     * @param bool $create_elements
+     *            Should we create elements it they don't exist
+     *            
      * @return &pos|false Pointer to element in $this->config or false is element don't exist and $create_elements===false
-     *                    Returns false if element don't exist and $create_elements===false
+     *         Returns false if element don't exist and $create_elements===false
      */
     protected function &_lookupConfigElement($path, $create_elements = false)
     {
@@ -168,16 +188,16 @@ trait ConfigTrait
 
             // need to return if not is array
             // before call array_key_exists and throw error
-            if (!is_array($pos)) {
+            if (! is_array($pos)) {
                 return $false;
             }
 
             // create empty element if it doesn't exist
-            if (!array_key_exists($el, $pos) && $create_elements) {
+            if (! array_key_exists($el, $pos) && $create_elements) {
                 $pos[$el] = [];
             }
             // if it still doesn't exist, then just return false (no error)
-            if (!array_key_exists($el, $pos) && !$create_elements) {
+            if (! array_key_exists($el, $pos) && ! $create_elements) {
                 return $false;
             }
 

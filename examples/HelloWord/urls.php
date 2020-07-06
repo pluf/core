@@ -1,9 +1,11 @@
 <?php
-return array(
-    array(
+use Pluf\HelloWord\Processors\HelloWordProcessor;
+
+return [
+    [
         'regex' => '#^/HelloWord$#',
-        'priority' => 4,
-        'model' => '\Pluf\HelloWord\Views',
-        'method' => 'main'
-    )
-);
+        'processors' => [
+            HelloWordProcessor::class
+        ]
+    ]
+];

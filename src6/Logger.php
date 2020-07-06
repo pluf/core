@@ -171,11 +171,11 @@ class Logger
             return self::$loggerManagers[$key];
         }
         if (! isset(self::$loggerFormater)) {
-            $className = Pluf::f('log_formater', '\Pluf\LoggerFormater\Plain');
+            $className = Pluf::getConfig('log_formater', LoggerFormatter\Plain::class);
             self::$loggerFormater = new $className();
         }
         if (! isset(self::$loggerAppender)) {
-            $className = Pluf::f('log_appender', '\Pluf\LoggerAppender\Console');
+            $className = Pluf::getConfig('log_appender', LoggerAppender\Console::class);
             self::$loggerAppender = new $className();
         }
         $loggerManager = new LoggerManager($key, self::$loggerFormater, self::$loggerAppender);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -16,34 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\PlufTest\Dispatcher;
+namespace Pluf;
 
-use Pluf\Dispatcher;
-use Pluf\Module;
-use Pluf\Test\PlufTestCase;
+use Pluf\HTTP\Request;
+use Pluf\HTTP\Response;
 
-class DispatcherTest extends PlufTestCase
+/**
+ * Pluf general Processor
+ *
+ * @author maso <mostafa.barmshory@dpq.co.ir>
+ *        
+ */
+interface Processor
 {
 
     /**
-     * Loads application to start the test
+     * Process the request
      *
-     * @before
+     * @param Request $request
+     * @return boolean false if ther is no problem otherwize ther is an error
      */
-    public function setUpTest()
-    {
-        \Pluf::start(__DIR__ . '/../conf/config.php');
-    }
+    public function request(Request &$request);
 
     /**
-     * Creates new instance of dispatcher and load module views
+     * Process the response
      *
-     * @test
+     * @param Request $request
+     * @param Response $response
      */
-    public function createNewInstance()
-    {
-        $dispatcher = Dispatcher::getInstance();
-
-        $this->assertNotNull($dispatcher->setViews(Module::loadControllers()));
-    }
+    public function response(Request $request, Response $response): Response;
 }
+

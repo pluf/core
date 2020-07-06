@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Middleware;
+namespace Pluf\Processors;
 
 use Pluf\Exception;
 use Pluf\Data\Query;
@@ -24,11 +24,12 @@ use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 use Pluf;
 use Pluf_Signal;
+use Pluf\Processor;
 
 /**
  * Allow a session object in the request.
  */
-class Session implements \Pluf\Middleware
+class Session implements Processor
 {
 
     /**
@@ -40,7 +41,7 @@ class Session implements \Pluf\Middleware
      *            Request The request
      * @return bool false
      */
-    function process_request(Request &$request)
+    function request(Request &$request)
     {
         $repo = Pluf::getDataRepository([
             'type' => 'model',
@@ -104,7 +105,7 @@ class Session implements \Pluf\Middleware
      * @param
      *            Response The response
      */
-    function process_response(Request $request, Response $response): Response
+    function response(Request $request, Response $response): Response
     {
         if ($request->session->touched) {
             if ($request->session->isAnonymous()) {

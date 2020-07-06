@@ -16,34 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\PlufTest\Dispatcher;
+namespace Pluf\Processors;
 
-use Pluf\Dispatcher;
-use Pluf\Module;
-use Pluf\Test\PlufTestCase;
-
-class DispatcherTest extends PlufTestCase
+class ItemBinaryDownload
 {
-
-    /**
-     * Loads application to start the test
-     *
-     * @before
-     */
-    public function setUpTest()
-    {
-        \Pluf::start(__DIR__ . '/../conf/config.php');
-    }
-
-    /**
-     * Creates new instance of dispatcher and load module views
-     *
-     * @test
-     */
-    public function createNewInstance()
-    {
-        $dispatcher = Dispatcher::getInstance();
-
-        $this->assertNotNull($dispatcher->setViews(Module::loadControllers()));
-    }
 }
+

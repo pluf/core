@@ -24,21 +24,21 @@ use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 use Pluf\Pluf\Tenant;
 use Pluf;
+use Pluf\Processor;
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class TenantMiddleware implements \Pluf\Middleware
+class TenantProcessor implements Processor
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see \Pluf\Middleware::process_request()
      */
-    public function process_request(Request &$request)
+    public function request(Request &$request)
     {
         /*
          * In single tenant mode we do not check anything
@@ -100,10 +100,11 @@ class TenantMiddleware implements \Pluf\Middleware
 
     /**
      *
-     * {@inheritdoc}
-     * @see \Pluf\Middleware::process_response()
+     * @param Request $request
+     * @param Response $response
+     * @return Response
      */
-    public function process_response(Request $request, Response $response): Response
+    public function response(Request $request, Response $response): Response
     {
         return $response;
     }

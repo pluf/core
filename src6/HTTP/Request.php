@@ -19,15 +19,24 @@
  */
 namespace Pluf\HTTP;
 
+use Pluf\DiContainerTrait;
 use Pluf\Pluf\Tenant;
+use ArrayAccess;
+use Iterator;
+use Serializable;
 
-/**
+/*
  * The request object.
  *
  * It is given as first arguments to the view as first argument.
+ * 
+ * @author maso
+ *
  */
-class Request
+class Request implements ArrayAccess, Iterator, Serializable
 {
+
+    use DiContainerTrait;
 
     static ?Request $current = null;
 
@@ -75,16 +84,15 @@ class Request
      */
     public $https = false;
 
-    /**
-     * Current user
+    /*
+     * TODO: maso, 2020: put the following items into the context
      */
     public $user = null;
 
-    /**
-     * Current tenant
-     *
-     * @var Tenant
-     */
+    public $match = [];
+
+    public $params = [];
+
     public ?Tenant $tenant = null;
 
     function __construct($query)
@@ -105,7 +113,7 @@ class Request
         $this->remote_addr = (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : 'localhost';
         $this->http_host = (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : '';
         $this->SERVER = &$_SERVER;
-        $this->uid = $GLOBALS['_PX_uniqid'];
+        $this->uid = uniqid(microtime(true), true);
         // request time
         $this->time = (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : time();
         // XXX: maso, 2019: check the documents
@@ -218,5 +226,82 @@ class Request
         // Legacy model,
         $GLOBALS['_PX_request'] = $request;
         self::$current = $request;
+    }
+
+    // -------------------------------------------------------------------------
+    // Context Manager
+    // -------------------------------------------------------------------------
+    private array $context = [];
+
+    private $position = 0;
+
+    function __get($key)
+    {
+        // get local value
+        if (isset($this->context[$key])) {
+            return $this->context[$key];
+        }
+        return null;
+    }
+
+    function __set($key, $value)
+    {
+        // set local value
+        $this->context[$key] = $value;
+    }
+
+    public function next()
+    {
+        ++ $this->position;
+    }
+
+    public function valid()
+    {
+        return isset($this->context[$this->position]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return isset($this->context[$offset]) ? $this->context[$offset] : null;
+    }
+
+    public function serialize()
+    {
+        return serialize($this->context);
+    }
+
+    public function current()
+    {
+        return $this->context[$this->position];
+    }
+
+    public function unserialize($serialized)
+    {
+        $this->context = unserialize($serialized);
+    }
+
+    public function offsetExists($offset)
+    {
+        unset($this->context[$offset]);
+    }
+
+    public function rewind()
+    {
+        $this->position = 0;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->context[$offset]);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        return isset($this->context[$offset]) ? $this->context[$offset] : null;
+    }
+
+    public function key()
+    {
+        return $this->position;
     }
 }

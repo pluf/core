@@ -32,8 +32,6 @@ class URLTest extends TestCase
     protected function setUp()
     {
         Pluf::start(__DIR__ . '/../conf/config.php');
-        $d = new Dispatcher();
-        $d->loadControllers(__DIR__ . '/../conf/views.php');
     }
 
     public function testGenerateSimple()
@@ -119,6 +117,7 @@ class URLTest extends TestCase
         $this->assertEquals('/toto/AB.txt', $url);
     }
 
+    // Reversce not supported anymore
     // public function testReverseMultipleArgUrlFailure()
     // {
     // $url_regex = '#^/toto/(\s+)/asd/(.*)/$#';
@@ -129,12 +128,12 @@ class URLTest extends TestCase
     // $url = URL::buildReverseUrl($url_regex, $params);
     // $this->fail('An exception as not been raised, regex:' . $url_regex . ' should not match params: ' . var_export($params, true));
     // }
-    public function testReverseUrlFromView()
-    {
-        $url = URL::reverse('Todo_Views::updateItem', array(
-            '32'
-        ));
-        $this->assertEquals('/item/32/update/', $url);
-    }
+    // public function testReverseUrlFromView()
+    // {
+    // $url = URL::reverse('Todo_Views::updateItem', array(
+    // '32'
+    // ));
+    // $this->assertEquals('/item/32/update/', $url);
+    // }
 }
 

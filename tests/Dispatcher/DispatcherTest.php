@@ -25,6 +25,7 @@ use Pluf\HTTP\Response;
 use Pluf\HTTP\URL;
 use Pluf\HTTP\Response\Redirect;
 use Pluf\Test\PlufTestCase;
+use Pluf\HTTP\Request;
 
 class DispatcherTest extends PlufTestCase
 {
@@ -80,46 +81,48 @@ class DispatcherTest extends PlufTestCase
      */
     public function testSimple()
     {
-        $GLOBALS['_PX_views'] = array(
-            array(
+        $views = [
+            [
                 'regex' => '#^/hello/$#',
-                'base' => '',
-                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                'method' => 'hello'
-            )
-        );
-        $req1 = (object) array(
-            'query' => '/hello/'
-        ); // match
-        $req2 = (object) array(
-            'query' => '/hello'
-        ); // match second pass
+                'processors' => [
+                    SimpleTextProcessor::class
+                ]
+            ],
+            [
+                'regex' => '#^/hello-redirect/$#',
+                'processors' => [
+                    RedirectProcessor::class
+                ]
+            ]
+        ];
+        $req1 = new Request('/hello/');
+        $req2 = new Request('/hello-redirect/');
 
-        $this->assertEquals(200, Dispatcher::match($req1)->status_code);
-        $this->assertEquals('ok', Dispatcher::match($req1)->content);
-        $this->assertInstanceOf(Redirect::class, Dispatcher::match($req2));
+        $dispatcher = Dispatcher::getInstance()->setViews($views);
+        $this->assertEquals(200, $dispatcher->dispatch($req1)
+            ->getStatusCode());
+        $this->assertEquals('ok', $dispatcher->dispatch($req1)
+            ->getBody());
+        $this->assertInstanceOf(Redirect::class, $dispatcher->dispatch($req2));
     }
 
     /**
      *
      * @test
-     * @expectedException Pluf\HTTP\Error404
      */
     public function testSimpleNotfound()
     {
-        $GLOBALS['_PX_views'] = array(
-            array(
+        $views = [
+            [
                 'regex' => '#^/hello/$#',
-                'base' => '',
-                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                'method' => 'hello'
-            )
-        );
-        $req3 = (object) array(
-            'query' => '/hello/you/'
-        ); // no match
-
-        Dispatcher::match($req3);
+                'processors' => [
+                    SimpleTextProcessor::class
+                ]
+            ]
+        ];
+        $this->assertEquals(404, Dispatcher::getInstance()->setViews($views)
+            ->dispatch(new Request('/hello/you/'))
+            ->getStatusCode());
     }
 
     /**
@@ -128,86 +131,68 @@ class DispatcherTest extends PlufTestCase
      */
     public function testRecursif()
     {
-        $GLOBALS['_PX_views'] = array(
-            array(
-                'regex' => '#^/hello/$#',
-                'base' => '',
-                'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                'method' => 'hello3'
-            ),
-            array(
-                'regex' => '#^/hello/#',
-                'base' => '',
-                'sub' => array(
-                    array(
-                        'regex' => '#^world/$#',
-                        'base' => '',
-                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                        'method' => 'hello'
-                    ),
-                    array(
-                        'regex' => '#^hello/$#',
-                        'base' => '',
-                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                        'method' => 'hello4'
-                    )
-                )
-            ),
-            array(
-                'regex' => '#^/hello1/#',
-                'base' => '',
-                'sub' => array(
-                    array(
-                        'regex' => '#^world/$#',
-                        'base' => '',
-                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                        'method' => 'hello1'
-                    )
-                )
-            ),
-            array(
-                'regex' => '#^/hello2/#',
-                'base' => '',
-                'sub' => array(
-                    array(
-                        'regex' => '#^world/$#',
-                        'base' => '',
-                        'model' => '\\Pluf\\Test\\Dispatcher\\DispatcherTest',
-                        'method' => 'hello2'
-                    )
-                )
-            )
-        );
-        $req1 = (object) array(
-            'query' => '/hello/world/'
-        ); // match
-        $req2 = (object) array(
-            'query' => '/hello/world'
-        ); // match second pass
-        $h1 = (object) array(
-            'query' => '/hello1/world/'
-        ); // match
-        $h2 = (object) array(
-            'query' => '/hello2/world/'
-        ); // match
-        $h3 = (object) array(
-            'query' => '/hello/'
-        ); // match
-        $h4 = (object) array(
-            'query' => '/hello/hello/'
-        ); // match
-        $this->assertEquals(200, Dispatcher::match($req1)->status_code);
-        $this->assertEquals('ok', Dispatcher::match($req1)->content);
-        $this->assertEquals(1, Dispatcher::match($h1));
-        $this->assertEquals(2, Dispatcher::match($h2));
-        $this->assertEquals(3, Dispatcher::match($h3));
-        $this->assertEquals(4, Dispatcher::match($h4));
-        $this->assertInstanceOf(Redirect::class, Dispatcher::match($req2));
+        $views = [
+            [
+                'regex' => '#^/hello$#',
+                'processors' => [
+                    CounterProcessor::class
+                ]
+            ],
+            [
+                'regex' => '#^/hello#',
+                'processors' => [
+                    CounterProcessor::class
+                ],
+                'sub' => [
+                    [
+                        'regex' => '#^/hello$#',
+                        'processors' => [
+                            CounterProcessor::class
+                        ]
+                    ],
+                    [
+                        'regex' => '#^/hello#',
+                        'processors' => [
+                            CounterProcessor::class
+                        ],
+                        'sub' => [
+                            [
+                                'regex' => '#^/hello$#',
+                                'processors' => [
+                                    CounterProcessor::class
+                                ]
+                            ],
+                            [
+                                'regex' => '#^/hello#',
+                                'processors' => [
+                                    CounterProcessor::class
+                                ],
+                                'sub' => [
+                                    [
+                                        'regex' => '#^/hello$#',
+                                        'processors' => [
+                                            CounterProcessor::class
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
 
-        $this->assertEquals('/hello/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello'));
-        $this->assertEquals('/hello1/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello1'));
-        $this->assertEquals('/hello2/world/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello2'));
-        $this->assertEquals('/hello/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello3'));
-        $this->assertEquals('/hello/hello/', URL::reverse('\\Pluf\\Test\\Dispatcher\\DispatcherTest::hello4'));
+        $dispatcher = Dispatcher::getInstance()->setViews($views);
+
+        $this->assertEquals(200, $dispatcher->dispatch(new Request('/hello'))
+            ->getStatusCode());
+        $this->assertEquals(1, $dispatcher->dispatch(new Request('/hello'))
+            ->getBody());
+        $this->assertEquals(2, $dispatcher->dispatch(new Request('/hello/hello'))
+            ->getBody());
+        $this->assertEquals(3, $dispatcher->dispatch(new Request('/hello/hello/hello'))
+            ->getBody());
+        $this->assertEquals(4, $dispatcher->dispatch(new Request('/hello/hello/hello/hello'))
+            ->getBody());
     }
 }

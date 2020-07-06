@@ -16,34 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\PlufTest\Dispatcher;
+namespace Pluf\Processors;
 
-use Pluf\Dispatcher;
-use Pluf\Module;
-use Pluf\Test\PlufTestCase;
+use Pluf\ProcessorAdaptor;
+use Pluf\HTTP\Error500;
+use Pluf\HTTP\Request;
 
-class DispatcherTest extends PlufTestCase
+/**
+ * Deletes Model Item
+ *
+ * Required processors:
+ *
+ * - ItemRead
+ *
+ * @author maso
+ *        
+ */
+class ItemDelete extends ProcessorAdaptor
 {
 
     /**
-     * Loads application to start the test
+     * Deletes item (loaded in request) from repository
      *
-     * @before
+     * {@inheritdoc}
+     * @see \Pluf\Processor::request()
      */
-    public function setUpTest()
+    public function request(Request $request)
     {
-        \Pluf::start(__DIR__ . '/../conf/config.php');
-    }
-
-    /**
-     * Creates new instance of dispatcher and load module views
-     *
-     * @test
-     */
-    public function createNewInstance()
-    {
-        $dispatcher = Dispatcher::getInstance();
-
-        $this->assertNotNull($dispatcher->setViews(Module::loadControllers()));
+        if (! isset($request->item)) {
+            throw new Error500("Item is not loaded. Check the ItemRead processor is placed in stack.");
+        }
+        $request->item->delete();
     }
 }
+

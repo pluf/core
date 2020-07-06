@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Middleware;
+namespace Pluf\Processors;
 
+use Pluf\Processor;
 use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 use Pluf;
@@ -51,7 +52,7 @@ use Pluf;
  *
  * You can put HTML in your message.
  */
-class ReadOnly implements \Pluf\Middleware
+class ReadOnly implements Processor
 {
 
     /**
@@ -61,7 +62,7 @@ class ReadOnly implements \Pluf\Middleware
      *            Request The request
      * @return bool false
      */
-    function process_request(Request &$request)
+    function request(Request &$request)
     {
         if ($request->method == 'POST') {
             $res = new Response('Server in read only mode' . "\n\n" . 'We are upgrading the system to make it better for you, please try again later...', 'text/plain');
@@ -83,7 +84,7 @@ class ReadOnly implements \Pluf\Middleware
      *            Response The response
      * @return Response The response
      */
-    public function process_response(Request $request, Response $response): Response
+    public function response(Request $request, Response $response): Response
     {
         if (! Pluf::f('read_only_mode_message', false)) {
             return $response;

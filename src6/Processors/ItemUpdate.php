@@ -16,34 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\PlufTest\Dispatcher;
+namespace Pluf\Processors;
 
-use Pluf\Dispatcher;
-use Pluf\Module;
-use Pluf\Test\PlufTestCase;
+use Pluf\ObjectMapper;
+use Pluf\ObjectValidator;
+use Pluf\ProcessorAdaptor;
+use Pluf\HTTP\Error403;
+use Pluf\HTTP\Request;
+use Pluf;
 
-class DispatcherTest extends PlufTestCase
+class ItemUpdate extends ProcessorAdaptor
 {
 
-    /**
-     * Loads application to start the test
-     *
-     * @before
-     */
-    public function setUpTest()
+    public function request(Request $request)
     {
-        \Pluf::start(__DIR__ . '/../conf/config.php');
-    }
-
-    /**
-     * Creates new instance of dispatcher and load module views
-     *
-     * @test
-     */
-    public function createNewInstance()
-    {
-        $dispatcher = Dispatcher::getInstance();
-
-        $this->assertNotNull($dispatcher->setViews(Module::loadControllers()));
+        $item = $request->item;
+        $modelName = get_class($item);
+        $mapper = ObjectMapper::getInstance($request);
+        if (! $mapper->hasMore()) {
+            throw new Error403('No item in request to update');
+        }
+        $newItem = $mapper->mapNext($modelName);
+        $newItem->id = $item->id;
+        ObjectValidator::getInstance()->check($newItem);
+        $item = Pluf::getDataRepository(get_class($item))->update($newItem);
+        $request->item = $item;
     }
 }
+

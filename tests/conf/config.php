@@ -161,13 +161,13 @@ return [
     // 'upload_max_size' => 1024,
     // 'upload_path' => '/tmp'
     //
-    // List of Middleware
+    // List of processors
     //
-    // Define list of middleware to apply on all requests. Add full path of
-    // middleware class addres into the list to enable it. The order of the
+    // Define list of default processors to apply on all requests. Add full path of
+    // processors class address into the list to enable it. The order of the
     // list is important.
     //
-    // 'middleware_classes' => array(),
+    // 'processors' => array(),
 
     // 'view_api_prefix' => '',
     // 'view_api_base' => '',

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -17,32 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf;
+namespace Pluf\Processors;
 
+use Pluf\Processor;
 use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 
-/**
- * Pluf general middleware
- *
- * @author maso <mostafa.barmshory@dpq.co.ir>
- *        
- */
-interface Middleware
+class ItemCollectionUpdate implements Processor
 {
 
-    /**
-     *
-     * @param Request $request
-     * @return boolean false if ther is no problem otherwize ther is an error
-     */
-    public function process_request(Request &$request);
+    public function request(Request $request)
+    {}
 
-    /**
-     *
-     * @param Request $request
-     * @param Response $response
-     */
-    public function process_response(Request $request, Response $response): Response;
+    public function response(Request $request, Response $response): Response
+    {}
 }
 

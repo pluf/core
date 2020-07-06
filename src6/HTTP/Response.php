@@ -19,6 +19,7 @@
 namespace Pluf\HTTP;
 
 use Pluf;
+use Pluf\DiContainerTrait;
 
 /**
  * Response object to be constructed by the views.
@@ -32,6 +33,8 @@ use Pluf;
  */
 class Response
 {
+
+    use DiContainerTrait;
 
     /**
      * Content of the response.
@@ -118,7 +121,7 @@ class Response
     function __construct($content = '', $mimetype = null)
     {
         if (is_null($mimetype)) {
-            $mimetype = Pluf::f('mimetype', 'text/html') . '; charset=utf-8';
+            $mimetype = Pluf::getConfig('mimetype', 'text/html') . '; charset=utf-8';
         }
         $this->content = $content;
 
@@ -127,7 +130,7 @@ class Response
         }
 
         $this->headers['Content-Type'] = $mimetype;
-        $this->headers['X-Powered-By'] = 'Pluf (Phoenix Scholars Co.) - http://dpq.co.ir';
+        $this->headers['X-Powered-By'] = 'Pluf (Phoenix Scholars Co.) - http://pluf.ir';
         $this->status_code = 200;
         $this->cookies = array();
     }
@@ -199,5 +202,51 @@ class Response
             return $this->contentHash;
         }
         return '0000';
+    }
+
+    public function getStatusCode()
+    {
+        return $this->status_code;
+    }
+
+    public function setStatusCode($code): Response
+    {
+        $this->status_code = $code;
+        return $this;
+    }
+
+    public function getBody()
+    {
+        return $this->content;
+    }
+
+    public function setBody($body): Response
+    {
+        $this->content = $body;
+        return $this;
+    }
+
+    /**
+     * Checks if the body is set
+     *
+     * @return bool true if the body is set
+     */
+    public function hasBody(): bool
+    {
+        return isset($this->content);
+    }
+
+    public function getHeader($key)
+    {
+        if (array_key_exists($key, $this->headers)) {
+            return $this->headers[$key];
+        }
+        return null;
+    }
+
+    public function setHeader($key, $value): Response
+    {
+        $this->headers[$key] = $value;
+        return $this;
     }
 }

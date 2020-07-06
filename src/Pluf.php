@@ -116,6 +116,9 @@ class Pluf
      */
     public static function getConfig(string $key, $default = '')
     {
+        if (! isset(self::$options)) {
+            return $default;
+        }
         $val = self::$options->$key;
         if (isset($val)) {
             return $val;

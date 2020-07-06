@@ -121,47 +121,47 @@ class URL
         return $url->generate(self::reverse($view, $params), $get_params);
     }
 
-    /**
-     * Reverse an URL.
-     *
-     * @param
-     *            string View in the form 'class::method' or string of the name.
-     * @param
-     *            array Possible parameters for the view (array()).
-     * @return string URL.
-     */
-    public static function reverse($view, $params = array())
-    {
-        $model = '';
-        $method = '';
-        if (false !== strpos($view, '::')) {
-            list ($model, $method) = explode('::', $view);
-        }
-        $vdef = array(
-            $model,
-            $method,
-            $view
-        );
-        $regbase = array(
-            '',
-            array()
-        );
-        $regbase = self::find($GLOBALS['_PX_views'], $vdef, $regbase);
-        if ($regbase === false) {
-            throw new Exception(sprintf('Error, the view: %s has not been found.', $view));
-        }
-        $url = '';
-        foreach ($regbase[1] as $regex) {
-            if ($regex == '#^#')
-                continue;
-            $url .= self::buildReverseUrl($regex, $params);
-        }
-        if (! defined('IN_UNIT_TESTS')) {
-            $url = $regbase[0] . $url;
-        }
+//     /**
+//      * Reverse an URL.
+//      *
+//      * @param
+//      *            string View in the form 'class::method' or string of the name.
+//      * @param
+//      *            array Possible parameters for the view (array()).
+//      * @return string URL.
+//      */
+//     public static function reverse($view, $params = array())
+//     {
+//         $model = '';
+//         $method = '';
+//         if (false !== strpos($view, '::')) {
+//             list ($model, $method) = explode('::', $view);
+//         }
+//         $vdef = array(
+//             $model,
+//             $method,
+//             $view
+//         );
+//         $regbase = array(
+//             '',
+//             array()
+//         );
+//         $regbase = self::find($GLOBALS['_PX_views'], $vdef, $regbase);
+//         if ($regbase === false) {
+//             throw new Exception(sprintf('Error, the view: %s has not been found.', $view));
+//         }
+//         $url = '';
+//         foreach ($regbase[1] as $regex) {
+//             if ($regex == '#^#')
+//                 continue;
+//             $url .= self::buildReverseUrl($regex, $params);
+//         }
+//         if (! defined('IN_UNIT_TESTS')) {
+//             $url = $regbase[0] . $url;
+//         }
 
-        return $url;
-    }
+//         return $url;
+//     }
 
     /**
      * Go in the list of views to find the matching one.

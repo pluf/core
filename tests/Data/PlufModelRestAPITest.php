@@ -25,6 +25,7 @@ use Pluf\Dispatcher;
 use Pluf\Module;
 use Pluf;
 use Pluf_Migration;
+use Pluf\HTTP\Request;
 
 class PlufModelRestAPITest extends TestCase
 {
@@ -58,10 +59,11 @@ class PlufModelRestAPITest extends TestCase
      */
     public function getInvalidRequestWithRandomPrefix()
     {
-        $dispatcher = new Dispatcher();
-        $res = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
+        $res = Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'));
         $this->assertNotNull($res);
-        $this->assertEquals($res[1]->status_code, 404);
+        $this->assertEquals(404, $res->getStatusCode());
     }
 
     /**
@@ -70,10 +72,16 @@ class PlufModelRestAPITest extends TestCase
      */
     public function getValidRequestWithRandomPrefix()
     {
-        $dispatcher = new Dispatcher();
-        $res = $dispatcher->dispatch(Pluf::f('view_api_prefix') . '/helloword/HelloWord', Module::loadControllers());
-        $this->assertNotNull($res);
-        $this->assertEquals($res[1]->status_code, 200);
+        $query = Pluf::getConfig('view_api_prefix') . '/helloword/HelloWord';
+        
+        $this->assertNotNull(Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request($query)));
+        
+        $this->assertEquals(200, Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request($query))
+            ->getStatusCode());
     }
 }
 

@@ -87,6 +87,19 @@ class HTTP
             return stripslashes($value);
         }
     }
+    
+    //----------------------Build reauest
+    
+//     /*
+//      * # Create q request
+//      *
+//      * TODO: maso, 2020: remove from dispatcher
+//      * - It limits tests
+//      * - It bind the dispatcher to a specific environment
+//      */
+//     $query = preg_replace('#^(/)+#', '/', '/' . $query);
+//     $req = new Pluf\HTTP\Request($query);
+//     Pluf\HTTP\Request::setCurrent($req);
 }
 
 

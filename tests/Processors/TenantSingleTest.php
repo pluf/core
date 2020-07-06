@@ -21,8 +21,8 @@ class TenantSingleTest extends TestCase
         // Load config
         $config = include __DIR__ . '/../conf/config.php';
         $config['multitenant'] = false;
-        $config['middleware_classes'] = array(
-            '\Pluf\Middleware\TenantMiddleware'
+        $config['processors'] = array(
+            '\Pluf\Processors\TenantProcessor'
         );
 
         // Install
