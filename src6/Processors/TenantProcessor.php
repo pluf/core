@@ -16,22 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Pluf\Middleware;
+namespace Pluf\Processors;
 
 use Pluf\Exception;
 use Pluf\Logger;
+use Pluf\ProcessorAdaptor;
 use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 use Pluf\Pluf\Tenant;
 use Pluf;
-use Pluf\Processor;
+use Pluf\HTTP\Error404;
 
 /**
  *
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class TenantProcessor implements Processor
+class TenantProcessor extends ProcessorAdaptor
 {
 
     /**
@@ -43,9 +44,9 @@ class TenantProcessor implements Processor
         /*
          * In single tenant mode we do not check anything
          */
-        if (! Pluf::f('multitenant', false)) {
-            $request->setTenant(Tenant::getCurrent());
-            return false;
+        if (! Pluf::getConfig('multitenant', false)) {
+            $request->tenant = Tenant::getCurrent();
+            return;
         }
 
         /*
@@ -55,8 +56,8 @@ class TenantProcessor implements Processor
             $domain = $request->http_host;
             $tenant = Tenant::byDomain($domain);
             if ($tenant) {
-                $request->setTenant($tenant);
-                return false;
+                $request->tenant = $tenant;
+                return;
             }
         } catch (Exception $e) {
             Logger::debug('Fail to get tenant from domain address', $e);
@@ -69,8 +70,8 @@ class TenantProcessor implements Processor
             $subdomain = self::extract_subdomains($request->http_host);
             $tenant = Tenant::bySubDomain($subdomain);
             if ($tenant) {
-                $request->setTenant($tenant);
-                return false;
+                $request->tenant = $tenant;
+                return;
             }
         } catch (Exception $e) {
             Logger::debug('Fail to get tenant from domain address', $e);
@@ -83,19 +84,15 @@ class TenantProcessor implements Processor
             if (array_key_exists('_PX_tenant', $request->HEADERS)) {
                 $tenant = new Tenant($request->HEADERS['_PX_tenant']);
                 if ($tenant) {
-                    $request->setTenant($tenant);
-                    return false;
+                    $request->tenant = $tenant;
+                    return;
                 }
             }
         } catch (Exception $e) {
             Logger::debug('Fail to get tenant from header', $e);
         }
 
-        /*
-         * If no tenant found, then we redirect to the error url
-         */
-        $redirectUrl = Pluf::f('tenant_notfound_url', 'https://pluf.ir/wb/blog/page/how-config-notfound-tenant');
-        return new Response\Redirect($redirectUrl, 302);
+        throw new Error404('Tenant not found');
     }
 
     /**
@@ -106,7 +103,15 @@ class TenantProcessor implements Processor
      */
     public function response(Request $request, Response $response): Response
     {
-        return $response;
+        if (! Pluf::getConfig('multitenant', false) || $response->isOk() || isset($request->tenant)) {
+            return $response;
+        }
+
+        /*
+         * If no tenant found, then we redirect to the error url
+         */
+        $redirectUrl = Pluf::getConfig('tenant_notfound_url', 'https://pluf.ir/wb/blog/page/how-config-notfound-tenant');
+        return new Response\Redirect($redirectUrl, 302);
     }
 
     /**

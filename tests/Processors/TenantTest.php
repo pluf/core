@@ -1,15 +1,16 @@
 <?php
-namespace Pluf\Test\Middleware;
+namespace Pluf\Test\Processors;
 
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;
-use Pluf\Middleware\TenantMiddleware;
 use Pluf\Pluf\Tenant;
+use Pluf\Processors\TenantProcessor;
 use Pluf;
 use Pluf_Migration;
+use Pluf\HTTP\Request;
 
 class TenantTest extends TestCase
 {
@@ -23,8 +24,8 @@ class TenantTest extends TestCase
         // Load config
         $config = include __DIR__ . '/../conf/config.php';
         $config['multitenant'] = true;
-        $config['middleware_classes'] = array(
-            '\Pluf\Middleware\TenantMiddleware'
+        $config['processors'] = array(
+            TenantProcessor::class
         );
 
         // Install
@@ -52,13 +53,9 @@ class TenantTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord');
-
-        // $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 302);
+        $this->assertEquals(302, Dispatcher::getInstance()->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
     }
 
     /**
@@ -69,13 +66,9 @@ class TenantTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'x x x.' . rand();
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord');
-
-        // $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 302);
+        $this->assertEquals(302, Dispatcher::getInstance()->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
     }
 
     /**
@@ -92,13 +85,10 @@ class TenantTest extends TestCase
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
-
-        // $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 200);
+        $this->assertEquals(200, Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
     }
 
     /**
@@ -119,20 +109,24 @@ class TenantTest extends TestCase
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
+//         $dispatcher = new Dispatcher();
+//         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
 
-        $request = $results[0];
-        $response = $results[1];
+//         $request = $results[0];
+//         $response = $results[1];
 
-        $this->assertEquals($response->status_code, 200);
+//         $this->assertEquals($response->status_code, 200);
+        
+        $this->assertEquals(200, Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
 
-        /*
-         * Direct
-         */
-        $md = new TenantMiddleware();
-        $response = $md->process_request($request);
-        $this->assertFalse($response);
+//         /*
+//          * Direct
+//          */
+//         $md = new TenantProcessor();
+//         $md->request($request);
     }
 
     /**
@@ -152,23 +146,17 @@ class TenantTest extends TestCase
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
+        $this->assertEquals(302, Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
 
-        $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 302);
-
-        /*
-         * Direct
-         */
-        $request->HEADERS = array(
-            '_PX_tenant' => $tenant->id
-        );
-        $md = new TenantMiddleware();
-        $response = $md->process_request($request);
-        $this->assertFalse($response);
+        $request = new Request('/helloword/HelloWord');
+        $request->setHeader('_PX_tenant', $tenant->id);
+        $this->assertEquals(200, Dispatcher::getInstance()
+            ->setViews(Module::loadControllers())
+            ->dispatch($request)
+            ->getStatusCode());
     }
 }
 

@@ -65,6 +65,7 @@ class Dispatcher
              * 1. Apply all ready to run processor
              */
             if (! $this->applyRequestProcessors($request, $response, $processors, $appliedProcessors)) {
+                $processors = [];
                 break;
             }
 
@@ -185,10 +186,11 @@ class Dispatcher
          */
         foreach ($processors as $processor) {
             try {
-                $processor->request($request);
                 array_unshift($applyedProcessors, $processor);
+                $processor->request($request);
             } catch (\Exception $ex) {
-                $response->setBody($ex);
+                $response->setBody($ex)
+                    ->setStatusCode(500);
                 Logger::debug('Fail to apply request processor {}. The chain is stoped.', $processor);
                 return false;
             }

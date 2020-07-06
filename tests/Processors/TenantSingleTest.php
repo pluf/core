@@ -1,11 +1,13 @@
 <?php
-namespace Pluf\Test\Middleware;
+namespace Pluf\Test\Processors;
 
 require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;
+use Pluf\HTTP\Request;
+use Pluf\Processors\TenantProcessor;
 use Pluf;
 use Pluf_Migration;
 
@@ -22,7 +24,7 @@ class TenantSingleTest extends TestCase
         $config = include __DIR__ . '/../conf/config.php';
         $config['multitenant'] = false;
         $config['processors'] = array(
-            '\Pluf\Processors\TenantProcessor'
+            TenantProcessor::class
         );
 
         // Install
@@ -50,13 +52,9 @@ class TenantSingleTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'xxx.' . rand();
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
-
-        // $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 200);
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
     }
 
     /**
@@ -67,12 +65,8 @@ class TenantSingleTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'x x x.' . rand();
 
-        $dispatcher = new Dispatcher();
-        $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
-
-        // $request = $results[0];
-        $response = $results[1];
-
-        $this->assertEquals($response->status_code, 200);
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
+            ->dispatch(new Request('/helloword/HelloWord'))
+            ->getStatusCode());
     }
 }

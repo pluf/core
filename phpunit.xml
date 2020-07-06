@@ -33,7 +33,7 @@
             <directory>tests/Middleware/</directory>
             <directory>tests/Encoder/</directory>
             <directory>tests/Template/</directory>
-            <directory>tests/Form/</directory>
+            <directory>tests/Processors/</directory>
         </testsuite>
         <testsuite name="Util">
             <directory>tests/Text/</directory>

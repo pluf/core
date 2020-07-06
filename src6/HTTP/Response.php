@@ -249,4 +249,9 @@ class Response
         $this->headers[$key] = $value;
         return $this;
     }
+
+    public function isOk(): bool
+    {
+        return $this->status_code == 200;
+    }
 }

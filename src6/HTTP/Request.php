@@ -20,7 +20,6 @@
 namespace Pluf\HTTP;
 
 use Pluf\DiContainerTrait;
-use Pluf\Pluf\Tenant;
 use ArrayAccess;
 use Iterator;
 use Serializable;
@@ -29,7 +28,7 @@ use Serializable;
  * The request object.
  *
  * It is given as first arguments to the view as first argument.
- * 
+ *
  * @author maso
  *
  */
@@ -93,8 +92,7 @@ class Request implements ArrayAccess, Iterator, Serializable
 
     public $params = [];
 
-    public ?Tenant $tenant = null;
-
+    // public ?Tenant $tenant = null;
     function __construct($query)
     {
         $http = new \Pluf\HTTP();
@@ -183,19 +181,18 @@ class Request implements ArrayAccess, Iterator, Serializable
         return $size;
     }
 
-    public function setTenant(?Tenant $tenant = null): void
-    {
-        $this->tenant = $tenant;
-    }
+    // public function setTenant(?Tenant $tenant = null): void
+    // {
+    // $this->tenant = $tenant;
+    // }
 
-    public function getTenant(): ?Tenant
-    {
-        if (isset($this->tenant)) {
-            return $this->tenant;
-        }
-        return Tenant::getCurrent();
-    }
-
+    // public function getTenant(): ?Tenant
+    // {
+    // if (isset($this->tenant)) {
+    // return $this->tenant;
+    // }
+    // return Tenant::getCurrent();
+    // }
     public function isGet(): bool
     {
         return $this->method == 'GET';
@@ -214,6 +211,12 @@ class Request implements ArrayAccess, Iterator, Serializable
     public function isDelete(): bool
     {
         return $this->method == 'DELETE';
+    }
+
+    public function setHeader($key, $value): Request
+    {
+        $this->HEADERS[$key] = $value;
+        return $this;
     }
 
     public static function getCurrent(): ?Request
