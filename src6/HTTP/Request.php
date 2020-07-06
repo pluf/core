@@ -137,6 +137,11 @@ class Request implements ArrayAccess, Iterator, Serializable
         if (function_exists('apache_request_headers')) {
             $this->HEADERS = apache_request_headers();
         }
+        $headers = new Header2();
+        foreach ($this->HEADERS as $key => $value){
+            $headers->setHeader($key, $value);
+        }
+        $this->headers = $headers;
     }
 
     /**
@@ -181,18 +186,6 @@ class Request implements ArrayAccess, Iterator, Serializable
         return $size;
     }
 
-    // public function setTenant(?Tenant $tenant = null): void
-    // {
-    // $this->tenant = $tenant;
-    // }
-
-    // public function getTenant(): ?Tenant
-    // {
-    // if (isset($this->tenant)) {
-    // return $this->tenant;
-    // }
-    // return Tenant::getCurrent();
-    // }
     public function isGet(): bool
     {
         return $this->method == 'GET';
@@ -234,6 +227,7 @@ class Request implements ArrayAccess, Iterator, Serializable
     // -------------------------------------------------------------------------
     // Context Manager
     // -------------------------------------------------------------------------
+    public Header2 $headers;
     private array $context = [];
 
     private $position = 0;

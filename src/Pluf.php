@@ -415,7 +415,7 @@ function Pluf_autoload($class_name)
     try {
         Pluf::loadClass($class_name);
     } catch (Exception $e) {
-        if (Pluf::f('debug')) {
+        if (Pluf::getConfig('debug')) {
             print $e->getMessage();
             die();
         }

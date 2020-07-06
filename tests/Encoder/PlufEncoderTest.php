@@ -18,9 +18,9 @@
  */
 namespace Pluf\Test;
 
-use Pluf;
-use Pluf_Form_Invalid;
 use Pluf\Encoder;
+use Exception;
+use Pluf;
 require_once 'Pluf.php';
 
 /**
@@ -77,7 +77,7 @@ class PlufEncoderTest extends PlufTestCase
             try {
                 $enc->url($url, $form, $p);
                 $this->assertEquals(false, $url);
-            } catch (Pluf_Form_Invalid $e) {
+            } catch (Exception $e) {
                 $this->assertEquals(true, true);
             }
         }
@@ -100,7 +100,7 @@ class PlufEncoderTest extends PlufTestCase
             try {
                 $enc->date($date, $form, $p);
                 $this->assertEquals(false, $date);
-            } catch (Pluf_Form_Invalid $e) {
+            } catch (Exception $e) {
                 $this->assertEquals(true, true);
             }
         }

@@ -108,25 +108,11 @@ class TenantTest extends TestCase
         $tenant->subdomain = $sub;
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
-
-//         $dispatcher = new Dispatcher();
-//         $results = $dispatcher->dispatch('/helloword/HelloWord', Module::loadControllers());
-
-//         $request = $results[0];
-//         $response = $results[1];
-
-//         $this->assertEquals($response->status_code, 200);
         
         $this->assertEquals(200, Dispatcher::getInstance()
             ->setViews(Module::loadControllers())
             ->dispatch(new Request('/helloword/HelloWord'))
             ->getStatusCode());
-
-//         /*
-//          * Direct
-//          */
-//         $md = new TenantProcessor();
-//         $md->request($request);
     }
 
     /**

@@ -41,7 +41,7 @@ class ResumableFile extends \Pluf\HTTP\Response
     function __construct($filepath, $httpRange, $fileName, $mimetype = null, $delay = 0)
     {
         parent::__construct($filepath, $mimetype);
-        
+
         if (! is_file($filepath)) {
             throw new Pluf_Exception_DoesNotExist();
         }
@@ -78,9 +78,7 @@ class ResumableFile extends \Pluf\HTTP\Response
         $this->headers['Content-Type'] = 'application/octet-stream';
         $this->headers['Content-Transfer-Encoding'] = 'binary';
         // $this->headers ['Content-Disposition'] = sprintf ( 'attachment; filename="%s"', $this->name );
-        $this->headers['Content-Disposition'] = 'attachment; '
-            . sprintf('filename="%s"; ', rawurlencode($this->name))
-            . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
+        $this->headers['Content-Disposition'] = 'attachment; ' . sprintf('filename="%s"; ', rawurlencode($this->name)) . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
         if ($t > 0) {
             $this->status_code = 206;
             $t === 1 ? $this->pushSingle($range) : $this->pushMulti($ranges);
@@ -107,7 +105,7 @@ class ResumableFile extends \Pluf\HTTP\Response
     private function pushMulti($ranges)
     {
         $length = $start = $end = 0;
-        $output = "";
+        // $output = "";
         $tl = "Content-type: application/octet-stream\r\n";
         $formatRange = "Content-range: bytes %d-%d/%d\r\n\r\n";
         foreach ($ranges as $range) {

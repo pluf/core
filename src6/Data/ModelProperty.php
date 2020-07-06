@@ -25,7 +25,7 @@ class ModelProperty
 
     // public array $validators" => ['NotNull', 'MaxSize:20', 'MinSize:2'],
     // public array $tags => [],
-    public bool $editable = false;
+    public bool $editable = true;
 
     public bool $nullable = true;
 

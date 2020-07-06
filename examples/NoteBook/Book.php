@@ -60,13 +60,12 @@ class Book extends Pluf_Model
                 'type' => Schema::VARCHAR,
                 'size' => 100,
                 'blank' => false,
-                'editable' => false,
                 'readable' => true
             ],
             'description' => [
                 'type' => 'Text',
                 'blank' => false,
-                'editable' => false,
+                'editable' => true,
                 'readable' => true
             ],
             'creation_dtime' => [

@@ -55,6 +55,9 @@ class ModelDescription extends ArrayObject
             if (! array_key_exists('name', $description)) {
                 $description['name'] = $col;
             }
+            if (! array_key_exists('editable', $description)) {
+                $description['editable'] = true;
+            }
             $this->$col = new ModelProperty($description);
         }
 

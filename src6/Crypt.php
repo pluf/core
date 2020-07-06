@@ -123,8 +123,7 @@ class Crypt
         }
         return $result;
     }
-    
-    
+
     /**
      * Dump and sign an object.
      *
@@ -162,7 +161,7 @@ class Crypt
         }
         return self::sign($base64d, $key . $extra_key);
     }
-    
+
     /**
      * Reverse of dumps, throw an Exception in case of bad signature.
      *
@@ -192,7 +191,7 @@ class Crypt
         }
         return unserialize($serialized);
     }
-    
+
     /**
      * Sign a string.
      *
@@ -215,7 +214,7 @@ class Crypt
         }
         return $value . '.' . self::base64_hmac($value, $key);
     }
-    
+
     /**
      * Unsign a value.
      *
@@ -246,7 +245,7 @@ class Crypt
             throw new Exception(sprintf('Signature failed: "%s".', $sig));
         }
     }
-    
+
     /**
      * Calculate the URL safe base64 encoded SHA1 hmac of a string.
      *

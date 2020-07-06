@@ -26,6 +26,7 @@
         </testsuite>
         <testsuite name="Data">
             <directory>tests/Data/</directory>
+            <file>tests/ObjectMappertTest.php</file>
         </testsuite>
         <testsuite name="View">
             <directory>tests/Dispatcher/</directory>
@@ -35,7 +36,7 @@
             <directory>tests/Template/</directory>
             <directory>tests/Processors/</directory>
         </testsuite>
-        <testsuite name="Util">
+        <testsuite name="Utillities">
             <directory>tests/Text/</directory>
             <directory>tests/Pluf_Mail/</directory>
         </testsuite>
