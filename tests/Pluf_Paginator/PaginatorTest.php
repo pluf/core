@@ -496,7 +496,7 @@ class Pluf_Paginator_PaginatorTest extends TestCase
      * Test filter key validation
      *
      * @test
-     * @expectedException Pluf_Exception_BadRequest
+     * @expectedException Error404
      */
     public function testValidationForFilterKeys()
     {

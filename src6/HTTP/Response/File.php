@@ -18,7 +18,7 @@
  */
 namespace Pluf\HTTP\Response;
 
-use Pluf_Exception_DoesNotExist;
+use Pluf\HTTP\Error404;
 
 /**
  * Render file as response
@@ -53,7 +53,7 @@ class File extends \Pluf\HTTP\Response
     function render($output_body = true)
     {
         if (! file_exists($this->content)) {
-            throw new Pluf_Exception_DoesNotExist('Requested resource not found');
+            throw new Error404('Requested resource not found');
         }
         if (defined('IN_UNIT_TESTS')) {
             parent::render($output_body);

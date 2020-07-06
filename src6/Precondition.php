@@ -24,9 +24,15 @@ namespace Pluf;
  *
  * @author maso<mostafa.barmshory@dpq.co.ir>
  */
+use Pluf\HTTP\Error404;
 use Pluf\HTTP\Response;
-use Pluf_Exception_BadRequest;
 
+/**
+ * 
+ * @deprecated use processing model
+ * @author maso
+ *
+ */
 class Precondition
 {
 
@@ -55,12 +61,12 @@ class Precondition
      * Throws bad request exception if given name does not match.
      *
      * @param string $name
-     * @throws Pluf_Exception_BadRequest
+     * @throws Error404
      */
     public static function assertKeyIsValid($name)
     {
         if (preg_match('/^[a-zA-Z_][0-9a-zA-Z_]*$/', $name) !== 1) {
-            throw new Pluf_Exception_BadRequest('Invalid parameter: <' . $name . '>');
+            throw new Error404('Invalid parameter: <' . $name . '>');
         }
     }
 }

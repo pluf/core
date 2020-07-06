@@ -18,7 +18,7 @@
  */
 namespace Pluf\HTTP\Response;
 
-use Pluf_Exception_DoesNotExist;
+use Pluf\HTTP\Error404;
 
 /**
  * TODO: maso, 1395: document
@@ -43,7 +43,7 @@ class ResumableFile extends \Pluf\HTTP\Response
         parent::__construct($filepath, $mimetype);
 
         if (! is_file($filepath)) {
-            throw new Pluf_Exception_DoesNotExist();
+            throw new Error404();
         }
         $this->httpRange = $httpRange;
         $this->totalSize = filesize($filepath);
