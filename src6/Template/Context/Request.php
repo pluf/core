@@ -18,9 +18,9 @@
  */
 namespace Pluf\Template\Context;
 
+use Pluf\Signal;
 use Pluf\Template\ContextVars;
 use Pluf;
-use Pluf_Signal;
 
 /**
  * Class storing the data that are then used in the template.
@@ -62,7 +62,7 @@ class Request extends \Pluf\Template\Context
          * array('request' => $request,
          * 'context' => array());
          */
-        Pluf_Signal::send('Pluf_Template_Context_Request::construct', 'Pluf_Template_Context_Request', $params);
+        Signal::send('Pluf_Template_Context_Request::construct', 'Pluf_Template_Context_Request', $params);
         $this->_vars = new ContextVars($params['context']);
     }
 }

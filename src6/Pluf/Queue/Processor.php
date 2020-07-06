@@ -18,9 +18,9 @@
  */
 namespace Pluf\Pluf\Queue;
 
+use Pluf\Signal;
 use Pluf\Pluf\Queue;
 use Pluf;
-use Pluf_Signal;
 
 /**
  * Class to process a Pluf_Queue.
@@ -90,7 +90,7 @@ class Processor
              *
              * array('item' => $item, 'queue' => $queue);
              */
-            Pluf_Signal::send('Pluf_Queue_Processor::process', 'Pluf_Queue_Process', $q);
+            Signal::send('Pluf_Queue_Processor::process', 'Pluf_Queue_Process', $q);
             $q['queue']->lock = 2;
             $q['queue']->update();
         }

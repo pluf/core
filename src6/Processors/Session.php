@@ -19,12 +19,12 @@
 namespace Pluf\Processors;
 
 use Pluf\Exception;
+use Pluf\Processor;
+use Pluf\Signal;
 use Pluf\Data\Query;
 use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
 use Pluf;
-use Pluf_Signal;
-use Pluf\Processor;
 
 /**
  * Allow a session object in the request.
@@ -165,7 +165,7 @@ class Session implements Processor
 }
 
 // TODO: maso, 2020: move to module initials
-Pluf_Signal::connect('Pluf_Template_Context_Request::construct', array(
+Signal::connect('Pluf_Template_Context_Request::construct', array(
     'Pluf_Middleware_Session',
     'processContext'
 ));

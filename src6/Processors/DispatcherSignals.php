@@ -2,9 +2,9 @@
 namespace Pluf\Processors;
 
 use Pluf\ProcessorAdaptor;
+use Pluf\Signal;
 use Pluf\HTTP\Request;
 use Pluf\HTTP\Response;
-use Pluf_Signal;
 
 class DispatcherSignals extends ProcessorAdaptor
 {
@@ -46,7 +46,7 @@ class DispatcherSignals extends ProcessorAdaptor
          * array('request' => $request,
          * 'response' => $response)
          */
-        Pluf_Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', [
+        Signal::send('Pluf_Dispatcher::postDispatch', 'Pluf_Dispatcher', [
             'request' => $request,
             'response' => $response
         ]);

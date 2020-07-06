@@ -49,10 +49,11 @@ class Book extends Pluf_Model
         $this->_a['cols'] = [
             // It is mandatory to have an "id" column.
             'id' => [
+                // DB
                 'type' => Schema::SEQUENCE,
                 'primary' => true,
-                // It is automatically added.
                 'blank' => true,
+                // View
                 'editable' => false,
                 'readable' => true
             ],

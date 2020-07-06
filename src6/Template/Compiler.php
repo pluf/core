@@ -1,9 +1,9 @@
 <?php
 namespace Pluf\Template;
 
+use Pluf\Signal;
 use Exception;
 use Pluf;
-use Pluf_Signal;
 
 /**
  * Class to compile a template file into the corresponding PHP script
@@ -148,11 +148,11 @@ class Compiler
      * in the configuration of the application.
      */
     protected $_allowedTags = array(
-        'url'     => '\\Pluf\\Template\\Tag\\UrlTag',
-        'aurl'    => '\\Pluf\\Template\\Tag\\Rurl',
-        'media'   => '\\Pluf\\Template\\Tag\\MediaUrl',
-        'amedia'  => '\\Pluf\\Template\\Tag\\RmediaUrl',
-        'aperm'   => '\\Pluf\\Template\\Tag\\APerm',
+        'url' => '\\Pluf\\Template\\Tag\\UrlTag',
+        'aurl' => '\\Pluf\\Template\\Tag\\Rurl',
+        'media' => '\\Pluf\\Template\\Tag\\MediaUrl',
+        'amedia' => '\\Pluf\\Template\\Tag\\RmediaUrl',
+        'aperm' => '\\Pluf\\Template\\Tag\\APerm',
         'getmsgs' => '\\Pluf\\Template\\Tag\\Messages'
     );
 
@@ -244,7 +244,7 @@ class Compiler
             'tags' => array(),
             'modifiers' => array()
         );
-        Pluf_Signal::send('Pluf_Template_Compiler::construct_template_tags_modifiers', 'Pluf_Template_Compiler', $params);
+        Signal::send('Pluf_Template_Compiler::construct_template_tags_modifiers', 'Pluf_Template_Compiler', $params);
         $this->_allowedTags = array_merge($this->_allowedTags, $params['tags'], Pluf::f('template_tags', array()));
         $this->_modifier = array_merge($this->_modifier, $params['modifiers'], Pluf::f('template_modifiers', array()));
         foreach ($this->_allowedTags as $name => $model) {
@@ -275,6 +275,7 @@ class Compiler
         $tplcontent = preg_replace('!<\?php(.*?)\?>!s', '', $tplcontent);
         // Catch the litteral blocks and put them in the
         // $this->_literals stack
+        $_match = [];
         preg_match_all('!{literal}(.*?){/literal}!s', $tplcontent, $_match);
         $this->_literals = $_match[1];
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
@@ -295,13 +296,13 @@ class Compiler
     function getCompiledTemplate()
     {
         $result = $this->compile();
-//         if (count($this->_usedModifiers)) {
-//             $code = array();
-// //             foreach ($this->_usedModifiers as $modifier) {
-// //                 $code[] = 'Pluf::loadFunction(\'' . $modifier . '\'); ';
-// //             }
-//             $result = '<?php ' . implode("\n", $code) . '? >' . $result;
-//         }
+        // if (count($this->_usedModifiers)) {
+        // $code = array();
+        // // foreach ($this->_usedModifiers as $modifier) {
+        // // $code[] = 'Pluf::loadFunction(\'' . $modifier . '\'); ';
+        // // }
+        // $result = '<?php ' . implode("\n", $code) . '? >' . $result;
+        // }
         // Clean the output
         $result = str_replace(array(
             '?><?php',
@@ -324,6 +325,7 @@ class Compiler
         $tplcontent = $this->templateContent;
         $this->_extendedTemplate = '';
         // Match extends on the first line of the template
+        $_match = [];
         if (preg_match("!{extends\s['\"](.*?)['\"]}!", $tplcontent, $_match)) {
             $this->_extendedTemplate = $_match[1];
         }
@@ -403,6 +405,7 @@ class Compiler
                 return '%%' . substr($tok[0], 1) . '%%';
             }
         } else {
+            $m = [];
             if (! preg_match('/^(\/?[a-zA-Z0-9_]+)(?:(?:\s+(.*))|(?:\((.*)\)))?$/', $tag, $m)) {
                 trigger_error(sprintf(__('Invalid function syntax: %s'), $tag), E_USER_ERROR);
                 return '';

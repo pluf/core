@@ -18,6 +18,8 @@
  */
 namespace Pluf\Pluf;
 
+use Pluf\Signal;
+
 class Module extends \Pluf\Module
 {
 
@@ -41,7 +43,7 @@ class Module extends \Pluf\Module
          * These details are used to generated the methods
          * to retrieve related models from each model.
          */
-        \Pluf_Signal::connect('Pluf_Dispatcher::postDispatch', array(
+        Signal::connect('Pluf_Dispatcher::postDispatch', array(
             '\\Pluf\\Logger',
             'flushHandler'
         ), 'Pluf_Dispatcher');
