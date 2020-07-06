@@ -21,8 +21,8 @@ class ManyToOneCollectionView extends AbstractCollectionView
     // * Checks if one to many relation exist between two entity
     // *
     // * @param Request $request
-    // * @param Pluf_Model $parent
-    // * @param Pluf_Model $object
+    // * @param \Pluf\Data\Model $parent
+    // * @param \Pluf\Data\Model $object
     // * @param array $p
     // * parameters
     // * @throws \Pluf\HTTP\Error404 if relation does not exist

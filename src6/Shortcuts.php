@@ -113,7 +113,7 @@ class Shortcuts
      * Returns column name for given model as foreign key in an association table.
      *
      * @param string $modelName
-     *            name of model (of type Pluf_Model)
+     *            name of model (of type \Pluf\Data\Model)
      * @return string column name for given model as foreign key in an association table.
      * @deprecated use Schema::getAssocField($model);
      */

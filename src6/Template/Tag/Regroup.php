@@ -92,7 +92,7 @@ use ReflectionObject;
  * </code>
  *
  * Let's walk through this example. {regroup} takes three arguments:
- * the object (array or instance of Pluf_Model or any object)
+ * the object (array or instance of \Pluf\Data\Model or any object)
  * you want to regroup, the attribute to group by,and the name of the
  * resulting object. Here, we're regrouping the people list by the
  * gender attribute and calling the result gender_list. The result is
@@ -133,7 +133,7 @@ class Regroup extends \Pluf\Template\Tag
 
         foreach ($data as $group) {
             if (is_object($group)) {
-                if (is_subclass_of($group, 'Pluf_Model')) {
+                if (is_subclass_of($group, '\Pluf\Data\Model')) {
                     $raw = $group->getData();
                     if (! array_key_exists($by, $raw)) {
                         continue;

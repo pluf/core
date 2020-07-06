@@ -19,20 +19,19 @@
 namespace Pluf\Relation;
 
 use Pluf\Data\Schema;
-use Pluf_Model;
 
 /**
  *
  * @author maso
  *        
  */
-class Model extends Pluf_Model
+class Model extends \Pluf\Data\Model
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {
@@ -87,7 +86,7 @@ class Model extends Pluf_Model
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::loadViews()
+     * @see \Pluf\Data\Model::loadViews()
      */
     public function loadViews(): array
     {
@@ -104,7 +103,7 @@ class Model extends Pluf_Model
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::loadIndexes()
+     * @see \Pluf\Data\Model::loadIndexes()
      */
     public function loadIndexes(): array
     {

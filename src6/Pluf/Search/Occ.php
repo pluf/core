@@ -19,12 +19,12 @@
  */
 namespace Pluf\Pluf\Search;
 
-use Pluf_Model;
+use \Pluf\Data\Model;
 
 /**
  * Storage of the occurence of the words.
  */
-class Occ extends Pluf_Model
+class Occ extends \Pluf\Data\Model
 {
 
     function init ()

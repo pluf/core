@@ -363,7 +363,7 @@ class Pluf
         if ($option instanceof ModelDescription) {
             $options->model = $option->type;
         }
-        if ($option instanceof Pluf_Model) {
+        if ($option instanceof \Pluf\Data\Model) {
             $options->model = get_class($option);
         }
 

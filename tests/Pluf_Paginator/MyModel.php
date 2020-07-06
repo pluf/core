@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadClass('Pluf_Model');
+Pluf::loadClass('\Pluf\Data\Model');
 
-class Pluf_Paginator_MyModel extends Pluf_Model
+class Pluf_Paginator_MyModel extends \Pluf\Data\Model
 {
 
     function init()

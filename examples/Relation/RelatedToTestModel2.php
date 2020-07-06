@@ -18,17 +18,16 @@
  */
 namespace Pluf\Relation;
 
-use Pluf_Model;
 use Pluf\Data\Schema;
 
-class RelatedToTestModel2 extends Pluf_Model
+class RelatedToTestModel2 extends \Pluf\Data\Model
 {
 
     /**
      * Load data model
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {

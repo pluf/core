@@ -19,7 +19,6 @@
  */
 namespace Pluf\Relation;
 
-use Pluf_Model;
 use Pluf\Data\Schema;
 
 /**
@@ -27,13 +26,13 @@ use Pluf\Data\Schema;
  * @author maso
  *        
  */
-class ManyToManyOne extends Pluf_Model
+class ManyToManyOne extends \Pluf\Data\Model
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {

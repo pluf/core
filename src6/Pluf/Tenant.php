@@ -5,7 +5,6 @@ use Pluf\Data\Query;
 use Pluf\Data\Schema;
 use Pluf\HTTP\Request;
 use Pluf;
-use Pluf_Model;
 
 /**
  * Data model of a tenant
@@ -13,7 +12,7 @@ use Pluf_Model;
  * @author maso <mostafa.barmshory@dpq.co.ir>
  *        
  */
-class Tenant extends Pluf_Model
+class Tenant extends \Pluf\Data\Model
 {
 
     /**
@@ -47,7 +46,7 @@ class Tenant extends Pluf_Model
      *
      * @brief مدل داده‌ای را بارگذاری می‌کند.
      *
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {

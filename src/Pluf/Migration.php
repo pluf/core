@@ -281,7 +281,7 @@ class Pluf_Migration extends Migration
      *
      * @return mixed True if success or database error.
      */
-    public static function createTables(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    public static function createTables(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     {
         $sql = $schema->createTableQueries($model);
         // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
@@ -313,7 +313,7 @@ class Pluf_Migration extends Migration
      *
      * @return mixed True if success or database error.
      */
-    public static function dropTables(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    public static function dropTables(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     {
         $sql = $schema->dropTableQueries($model);
         // Note: hadi, 2019: If model is a mapped model, its table is created or will be created by a none mapped model.
@@ -338,7 +338,7 @@ class Pluf_Migration extends Migration
      *
      * @throws \Pluf\Exception
      */
-    public static function createConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    public static function createConstraints(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     {
         $sql = $schema->createConstraintQueries($model);
         foreach ($sql as $query) {
@@ -355,7 +355,7 @@ class Pluf_Migration extends Migration
      * @throws \Pluf\Exception
      * @return boolean
      */
-    public static function dropConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    public static function dropConstraints(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     {
         $sql = $schema->dropConstraintQueries($model);
         foreach ($sql as $query) {

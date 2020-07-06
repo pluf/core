@@ -274,7 +274,7 @@ class Migration
     // *
     // * @throws \Pluf\Exception
     // */
-    // public static function createConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    // public static function createConstraints(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     // {
     // $sql = $schema->createConstraintQueries($model);
     // foreach ($sql as $query) {
@@ -291,7 +291,7 @@ class Migration
     // * @throws \Pluf\Exception
     // * @return boolean
     // */
-    // public static function dropConstraints(Engine $engine, Schema $schema, Pluf_Model $model): bool
+    // public static function dropConstraints(Engine $engine, Schema $schema, \Pluf\Data\Model $model): bool
     // {
     // $sql = $schema->dropConstraintQueries($model);
     // foreach ($sql as $query) {

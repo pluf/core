@@ -4,7 +4,7 @@ namespace Pluf\Db\Connection;
 
 use Pluf\Db\Connection;
 use Pluf\Db\Query;
-use Pluf_Model;
+use \Pluf\Data\Model;
 
 /**
  * Custom Connection class specifically for Oracle database.
@@ -47,7 +47,7 @@ class Oracle extends Connection
      */
     public function lastInsertID($m = null)
     {
-        if ($m instanceof Pluf_Model) {
+        if ($m instanceof \Pluf\Data\Model) {
             // if we use sequence, then we can easily get current value
             if (isset($m->sequence)) {
                 return $this->dsql()

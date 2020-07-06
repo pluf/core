@@ -19,20 +19,19 @@
 namespace Pluf\Relation;
 
 use Pluf\Data\Schema;
-use Pluf_Model;
 
 /**
  *
  * @author maso
  *        
  */
-class ManyToManyTwo extends Pluf_Model
+class ManyToManyTwo extends \Pluf\Data\Model
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {

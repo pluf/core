@@ -19,12 +19,12 @@
  */
 namespace Pluf\Pluf\Search;
 
-use Pluf_Model;
+use \Pluf\Data\Model;
 
 /**
  * Storage of the words.
  */
-class Word extends Pluf_Model
+class Word extends \Pluf\Data\Model
 {
 
     function init()

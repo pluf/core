@@ -2,7 +2,6 @@
 namespace Pluf\Data;
 
 use ArrayObject;
-use Pluf_Model;
 
 class ModelDescription extends ArrayObject
 {
@@ -48,7 +47,7 @@ class ModelDescription extends ArrayObject
         return new $this->type();
     }
 
-    private function loadFromOldModel(Pluf_Model $model)
+    private function loadFromOldModel(\Pluf\Data\Model $model)
     {
         // load properties
         foreach ($model->_a['cols'] as $col => $description) {
@@ -68,8 +67,8 @@ class ModelDescription extends ArrayObject
         $this->multitinant = $model->_a['multitenant'];
 
         // Set identifier
-        $identifier = $this->id;
-        $this->identifier = $identifier;
+//         $identifier = $this->id;
+//         $this->identifier = $identifier;
     }
 
     public static function getInstance($model): ModelDescription
@@ -81,7 +80,7 @@ class ModelDescription extends ArrayObject
         /*
          * Support old
          */
-        if (is_a($model, '\Pluf_Model', true)) {
+        if (is_a($model, '\\Pluf\Data\Model', true)) {
             $modelDescription = new ModelDescription();
             if (is_string($model)) {
                 $model = new $model();
@@ -104,7 +103,7 @@ class ModelDescription extends ArrayObject
      */
     public function isAnonymous($model): bool
     {
-        if ($model instanceof \Pluf_Model) {
+        if ($model instanceof \Pluf\Data\Model) {
             return $model->isAnonymous();
         }
 

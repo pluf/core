@@ -42,7 +42,7 @@ class APerm extends \Pluf\Template\Tag
      * @param
      *            string Permission string
      * @param
-     *            mixed Optional Pluf_Model if using row level permission (null)
+     *            mixed Optional \Pluf\Data\Model if using row level permission (null)
      */
     function start($var, $user, $perm, $object = null)
     {

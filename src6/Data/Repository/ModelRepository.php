@@ -27,7 +27,7 @@ class ModelRepository extends \Pluf\Data\Repository
     /**
      * Stores an instance of the model type
      *
-     * @var \Pluf_Model
+     * @var \\Pluf\Data\Model
      */
     public $model;
 
@@ -133,7 +133,7 @@ class ModelRepository extends \Pluf\Data\Repository
 
         $this->checkStatement($stm);
         // TODO: maso, 2019: post create
-        // Setting ID must move into post create from Pluf_Model
+        // Setting ID must move into post create from \Pluf\Data\Model
         $model->id = $connection->lastInsertID();
         return $model;
     }

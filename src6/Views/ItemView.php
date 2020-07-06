@@ -46,8 +46,8 @@
 //      *
 //      * Each precondition function will be called with three argument respectively as following:
 //      * - $request: Pluf_HTTp_Request
-//      * - $object: Pluf_Model
-//      * - $parent: Pluf_Model, which is a parent of $object model
+//      * - $object: \Pluf\Data\Model
+//      * - $parent: \Pluf\Data\Model, which is a parent of $object model
 //      *
 //      */
 //     protected function checkPreconditions(Request $request, array $match, array $params, Object $item): void

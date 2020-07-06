@@ -10,7 +10,7 @@ use Pluf;
 
 /**
  *
- * Here is list of all Pluf_Model supports.
+ * Here is list of all \Pluf\Data\Model supports.
  *
  * - create by id ..................... ok
  * - get .............................. ok

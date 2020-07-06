@@ -31,7 +31,7 @@
  * Here is an example showes how to use the class:
  *
  * <code>
- * $pag = new Pluf_Paginator(new Pluf_Model());
+ * $pag = new Pluf_Paginator(new \Pluf\Data\Model());
  * // Get the paginator parameters from the request
  * $pag->setFromRequest($request);
  * print $pag->render();
@@ -67,7 +67,7 @@ class Pluf_Paginator
     /**
      * Data model of the items
      *
-     * @var Pluf_Model
+     * @var \Pluf\Data\Model
      */
     public $model;
 
@@ -186,7 +186,7 @@ class Pluf_Paginator
     /**
      * Creates new instance of paginator
      *
-     * @param Pluf_Model $model
+     * @param \Pluf\Data\Model $model
      *            The main pagination model
      * @param array $list_display
      *            fields to display

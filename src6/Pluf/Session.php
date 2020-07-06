@@ -19,8 +19,8 @@
  */
 namespace Pluf\Pluf;
 
-use Pluf;
 use Pluf\Data\Schema;
+use Pluf;
 
 /**
  * ساختار داده‌ای یک نشست را تعیین می‌کند
@@ -28,7 +28,7 @@ use Pluf\Data\Schema;
  * @author maso
  *        
  */
-class Session extends \Pluf_Model
+class Session extends \Pluf\Data\Model
 {
 
     public $data = array();
@@ -48,7 +48,7 @@ class Session extends \Pluf_Model
     /**
      * یک نمونه جدید از این کلاس ایجاد می‌کند.
      *
-     * @see \Pluf_Model::_init()
+     * @see \\Pluf\Data\Model::_init()
      */
     function _init()
     {
@@ -59,7 +59,7 @@ class Session extends \Pluf_Model
     /**
      * ساختارهای داده‌ای مورد نیاز برای نشت را تعیین می‌کند.
      *
-     * @see \Pluf_Model::init()
+     * @see \\Pluf\Data\Model::init()
      */
     function init()
     {

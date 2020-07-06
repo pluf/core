@@ -1,7 +1,6 @@
 <?php
 namespace Pluf\NoteBook;
 
-use Pluf_Model;
 use Pluf\Data\Schema;
 
 /*
@@ -27,7 +26,7 @@ use Pluf\Data\Schema;
  * @author maso
  *        
  */
-class Item extends Pluf_Model
+class Item extends \Pluf\Data\Model
 {
 
     function init()
@@ -74,7 +73,7 @@ class Item extends Pluf_Model
                 'inverseJoinModel' => Book::class,
                 'inverseJoinProperty' => 'id',
                 // do not create columne
-                'mapped' => true,
+                'mapped' => true
             ]
         ];
     }
@@ -82,7 +81,7 @@ class Item extends Pluf_Model
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::preSave()
+     * @see \Pluf\Data\Model::preSave()
      */
     function preSave($create = false)
     {

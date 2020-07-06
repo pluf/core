@@ -26,7 +26,7 @@
  * Here is an example showes how to use the class:
  *
  * <code><pre>
- * $builder = new Pluf_Paginator_Builder(new Pluf_Model())
+ * $builder = new Pluf_Paginator_Builder(new \Pluf\Data\Model())
  * ->setRequest($request)
  *
  * ->setDisplayFields($displayList)
@@ -98,7 +98,7 @@ class Pluf_Paginator_Builder
     /**
      * Creates new instance of builder
      *
-     * @param Pluf_Model $model
+     * @param \Pluf\Data\Model $model
      */
     function __construct($model = null)
     {

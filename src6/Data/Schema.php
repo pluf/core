@@ -2,12 +2,12 @@
 namespace Pluf\Data;
 
 use Pluf\Options;
+use Pluf\Utils;
 use Pluf\Db\Connection;
 use Pluf\Db\Expression;
-use Pluf\Utils;
 
 /**
- * Create the schema of a given Pluf_Model for a given database.
+ * Create the schema of a given \Pluf\Data\Model for a given database.
  *
  * @author maso
  *        
@@ -1132,7 +1132,7 @@ abstract class Schema
             case self::SEQUENCE:
             case self::MANY_TO_ONE:
             case self::FOREIGNKEY:
-                if ($val instanceof \Pluf_Model) {
+                if ($val instanceof \Pluf\Data\Model) {
                     return $val->id;
                 }
                 if (is_numeric($val)) {

@@ -74,8 +74,8 @@ class PlufTest extends TestCase
      */
     public function testLoadClass()
     {
-        Pluf::loadClass('Pluf_Model');
-        $this->assertEquals(true, class_exists('Pluf_Model'));
+        Pluf::loadClass('\Pluf\Data\Model');
+        $this->assertEquals(true, class_exists('\Pluf\Data\Model'));
     }
 
     /**

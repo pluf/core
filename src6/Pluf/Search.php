@@ -25,7 +25,6 @@ use Pluf\Pluf\Search\Stats;
 use Pluf\Pluf\Search\Word;
 use Exception;
 use Pluf;
-use Pluf_SQL;
 
 /**
  * Class implementing a small search engine.
@@ -165,7 +164,7 @@ class Search
      * FIXME: Concurrency problem if you index at the same time the same doc.
      *
      * @param
-     *            Pluf_Model Document to index.
+     *            \Pluf\Data\Model Document to index.
      * @param
      *            Stemmer used. ('Pluf_Text_Stemmer_Porter')
      * @return array Statistics.

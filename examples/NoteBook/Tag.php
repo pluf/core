@@ -2,15 +2,14 @@
 namespace Pluf\NoteBook;
 
 use Pluf\Data\Schema;
-use Pluf_Model;
 
-class Tag extends Pluf_Model
+class Tag extends \Pluf\Data\Model
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {

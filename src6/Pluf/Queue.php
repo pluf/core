@@ -18,7 +18,7 @@
  */
 namespace Pluf\Pluf;
 
-use Pluf_Model;
+use \Pluf\Data\Model;
 
 /**
  * Simple queue system to delay the processing of tasks.
@@ -41,7 +41,7 @@ use Pluf_Model;
  * find that the author has been updated and index each of his
  * articles.
  */
-class Queue extends Pluf_Model
+class Queue extends \Pluf\Data\Model
 {
 
     function init()
@@ -118,7 +118,7 @@ class Queue extends Pluf_Model
      * Add an object to the queue.
      *
      * @param
-     *            Pluf_Model Your model
+     *            \Pluf\Data\Model Your model
      * @param
      *            string Action for the object
      */

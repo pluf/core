@@ -185,14 +185,14 @@ abstract class Repository
      *
      * If the $modal is a query, then all matched items will be removed
      *
-     * @param mixed|\Pluf_Model|Query $model
+     * @param mixed|\\Pluf\Data\Model|Query $model
      */
     public abstract function delete($model);
 
     /**
      * Crates the model in repository
      *
-     * @param mixed|array|\Pluf_Model $model
+     * @param mixed|array|\\Pluf\Data\Model $model
      *            to create into the db
      */
     public abstract function create($model);
@@ -200,7 +200,7 @@ abstract class Repository
     /**
      * Updates the model in repository
      *
-     * @param mixed|array|\Pluf_Model $model
+     * @param mixed|array|\\Pluf\Data\Model $model
      *            to create into the db
      */
     public abstract function update($model);

@@ -1,14 +1,13 @@
 <?php
 namespace Pluf\Data\Schema;
 
+use Pluf\ModelUtils;
 use Pluf\Options;
+use Pluf\Data\ModelDescription;
 use Pluf\Db\Expression;
 use Pluf;
-use Pluf_Model;
-use Pluf_ModelUtils;
 use WKT;
 use geoPHP;
-use Pluf\Data\ModelDescription;
 
 class MySQLSchema extends \Pluf\Data\Schema
 {
@@ -95,7 +94,7 @@ class MySQLSchema extends \Pluf\Data\Schema
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    public function createConstraintQueries(Pluf_Model $model): array
+    public function createConstraintQueries(\Pluf\Data\Model $model): array
     {
         $smd = ModelDescription::getInstance($model);
         $table = $this->getTableName($smd);
@@ -149,7 +148,7 @@ class MySQLSchema extends \Pluf\Data\Schema
      *            Object Model
      * @return array Array of SQL strings ready to execute.
      */
-    public function dropConstraintQueries(Pluf_Model $model): array
+    public function dropConstraintQueries(\Pluf\Data\Model $model): array
     {
         $table = $this->prefix . $model->_a['table'];
         $constraints = array();
@@ -173,7 +172,7 @@ class MySQLSchema extends \Pluf\Data\Schema
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $table = ModelUtils::getAssocTable($model, $omodel);
             $alter_tbl = 'ALTER TABLE ' . $table;
             $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey1');
             $constraints[] = $alter_tbl . ' DROP CONSTRAINT ' . $this->getShortenedFKeyName($table . '_fkey2');
@@ -203,7 +202,7 @@ class MySQLSchema extends \Pluf\Data\Schema
      * {@inheritdoc}
      * @see \Pluf\Data\Schema::dropTableQueries()
      */
-    public function dropTableQueries(Pluf_Model $model): array
+    public function dropTableQueries(\Pluf\Data\Model $model): array
     {
         $cols = $model->_a['cols'];
         $modelTable = $this->getTableName($model);
@@ -232,7 +231,7 @@ class MySQLSchema extends \Pluf\Data\Schema
      * {@inheritdoc}
      * @see \Pluf\Data\Schema::createTableQueries()
      */
-    public function createTableQueries(Pluf_Model $model): array
+    public function createTableQueries(\Pluf\Data\Model $model): array
     {
         $tables = array();
         $cols = $model->_a['cols'];
@@ -289,10 +288,10 @@ class MySQLSchema extends \Pluf\Data\Schema
         // Now for the many to many
         foreach ($manytomany as $many) {
             $omodel = new $cols[$many]['model']();
-            $table = Pluf_ModelUtils::getAssocTable($model, $omodel);
+            $table = ModelUtils::getAssocTable($model, $omodel);
 
-            $ra = Pluf_ModelUtils::getAssocField($model);
-            $rb = Pluf_ModelUtils::getAssocField($omodel);
+            $ra = ModelUtils::getAssocField($model);
+            $rb = ModelUtils::getAssocField($omodel);
 
             $sql = 'CREATE TABLE `' . $table . '` (';
             $sql .= $ra . ' ' . $this->mappings[self::FOREIGNKEY] . ' default 0,';
@@ -305,7 +304,7 @@ class MySQLSchema extends \Pluf\Data\Schema
         return $tables;
     }
 
-    public function createIndexQueries(Pluf_Model $model): array
+    public function createIndexQueries(\Pluf\Data\Model $model): array
     {
         $index = array();
         $indexes = $model->getIndexes();

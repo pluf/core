@@ -19,13 +19,13 @@
  */
 namespace Pluf\Pluf\Search;
 
-use Pluf_Model;
+use \Pluf\Data\Model;
 
 /**
  * Keep track of when a document has been last indexed and the number
  * of indexations.
  */
-class Stats extends Pluf_Model
+class Stats extends \Pluf\Data\Model
 {
 
     function init ()

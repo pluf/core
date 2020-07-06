@@ -19,9 +19,8 @@
 namespace Pluf\Relation;
 
 use Pluf\Data\Schema;
-use Pluf_Model;
 
-class ModelRecurse extends Pluf_Model
+class ModelRecurse extends \Pluf\Data\Model
 {
 
     function init()

@@ -287,7 +287,7 @@ class ' . $className . ' {
      *
      * @param string $type
      *            Relation type: Engine::FOREIGNKEY Engine::Many_To_many
-     * @param Pluf_Model $mainModel
+     * @param \Pluf\Data\Model $mainModel
      *            main model wihch is the target of compile
      */
     private function compileRelationFields($type, $mainModel)

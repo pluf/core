@@ -19,7 +19,6 @@
  */
 namespace Pluf\NoteBook;
 
-use Pluf_Model;
 use Pluf\Data\Schema;
 use Pluf\Db\Expression;
 
@@ -34,13 +33,13 @@ use Pluf\Db\Expression;
  *  mapped=false,
  * )
  */
-class Book extends Pluf_Model
+class Book extends \Pluf\Data\Model
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::init()
+     * @see \Pluf\Data\Model::init()
      */
     function init()
     {
@@ -93,7 +92,7 @@ class Book extends Pluf_Model
     /**
      *
      * {@inheritdoc}
-     * @see Pluf_Model::preSave()
+     * @see \Pluf\Data\Model::preSave()
      */
     function preSave($create = false)
     {
