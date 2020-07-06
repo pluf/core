@@ -38,7 +38,7 @@
         </testsuite>
         <testsuite name="Utillities">
             <directory>tests/Text/</directory>
-            <directory>tests/Pluf_Mail/</directory>
+            <directory>tests/Mail/</directory>
         </testsuite>
 <!--         <testsuite name="Pluf2Suit"> -->
 <!--             <directory>tests/Pluf tenant/</directory> -->

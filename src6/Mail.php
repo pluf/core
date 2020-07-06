@@ -88,7 +88,12 @@
  * If you are doing some testing, you should use the smtp backend 
  * together with fakemail: http://www.lastcraft.com/fakemail.php
  */
-class Pluf_Mail
+namespace Pluf;
+
+use Mail_mime;
+use Pluf;
+
+class Mail
 {
 
     public $headers = array();

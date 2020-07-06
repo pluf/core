@@ -16,16 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Mail;
+
+use Mail;
+use Mail_mime;
+use Pluf;
 
 /**
  * Generate and send multipart emails in batch mode.
  *
  * This class is just a small wrapper around the PEAR packages Mail
- * and Mail/mime. 
+ * and Mail/mime.
  *
  * Class to easily generate multipart emails. It supports embedded
- * images within the email. It can be used to send a text with 
- * possible attachments. 
+ * images within the email. It can be used to send a text with
+ * possible attachments.
  *
  * The encoding of the message is utf-8 by default.
  *
@@ -33,11 +38,11 @@
  * <code>
  * $email = new Pluf_Mail_Batch('from_email@example.com');
  * foreach($emails as $m) {
- *     $email->setSubject($m['subject']);
- *     $email->setTo($m['to']);
- *     $img_id = $email->addAttachment('/var/www/html/img/pic.jpg', 'image/jpg');
- *     $email->addTextMessage($m['content']);
- *     $email->sendMail(); 
+ * $email->setSubject($m['subject']);
+ * $email->setTo($m['to']);
+ * $img_id = $email->addAttachment('/var/www/html/img/pic.jpg', 'image/jpg');
+ * $email->addTextMessage($m['content']);
+ * $email->sendMail();
  * }
  * $email->close();
  * </code>
@@ -45,75 +50,84 @@
  * The configuration parameters are the one for Mail::factory with the
  * 'mail_' prefix not to conflict with the other parameters.
  *
- * @see http://pear.php.net/manual/en/package.mail.mail.factory.php
- *
- * 'mail_backend' - 'mail', 'smtp' or 'sendmail' (default 'mail').
- *
- * List of parameter for the backends:
- *
- *  mail backend
- * --------------
- *
- * If safe mode is disabled, an array with all the 'mail_*' parameters
- * excluding 'mail_backend' will be passed as the fifth argument to
- * the PHP mail() function. The elements will be joined as a
- * space-delimited string.
- *
- *  sendmail backend
- * ------------------
- *
- * 'mail_sendmail_path' - The location of the sendmail program on the
- *                        filesystem. Default is /usr/bin/sendmail
- * 'sendmail_args' - Additional parameters to pass to the
- *                   sendmail. Default is -i
- *
- *  smtp backend
- * --------------
- *
- * 'mail_host' - The server to connect. Default is localhost
- * 'mail_port' - The port to connect. Default is 25
- * 'mail_auth' - Whether or not to use SMTP authentication. Default is
- *               FALSE
- *
- * 'mail_username' - The username to use for SMTP authentication.
- * 'mail_password' - The password to use for SMTP authentication.
- * 'mail_localhost' - The value to give when sending EHLO or
- *                    HELO. Default is localhost
- * 'mail_timeout' - The SMTP connection timeout. Default is NULL (no
- *                  timeout)
- * 'mail_verp' - Whether to use VERP or not. Default is FALSE
- * 'mail_debug' - Whether to enable SMTP debug mode or not. Default is
- *                FALSE
- * 'mail_persist' - Will automatically be set to true.
- *
- * If you are doing some testing, you should use the smtp backend 
- * together with fakemail: http://www.lastcraft.com/fakemail.php
+ * @see http://pear.php.net/manual/en/package.mail.mail.factory.php 'mail_backend' - 'mail', 'smtp' or 'sendmail' (default 'mail').
+ *     
+ *      List of parameter for the backends:
+ *     
+ *      mail backend
+ *      --------------
+ *     
+ *      If safe mode is disabled, an array with all the 'mail_*' parameters
+ *      excluding 'mail_backend' will be passed as the fifth argument to
+ *      the PHP mail() function. The elements will be joined as a
+ *      space-delimited string.
+ *     
+ *      sendmail backend
+ *      ------------------
+ *     
+ *      'mail_sendmail_path' - The location of the sendmail program on the
+ *      filesystem. Default is /usr/bin/sendmail
+ *      'sendmail_args' - Additional parameters to pass to the
+ *      sendmail. Default is -i
+ *     
+ *      smtp backend
+ *      --------------
+ *     
+ *      'mail_host' - The server to connect. Default is localhost
+ *      'mail_port' - The port to connect. Default is 25
+ *      'mail_auth' - Whether or not to use SMTP authentication. Default is
+ *      FALSE
+ *     
+ *      'mail_username' - The username to use for SMTP authentication.
+ *      'mail_password' - The password to use for SMTP authentication.
+ *      'mail_localhost' - The value to give when sending EHLO or
+ *      HELO. Default is localhost
+ *      'mail_timeout' - The SMTP connection timeout. Default is NULL (no
+ *      timeout)
+ *      'mail_verp' - Whether to use VERP or not. Default is FALSE
+ *      'mail_debug' - Whether to enable SMTP debug mode or not. Default is
+ *      FALSE
+ *      'mail_persist' - Will automatically be set to true.
+ *     
+ *      If you are doing some testing, you should use the smtp backend
+ *      together with fakemail: http://www.lastcraft.com/fakemail.php
  */
-class Pluf_Mail_Batch
+class Batch
 {
+
     public $headers = array();
+
     public $message;
+
     public $encoding = 'utf-8';
+
     public $crlf = "\n";
+
     public $from = '';
+
     protected $backend = null;
 
     /**
      * Construct the base email.
      *
-     * @param string The email of the sender.
-     * @param string Encoding of the message ('UTF-8')
-     * @param string End of line type ("\n")
+     * @param
+     *            string The email of the sender.
+     * @param
+     *            string Encoding of the message ('UTF-8')
+     * @param
+     *            string End of line type ("\n")
      */
-    function __construct($src, $encoding='UTF-8', $crlf="\n")
+    function __construct($src, $encoding = 'UTF-8', $crlf = "\n")
     {
         // Note that the Pluf autoloader will correctly load this PEAR
         // object.
-        $this->message = new Mail_mime($crlf); 
+        $this->message = new Mail_mime($crlf);
         $this->message->_build_params['html_charset'] = $encoding;
         $this->message->_build_params['text_charset'] = $encoding;
-        $this->message->_build_params['head_charset'] = $encoding;        
-        $this->headers = array('From' => $src);
+        $this->message->_build_params['head_charset'] = $encoding;
+        $this->headers = array(
+            'From' => $src
+        );
         $this->encoding = $encoding;
         $this->crlf = $crlf;
         $this->from = $src;
@@ -122,7 +136,8 @@ class Pluf_Mail_Batch
     /**
      * Set the subject of the email.
      *
-     * @param string Subject
+     * @param
+     *            string Subject
      */
     function setSubject($subject)
     {
@@ -132,7 +147,8 @@ class Pluf_Mail_Batch
     /**
      * Set the recipient of the email.
      *
-     * @param string Recipient email
+     * @param
+     *            string Recipient email
      */
     function setTo($email)
     {
@@ -142,7 +158,8 @@ class Pluf_Mail_Batch
     /**
      * Add the base plain text message to the email.
      *
-     * @param string The message
+     * @param
+     *            string The message
      */
     function addTextMessage($msg)
     {
@@ -152,7 +169,8 @@ class Pluf_Mail_Batch
     /**
      * Set the return path for the email.
      *
-     * @param string Email
+     * @param
+     *            string Email
      */
     function setReturnPath($email)
     {
@@ -162,7 +180,8 @@ class Pluf_Mail_Batch
     /**
      * Add headers to an email.
      *
-     * @param array Array of headers
+     * @param
+     *            array Array of headers
      */
     function addHeaders($hdrs)
     {
@@ -172,7 +191,8 @@ class Pluf_Mail_Batch
     /**
      * Add the alternate HTML message to the email.
      *
-     * @param string The HTML message
+     * @param
+     *            string The HTML message
      */
     function addHtmlMessage($msg)
     {
@@ -185,11 +205,13 @@ class Pluf_Mail_Batch
      * The file to attach must be available on disk and you need to
      * provide the mimetype of the attachment manually.
      *
-     * @param string Path to the file to be added.
-     * @param string Mimetype of the file to be added ('text/plain').
+     * @param
+     *            string Path to the file to be added.
+     * @param
+     *            string Mimetype of the file to be added ('text/plain').
      * @return bool True.
      */
-    function addAttachment($file, $ctype='text/plain')
+    function addAttachment($file, $ctype = 'text/plain')
     {
         $this->message->addAttachment($file, $ctype);
     }
@@ -206,19 +228,20 @@ class Pluf_Mail_Batch
             if (Pluf::f('mail_backend') == 'smtp') {
                 $params['persist'] = true;
             }
-            $this->backend = $gmail->factory(Pluf::f('mail_backend', 'mail'), 
-                                             $params);
+            $this->backend = $gmail->factory(Pluf::f('mail_backend', 'mail'), $params);
         }
         $body = $this->message->get();
         $hdrs = $this->message->headers($this->headers);
         if (Pluf::f('send_emails', true)) {
             $this->backend->send($this->headers['To'], $hdrs, $body);
         }
-        $this->message = new Mail_mime($this->crlf); 
+        $this->message = new Mail_mime($this->crlf);
         $this->message->_build_params['html_charset'] = $this->encoding;
         $this->message->_build_params['text_charset'] = $this->encoding;
-        $this->message->_build_params['head_charset'] = $this->encoding;        
-        $this->headers = array('From' => $this->from);
+        $this->message->_build_params['head_charset'] = $this->encoding;
+        $this->headers = array(
+            'From' => $this->from
+        );
     }
 
     function close()

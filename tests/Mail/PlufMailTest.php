@@ -20,10 +20,10 @@ namespace Pluf\Test\Mail;
 
 use PHPUnit\Framework\TestCase;
 use Pluf;
-
 require_once 'Pluf.php';
 
 /**
+ *
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
@@ -31,6 +31,7 @@ class PlufMailTest extends TestCase
 {
 
     /**
+     *
      * @before
      * @return void
      */
@@ -41,8 +42,6 @@ class PlufMailTest extends TestCase
 
     public function testGenerateEmail()
     {
-        $this->markTestSkipped(
-            'It implies PEAR testing and PHPUnit does not work well with PEAR.'
-        );
+        $this->markTestSkipped('It implies PEAR testing and PHPUnit does not work well with PEAR.');
     }
 }
