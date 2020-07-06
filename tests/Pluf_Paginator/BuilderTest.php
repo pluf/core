@@ -41,8 +41,8 @@ class Pluf_Paginator_BuilderTest extends TestCase
 
         $m1 = new Pluf_Paginator_MyModel();
 
-        Pluf_Migration::dropTables($engine, $schema, $m1);
-        Pluf_Migration::createTables($engine, $schema, $m1);
+        \Pluf\Migration::dropTables($engine, $schema, $m1);
+        \Pluf\Migration::createTables($engine, $schema, $m1);
 
         for ($i = 1; $i < 11; $i ++) {
             $m = new Pluf_Paginator_MyModel();
@@ -62,7 +62,7 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $schema = $db->getSchema();
 
         $m1 = new Pluf_Paginator_MyModel();
-        Pluf_Migration::dropTables($db, $schema, $m1);
+        \Pluf\Migration::dropTables($db, $schema, $m1);
     }
 
     /**

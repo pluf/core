@@ -28,19 +28,19 @@ namespace Pluf;
  * Simple example usage:
  *
  * <pre>
- * $m = new Pluf_Migration('MyApp');
+ * $m = new \Pluf\Migration('MyApp');
  * $m->migrate();
  *
  * // Install the application MyApp
- * $m = new Pluf_Migration('MyApp');
+ * $m = new \Pluf\Migration('MyApp');
  * $m->install();
  * // Uninstall the application MyApp
  * $m->uninstall();
  *
- * $m = new Pluf_Migration();
+ * $m = new \Pluf\Migration();
  * $m->migrate(); // migrate all the installed app to the newest version.
  *
- * $m = new Pluf_Migration();
+ * $m = new \Pluf\Migration();
  * $m->migrate(3); // migrate (upgrade or downgrade) to version 3
  * </pre>
  */

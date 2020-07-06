@@ -26,7 +26,6 @@ use Pluf\Data\Query;
 use Pluf\NoteBook\Book;
 use Pluf\NoteBook\Tag;
 use Pluf;
-use Pluf_Migration;
 
 class RepositoryTest extends TestCase
 {
@@ -38,7 +37,7 @@ class RepositoryTest extends TestCase
     public static function installApplication()
     {
         Pluf::start(__DIR__ . '/../conf/config.php');
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->install();
     }
 
@@ -48,7 +47,7 @@ class RepositoryTest extends TestCase
      */
     public static function deleteApplication()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 

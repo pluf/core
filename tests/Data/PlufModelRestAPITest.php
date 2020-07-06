@@ -23,9 +23,8 @@ require_once 'Pluf.php';
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;
-use Pluf;
-use Pluf_Migration;
 use Pluf\HTTP\Request;
+use Pluf;
 
 class PlufModelRestAPITest extends TestCase
 {
@@ -39,7 +38,7 @@ class PlufModelRestAPITest extends TestCase
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['view_api_prefix'] = '/api/test/prefix' . rand();
         Pluf::start($conf);
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->install();
     }
 
@@ -49,7 +48,7 @@ class PlufModelRestAPITest extends TestCase
      */
     public static function removeDatabses()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 

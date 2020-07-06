@@ -55,7 +55,7 @@ class Pluf_Migration_InitTest extends TestCase
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Empty'
         ));
         $this->assertTrue($m->install());
@@ -74,7 +74,7 @@ class Pluf_Migration_InitTest extends TestCase
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Empty'
         ));
         $this->assertTrue($m->install());
@@ -95,7 +95,7 @@ class Pluf_Migration_InitTest extends TestCase
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Note'
         ));
         $this->assertTrue($m->install());
@@ -113,7 +113,7 @@ class Pluf_Migration_InitTest extends TestCase
             'Note'
         );
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Note'
         ));
         $this->assertTrue($m->install());

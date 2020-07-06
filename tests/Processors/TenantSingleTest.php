@@ -9,7 +9,6 @@ use Pluf\Module;
 use Pluf\HTTP\Request;
 use Pluf\Processors\TenantProcessor;
 use Pluf;
-use Pluf_Migration;
 
 class TenantSingleTest extends TestCase
 {
@@ -29,7 +28,7 @@ class TenantSingleTest extends TestCase
 
         // Install
         Pluf::start($config);
-        $migration = new Pluf_Migration();
+        $migration = new \Pluf\Migration();
         $migration->install();
     }
 
@@ -40,7 +39,7 @@ class TenantSingleTest extends TestCase
     public static function removeApplication()
     {
         // unistall
-        $migration = new Pluf_Migration();
+        $migration = new \Pluf\Migration();
         $migration->uninstall();
     }
 

@@ -28,7 +28,6 @@ use Pluf\Relation\ModelRecurse;
 use Pluf\Relation\RelatedToTestModel;
 use Pluf\Relation\RelatedToTestModel2;
 use Pluf;
-use Pluf_Migration;
 
 class PlufModelMTTest extends TestCase
 {
@@ -42,7 +41,7 @@ class PlufModelMTTest extends TestCase
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['multitenant'] = true;
         Pluf::start($conf);
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->install();
 
         // Test tenant
@@ -63,7 +62,7 @@ class PlufModelMTTest extends TestCase
      */
     public static function removeDatabses()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 

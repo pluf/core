@@ -41,7 +41,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['multitenant'] = true;
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Pluf',
             'Empty'
         ));
@@ -61,7 +61,7 @@ class Pluf_Migration_MtnitTest extends TestCase
             'Empty'
         );
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Pluf',
             'Empty'
         ));
@@ -90,7 +90,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Pluf',
             'Note'
         ));
@@ -110,7 +110,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Pluf',
             'Note'
         ));

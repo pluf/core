@@ -42,7 +42,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
             'Test'
         );
         Pluf::start($conf);
-        $m = new Pluf_Migration($conf['installed_apps']);
+        $m = new \Pluf\Migration($conf['installed_apps']);
         $m->install();
     }
 
@@ -52,7 +52,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
      */
     public static function removeDatabses1()
     {
-        $m = new Pluf_Migration(array(
+        $m = new \Pluf\Migration(array(
             'Pluf',
             'Test'
         ));

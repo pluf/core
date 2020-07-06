@@ -42,7 +42,7 @@
         </testsuite>
 <!--         <testsuite name="Pluf2Suit"> -->
 <!--             <directory>tests/Pluf tenant/</directory> -->
-<!--             <directory>tests/Pluf_Migration/</directory> -->
+<!--             <directory>tests/\Pluf\Migration/</directory> -->
 <!-- 		</testsuite> -->
 <!--         <testsuite name="View"> -->
 <!--             <directory>tests/Pluf_Paginator/</directory> -->

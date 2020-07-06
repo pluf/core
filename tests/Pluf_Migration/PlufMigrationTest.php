@@ -39,7 +39,7 @@ class PlufMigrationTest extends TestCase
 
     public function testMigrate()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->dry_run = false;
         $this->assertEquals(true, $m->migrate());
         $this->assertEquals(true, $m->migrate(0));
@@ -47,14 +47,14 @@ class PlufMigrationTest extends TestCase
 
     public function testMigrateDown()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->dry_run = true;
         $this->assertEquals(true, $m->migrate(0));
     }
 
     public function testMigrateUp()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->dry_run = true;
         $this->assertEquals(true, $m->migrate(5));
     }

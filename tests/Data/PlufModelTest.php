@@ -28,7 +28,6 @@ use Pluf\Relation\ModelRecurse;
 use Pluf\Relation\RelatedToTestModel;
 use Pluf\Relation\RelatedToTestModel2;
 use Pluf;
-use Pluf_Migration;
 
 class PlufModelTest extends TestCase
 {
@@ -45,7 +44,7 @@ class PlufModelTest extends TestCase
         ];
         Pluf::start($conf);
 
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->install();
     }
 
@@ -55,7 +54,7 @@ class PlufModelTest extends TestCase
      */
     public static function removeDatabses()
     {
-        $m = new Pluf_Migration();
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 

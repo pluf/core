@@ -6,11 +6,10 @@ require_once 'Pluf.php';
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;
+use Pluf\HTTP\Request;
 use Pluf\Pluf\Tenant;
 use Pluf\Processors\TenantProcessor;
 use Pluf;
-use Pluf_Migration;
-use Pluf\HTTP\Request;
 
 class TenantTest extends TestCase
 {
@@ -30,7 +29,7 @@ class TenantTest extends TestCase
 
         // Install
         Pluf::start($config);
-        $migration = new Pluf_Migration();
+        $migration = new \Pluf\Migration();
         $migration->install();
     }
 
@@ -41,7 +40,7 @@ class TenantTest extends TestCase
     public static function removeApplication()
     {
         // unistall
-        $migration = new Pluf_Migration();
+        $migration = new \Pluf\Migration();
         $migration->uninstall();
     }
 
