@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of bootstrap Framework, a simple PHP Application Framework.
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use PHPUnit\Framework\TestCase;
-use function Pluf\start as rand;
+namespace Pluf\Test\Migration;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
+use PHPUnit\Framework\TestCase;
+use Pluf\NoteBook\Book;
+use Pluf\Pluf\Tenant;
+use Pluf;
 
 /**
  * Single tenant test
@@ -27,21 +29,8 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
  * @backupGlobals disabled
  * @backupStaticAttributes disabled
  */
-class Pluf_Migration_InitTest extends TestCase
+class Pluf_Migration_MtnitTest extends TestCase
 {
-
-    /**
-     *
-     * @beforeClass
-     */
-    public static function createDataBase()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/';
-        $_SERVER['REMOTE_ADDR'] = '/';
-
-        $GLOBALS['_PX_uniqid'] = '1234';
-    }
 
     /**
      *
@@ -50,14 +39,13 @@ class Pluf_Migration_InitTest extends TestCase
     public function shouldInstallEmptyApp()
     {
         $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'Empty'
-        );
-        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
+        $conf['multitenant'] = true;
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Empty'
+            'Pluf',
+            'Smallest'
         ));
+
         $this->assertTrue($m->install());
         $this->assertTrue($m->uninstall());
     }
@@ -70,16 +58,23 @@ class Pluf_Migration_InitTest extends TestCase
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
-            'Empty'
+            'Smallest'
         );
-        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Empty'
+            'Pluf',
+            'Smallest'
         ));
         $this->assertTrue($m->install());
 
-        $this->assertTrue($m->init());
+        $tenant = new Tenant();
+        $tenant->title = 'Default Tenant';
+        $tenant->description = 'Auto generated tenant';
+        $tenant->subdomain = Pluf::f('tenant_default', 'main');
+        $tenant->domain = Pluf::f('general_domain', 'donate.com');
+        $tenant->create();
+        $this->assertTrue($m->init($tenant));
+
         $this->assertTrue($m->uninstall());
     }
 
@@ -91,12 +86,13 @@ class Pluf_Migration_InitTest extends TestCase
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
-            'Note'
+            'NoteBook'
         );
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Note'
+            'Pluf',
+            'NoteBook'
         ));
         $this->assertTrue($m->install());
         $this->assertTrue($m->uninstall());
@@ -110,17 +106,29 @@ class Pluf_Migration_InitTest extends TestCase
     {
         $conf = include __DIR__ . '/../conf/config.php';
         $conf['installed_apps'] = array(
-            'Note'
+            'NoteBook'
         );
+        $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Note'
+            'Pluf',
+            'NoteBook'
         ));
         $this->assertTrue($m->install());
 
-        $this->assertTrue($m->init());
+        $tenant = new Tenant();
+        $tenant->title = 'Default Tenant';
+        $tenant->description = 'Auto generated tenant';
+        $tenant->subdomain = Pluf::f('tenant_default', 'main');
+        $tenant->domain = Pluf::f('general_domain', 'donate.com');
+        $tenant->create();
+        $this->assertTrue($m->init($tenant));
 
-        $note = new Note_Book();
+        // 1- Switch Tenant to the new one
+        Tenant::setCurrent($tenant);
+
+        // 2- Create new instance of book
+        $note = new Book();
         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
 
         $this->assertTrue($m->unInstall());

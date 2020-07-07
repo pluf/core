@@ -1,5 +1,5 @@
 <?php
-namespace Pluf\Db\tests;
+namespace Pluf\Test\Db;
 
 use Pluf\Db\Expression;
 use Pluf\Db\Expressionable;

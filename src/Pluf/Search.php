@@ -19,6 +19,7 @@
  */
 namespace Pluf\Pluf;
 
+use Pluf\SQL;
 use Pluf\Text;
 use Pluf\Pluf\Search\Occ;
 use Pluf\Pluf\Search\Stats;
@@ -184,7 +185,7 @@ class Search
         }
         // Drop the last indexation.
         $gocc = new Occ();
-        $sql = new Pluf_SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
+        $sql = new SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
             $doc->_model,
             $doc->id
         ));
@@ -229,7 +230,7 @@ class Search
             $occ->create();
         }
         // update the stats
-        $sql = new Pluf_SQL('model_class=%s AND model_id=%s', array(
+        $sql = new SQL('model_class=%s AND model_id=%s', array(
             $doc->_model,
             $doc->id
         ));

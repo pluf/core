@@ -6,7 +6,7 @@ use Pluf\HTTP\Response;
 use Pluf\ObjectStorage;
 use Pluf\HTTP\ResponseFileBuilder;
 
-class ItemBinary extends ItemView
+class ItemBinary 
 {
 
     /**
