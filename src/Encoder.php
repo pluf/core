@@ -77,14 +77,14 @@ class Encoder
         if (preg_match('!^(http|https|ftp|gopher)\://(' . $ip . '|' . $dom . ')!i', $url)) {
             return $url;
         } else {
-            throw new Error403(sprintf(__('The URL <em>%s</em> is not valid.'), htmlspecialchars($url)));
+            throw new Error403(sprintf(('The URL <em>%s</em> is not valid.'), htmlspecialchars($url)));
         }
     }
 
     static function varchar($string, $form = array(), $p = array())
     {
         if (isset($p['size']) && strlen($string) > $p['size']) {
-            throw new Error403(sprintf(__('The value should not be more than <em>%s</em> characters long.'), $p['size']));
+            throw new Error403(sprintf(('The value should not be more than <em>%s</em> characters long.'), $p['size']));
         }
         return $string;
     }
@@ -92,7 +92,7 @@ class Encoder
     static function password($string, $form = array(), $p = array())
     {
         if (strlen($string) < 6) {
-            throw new Error403(sprintf(__('The password must be at least <em>%s</em> characters long.'), '6'));
+            throw new Error403(sprintf(('The password must be at least <em>%s</em> characters long.'), '6'));
         }
         return $string;
     }
@@ -102,7 +102,7 @@ class Encoder
         if (preg_match('/^[A-Z0-9._%-][+A-Z0-9._%-]*@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}$/i', $string)) {
             return $string;
         } else {
-            throw new Error403(sprintf(__('The email address "%s" is not valid.'), $string));
+            throw new Error403(sprintf(('The email address "%s" is not valid.'), $string));
         }
     }
 
@@ -138,7 +138,7 @@ class Encoder
     static function integer($int, $form = array(), $p = array())
     {
         if (! preg_match('/[0-9]+/', $int)) {
-            throw new Error403(__('The value must be an integer.'));
+            throw new Error403(('The value must be an integer.'));
         }
         return (int) $int;
     }
@@ -146,7 +146,7 @@ class Encoder
     static function datetime($datetime, $form = array(), $p = array())
     {
         if (false === ($stamp = strtotime($datetime))) {
-            throw new Error403(sprintf(__('The date and time <em>%s</em> are not valid.'), htmlspecialchars($datetime)));
+            throw new Error403(sprintf(('The date and time <em>%s</em> are not valid.'), htmlspecialchars($datetime)));
         }
         // convert to GMT
         return gmdate('Y-m-d H:i:s', $stamp);
@@ -156,7 +156,7 @@ class Encoder
     {
         $ymd = explode('-', $date);
         if (count($ymd) != 3 or strlen($ymd[0]) != 4 or false === checkdate($ymd[1], $ymd[2], $ymd[0])) {
-            throw new Error403(sprintf(__('The date <em>%s</em> is not valid.'), htmlspecialchars($date)));
+            throw new Error403(sprintf(('The date <em>%s</em> is not valid.'), htmlspecialchars($date)));
         }
         return $date;
     }

@@ -1,8 +1,6 @@
 <?php
 namespace Pluf\Test\Processors;
 
-require_once 'Pluf.php';
-
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;
@@ -84,8 +82,7 @@ class TenantTest extends TestCase
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $this->assertEquals(200, Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch(new Request('/helloword/HelloWord'))
             ->getStatusCode());
     }
@@ -107,9 +104,8 @@ class TenantTest extends TestCase
         $tenant->subdomain = $sub;
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
-        
-        $this->assertEquals(200, Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch(new Request('/helloword/HelloWord'))
             ->getStatusCode());
     }
@@ -131,15 +127,13 @@ class TenantTest extends TestCase
         $tenant->create();
         $this->assertFalse($tenant->isAnonymous());
 
-        $this->assertEquals(302, Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+        $this->assertEquals(302, Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch(new Request('/helloword/HelloWord'))
             ->getStatusCode());
 
         $request = new Request('/helloword/HelloWord');
         $request->setHeader('_PX_tenant', $tenant->id);
-        $this->assertEquals(200, Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch($request)
             ->getStatusCode());
     }

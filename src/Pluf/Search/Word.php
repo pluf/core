@@ -19,7 +19,6 @@
  */
 namespace Pluf\Pluf\Search;
 
-use \Pluf\Data\Model;
 
 /**
  * Storage of the words.
@@ -43,7 +42,7 @@ class Word extends \Pluf\Data\Model
                 'blank' => false,
                 'unique' => true,
                 'size' => 150,
-                'verbose' => __('word')
+                'verbose' => 'word'
             )
         );
     }

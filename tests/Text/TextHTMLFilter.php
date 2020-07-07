@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * This file is part of bootstrap Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@ namespace Pluf\Test\Text;
 use PHPUnit\Framework\TestCase;
 use Pluf\Text\HTML\Filter;
 use Pluf;
-require_once 'Pluf.php';
 
 /**
  * Based on the tests provided with the Pluf_Text_HTML_Filter original

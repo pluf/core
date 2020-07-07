@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * This file is part of bootstrap Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 namespace Pluf\Test\Data;
-
-require_once 'Pluf.php';
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
@@ -58,9 +56,7 @@ class PlufModelRestAPITest extends TestCase
      */
     public function getInvalidRequestWithRandomPrefix()
     {
-        $res = Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
-            ->dispatch(new Request('/helloword/HelloWord'));
+        $res = Dispatcher::getInstance()->setViews(Module::loadControllers())->dispatch(new Request('/helloword/HelloWord'));
         $this->assertNotNull($res);
         $this->assertEquals(404, $res->getStatusCode());
     }
@@ -72,13 +68,11 @@ class PlufModelRestAPITest extends TestCase
     public function getValidRequestWithRandomPrefix()
     {
         $query = Pluf::getConfig('view_api_prefix') . '/helloword/HelloWord';
-        
-        $this->assertNotNull(Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+
+        $this->assertNotNull(Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch(new Request($query)));
-        
-        $this->assertEquals(200, Dispatcher::getInstance()
-            ->setViews(Module::loadControllers())
+
+        $this->assertEquals(200, Dispatcher::getInstance()->setViews(Module::loadControllers())
             ->dispatch(new Request($query))
             ->getStatusCode());
     }

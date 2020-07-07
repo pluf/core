@@ -19,18 +19,18 @@
  */
 namespace Pluf\Pluf\Search;
 
-use \Pluf\Data\Model;
 
 /**
- * Storage of the occurence of the words.
+ * Keep track of when a document has been last indexed and the number
+ * of indexations.
  */
-class Occ extends \Pluf\Data\Model
+class Stats extends \Pluf\Data\Model
 {
 
     function init ()
     {
-        $this->_a['verbose'] = 'occurence';
-        $this->_a['table'] = 'pluf_search_occs';
+        $this->_a['verbose'] = 'search stats';
+        $this->_a['table'] = 'pluf_search_stats';
         $this->_a['cols'] = array(
                 // It is mandatory to have an "id" column.
                 'id' => array(
@@ -38,45 +38,48 @@ class Occ extends \Pluf\Data\Model
                         // It is automatically added.
                         'blank' => true
                 ),
-                'word' => array(
-                        'type' => 'Foreignkey',
-                        'model' => 'Pluf_Search_Word',
-                        'blank' => false,
-                        'verbose' => __('word')
-                ),
                 'model_class' => array(
                         'type' => 'Varchar',
                         'blank' => false,
                         'size' => 150,
-                        'verbose' => __('model class')
+                        'verbose' => 'model class'
                 ),
                 'model_id' => array(
                         'type' => 'Integer',
                         'blank' => false,
-                        'verbose' => __('model id')
+                        'verbose' => 'model id'
                 ),
-                'occ' => array(
+                'indexations' => array(
                         'type' => 'Integer',
                         'blank' => false,
-                        'verbose' => __('occurences')
+                        'verbose' => 'number of indexations',
+                        'default' => 0
                 ),
-                'pondocc' => array(
-                        'type' => 'Float',
-                        'blank' => false,
-                        'verbose' => __('weighted occurence')
+                'creation_dtime' => array(
+                        'type' => 'Datetime',
+                        'blank' => true,
+                        'verbose' => 'created at'
+                ),
+                'modif_dtime' => array(
+                        'type' => 'Datetime',
+                        'blank' => true,
+                        'verbose' => 'modified at'
                 )
         );
         $this->_a['idx'] = array(
-                'model_class_id_combo_word_idx' => array(
+                'model_class_id_combo_idx' => array(
                         'type' => 'unique',
-                        'col' => 'model_class, model_id, word'
+                        'col' => 'model_class, model_id'
                 )
         );
     }
 
-    function __toString ()
+    function preSave ($create = false)
     {
-        return $this->word;
+        if ($this->id == '') {
+            $this->creation_dtime = gmdate('Y-m-d H:i:s');
+        }
+        $this->modif_dtime = gmdate('Y-m-d H:i:s');
     }
 }
 

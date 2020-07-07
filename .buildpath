@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
-	<buildpathentry kind="src" path="src"/>
+	<buildpathentry kind="src" path="src~"/>
 	<buildpathentry combineaccessrules="false" kind="prj" path="/http2"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 	<buildpathentry kind="src" path="examples/HelloWord">
@@ -23,7 +23,7 @@
 			<attribute name="composer" value="source"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="src6">
+	<buildpathentry kind="src" path="src">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>

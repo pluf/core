@@ -1,8 +1,6 @@
 <?php
 namespace Pluf\Test\Data;
 
-require_once 'Pluf.php';
-
 use PHPUnit\Framework\TestCase;
 use Pluf\Data\ModelDescription;
 use Pluf\Data\Query;
@@ -10,7 +8,7 @@ use Pluf;
 
 /**
  *
- * Here is list of all \Pluf\Data\Model supports.
+ * Here is list of all \bootstrap\Data\Model supports.
  *
  * - create by id ..................... ok
  * - get .............................. ok

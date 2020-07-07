@@ -1,8 +1,6 @@
 <?php
 namespace Pluf\Test\Processors;
 
-require_once 'Pluf.php';
-
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\Module;

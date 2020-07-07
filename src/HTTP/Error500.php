@@ -16,7 +16,7 @@ class Error500 extends \Pluf\Exception
     {
         $status = 500;
         $link = Pluf::f('exception_5000_link', '/wiki/page/en/internal-error');
-        $developerMessage = __('Unknown exception happend.');
+        $developerMessage = 'Unknown exception happend.';
         parent::__construct($message, $code, $previous, $status, $link, $developerMessage);
     }
 }

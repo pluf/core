@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * This file is part of bootstrap Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
  */
 namespace Pluf\Test\Data;
 
-require_once 'Pluf.php';
 use PHPUnit\Framework\TestCase;
 use Pluf\Pluf\Tenant;
 use Pluf\Relation\ManyToManyTwo;
@@ -340,18 +339,18 @@ class PlufModelMTTest extends TestCase
         $this->assertEquals(0, count($rel));
     }
 
-//     /**
-//      * XXX: maso, 2020: check if this process must fail
-//      * @expectedException Exception
-//      * @test
-//      */
-//     public function testExceptionOnProperty()
-//     {
-//         $model = new Model();
-//         $model->title = 'title';
-//         $model->description = 'A small desc ';
-//         $this->assertEquals(true, $model->create());
-//         // $rel = $model->should_fail;
-//     }
+    // /**
+    // * XXX: maso, 2020: check if this process must fail
+    // * @expectedException Exception
+    // * @test
+    // */
+    // public function testExceptionOnProperty()
+    // {
+    // $model = new Model();
+    // $model->title = 'title';
+    // $model->description = 'A small desc ';
+    // $this->assertEquals(true, $model->create());
+    // // $rel = $model->should_fail;
+    // }
 }
 

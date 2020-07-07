@@ -61,7 +61,7 @@ class RedirectToLogin extends \Pluf\HTTP\Response
                 '_redirect_after' => $request->uri
             ));
         }
-        $content = sprintf(__('<a href="%s">Please, click here to be redirected</a>.'), $encoded);
+        $content = sprintf('<a href="%s">Please, click here to be redirected</a>.', $encoded);
         parent::__construct($content);
         $this->headers['Location'] = $url;
         $this->status_code = 302;

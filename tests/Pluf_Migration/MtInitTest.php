@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * This file is part of bootstrap Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@
 use PHPUnit\Framework\TestCase;
 use Pluf\NoteBook\Book;
 use Pluf\Pluf\Tenant;
-require_once 'Pluf.php';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
 
@@ -42,7 +41,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf['multitenant'] = true;
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Pluf',
+            'bootstrap',
             'Empty'
         ));
 
@@ -62,7 +61,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         );
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Pluf',
+            'bootstrap',
             'Empty'
         ));
         $this->assertTrue($m->install());
@@ -91,7 +90,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Pluf',
+            'bootstrap',
             'Note'
         ));
         $this->assertTrue($m->install());
@@ -111,7 +110,7 @@ class Pluf_Migration_MtnitTest extends TestCase
         $conf['db_table_prefix'] = 'pluf_unit_tests_' . rand() . '_';
         Pluf::start($conf);
         $m = new \Pluf\Migration(array(
-            'Pluf',
+            'bootstrap',
             'Note'
         ));
         $this->assertTrue($m->install());

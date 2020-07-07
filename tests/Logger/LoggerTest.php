@@ -1,8 +1,6 @@
 <?php
 namespace Pluf\Test\Logger;
 
-require_once 'Pluf.php';
-
 use PHPUnit\Framework\TestCase;
 use Pluf\Logger;
 use Pluf;

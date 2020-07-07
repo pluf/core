@@ -300,9 +300,9 @@ public static function render($c) {$t = $c; ?>' . $this->template_content . '<?p
     {
         $date = Template::dateFormat($date, '%Y-%m-%d %H:%M:%S');
         if ($f == 'withal') {
-            return \Pluf\Date::easy($date, null, 2, __('now'));
+            return \Pluf\Date::easy($date, null, 2, ('now'));
         } else {
-            return \Pluf\Date::easy($date, null, 2, __('now'), false);
+            return \Pluf\Date::easy($date, null, 2, ('now'), false);
         }
     }
 
@@ -313,9 +313,9 @@ public static function render($c) {$t = $c; ?>' . $this->template_content . '<?p
     {
         $date = self::timeFormat($date);
         if ($f == 'withal') {
-            return \Pluf\Date::easy($date, null, 2, __('now'));
+            return \Pluf\Date::easy($date, null, 2, ('now'));
         } else {
-            return \Pluf\Date::easy($date, null, 2, __('now'), false);
+            return \Pluf\Date::easy($date, null, 2, ('now'), false);
         }
     }
 
