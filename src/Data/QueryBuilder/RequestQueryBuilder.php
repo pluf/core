@@ -39,19 +39,10 @@ class RequestQueryBuilder extends \Pluf\Data\QueryBuilder
      */
     function __construct(Request $request)
     {
-        // load query
-        if (isset($request->REQUEST[self::SEARCH_QUERY_KEY])) {
-            $this->setQueryString($request->REQUEST[self::SEARCH_QUERY_KEY]);
-        }
-
         $this->loadPage($request)
             ->loadSorts($request)
             ->loadFilters($request)
             ->loadQuery($request);
-
-        // Load options
-        $this->loadSortOptions($request);
-        $this->loadFilterOptions($request);
     }
 
     /*
@@ -89,7 +80,7 @@ class RequestQueryBuilder extends \Pluf\Data\QueryBuilder
     {
         if (! isset($request->REQUEST[self::SORT_KEY_KEY])) {
             $this->sort_order = [];
-            return;
+            return $this;
         }
         // Sort orders
         $keys = $request->REQUEST[self::SORT_KEY_KEY];
@@ -126,7 +117,7 @@ class RequestQueryBuilder extends \Pluf\Data\QueryBuilder
 
         // check filter option
         if (! array_key_exists(self::FILTER_KEY_KEY, $request->REQUEST)) {
-            return;
+            return $this;
         }
 
         $keys = $request->REQUEST[self::FILTER_KEY_KEY];
@@ -157,6 +148,12 @@ class RequestQueryBuilder extends \Pluf\Data\QueryBuilder
      */
     private function loadQuery(Request $request): RequestQueryBuilder
     {
+        // load query
+        $query = null;
+        if (isset($request->REQUEST[self::SEARCH_QUERY_KEY])) {
+            $query = $request->REQUEST[self::SEARCH_QUERY_KEY];
+        }
+        $this->setSelect((string) $query);
         return $this;
     }
 }

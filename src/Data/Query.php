@@ -88,18 +88,20 @@ class Query
 
     private bool $count = false;
 
+    private ?string $select = null;
+
     /**
      * Creates new instance of the Query
      *
      * To build a query:
      *
-     * - view
-     * - filter
-     * - order
-     * - start
-     * - limit
-     * - select
-     * - count
+     * - view: a view to apply
+     * - filter: list of where clouse
+     * - order: list of order by
+     * - start: start index of results
+     * - limit: Limit of resoult count
+     * - select: a query to search
+     * - count: returns counts of items
      *
      * @param array $param
      */
@@ -118,6 +120,16 @@ class Query
     }
 
     /**
+     * Gets select query
+     *
+     * @return string
+     */
+    public function getSelect(): string
+    {
+        return $this->select;
+    }
+
+    /**
      * Get current view of the query
      *
      * @return string view
@@ -131,7 +143,7 @@ class Query
      *
      * @return array of filters
      */
-    public function getFilter()
+    public function getFilter(): array
     {
         return $this->filter;
     }
@@ -140,7 +152,7 @@ class Query
      *
      * @return array order
      */
-    public function getOrder()
+    public function getOrder(): array
     {
         return $this->order;
     }
@@ -149,7 +161,7 @@ class Query
      *
      * @return number
      */
-    public function getStart()
+    public function getStart(): int
     {
         return $this->start;
     }
@@ -158,7 +170,7 @@ class Query
      *
      * @return number
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         if ($this->limit < 1) {
             return Query::MAX_RESULT_SIZE;
@@ -170,7 +182,7 @@ class Query
      *
      * @return number of item
      */
-    public function getCount()
+    public function getCount(): bool
     {
         return $this->count;
     }

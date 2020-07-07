@@ -16,27 +16,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-Pluf::loadClass('\Pluf\Data\Model');
+namespace Pluf\NoteBook;
 
-class Pluf_Paginator_MyGeoModel extends \Pluf\Data\Model
+use Pluf\Data\Model;
+use Pluf\Data\Schema;
+
+/**
+ * Saves library location
+ *
+ * @author maso
+ *        
+ */
+class Library extends Model
 {
-    
+
     function init()
     {
-        $this->_a['table'] = 'testforgeomodels';
+        $this->_a['table'] = 'notebook_library';
         $this->_a['cols'] = array(
             'id' => array(
-                'type' => 'Sequence',
+                'type' => Schema::SEQUENCE,
                 'blank' => true
             ), // It is automatically added.
             'title' => array(
-                'type' => 'Varchar',
+                'type' => Schema::VARCHAR,
                 'blank' => false,
                 'size' => 100,
                 'verbose' => 'Title of the item'
             ),
             'location' => array(
-                'type' => 'Geometry',
+                'type' => Schema::GEOMETRY,
                 'blank' => true,
                 'is_null' => false,
                 'editable' => false,
@@ -44,8 +53,6 @@ class Pluf_Paginator_MyGeoModel extends \Pluf\Data\Model
             )
         );
     }
-    
-    
 }
 
 

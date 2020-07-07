@@ -1,7 +1,7 @@
 <?php
-namespace Pluf\HTTP;
+namespace Pluf\ObjectMapper;
 
-use Pluf\ObjectMapper;
+use Pluf\HTTP\Request;
 
 /**
  * Maps HTTP request to objects
@@ -12,61 +12,34 @@ use Pluf\ObjectMapper;
  * @author maso
  *        
  */
-class RequestMapper extends ObjectMapper
+class RequestMapper extends ArrayMapper
 {
 
     private ?Request $request;
 
-    private int $length = 0;
-
-    private int $pointer = 0;
-
-    private array $values = [];
-
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $values = [];
         switch ($request->method) {
             case 'GET':
-                $this->loadGetParams();
+                $values = $this->loadGetParams();
                 break;
             case 'POST':
-                $this->loadPostParams();
+                $values = $this->loadPostParams();
                 break;
             case 'PUT':
             case 'HEAD':
             default:
-                $this->loadEmptyParams();
+                $values = $this->loadEmptyParams();
                 break;
         }
-    }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Pluf\ObjectMapper::next()
-     */
-    public function next($object): Object
-    {
-        $values = $this->values[$this->pointer];
-        return $this->fillObject($object, $values);
-    }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see \Pluf\ObjectMapper::hasMore()
-     */
-    public function hasMore(): bool
-    {
-        return $this->pointer < $this->length;
+        parent::__construct($values);
     }
 
     private function loadGetParams()
     {
-        $this->length = 1;
-        $this->pointer = 0;
-        $this->values = [
+        return [
             $this->request->REQUEST
         ];
     }
@@ -87,23 +60,19 @@ class RequestMapper extends ObjectMapper
              */
             case 'application/x-www-form-urlencoded':
             case 'multipart/form-data':
-                $this->length = 1;
-                $this->pointer = 0;
-                $this->values = [
+                return [
                     $request->REQUEST
                 ];
                 break;
             default:
-                $this->loadEmptyParams();
+                return $this->loadEmptyParams();
                 break;
         }
     }
 
     private function loadEmptyParams()
     {
-        $this->length = 0;
-        $this->pointer = 0;
-        $this->values = [];
+        return [];
     }
 }
 

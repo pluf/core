@@ -3,7 +3,8 @@ namespace Pluf;
 
 use Pluf\Data\ModelDescription;
 use Pluf\HTTP\Error500;
-use Pluf\HTTP\RequestMapper;
+use Pluf\ObjectMapper\ArrayMapper;
+use Pluf\ObjectMapper\RequestMapper;
 
 abstract class ObjectMapper
 {
@@ -38,6 +39,9 @@ abstract class ObjectMapper
     {
         if ($input instanceof HTTP\Request) {
             return new RequestMapper($input);
+        }
+        if (is_array($input)) {
+            return new ArrayMapper($input);
         }
         throw new Error500('No suitable object mapper fount for input: ' . get_class($input));
     }

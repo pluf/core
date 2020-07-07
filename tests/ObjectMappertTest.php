@@ -35,5 +35,30 @@ class ObjectMappertTest extends PlufTestCase
         $book = ObjectMapper::getInstance($request)->next($book);
         $this->assertEquals($title, $book->title);
     }
+
+    /**
+     *
+     * @test
+     */
+    public function fillBooksFromArray()
+    {
+        $books = [
+            [
+                "title" => "title" . rand(),
+                "description" => "description" . rand()
+            ],
+            [
+                "title" => "x" . rand(),
+                "description" => "z" . rand()
+            ]
+        ];
+        $mapper = ObjectMapper::getInstance($books);
+        for ($i = 0; $i < count($books); $i ++) {
+            $this->assertTrue($mapper->hasMore());
+            $item = $mapper->next(Book::class);
+            $this->assertEquals($books[$i]['title'], $item->title);
+            $this->assertEquals($books[$i]['description'], $item->description);
+        }
+    }
 }
 
