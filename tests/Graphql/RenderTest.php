@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Test\Graphql;
+
 use PHPUnit\Framework\TestCase;
+use Pluf\Graphql;
+use Pluf\NoteBook\Book;
+use Pluf;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
-
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
-class Pluf_Graphql_RenderTest extends TestCase
+class RenderTest extends TestCase
 {
 
     /**
@@ -34,14 +32,10 @@ class Pluf_Graphql_RenderTest extends TestCase
      */
     public static function installApplication1()
     {
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'bootstrap',
-            'Test'
-        );
-        Pluf::start($conf);
-        $m = new \Pluf\Migration($conf['installed_apps']);
-        $m->install();
+        // Load config
+        Pluf::start(__DIR__ . '/../conf/config.php');
+        $migration = new \Pluf\Migration();
+        $migration->install();
     }
 
     /**
@@ -50,10 +44,8 @@ class Pluf_Graphql_RenderTest extends TestCase
      */
     public static function removeDatabses1()
     {
-        $m = new \Pluf\Migration(array(
-            'bootstrap',
-            'Test'
-        ));
+        Pluf::start(__DIR__ . '/../conf/config.php');
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 
@@ -63,12 +55,12 @@ class Pluf_Graphql_RenderTest extends TestCase
      */
     public function testRenderAndRun()
     {
-        $rootValue = new Test_Model();
+        $rootValue = new Book();
         $rootValue->id = 1;
         $rootValue->title = 'title';
         $rootValue->description = 'description';
 
-        $gl = new Pluf_Graphql();
+        $gl = new Graphql();
         $result = $gl->render($rootValue, '{id, title, description}');
         $this->assertTrue(array_key_exists('id', $result));
         $this->assertTrue(array_key_exists('title', $result));
@@ -81,7 +73,7 @@ class Pluf_Graphql_RenderTest extends TestCase
      */
     public function testRenderAndRunNonDebug()
     {
-        $rootValue = new Test_Model();
+        $rootValue = new Book();
         $rootValue->id = 1;
         $rootValue->title = 'title';
         $rootValue->description = 'description';
@@ -95,7 +87,7 @@ class Pluf_Graphql_RenderTest extends TestCase
         Pluf::start($conf);
 
         for ($i = 0; $i < 2; $i ++) {
-            $gl = new Pluf_Graphql();
+            $gl = new Graphql();
             $result = $gl->render($rootValue, '{id, title, description}');
             $this->assertTrue(array_key_exists('id', $result));
             $this->assertTrue(array_key_exists('title', $result));

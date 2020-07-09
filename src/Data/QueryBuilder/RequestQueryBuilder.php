@@ -153,8 +153,13 @@ class RequestQueryBuilder extends \Pluf\Data\QueryBuilder
         if (isset($request->REQUEST[self::SEARCH_QUERY_KEY])) {
             $query = $request->REQUEST[self::SEARCH_QUERY_KEY];
         }
-        $this->setSelect((string) $query);
-        return $this;
+        return $this->setSelect($query);
     }
 }
 
+// XXX: maso, 2020: support Geometry in core of data model
+// $feild = $this->model->_a['cols'][$key];
+// if (strcmp($feild['type'], 'Geometry') === 0) {
+//     $str = "Contains(GeometryFromText('" . implode("')," . $key . ") OR Contains(GeometryFromText('", $vals) . "')," . $key . ")";
+//     $sql = new Pluf_SQL($str);
+// } else 

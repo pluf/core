@@ -741,7 +741,7 @@ class Model implements JsonSerializable
     function setAssoc(\Pluf\Data\Model $model, ?string $assocName = null)
     {
         if (! isset($assocName)) {
-            $property = Pluf::getDataSchema()->getRelationProperty($this, $model);
+            $property = ModelUtils::getRelationProperty(ModelDescription::getInstance($this), ModelDescription::getInstance($model));
             $assocName = $property->name;
         }
         Pluf::getDataRepository([

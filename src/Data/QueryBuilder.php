@@ -1,8 +1,9 @@
 <?php
 namespace Pluf\Data;
 
+use Pluf\DiContainerTrait;
 use Pluf\HTTP\Error500;
-use Pluf\HTTP\Request;
+use Pluf;
 
 /**
  * Crates a new query
@@ -12,6 +13,7 @@ use Pluf\HTTP\Request;
  */
 class QueryBuilder
 {
+    use DiContainerTrait;
 
     private $view;
 
@@ -30,13 +32,26 @@ class QueryBuilder
     /**
      * Creates new instance of the builder
      *
-     * @param Request|array $config
+     * @param mixed $config
      * @return QueryBuilder
      */
     public static function getInstance($config): QueryBuilder
     {
         if ($config instanceof \Pluf\HTTP\Request) {
             return new QueryBuilder\RequestQueryBuilder($config);
+        }
+        if ($config instanceof Query) {
+            $qb = new QueryBuilder();
+            $qb->setDefaults([
+                'view' => $config->getView(),
+                'count' => $config->getCount(),
+                'select' => $config->getSelect(),
+                'start' => $config->getStart(),
+                'limit' => $config->getLimit(),
+                'filters' => $config->getFilter(),
+                'orders' => $config->getOrder()
+            ]);
+            return $qb;
         }
         return new QueryBuilder();
     }
@@ -91,13 +106,28 @@ class QueryBuilder
         return $this;
     }
 
-    public function addFilter($key, $value): QueryBuilder
+    public function addFilter(): QueryBuilder
     {
-        $this->filters[] = [
-            $key,
-            '=',
-            $value
-        ];
+        $args = func_get_args();
+        switch (count($args)) {
+            case 0:
+                throw new Error500('A parameter is required.');
+            case 1:
+                $this->filters[] = $args[0];
+                break;
+            case 2:
+                $this->filters[] = [
+                    $args[0],
+                    '=',
+                    $args[1]
+                ];
+                break;
+            case 3:
+                $this->filters[] = $args;
+                break;
+            default:
+                throw new Error500('Maximum allowed paramiter is 3');
+        }
         return $this;
     }
 
@@ -108,9 +138,58 @@ class QueryBuilder
      *            A query to perform on object.
      * @return QueryBuilder current builder
      */
-    public function setSelect(string $select): QueryBuilder
+    public function setSelect(?string $select = null): QueryBuilder
     {
         $this->select = $select;
+        return $this;
+    }
+
+    public function optimize(): QueryBuilder
+    {
+        return $this->optimizeFilters();
+    }
+
+    public function optimizeFilters(): QueryBuilder
+    {
+        $categories = [];
+        $other = [];
+        foreach ($this->filters as $filter) {
+            if (! is_array($filter)) {
+                $other[] = $filter;
+                continue;
+            }
+            $key = $filter[0];
+            $opr = $filter[1];
+            $val = $filter[2];
+            switch ($opr) {
+                case '=':
+                    if (! array_key_exists($key, $categories)) {
+                        $categories[$key] = [
+                            $key,
+                            'in',
+                            []
+                        ];
+                    }
+                    $categories[$key][2][] = $val;
+                    break;
+                case 'in':
+                    if (! array_key_exists($key, $categories)) {
+                        $categories[$key] = [
+                            $key,
+                            'in',
+                            []
+                        ];
+                    }
+                    if (! is_array($val)) {
+                        throw new Error500('Invalid value for in operation');
+                    }
+                    $categories[$key][2] = array_merge($categories[$key][2], $val);
+                    break;
+                default:
+                    $other[] = $filter;
+            }
+        }
+        $this->filters = array_merge($other, $categories);
         return $this;
     }
 
@@ -121,6 +200,10 @@ class QueryBuilder
      */
     public function build(): Query
     {
+        // optimize query
+        if (Pluf::getConfig('data.query.optimization.enable', true)) {
+            $this->optimize();
+        }
         return new Query([
             'view' => $this->view,
             'filter' => $this->filters,

@@ -43,8 +43,7 @@ class ModelRecurse extends \Pluf\Data\Model
             ],
             'parent' => [
                 'type' => Schema::MANY_TO_ONE,
-                'mapped' => true,
-                'joinProperty' => 'parent_id',
+                'joinColumne' => 'parent_id',
                 'inverseJoinModel' => ModelRecurse::class,
                 'inverseJoinProperty' => 'id'
             ],

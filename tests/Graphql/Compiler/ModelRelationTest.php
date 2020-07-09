@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Test\Graphql\Compiler;
+
 use PHPUnit\Framework\TestCase;
+use Pluf\Graphql\Compiler;
+use Pluf\Relation\ManyToManyOne;
+use Pluf\Relation\ManyToManyTwo;
+use Pluf\Relation\ModelRecurse;
+use Pluf;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
-
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
-class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
+class ModelRelationTest extends TestCase
 {
 
     /**
@@ -34,13 +34,8 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
      */
     public static function installApplication1()
     {
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'bootstrap',
-            'Test'
-        );
-        Pluf::start($conf);
-        $m = new \Pluf\Migration($conf['installed_apps']);
+        Pluf::start(__DIR__ . '/../../conf/config.php');
+        $m = new \Pluf\Migration();
         $m->install();
     }
 
@@ -50,10 +45,8 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
      */
     public static function removeDatabses1()
     {
-        $m = new \Pluf\Migration(array(
-            'bootstrap',
-            'Test'
-        ));
+        Pluf::start(__DIR__ . '/../../conf/config.php');
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 
@@ -64,32 +57,32 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
     public function testForeignkeyRenderAndRun()
     {
         // create data
-        $model = new Test_ModelRecurse();
+        $model = new ModelRecurse();
         $model->title = 'myvalue';
         $this->assertEquals('myvalue', $model->title);
         $model->create();
 
-        $model2 = new Test_ModelRecurse();
+        $model2 = new ModelRecurse();
         $model2->title = 'child 1';
-        $model2->parent_id = $model;
+        $model2->parent_id = $model->getId();
         $this->assertEquals(true, $model2->create());
 
-        $model3 = new Test_ModelRecurse();
+        $model3 = new ModelRecurse();
         $model3->title = 'child 2';
-        $model3->parent_id = $model;
+        $model3->parent_id = $model->getId();
         $this->assertEquals(true, $model3->create());
 
         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
-        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
+        $filename = Pluf::getConfig('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
         if (file_exists($filename)) {
             unlink($filename);
         }
-        $compiler = new Pluf_Graphql_Compiler('Test_ModelRecurse');
+        $compiler = new Compiler(ModelRecurse::class);
         $compiler->write($class_name, $filename);
         $this->assertTrue(file_exists($filename));
         include $filename;
 
-        $rootValue = new Test_ModelRecurse($model2->id);
+        $rootValue = new ModelRecurse($model2->id);
 
         // get all
         $compiler = new $class_name();
@@ -102,7 +95,7 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $parnet = $result['parent'];
         $this->assertEquals($parnet['id'], $model->id);
 
-        $rootValue = new Test_ModelRecurse($model->id);
+        $rootValue = new ModelRecurse($model->id);
         $result = $compiler->render($rootValue, '{id, title, children{id, title, parent_id, parent{id}}}');
         $this->assertFalse(array_key_exists('errors', $result));
         $result = $result['data'];
@@ -122,11 +115,11 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
     public function testManyToManyRenderAndRun()
     {
         // create data
-        $model = new Test_ManyToManyOne();
+        $model = new ManyToManyOne();
         $model->one = 'One item ';
         $this->assertTrue($model->create());
 
-        $model2 = new Test_ManyToManyTwo();
+        $model2 = new ManyToManyTwo();
         $model2->two = 'Two item';
         $this->assertEquals(true, $model2->create());
 
@@ -137,12 +130,12 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         if (file_exists($filename)) {
             unlink($filename);
         }
-        $compiler = new Pluf_Graphql_Compiler('Test_ManyToManyOne');
+        $compiler = new Compiler(ManyToManyOne::class);
         $compiler->write($class_name, $filename);
         $this->assertTrue(file_exists($filename));
         include $filename;
 
-        $rootValue = new Test_ManyToManyOne($model->id);
+        $rootValue = new ManyToManyOne($model->id);
 
         // get all
         $compiler = new $class_name();

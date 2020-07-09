@@ -36,7 +36,7 @@
 			<directory>tests/Text/</directory>
 			<directory>tests/Mail/</directory>
 			<directory>tests/Migration</directory>
-			<!-- <directory>tests/Graphql/</directory> -->
+			<directory>tests/Graphql/</directory>
 		</testsuite>
 	</testsuites>
 
@@ -44,7 +44,6 @@
 	<filter>
 		<whitelist addUncoveredFilesFromWhitelist="true">
 			<directory suffix=".php">./src</directory>
-			<directory suffix=".php">./src6</directory>
 		</whitelist>
 	</filter>
 	<logging>

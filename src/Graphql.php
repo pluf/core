@@ -1,6 +1,4 @@
 <?php
-use Pluf\ModelUtils;
-
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
@@ -18,6 +16,11 @@ use Pluf\ModelUtils;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf;
+
+use Pluf\Data\ModelUtils;
+use Pluf\Graphql\Compiler;
+use Pluf;
 
 /**
  * Render a result based on GraphQl
@@ -25,7 +28,7 @@ use Pluf\ModelUtils;
  * @author maso<mostafa.barmshory@dpq.co.ir>
  * @since 4.0.0
  */
-class Pluf_Graphql
+class Graphql
 {
 
     private $cache = null;
@@ -71,14 +74,14 @@ class Pluf_Graphql
     {
         // 1. root type
         $itemType = null;
-        if ($c instanceof Pluf_Paginator) {
-            $rootType = 'Pluf_Paginator';
-            $itemType = ModelUtils::getModelCacheKey($c->model);
-            $schema = 'Pluf_GraphQl_Schema__Pluf_Paginator_' . $itemType;
-        } else {
-            $rootType = ModelUtils::getModelCacheKey($c);
-            $schema = 'Pluf_GraphQl_Schema_' . Pluf_ModelUtils::skipeName($rootType);
-        }
+        // if ($c instanceof Pluf_Paginator) {
+        // $rootType = 'Pluf_Paginator';
+        // $itemType = ModelUtils::getModelCacheKey($c->model);
+        // $schema = 'Pluf_GraphQl_Schema__Pluf_Paginator_' . $itemType;
+        // } else {
+        $rootType = ModelUtils::getModelCacheKey($c);
+        $schema = 'Pluf_GraphQl_Schema_' . ModelUtils::skipeName($rootType);
+        // }
 
         // 2. load schema
         $this->loadSchema($schema, $rootType, $itemType);
@@ -94,7 +97,7 @@ class Pluf_Graphql
         }
         $compiled_schema = $this->cache . '/' . $schema . '.phps';
         if (! file_exists($compiled_schema) or Pluf::f('debug')) {
-            $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
+            $compiler = new Compiler($rootType, $itemType);
             $compiler->write($schema, $compiled_schema);
         }
         include $compiled_schema;

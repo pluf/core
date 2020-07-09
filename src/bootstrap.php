@@ -331,7 +331,7 @@ class Pluf
         return self::$cache;
     }
 
-    public static function getDataSchema()
+    public static function getDataSchema(): Schema
     {
         if (! isset(self::$dataSchema)) {
             self::$dataSchema = Schema::getInstance(self::getConfigByPrefix('data_schema_', true));

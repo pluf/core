@@ -32,9 +32,10 @@ abstract class Schema
     // Others has foreing key to it
     public const ONE_TO_MANY = 'Onetomany';
 
-    // foreignkey
+    // foreignkey but a related object
     public const MANY_TO_ONE = 'Manytoone';
 
+    // A model id from other object
     public const FOREIGNKEY = 'Foreignkey';
 
     /**

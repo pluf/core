@@ -49,8 +49,20 @@ class RequestBuilderTest extends TestCase
 
         $mapper = ObjectMapper::getInstance([
             [
-                "title" => "",
-                "description" => ""
+                "title" => "a",
+                "description" => "b"
+            ],
+            [
+                "title" => "c",
+                "description" => "d"
+            ],
+            [
+                "title" => "e",
+                "description" => "f"
+            ],
+            [
+                "title" => "g",
+                "description" => "h"
             ]
         ]);
         $repo = Pluf::getDataRepository(Book::class);
@@ -77,6 +89,7 @@ class RequestBuilderTest extends TestCase
     public function testCreateSimplePaginator()
     {
         $request = new Request('/api/v2/nootbook/books');
+        $request->REQUEST = [];
         $builder = QueryBuilder::getInstance($request);
         $this->assertNotNull($builder);
         $this->assertTrue($builder instanceof QueryBuilder);
@@ -91,12 +104,107 @@ class RequestBuilderTest extends TestCase
      *
      * @test
      */
-    public function testWithSearchFields()
+    public function testListWithLimit()
     {
         $request = new Request('/api/v2/nootbook/books');
-        $request->REQUEST['q'] = 'test';
+        $request->REQUEST['_px_ps'] = '1';
         $query = QueryBuilder::getInstance($request)->build();
+        $repo = Pluf::getDataRepository(Book::class);
+        $list = $repo->get($query);
+        $this->assertEquals(1, count($list));
+    }
 
+    /**
+     *
+     * @test
+     */
+    public function testListWithPage()
+    {
+        $request = new Request('/api/v2/nootbook/books');
+        $request->REQUEST['_px_p'] = '0';
+        $request->REQUEST['_px_ps'] = '3';
+        $query = QueryBuilder::getInstance($request)->build();
+        $repo = Pluf::getDataRepository(Book::class);
+        $list = $repo->get($query);
+        $this->assertEquals(3, count($list));
+
+        $request = new Request('/api/v2/nootbook/books');
+        $request->REQUEST['_px_p'] = '1';
+        $request->REQUEST['_px_ps'] = '3';
+        $query = QueryBuilder::getInstance($request)->build();
+        $repo = Pluf::getDataRepository(Book::class);
+        $list = $repo->get($query);
+        $this->assertEquals(1, count($list));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWithSearchFields()
+    {
+        $letters = [
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f',
+            'g',
+            'h'
+        ];
+        foreach ($letters as $letter) {
+            $request = new Request('/api/v2/nootbook/books');
+            $request->REQUEST['q'] = $letter;
+            $request->REQUEST['_px_p'] = '0';
+            $request->REQUEST['_px_ps'] = '30';
+            $query = QueryBuilder::getInstance($request)->build();
+            $repo = Pluf::getDataRepository(Book::class);
+            $list = $repo->get($query);
+            $this->assertEquals(1, count($list));
+        }
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWithFilter()
+    {
+        $request = new Request('/api/v2/nootbook/books');
+        $request->REQUEST['_px_fk'] = 'title';
+        $request->REQUEST['_px_fv'] = 'a';
+        $request->REQUEST['_px_p'] = '0';
+        $request->REQUEST['_px_ps'] = '30';
+        $query = QueryBuilder::getInstance($request)->build();
+        $repo = Pluf::getDataRepository(Book::class);
+        $list = $repo->get($query);
+        $this->assertEquals(1, count($list));
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function testWithDublicatedFilter()
+    {
+        $request = new Request('/api/v2/nootbook/books');
+        $request->REQUEST['_px_fk'] = [
+            'title',
+            'title',
+            'title'
+        ];
+        $request->REQUEST['_px_fv'] = [
+            'a',
+            'b',
+            'c'
+        ];
+        $request->REQUEST['_px_p'] = '0';
+        $request->REQUEST['_px_ps'] = '30';
+        $query = QueryBuilder::getInstance($request)->optimize()->build();
+        $repo = Pluf::getDataRepository(Book::class);
+        $list = $repo->get($query);
+        $this->assertEquals(2, count($list));
     }
 
     // /**

@@ -3,8 +3,7 @@ namespace Pluf\Data\Repository;
 
 use Pluf\Options;
 use Pluf\Data\Exception;
-use Pluf\Data\ModelDescription;
-use Pluf\Data\ModelProperty;
+use Pluf\Data\ModelUtils;
 use Pluf\Data\Query;
 use Pluf\Data\Repository;
 use Pluf\Data\Schema;
@@ -183,7 +182,7 @@ class RelationRepository extends Repository
 
         $smd = $this->getModelDescription($this->source);
         $tmd = $this->getModelDescription($this->target);
-        $relation = $this->getRelationProperty($smd, $tmd, $this->relation);
+        $relation = ModelUtils::getRelationProperty($smd, $tmd, $this->relation);
 
         switch ($relation->type) {
             case Schema::MANY_TO_MANY:
@@ -231,7 +230,7 @@ class RelationRepository extends Repository
         $tmd = $this->getModelDescription($this->target);
         $schema = $this->getSchema();
 
-        $rp = $this->getRelationProperty($smd, $tmd, $this->relation);
+        $rp = ModelUtils::getRelationProperty($smd, $tmd, $this->relation);
 
         // 1. define table:
         $relationTable = $schema->getRelationTable($smd, $tmd, $rp);
@@ -281,38 +280,6 @@ class RelationRepository extends Repository
         $this->relationPd = null;
     }
 
-    private function getRelationProperty(ModelDescription $smd, ModelDescription $tmd, string $relation): ModelProperty
-    {
-        // check relation
-        $relationProperty = $smd->$relation;
-        if (! isset($relationProperty)) {
-            throw new Exception([
-                'message' => 'The property wtih name {name} does not exist in type {type}',
-                'type' => $smd->type,
-                'name' => $relation->name
-            ]);
-        }
-        // check type
-        $type = $relationProperty->type;
-        if (! ($type == Schema::MANY_TO_MANY || $type == Schema::MANY_TO_ONE || $type == Schema::ONE_TO_MANY)) {
-            throw new Exception([
-                'message' => 'The property wtih name {name} is not a relation type in {type}',
-                'type' => $smd->type,
-                'name' => $relation->name
-            ]);
-        }
-        // check target model
-        if (! $tmd->isInstanceOf($relationProperty->inverseJoinModel)) {
-            throw new Exception([
-                'message' => 'The type {target} does not match with relation type {type} from {source}',
-                'type' => $relationProperty->inverseJoinModel,
-                'source' => $smd->type,
-                'target' => $tmd->type
-            ]);
-        }
-
-        return $relationProperty;
-    }
 }
 
 

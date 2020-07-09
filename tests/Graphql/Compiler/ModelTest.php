@@ -16,16 +16,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Test\Graphql\Compiler;
+
 use PHPUnit\Framework\TestCase;
+use Pluf\Graphql\Compiler;
+use Pluf\NoteBook\Book;
+use Pluf;
 
-set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../apps');
-
-/**
- *
- * @backupGlobals disabled
- * @backupStaticAttributes disabled
- */
-class Pluf_Graphql_Compiler_ModelTest extends TestCase
+class ModelTest extends TestCase
 {
 
     /**
@@ -34,13 +32,8 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
      */
     public static function installApplication1()
     {
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'bootstrap',
-            'Test'
-        );
-        Pluf::start($conf);
-        $m = new \Pluf\Migration($conf['installed_apps']);
+        Pluf::start(__DIR__ . '/../../conf/config.php');
+        $m = new \Pluf\Migration();
         $m->install();
     }
 
@@ -50,10 +43,8 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
      */
     public static function removeDatabses1()
     {
-        $m = new \Pluf\Migration(array(
-            'bootstrap',
-            'Test'
-        ));
+        Pluf::start(__DIR__ . '/../../conf/config.php');
+        $m = new \Pluf\Migration();
         $m->uninstall();
     }
 
@@ -65,9 +56,9 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
     {
         $types = [
             // model item
-            'Test_Model' => null,
-            'Test_ModelRecurse' => null,
-            'Test_ModelCount' => null
+            '\Pluf\NoteBook\Book' => null,
+            '\Pluf\NoteBook\Item' => null,
+            '\Pluf\NoteBook\Tag' => null
         ];
         foreach ($types as $rootType => $itemType) {
             $class_name = 'Pluf_GraphQl_TestRender_' . rand();
@@ -75,7 +66,7 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
             if (file_exists($filename)) {
                 unlink($filename);
             }
-            $compiler = new Pluf_Graphql_Compiler($rootType, $itemType);
+            $compiler = new Compiler($rootType, $itemType);
             $compiler->write($class_name, $filename);
             $this->assertTrue(file_exists($filename));
 
@@ -95,14 +86,14 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
         if (file_exists($filename)) {
             unlink($filename);
         }
-        $compiler = new Pluf_Graphql_Compiler('Test_Model');
+        $compiler = new Compiler(Book::class);
         $compiler->write($class_name, $filename);
         $this->assertTrue(file_exists($filename));
 
         include $filename;
         class_exists($class_name);
 
-        $rootValue = new Test_Model();
+        $rootValue = new Book();
         $rootValue->id = 1;
         $rootValue->title = 'title';
         $rootValue->description = 'description';

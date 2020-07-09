@@ -22,6 +22,9 @@ class ModelProperty
     // "required" => false,
     // "visible" => false,
     // "priority" => 0,
+    public bool $graphql_field = true;
+
+    public ?string $graphql_name = null;
 
     // public array $validators" => ['NotNull', 'MaxSize:20', 'MinSize:2'],
     // public array $tags => [],
@@ -29,7 +32,7 @@ class ModelProperty
 
     public bool $nullable = true;
 
-    public bool $readable = false;
+    public bool $readable = true;
 
     public int $decimal_places = 8;
 
@@ -100,6 +103,20 @@ class ModelProperty
     public function isMapped(): bool
     {
         return isset($this->mapped) && $this->mapped;
+    }
+
+    /**
+     * Check if the property is a relation
+     *
+     * @return bool true if the property is relation
+     */
+    public function isRelation(): bool
+    {
+        return in_array($this->type, [
+            Schema::ONE_TO_MANY,
+            Schema::MANY_TO_MANY,
+            Schema::MANY_TO_ONE
+        ]);
     }
 }
 

@@ -18,14 +18,16 @@ class ModelUtils
 
     public const MODEL_VIEW_CACHE_KEY = '_PX_models_views';
 
-    public static function getModelCacheKey(\Pluf\Data\Model $model)
+    public static function getModelCacheKey($model): string
     {
-        $objr = new \ReflectionObject($model);
-        $key = $objr->getName();
-        if (strpos($key, '\\')) {
-            $key = '\\' . $key;
+        if (! is_string($model)) {
+            $objr = new \ReflectionObject($model);
+            $model = $objr->getName();
         }
-        return $key;
+        if (strpos($model, '\\')) {
+            $model = '\\' . $model;
+        }
+        return $model;
     }
 
     public static function loadFromCache(\Pluf\Data\Model $model): bool
@@ -60,14 +62,78 @@ class ModelUtils
         );
     }
 
-    public static function getRelatedModels(\Pluf\Data\Model $model, string $type)
+    /**
+     * Gets list of related model to the type
+     *
+     * @param ModelDescription|string $type
+     * @return array
+     */
+    public static function getRelatedModels($type): array
     {
-        $key = self::getModelCacheKey($model);
-        $relations = [];
-        if (isset($GLOBALS['_PX_models_related'][$type][$key])) {
-            $relations = $GLOBALS['_PX_models_related'][$type][$key];
+        if ($type instanceof ModelDescription) {
+            $modelDescription = $type;
+        } else {
+            $modelDescription = ModelDescription::getInstance($type);
         }
-        return $relations;
+        $preModels = [];
+        foreach ($modelDescription as $property) {
+            if ($property->isRelation()) {
+                $name = ModelUtils::getModelCacheKey($property->inverseJoinModel);
+                if (! in_array($name, $preModels)) {
+                    array_push($preModels, $name);
+                }
+            }
+        }
+        return $preModels;
+    }
+
+    /**
+     * Gets relation property from $smd to $tmd with name $relation
+     *
+     * @param ModelDescription $smd
+     * @param ModelDescription $tmd
+     * @param string $relation
+     * @throws Exception
+     * @return ModelProperty
+     */
+    public static function getRelationProperty(ModelDescription $smd, ModelDescription $tmd, ?string $relation = null): ModelProperty
+    {
+        if (! isset($relation)) {
+            foreach ($smd as $property) {
+                if ($property->isRelation() && $tmd->isInstanceOf($property->inverseJoinModel)) {
+                    return $property;
+                }
+            }
+        }
+
+        // check relation
+        $relationProperty = $smd->$relation;
+        if (! isset($relationProperty)) {
+            throw new Exception([
+                'message' => 'The property wtih name {name} does not exist in type {type}',
+                'type' => $smd->type,
+                'name' => $relation->name
+            ]);
+        }
+        // check type
+        if (! $relationProperty->isRelation()) {
+            throw new Exception([
+                'message' => 'The property wtih name {name} is not a relation type in {type}',
+                'type' => $smd->type,
+                'name' => $relation->name
+            ]);
+        }
+        // check target model
+        if (! $tmd->isInstanceOf($relationProperty->inverseJoinModel)) {
+            throw new Exception([
+                'message' => 'The type {target} does not match with relation type {type} from {source}',
+                'type' => $relationProperty->inverseJoinModel,
+                'source' => $smd->type,
+                'target' => $tmd->type
+            ]);
+        }
+
+        return $relationProperty;
     }
 
     // /**
