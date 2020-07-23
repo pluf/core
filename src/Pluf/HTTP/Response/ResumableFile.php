@@ -76,9 +76,9 @@ class Pluf_HTTP_Response_ResumableFile extends Pluf_HTTP_Response
         $this->headers['Content-Type'] = 'application/octet-stream';
         $this->headers['Content-Transfer-Encoding'] = 'binary';
         // $this->headers ['Content-Disposition'] = sprintf ( 'attachment; filename="%s"', $this->name );
-        $this->headers['Content-Disposition'] = 'attachment; '
-            . sprintf('filename="%s"; ', rawurlencode($this->name))
-            . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
+//         $this->headers['Content-Disposition'] = 'attachment; '
+//             . sprintf('filename="%s"; ', rawurlencode($this->name))
+//             . sprintf("filename*=utf-8''%s", rawurlencode($this->name));
         if ($t > 0) {
             $this->status_code = 206;
             $t === 1 ? $this->pushSingle($range) : $this->pushMulti($ranges);

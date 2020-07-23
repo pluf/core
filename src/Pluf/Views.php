@@ -608,7 +608,7 @@ class Pluf_Views
         $object = $this->getObject($request, $match, $p);
         // Do
         $response = new Pluf_HTTP_Response_File($object->getAbsloutPath(), $object->mime_type);
-        $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $object->file_name);
+        // $response->headers['Content-Disposition'] = sprintf('attachment; filename="%s"', $object->file_name);
         return $response;
     }
 
