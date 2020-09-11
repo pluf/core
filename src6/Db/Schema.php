@@ -2,10 +2,9 @@
 namespace Pluf\Db;
 
 use Pluf\Options;
+use Pluf\Pluf\Tenant;
 use Pluf;
 use Pluf_Model;
-use Pluf_SQL;
-use Pluf_Tenant;
 
 /**
  * Create the schema of a given Pluf_Model for a given database.
@@ -101,7 +100,7 @@ abstract class Schema
     public function createQuery(Pluf_Model $model)
     {
         if (Pluf::f('multitenant', false) && $model->_a['multitenant']) {
-            $model->tenant = Pluf_Tenant::getCurrent();
+            $model->tenant = Tenant::getCurrent();
         }
 
         // $engine = $model->getEngine();

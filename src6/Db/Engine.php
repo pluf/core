@@ -3,7 +3,6 @@ namespace Pluf\Db;
 
 use Pluf\Options;
 use Pluf\Data\Schema;
-use Pluf_Utils;
 use WKT;
 use geoPHP;
 
@@ -337,7 +336,7 @@ abstract class Engine
             return $val;
         }
         // We need to hash the value.
-        $salt = Pluf_Utils::getRandomString(5);
+        $salt = \Pluf\Utils::getRandomString(5);
         return 'sha1:' . $salt . ':' . sha1($salt . $val);
     }
 

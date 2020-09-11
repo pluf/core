@@ -25,7 +25,6 @@ use Pluf\Pluf\Search\Stats;
 use Pluf\Pluf\Search\Word;
 use Exception;
 use Pluf;
-use Pluf_SQL;
 
 /**
  * Class implementing a small search engine.
@@ -185,10 +184,10 @@ class Search
         }
         // Drop the last indexation.
         $gocc = new Occ();
-        $sql = new Pluf_SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
-            $doc->_model,
-            $doc->id
-        ));
+//         $sql = new Pluf_SQL('DELETE FROM ' . $gocc->getSqlTable() . ' WHERE model_class=%s AND model_id=%s', array(
+//             $doc->_model,
+//             $doc->id
+//         ));
         $db = &Pluf::db();
         $db->execute($sql->gen());
         // Get the ids for each word.
@@ -230,10 +229,10 @@ class Search
             $occ->create();
         }
         // update the stats
-        $sql = new Pluf_SQL('model_class=%s AND model_id=%s', array(
-            $doc->_model,
-            $doc->id
-        ));
+//         $sql = new Pluf_SQL('model_class=%s AND model_id=%s', array(
+//             $doc->_model,
+//             $doc->id
+//         ));
         $last_index = Pluf::factory(Stats::class)->getList(array(
             'filter' => $sql->gen()
         ));
