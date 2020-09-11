@@ -68,25 +68,31 @@ class Session extends \Pluf_Model
         $this->_a['cols'] = array(
             // It is mandatory to have an "id" column.
             'id' => array(
+<<<<<<< HEAD:src6/Pluf/Session.php
                 'type' => Schema::SEQUENCE,
                 'blank' => true
+=======
+                'type' => 'Sequence',
+                // It is automatically added.
+                'is_null' => false
+>>>>>>> 93ec36415c2420a23445480ce9e3ac27f04bf0e1:src/Pluf/Session.php
             ),
             'version' => array(
                 'type' => 'Integer',
-                'blank' => true
+                'is_null' => true
             ),
             'session_key' => array(
                 'type' => 'Varchar',
-                'blank' => false,
+                'is_null' => false,
                 'size' => 100
             ),
             'session_data' => array(
                 'type' => 'Text',
-                'blank' => false
+                'is_null' => false
             ),
             'expire' => array(
                 'type' => 'Datetime',
-                'blank' => false
+                'is_null' => false
             )
         );
         $this->_a['idx'] = array(

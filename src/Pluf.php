@@ -206,7 +206,7 @@ class Pluf
         array_pop($elts);
         $file = implode(DIRECTORY_SEPARATOR, $elts) . '.php';
         if (false !== ($file = Pluf::fileExists($file))) {
-            include $file;
+            include_once $file;
         }
         if (! function_exists($function)) {
             throw new Exception('Impossible to load the function: ' . $function);
