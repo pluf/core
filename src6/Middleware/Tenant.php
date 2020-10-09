@@ -73,6 +73,11 @@ class Tenant implements \Pluf\Middleware
                 $request->setTenant($tenant);
                 return false;
             }
+            $tenant = Pluf_Tenant::bySubDomain($request->http_host);
+            if ($tenant) {
+                $request->setTenant($tenant);
+                return false;
+            }
         } catch (Exception $e) {
             Logger::debug('Fail to get tenant from domain address', $e);
         }
