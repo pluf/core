@@ -30,9 +30,6 @@ use Pluf_Signal;
 /**
  * Dispatcher creates list of handlers and run thems
  *
- * در این کلاس تقاضای کاربر پردازش شده و بر اساس تنظیم‌ها به یکی از فراخوانی‌های
- * لایه
- * نمایش نگاشت داده می‌شود.
  *
  * @author maso
  *        

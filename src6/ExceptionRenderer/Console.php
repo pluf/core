@@ -57,7 +57,7 @@ class Console extends RendererAbstract
             return;
         }
 
-        foreach ($exception->getSolutions() as $key => $val) {
+        foreach ($exception->getSolutions() as /* $key => */ $val) {
             $this->output .= PHP_EOL . "\e[92mSolution: " . $val . "\e[0m";
         }
     }
@@ -84,8 +84,8 @@ class Console extends RendererAbstract
         $escape_frame = false;
         $tokens = [];
         $trace = $this->is_atk_exception ? $this->exception->getMyTrace() : $this->exception->getTrace();
-        $trace_count = count($trace);
-        foreach ($trace as $index => $call) {
+        // $trace_count = count($trace);
+        foreach ($trace as /* $index => */ $call) {
             $call = $this->parseCallTraceObject($call);
 
             if ($in_atk && ! preg_match('/atk4\/.*\/src\//', $call['file'])) {

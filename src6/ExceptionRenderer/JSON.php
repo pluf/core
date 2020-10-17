@@ -1,23 +1,22 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Pluf\ExceptionRenderer;
 
 use Pluf\Exception;
 
 class JSON extends RendererAbstract
 {
+
     protected $json = [
-        'success'  => false,
-        'code'     => 0,
-        'message'  => '',
-        'title'    => '',
-        'class'    => '',
-        'params'   => [],
+        'success' => false,
+        'code' => 0,
+        'message' => '',
+        'title' => '',
+        'class' => '',
+        'params' => [],
         'solution' => [],
-        'trace'    => [],
-        'previous' => [],
+        'trace' => [],
+        'previous' => []
     ];
 
     protected function processHeader(): void
@@ -70,9 +69,9 @@ class JSON extends RendererAbstract
     protected function processStackTrace(): void
     {
         $this->output .= <<<'HTML'
-<span style="color:sandybrown">Stack Trace:</span>
-
-HTML;
+        <span style="color:sandybrown">Stack Trace:</span>
+        
+        HTML;
 
         $this->processStackTraceInternal();
     }
@@ -81,13 +80,13 @@ HTML;
     {
         $in_atk = true;
         $escape_frame = false;
-        $tokens_trace = [];
+        // $tokens_trace = [];
         $trace = $this->is_atk_exception ? $this->exception->getMyTrace() : $this->exception->getTrace();
-        $trace_count = count($trace);
-        foreach ($trace as $index => $call) {
+        // $trace_count = count($trace);
+        foreach ($trace as /* $index => */ $call) {
             $call = $this->parseCallTraceObject($call);
 
-            if ($in_atk && !preg_match('/atk4\/.*\/src\//', $call['file'])) {
+            if ($in_atk && ! preg_match('/atk4\/.*\/src\//', $call['file'])) {
                 $escape_frame = true;
                 $in_atk = false;
             }
@@ -109,12 +108,12 @@ HTML;
 
     protected function processPreviousException(): void
     {
-        if (!$this->exception->getPrevious()) {
+        if (! $this->exception->getPrevious()) {
             return;
         }
 
         $previous = new static($this->exception->getPrevious());
-        $text = (string) $previous; // need to trigger processAll;
+        // $text = (string) $previous; // need to trigger processAll;
 
         $this->json['previous'] = $previous->json;
     }
@@ -122,12 +121,12 @@ HTML;
     protected function parseCallTraceObject($call): array
     {
         return [
-            'line'     => $call['line'] ?? '',
-            'file'     => $call['file'] ?? '',
-            'class'    => $call['class'] ?? null,
-            'object'   => ($call['object'] ?? null) !== null ? ($call['object']->name ?? get_class($call['object'])) : null,
+            'line' => $call['line'] ?? '',
+            'file' => $call['file'] ?? '',
+            'class' => $call['class'] ?? null,
+            'object' => ($call['object'] ?? null) !== null ? ($call['object']->name ?? get_class($call['object'])) : null,
             'function' => $call['function'] ?? null,
-            'args'     => $call['args'] ?? [],
+            'args' => $call['args'] ?? []
         ];
     }
 
@@ -138,22 +137,22 @@ HTML;
         } catch (\Throwable $e) {
             // fallback if error occur
             $this->json = [
-                'success'  => false,
-                'code'     => $this->exception->getCode(),
-                'message'  => 'Error during JSON renderer : '.$this->exception->getMessage(),
+                'success' => false,
+                'code' => $this->exception->getCode(),
+                'message' => 'Error during JSON renderer : ' . $this->exception->getMessage(),
                 // avoid translation
-                //'message'  => $this->_($this->exception->getMessage()),
-                'title'    => get_class($this->exception),
-                'class'    => get_class($this->exception),
-                'params'   => [],
+                // 'message' => $this->_($this->exception->getMessage()),
+                'title' => get_class($this->exception),
+                'class' => get_class($this->exception),
+                'params' => [],
                 'solution' => [],
-                'trace'    => [],
+                'trace' => [],
                 'previous' => [
-                    'title'    => get_class($e),
-                    'class'    => get_class($e),
-                    'code'     => $e->getCode(),
-                    'message'  => $e->getMessage(),
-                ],
+                    'title' => get_class($e),
+                    'class' => get_class($e),
+                    'code' => $e->getCode(),
+                    'message' => $e->getMessage()
+                ]
             ];
         }
 

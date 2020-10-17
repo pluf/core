@@ -64,7 +64,7 @@ class HTMLText extends RendererAbstract
         }
 
         $this->output .= PHP_EOL . PHP_EOL . '<span style="color:lightgreen">Suggested solutions</span>:';
-        foreach ($exception->getSolutions() as $key => $val) {
+        foreach ($exception->getSolutions() as /* $key => */ $val) {
             $this->output .= PHP_EOL . ' - ' . htmlentities($val);
         }
     }
@@ -91,8 +91,8 @@ class HTMLText extends RendererAbstract
         $escape_frame = false;
         $tokens_trace = [];
         $trace = $this->is_atk_exception ? $this->exception->getMyTrace() : $this->exception->getTrace();
-        $trace_count = count($trace);
-        foreach ($trace as $index => $call) {
+        // $trace_count = count($trace);
+        foreach ($trace as /* $index => */ $call) {
             $call = $this->parseCallTraceObject($call);
 
             if ($in_atk && ! preg_match('/atk4\/.*\/src\//', $call['file'])) {

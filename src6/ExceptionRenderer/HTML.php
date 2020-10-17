@@ -93,7 +93,7 @@ class HTML extends RendererAbstract
             '{SOLUTIONS}' => ''
         ];
         $text_inner = '<div class="ui segment">{VAL}</div>';
-        foreach ($exception->getSolutions() as $key => $val) {
+        foreach ($exception->getSolutions() as /* $key => */ $val) {
             $tokens['{SOLUTIONS}'] .= $this->replaceTokens([
                 '{VAL}' => htmlentities($val)
             ], $text_inner);

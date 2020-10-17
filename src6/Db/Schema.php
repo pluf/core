@@ -2,7 +2,6 @@
 namespace Pluf\Db;
 
 use Pluf\Options;
-use Pluf\Pluf\Tenant;
 use Pluf;
 use Pluf_Model;
 
