@@ -4,7 +4,7 @@ namespace Pluf\Data;
 use Pluf\Options;
 use Pluf\Db\Connection;
 use Pluf\Db\Expression;
-use Pluf_Utils;
+use Pluf\Utils;
 
 /**
  * Create the schema of a given Pluf_Model for a given database.
@@ -373,9 +373,7 @@ abstract class Schema
             $alias = $alias . '.';
         }
         foreach ($md as $name => $property) {
-            if ($property->type == self::MANY_TO_MANY ||
-                $property->type == self::MANY_TO_ONE ||
-                $property->type == self::ONE_TO_MANY) {
+            if ($property->type == self::MANY_TO_MANY || $property->type == self::MANY_TO_ONE || $property->type == self::ONE_TO_MANY) {
                 continue;
             }
             $field[$name] = $alias . $this->getFieldName($md, $property, $autoPrefix);
@@ -720,9 +718,7 @@ abstract class Schema
                 // DB is responsible for ID
                 continue;
             }
-            if ($property->type == self::MANY_TO_MANY || 
-                $property->type == self::ONE_TO_MANY ||
-                $property->isMapped()) {
+            if ($property->type == self::MANY_TO_MANY || $property->type == self::ONE_TO_MANY || $property->isMapped()) {
                 // Virtural attributes
                 continue;
             }
@@ -1180,7 +1176,7 @@ abstract class Schema
             return $val;
         }
         // We need to hash the value.
-        $salt = Pluf_Utils::getRandomString(5);
+        $salt = Utils::getRandomString(5);
         return 'sha1:' . $salt . ':' . sha1($salt . $val);
     }
 

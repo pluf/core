@@ -3,8 +3,9 @@ namespace Pluf\Test\Db\db;
 
 use Pluf\Db\Connection;
 use Pluf\Db\Expression;
+use PHPUnit\DbUnit\TestCase;
 
-class SelectTest extends \PHPUnit\DbUnit\TestCase
+class SelectTest extends TestCase
 {
 
     protected $pdo;

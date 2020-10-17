@@ -131,20 +131,20 @@ class Pluf_Paginator_BuilderTest extends TestCase
         $this->assertEquals('test_view', $pag->model_view, 'Id not found in sort fields');
     }
 
-    /**
-     *
-     * @test
-     */
-    public function testWhereClause()
-    {
-        $sql = new Pluf_SQL('id=%s', array(
-            'id' => '1'
-        ));
-        $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
-        $pag = $builder->setView('test_view')
-            ->setWhereClause($sql)
-            ->build();
-        $this->assertTrue(isset($pag));
-        $this->assertEquals($sql->gen(), $pag->forced_where->gen(), 'Where clause dose not matsh');
-    }
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testWhereClause()
+//     {
+//         $sql = new Pluf_SQL('id=%s', array(
+//             'id' => '1'
+//         ));
+//         $builder = new Pluf_Paginator_Builder(new Pluf_Paginator_MyModel());
+//         $pag = $builder->setView('test_view')
+//             ->setWhereClause($sql)
+//             ->build();
+//         $this->assertTrue(isset($pag));
+//         $this->assertEquals($sql->gen(), $pag->forced_where->gen(), 'Where clause dose not matsh');
+//     }
 }

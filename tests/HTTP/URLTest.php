@@ -16,9 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Test\HTTP;
+
 use PHPUnit\Framework\TestCase;
 use Pluf\Dispatcher;
 use Pluf\HTTP\URL;
+use Pluf;
 require_once 'Pluf.php';
 
 /**

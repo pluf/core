@@ -58,109 +58,109 @@ class Pluf_Graphql_Compiler_ModelRelationTest extends TestCase
         $m->uninstall();
     }
 
-    /**
-     *
-     * @test
-     */
-    public function testForeignkeyRenderAndRun()
-    {
-        // create data
-        $model = new Test_ModelRecurse();
-        $model->title = 'myvalue';
-        $this->assertEquals('myvalue', $model->title);
-        $model->create();
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testForeignkeyRenderAndRun()
+//     {
+//         // create data
+//         $model = new Test_ModelRecurse();
+//         $model->title = 'myvalue';
+//         $this->assertEquals('myvalue', $model->title);
+//         $model->create();
 
-        $model2 = new Test_ModelRecurse();
-        $model2->title = 'child 1';
-        $model2->parent_id = $model;
-        $this->assertEquals(true, $model2->create());
+//         $model2 = new Test_ModelRecurse();
+//         $model2->title = 'child 1';
+//         $model2->parent_id = $model;
+//         $this->assertEquals(true, $model2->create());
 
-        $model3 = new Test_ModelRecurse();
-        $model3->title = 'child 2';
-        $model3->parent_id = $model;
-        $this->assertEquals(true, $model3->create());
+//         $model3 = new Test_ModelRecurse();
+//         $model3->title = 'child 2';
+//         $model3->parent_id = $model;
+//         $this->assertEquals(true, $model3->create());
 
-        $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
-        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
-        if (file_exists($filename)) {
-            unlink($filename);
-        }
-        $compiler = new Pluf_Graphql_Compiler('Test_ModelRecurse');
-        $compiler->write($class_name, $filename);
-        $this->assertTrue(file_exists($filename));
-        include $filename;
+//         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
+//         $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
+//         if (file_exists($filename)) {
+//             unlink($filename);
+//         }
+//         $compiler = new Pluf_Graphql_Compiler('Test_ModelRecurse');
+//         $compiler->write($class_name, $filename);
+//         $this->assertTrue(file_exists($filename));
+//         include $filename;
 
-        $rootValue = new Test_ModelRecurse($model2->id);
+//         $rootValue = new Test_ModelRecurse($model2->id);
 
-        // get all
-        $compiler = new $class_name();
-        $result = $compiler->render($rootValue, '{id, parent{id}}');
-        $this->assertFalse(array_key_exists('errors', $result));
+//         // get all
+//         $compiler = new $class_name();
+//         $result = $compiler->render($rootValue, '{id, parent{id}}');
+//         $this->assertFalse(array_key_exists('errors', $result));
 
-        $result = $result['data'];
-        $this->assertTrue(array_key_exists('parent', $result));
+//         $result = $result['data'];
+//         $this->assertTrue(array_key_exists('parent', $result));
 
-        $parnet = $result['parent'];
-        $this->assertEquals($parnet['id'], $model->id);
+//         $parnet = $result['parent'];
+//         $this->assertEquals($parnet['id'], $model->id);
 
-        $rootValue = new Test_ModelRecurse($model->id);
-        $result = $compiler->render($rootValue, '{id, title, children{id, title, parent_id, parent{id}}}');
-        $this->assertFalse(array_key_exists('errors', $result));
-        $result = $result['data'];
-        $this->assertTrue(array_key_exists('children', $result));
-        $children = $result['children'];
-        $this->assertEquals(sizeof($children), 2);
-        foreach ($children as $child) {
-            $this->assertTrue(array_key_exists('parent_id', $child));
-            $this->assertTrue(array_key_exists('parent', $child));
-        }
-    }
+//         $rootValue = new Test_ModelRecurse($model->id);
+//         $result = $compiler->render($rootValue, '{id, title, children{id, title, parent_id, parent{id}}}');
+//         $this->assertFalse(array_key_exists('errors', $result));
+//         $result = $result['data'];
+//         $this->assertTrue(array_key_exists('children', $result));
+//         $children = $result['children'];
+//         $this->assertEquals(sizeof($children), 2);
+//         foreach ($children as $child) {
+//             $this->assertTrue(array_key_exists('parent_id', $child));
+//             $this->assertTrue(array_key_exists('parent', $child));
+//         }
+//     }
 
-    /**
-     *
-     * @test
-     */
-    public function testManyToManyRenderAndRun()
-    {
-        // create data
-        $model = new Test_ManyToManyOne();
-        $model->one = 'One item ';
-        $this->assertTrue($model->create());
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testManyToManyRenderAndRun()
+//     {
+//         // create data
+//         $model = new Test_ManyToManyOne();
+//         $model->one = 'One item ';
+//         $this->assertTrue($model->create());
 
-        $model2 = new Test_ManyToManyTwo();
-        $model2->two = 'Two item';
-        $this->assertEquals(true, $model2->create());
+//         $model2 = new Test_ManyToManyTwo();
+//         $model2->two = 'Two item';
+//         $this->assertEquals(true, $model2->create());
 
-        $model->setAssoc($model2);
+//         $model->setAssoc($model2);
 
-        $class_name = 'Pluf_GraphQl_Model_ManyToMany_' . rand();
-        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
-        if (file_exists($filename)) {
-            unlink($filename);
-        }
-        $compiler = new Pluf_Graphql_Compiler('Test_ManyToManyOne');
-        $compiler->write($class_name, $filename);
-        $this->assertTrue(file_exists($filename));
-        include $filename;
+//         $class_name = 'Pluf_GraphQl_Model_ManyToMany_' . rand();
+//         $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
+//         if (file_exists($filename)) {
+//             unlink($filename);
+//         }
+//         $compiler = new Pluf_Graphql_Compiler('Test_ManyToManyOne');
+//         $compiler->write($class_name, $filename);
+//         $this->assertTrue(file_exists($filename));
+//         include $filename;
 
-        $rootValue = new Test_ManyToManyOne($model->id);
+//         $rootValue = new Test_ManyToManyOne($model->id);
 
-        // get all
-        $compiler = new $class_name();
-        $result = $compiler->render($rootValue, '{id, twos{id}}');
-        $this->assertFalse(array_key_exists('errors', $result));
+//         // get all
+//         $compiler = new $class_name();
+//         $result = $compiler->render($rootValue, '{id, twos{id}}');
+//         $this->assertFalse(array_key_exists('errors', $result));
 
-        $result = $result['data'];
-        $this->assertTrue(array_key_exists('twos', $result));
+//         $result = $result['data'];
+//         $this->assertTrue(array_key_exists('twos', $result));
 
-        $parnet = $result['twos'][0];
-        $this->assertEquals($parnet['id'], $model->id);
+//         $parnet = $result['twos'][0];
+//         $this->assertEquals($parnet['id'], $model->id);
 
-        //
-        $result = $compiler->render($rootValue, '{id, twos{id, ones{id}}}');
-        $this->assertFalse(array_key_exists('errors', $result));
-        $this->assertEquals($result['data']['twos'][0]['ones'][0]['id'], $rootValue->id);
-    }
+//         //
+//         $result = $compiler->render($rootValue, '{id, twos{id, ones{id}}}');
+//         $this->assertFalse(array_key_exists('errors', $result));
+//         $this->assertEquals($result['data']['twos'][0]['ones'][0]['id'], $rootValue->id);
+//     }
 }
 
 

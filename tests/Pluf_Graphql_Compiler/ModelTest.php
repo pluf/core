@@ -86,60 +86,60 @@ class Pluf_Graphql_Compiler_ModelTest extends TestCase
         }
     }
 
-    /**
-     *
-     * @test
-     */
-    public function testRenderAndRun()
-    {
-        $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
-        $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
-        if (file_exists($filename)) {
-            unlink($filename);
-        }
-        $compiler = new Pluf_Graphql_Compiler('Test_Model');
-        $compiler->write($class_name, $filename);
-        $this->assertTrue(file_exists($filename));
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testRenderAndRun()
+//     {
+//         $class_name = 'Pluf_GraphQl_Model_Test_' . rand();
+//         $filename = Pluf::f('tmp_folder', '/tmp') . '/' . $class_name . '.phps';
+//         if (file_exists($filename)) {
+//             unlink($filename);
+//         }
+//         $compiler = new Pluf_Graphql_Compiler('Test_Model');
+//         $compiler->write($class_name, $filename);
+//         $this->assertTrue(file_exists($filename));
 
-        include $filename;
-        class_exists($class_name);
+//         include $filename;
+//         class_exists($class_name);
 
-        $rootValue = new Test_Model();
-        $rootValue->id = 1;
-        $rootValue->title = 'title';
-        $rootValue->description = 'description';
+//         $rootValue = new Test_Model();
+//         $rootValue->id = 1;
+//         $rootValue->title = 'title';
+//         $rootValue->description = 'description';
 
-        // get all
-        $compiler = new $class_name();
-        $result = $compiler->render($rootValue, '{id, title, description}');
-        $this->assertFalse(array_key_exists('errors', $result));
-        $this->assertTrue(array_key_exists('data', $result));
+//         // get all
+//         $compiler = new $class_name();
+//         $result = $compiler->render($rootValue, '{id, title, description}');
+//         $this->assertFalse(array_key_exists('errors', $result));
+//         $this->assertTrue(array_key_exists('data', $result));
 
-        $result = $result['data'];
-        $this->assertTrue(array_key_exists('id', $result));
-        $this->assertEquals($result['id'], $rootValue->id);
+//         $result = $result['data'];
+//         $this->assertTrue(array_key_exists('id', $result));
+//         $this->assertEquals($result['id'], $rootValue->id);
 
-        $this->assertTrue(array_key_exists('title', $result));
-        $this->assertEquals($result['title'], $rootValue->title);
+//         $this->assertTrue(array_key_exists('title', $result));
+//         $this->assertEquals($result['title'], $rootValue->title);
 
-        $this->assertTrue(array_key_exists('description', $result));
-        $this->assertEquals($result['description'], $rootValue->description);
+//         $this->assertTrue(array_key_exists('description', $result));
+//         $this->assertEquals($result['description'], $rootValue->description);
 
-        // get id
-        $compiler = new $class_name();
-        $result = $compiler->render($rootValue, '{id}');
-        $this->assertFalse(array_key_exists('errors', $result));
-        $this->assertTrue(array_key_exists('data', $result));
+//         // get id
+//         $compiler = new $class_name();
+//         $result = $compiler->render($rootValue, '{id}');
+//         $this->assertFalse(array_key_exists('errors', $result));
+//         $this->assertTrue(array_key_exists('data', $result));
 
-        $result = $result['data'];
-        $this->assertTrue(array_key_exists('id', $result));
-        $this->assertEquals($result['id'], $rootValue->id);
+//         $result = $result['data'];
+//         $this->assertTrue(array_key_exists('id', $result));
+//         $this->assertEquals($result['id'], $rootValue->id);
 
-        // get invalid
-        $compiler = new $class_name();
-        $result = $compiler->render($rootValue, '{idx}');
-        $this->assertTrue(array_key_exists('errors', $result));
-    }
+//         // get invalid
+//         $compiler = new $class_name();
+//         $result = $compiler->render($rootValue, '{idx}');
+//         $this->assertTrue(array_key_exists('errors', $result));
+//     }
 }
 
 

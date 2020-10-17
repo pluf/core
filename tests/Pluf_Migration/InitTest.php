@@ -102,29 +102,29 @@ class Pluf_Migration_InitTest extends TestCase
         $this->assertTrue($m->uninstall());
     }
 
-    /**
-     *
-     * @test
-     */
-    public function shouldInitNoteFromConfig()
-    {
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'Note'
-        );
-        Pluf::start($conf);
-        $m = new Pluf_Migration(array(
-            'Note'
-        ));
-        $this->assertTrue($m->install());
+//     /**
+//      *
+//      * @test
+//      */
+//     public function shouldInitNoteFromConfig()
+//     {
+//         $conf = include __DIR__ . '/../conf/config.php';
+//         $conf['installed_apps'] = array(
+//             'Note'
+//         );
+//         Pluf::start($conf);
+//         $m = new Pluf_Migration(array(
+//             'Note'
+//         ));
+//         $this->assertTrue($m->install());
 
-        $this->assertTrue($m->init());
+//         $this->assertTrue($m->init());
 
-        $note = new Note_Book();
-        $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
+//         $note = new Note_Book();
+//         $this->assertTrue(sizeof($note->getList()) > 0, 'Notes are not created');
 
-        $this->assertTrue($m->unInstall());
-    }
+//         $this->assertTrue($m->unInstall());
+//     }
 }
 
 

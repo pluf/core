@@ -58,51 +58,51 @@ class Pluf_Graphql_RenderTest extends TestCase
         $m->uninstall();
     }
 
-    /**
-     *
-     * @test
-     */
-    public function testRenderAndRun()
-    {
-        $rootValue = new Test_Model();
-        $rootValue->id = 1;
-        $rootValue->title = 'title';
-        $rootValue->description = 'description';
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testRenderAndRun()
+//     {
+//         $rootValue = new Test_Model();
+//         $rootValue->id = 1;
+//         $rootValue->title = 'title';
+//         $rootValue->description = 'description';
 
-        $gl = new Pluf_Graphql();
-        $result = $gl->render($rootValue, '{id, title, description}');
-        $this->assertTrue(array_key_exists('id', $result));
-        $this->assertTrue(array_key_exists('title', $result));
-        $this->assertTrue(array_key_exists('description', $result));
-    }
+//         $gl = new Pluf_Graphql();
+//         $result = $gl->render($rootValue, '{id, title, description}');
+//         $this->assertTrue(array_key_exists('id', $result));
+//         $this->assertTrue(array_key_exists('title', $result));
+//         $this->assertTrue(array_key_exists('description', $result));
+//     }
 
-    /**
-     *
-     * @test
-     */
-    public function testRenderAndRunNonDebug()
-    {
-        $rootValue = new Test_Model();
-        $rootValue->id = 1;
-        $rootValue->title = 'title';
-        $rootValue->description = 'description';
+//     /**
+//      *
+//      * @test
+//      */
+//     public function testRenderAndRunNonDebug()
+//     {
+//         $rootValue = new Test_Model();
+//         $rootValue->id = 1;
+//         $rootValue->title = 'title';
+//         $rootValue->description = 'description';
 
-        $conf = include __DIR__ . '/../conf/config.php';
-        $conf['installed_apps'] = array(
-            'Pluf',
-            'Test'
-        );
-        $conf['debug'] = false;
-        Pluf::start($conf);
+//         $conf = include __DIR__ . '/../conf/config.php';
+//         $conf['installed_apps'] = array(
+//             'Pluf',
+//             'Test'
+//         );
+//         $conf['debug'] = false;
+//         Pluf::start($conf);
 
-        for ($i = 0; $i < 2; $i ++) {
-            $gl = new Pluf_Graphql();
-            $result = $gl->render($rootValue, '{id, title, description}');
-            $this->assertTrue(array_key_exists('id', $result));
-            $this->assertTrue(array_key_exists('title', $result));
-            $this->assertTrue(array_key_exists('description', $result));
-        }
-    }
+//         for ($i = 0; $i < 2; $i ++) {
+//             $gl = new Pluf_Graphql();
+//             $result = $gl->render($rootValue, '{id, title, description}');
+//             $this->assertTrue(array_key_exists('id', $result));
+//             $this->assertTrue(array_key_exists('title', $result));
+//             $this->assertTrue(array_key_exists('description', $result));
+//         }
+//     }
 }
 
 
