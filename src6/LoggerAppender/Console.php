@@ -18,13 +18,12 @@
  */
 namespace Pluf\LoggerAppender;
 
-
 class Console implements \Pluf\LoggerAppender
 {
 
     public function write($message): void
     {
-        print($message . PHP_EOL);
+        file_put_contents('php://stdout', $message . PHP_EOL);
     }
 }
 
