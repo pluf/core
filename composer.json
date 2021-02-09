@@ -17,22 +17,13 @@
 	],
 	"minimum-stability" : "stable",
 	"require" : {
-		"pluf/http2" : "6.x",
-		"pear/mail" : "^1.3",
-		"pear/mail_mime" : "^1.10.0",
-		"guzzlehttp/guzzle" : "^6.2",
-		"webonyx/graphql-php" : "^0.12.5",
-		"phayes/geophp" : "^1.2",
-		"psr/log" : "~1.1"
+		"pluf/http2" : "7.x",
+		"pluf/scion" : "7.x",
+		"pluf/log" : "7.x",
+		"pluf/orm" : "7.x"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : "~7.5",
-		"ockcyp/covers-validator" : "~1.0",
-		"squizlabs/php_codesniffer" : "~3.3",
-		"slevomat/coding-standard" : "~4.5",
-		"mediawiki/mediawiki-codesniffer" : "~23.0",
-		"phpstan/phpstan" : "~0.10.6",
-		"phpunit/dbunit" : "*"
+		"phpunit/phpunit" : "^9"
 	},
 	"support" : {
 		"wiki" : "https://github.com/pluf/core/wiki",
@@ -51,18 +42,11 @@
 	"autoload" : {
 		"psr-4" : {
 			"Pluf\\" : "src/"
-		},
-		"files" : [
-			"src/bootstrap.php"
-		]
+		}
 	},
 	"autoload-dev" : {
 		"psr-4" : {
-			"Pluf\\NoteBook\\" : "examples/NoteBook",
-			"Pluf\\Smallest\\" : "examples/Smallest",
-			"Pluf\\HelloWord\\" : "examples/HelloWord",
-			"Pluf\\Relation\\" : "examples/Relation",
-			"Pluf\\Test\\" : "tests/"
+			"Pluf\\Tests\\" : "tests/"
 		},
 		"psr-0" : {
 			"test" : ""

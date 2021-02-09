@@ -18,18 +18,14 @@
  */
 namespace Pluf;
 
-use Pluf\ExceptionRenderer\Console;
-use Pluf\ExceptionRenderer\HTML;
-use Pluf\ExceptionRenderer\HTMLText;
-use Pluf\ExceptionRenderer\JSON;
-use Pluf\ExceptionRenderer\RendererAbstract;
-use Pluf\Translator\ITranslatorAdapter;
 use Throwable;
+use JsonSerializable;
+use RuntimeException;
 
 /**
  * Pluf root exception type
  *
- * All pluf application exceptions are subclass of the \Pluf\Exception. If any exeption throw
+ * All pluf application exceptions are subclass of the \Pluf\Data\Exception. If any exeption throw
  * which is not subclass of it, the framework will consider as non expected exception.
  *
  *
@@ -37,147 +33,43 @@ use Throwable;
  * @since Pluf6
  *       
  */
-class Exception extends \Exception /* implements \JsonSerializable */
+class Exception extends RuntimeException implements JsonSerializable
 {
 
-    /** @var array */
-    public $params = [];
+    private array $solutions = [];
 
-    /** @var string */
-    protected $custom_exception_title = 'Critical Error';
+    private array $params = [];
 
-    /** @var string The name of the Exception for custom naming */
-    protected $custom_exception_name = null;
+    private int $status = 500;
 
     /**
-     * Most exceptions would be a cause by some other exception, Agile
-     * Core will encapsulate them and allow you to access them anyway.
-     *
-     * @var array
-     */
-    private $trace2;
-
-    // because PHP's use of final() sucks!
-
-    /** @var string[] */
-    private $solutions = [];
-
-    // store solutions
-
-    /** @var ITranslatorAdapter */
-    private $adapter;
-
-    /**
-     * Constructor.
-     *
-     * @param string|array $message
-     * @param int $code
-     * @param Throwable $previous
-     */
-    public function __construct($message = '', ?int $code = null, Throwable $previous = null)
-    {
-        if (is_array($message)) {
-            // message contain additional parameters
-            $this->params = $message;
-            $message = array_shift($this->params);
-        }
-
-        parent::__construct($message, $code ?? 0, $previous);
-        $this->trace2 = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT);
-    }
-
-    /**
-     * Change message (subject) of a current exception.
-     * Primary use is
-     * for localization purposes.
+     * Crates new instance of the exception
      *
      * @param string $message
-     *
-     * @return $this
+     *            the message to show
+     * @param int $code
+     *            the error code
+     * @param Throwable $previous
+     *            the cause root of the error
+     * @param int $status
+     *            the status code based on HTTP status for example 500 for internal error and 400 for user errors.
+     * @param array $params
+     *            parameters that is used in message and solutions
+     * @param array $solutions
+     *            list of common way to solve the problem
      */
-    public function setMessage($message): self
+    public function __construct($message = '', ?int $code = null, ?Throwable $previous = null, ?int $status = 500, ?array $params = [], ?array $solutions = [])
     {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Return trace array.
-     *
-     * @return array
-     */
-    public function getMyTrace()
-    {
-        return $this->trace2;
-    }
-
-    /**
-     * Return exception message using color sequences.
-     *
-     * <exception name>: <string>
-     * <info>
-     *
-     * trace
-     *
-     * --
-     * <triggered by>
-     *
-     * @return string
-     */
-    public function getColorfulText(): string
-    {
-        return (string) new Console($this, $this->adapter);
-    }
-
-    /**
-     * Similar to getColorfulText() but will use raw HTML for outputting colors.
-     *
-     * @return string
-     */
-    public function getHTMLText(): string
-    {
-        return (string) new HTMLText($this, $this->adapter);
-    }
-
-    /**
-     * Return exception message using HTML block and Semantic UI formatting.
-     * It's your job
-     * to put it inside boilerplate HTML and output, e.g:.
-     *
-     * $l = new \atk4\ui\App();
-     * $l->initLayout('Centered');
-     * $l->layout->template->setHTML('Content', $e->getHTML());
-     * $l->run();
-     * exit;
-     *
-     * @return string
-     */
-    public function getHTML(): string
-    {
-        return (string) new HTML($this, $this->adapter);
-    }
-
-    /**
-     * Return exception in JSON Format.
-     *
-     * @return string
-     */
-    public function getJSON(): string
-    {
-        return (string) new JSON($this, $this->adapter);
-    }
-
-    /**
-     * Safely converts some value to string.
-     *
-     * @param mixed $val
-     *
-     * @return string
-     */
-    public function toString($val): string
-    {
-        return RendererAbstract::toSafeString($val);
+        
+        if (is_array($message)) {
+            // message contain additional parameters
+            $params = $message;
+            $message = array_shift($this->params);
+        }
+        parent::__construct($message, $code ?? 0, $previous);
+        $this->status = $status;
+        $this->params = $params;
+        $this->solutions = $solutions;
     }
 
     /**
@@ -185,44 +77,15 @@ class Exception extends \Exception /* implements \JsonSerializable */
      *
      * @return array
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
 
     /**
-     * Augment existing exception with more info.
+     * Gets solustions
      *
-     * @param string $param
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function addMoreInfo($param, $value): self
-    {
-        $this->params[$param] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Add a suggested/possible solution to the exception.
-     *
-     * @todo can be added more features? usually we are out of App
-     *      
-     * @param string $solution
-     *
-     * @return Exception
-     */
-    public function addSolution(string $solution)
-    {
-        $this->solutions[] = $solution;
-
-        return $this;
-    }
-
-    /**
-     * Get the solutions array.
+     * @return array
      */
     public function getSolutions(): array
     {
@@ -230,98 +93,53 @@ class Exception extends \Exception /* implements \JsonSerializable */
     }
 
     /**
-     * Get the custom Exception name, if defined in $custom_exception_name.
+     * Get status of the error
      *
-     * @return string
+     * @return int
      */
-    public function getCustomExceptionName(): string
+    public function getStatus(): int
     {
-        return $this->custom_exception_name ?? get_class($this);
+        return $this->status;
     }
 
     /**
-     * Get the custom Exception title, if defined in $custom_exception_title.
      *
-     * @return string
+     * {@inheritdoc}
+     * @see JsonSerializable::jsonSerialize()
      */
-    public function getCustomExceptionTitle(): string
+    public function jsonSerialize()
     {
-        return $this->custom_exception_title;
+        return [
+            'code' => $this->code,
+            'status' => $this->status,
+            'message' => $this->message,
+            'parmas' => $this->params,
+            'solutions' => $this->getSolutions()
+        ];
     }
-
+    
+    public function jsonSerializeDebug(){
+        return [
+            'code' => $this->getCode(),
+            'status' => $this->getStatus(),
+            'message' => $this->getMessage(),
+            'parmas' => $this->getParams(),
+            'solutions' => $this->getSolutions(),
+            'file' => $this->getFile(),
+            'line' => $this->getLine(),
+            'stack' => $this->getTrace()
+        ];
+    }
+    
     /**
-     * Set Custom Translator adapter.
      *
-     * @param ITranslatorAdapter|null $adapter
-     *
-     * @return Exception
+     * {@inheritdoc}
+     * @see RuntimeException::__toString()
      */
-    public function setTranslatorAdapter(?ITranslatorAdapter $adapter = null): self
+    public function __toString(): string
     {
-        $this->adapter = $adapter;
-
-        return $this;
+        return json_encode($this->jsonSerialize(), JSON_PRETTY_PRINT);
     }
-
-    // use DiContainerTrait;
-
-    // protected $status;
-
-    // protected $link;
-
-    // protected $developerMessage;
-
-    // protected $data;
-
-    // /**
-    // * یک نمونه از این کلاس ایجاد می‌کند.
-    // *
-    // * @param string $message
-    // * @param string $code
-    // * @param string $previous
-    // */
-    // public function __construct($options)
-    // {
-    // $this->setDefaults($options);
-    // }
-
-    // public function getDeveloperMessage()
-    // {
-    // return $this->developerMessage;
-    // }
-
-    // public function getStatus()
-    // {
-    // return $this->status;
-    // }
-
-    // public function setData($data)
-    // {
-    // $this->data = $data;
-    // }
-
-    // public function jsonSerialize()
-    // {
-    // if (Pluf::f('debug', false)) {
-    // return array(
-    // 'code' => $this->code,
-    // 'status' => $this->status,
-    // 'link' => $this->link,
-    // 'message' => $this->message,
-    // 'data' => $this->data,
-    // 'developerMessage' => $this->developerMessage,
-    // 'stack' => $this->getTrace()
-    // );
-    // } else {
-    // return array(
-    // 'code' => $this->code,
-    // 'status' => $this->status,
-    // 'link' => $this->link,
-    // 'message' => $this->message,
-    // 'data' => $this->data
-    // );
-    // }
-    // }
 }
 
 
