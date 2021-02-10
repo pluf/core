@@ -28,3 +28,16 @@ Stack Overflow has a growing collection of Composer related questions.
 For development you need to have Docker and Docker-compose installed. Local PHP and Composer are not needed.
 
     sudo apt-get install docker docker-compose
+
+ 
+## Documents
+
+### PHPDoc
+
+Is used for developers
+
+### User Manuals
+
+Is used for users
+
+SEE: https://en.wikipedia.org/wiki/ReStructuredText

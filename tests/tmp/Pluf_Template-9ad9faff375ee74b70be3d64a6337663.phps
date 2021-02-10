@@ -1,2 +1,0 @@
-<?php class Pluf_Template_9ad9faff375ee74b70be3d64a6337663 {
-public static function render($c) {$t = $c; ?><?php $_extra_tag = Pluf::factory('Pluf_Template_Tag_Tenant', $t); $_extra_tag->start('id'); ?><?php } } 
