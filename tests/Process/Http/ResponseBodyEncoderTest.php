@@ -2,14 +2,16 @@
 namespace Pluf\Tests\Process\Http;
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Core\Process;
+use Pluf\Http\ResponseFactory;
 use Pluf\Http\ServerRequestFactory;
 use Pluf\Http\StreamFactory;
 use Pluf\Http\UriFactory;
+use Pluf\Log\Logger;
 use Pluf\Scion\UnitTracker;
-use Pluf\Core\Process\Http\RequestBodyParser;
 use Pluf\Tests\Process\Http\Mock\ReturnRequestParsedBody;
 
-class RequestBodyParserTest extends TestCase
+class ResponseBodyEncoderTest extends TestCase
 {
 
     public ?ServerRequestFactory $requestFactory;
@@ -27,24 +29,8 @@ class RequestBodyParserTest extends TestCase
     {
         return [
             [
-                "POST", // methos
-                (object) [
-                    "id" => 1,
-                    "float" => 2.3,
-                    "name" => "example string",
-                    "array" => [
-                        1,
-                        2.3,
-                        "example string"
-                    ],
-                    "object" => (object) [
-                        "id" => 1,
-                        "float" => 2.3,
-                        "name" => "example string"
-                    ]
-                ]
-            ],
-            [
+                200,
+                ReturnRequestParsedBody::class,
                 "POST", // methos
                 [
                     1,
@@ -52,17 +38,14 @@ class RequestBodyParserTest extends TestCase
                     "example string"
                 ]
             ],
-            [ // internal array
+            [
+                404,
+                Process\Http\ResourceNotFound::class,
                 "POST", // methos
                 [
                     1,
                     2.3,
-                    "example string",
-                    [
-                        1,
-                        2.3,
-                        "example string"
-                    ]
+                    "example string"
                 ]
             ]
         ];
@@ -74,7 +57,7 @@ class RequestBodyParserTest extends TestCase
         $streamBuilder = new StreamFactory();
         for ($i = 0; $i < count($data); $i ++) {
             $data[$i][] = "application/json";
-            $data[$i][] = $streamBuilder->createStream(json_encode($data[$i][1]));
+            $data[$i][] = $streamBuilder->createStream(json_encode($data[$i][3]));
         }
         return $data;
     }
@@ -84,26 +67,36 @@ class RequestBodyParserTest extends TestCase
      * @dataProvider generateValidStreamJSON
      * @test
      */
-    public function checkParseBodyNotFail($requestMethod, $sourceBody, $contentType, $stream)
+    public function testResponseCodeForError($statusCode, $finalProcess, $requestMethod, $sourceBody, $contentType, $stream)
     {
         $uriFactory = new UriFactory();
         $requestFactory = new ServerRequestFactory();
+
         $request = $requestFactory->createServerRequest($requestMethod, $uriFactory->createUri("http://test.com/api"));
         $request = $request->withMethod($requestMethod)
             ->withBody($stream)
             ->withAddedHeader("Content-Type", $contentType);
 
+        // Mocking request
+        $responseFactory = new ResponseFactory();
+        $response = $responseFactory->createResponse(501);
+
         // Mocking unit tracker
         $unitTracker = new UnitTracker([
-            RequestBodyParser::class,
-            ReturnRequestParsedBody::class
+            Process\Http\RequestBodyParser::class,
+            Process\Http\ResponseBodyEncoder::class,
+            $finalProcess
         ]);
+        $logger = Logger::getLogger("test");
 
         $result = $unitTracker->doProcess([
-            "request" => $request
+            "request" => $request,
+            "response" => $response,
+            "streamFactory" => new StreamFactory(),
+            "logger" => $logger
         ]);
         $this->assertNotNull($result);
-        $this->assertEquals($sourceBody, $result);
+        $this->assertEquals($statusCode, $result->getStatusCode());
     }
 }
 

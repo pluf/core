@@ -20,10 +20,10 @@ namespace Pluf\Tests\Process\Http;
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Scion\UnitTrackerInterface;
-use Pluf\Scion\Process\Http\AccessLog;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Pluf\Core\Process\Http\AccessLog;
 
 /**
  * AccessLog test case.

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Pluf\Process\Http;
+namespace Pluf\Core\Process\Http;
 
 use Pluf\Scion\UnitTrackerInterface;
 use Pluf\Scion\Process\Http\Exception\InvalidBodyContentException;
@@ -81,8 +81,6 @@ class RequestBodyParser
                         throw new InvalidBodyContentException("Not supported content type: " . $parsedContentType);
                 }
             }
-            
-            var_dump($request->getParsedBody());
         }
         // run pipeline
         return $unitTracker->next([

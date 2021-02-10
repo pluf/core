@@ -20,12 +20,13 @@ namespace Pluf\Tests\Process\Http;
 
 use PHPUnit\Framework\TestCase;
 use Pluf\Scion\UnitTrackerInterface;
-use Pluf\Scion\Process\Http\IfMethodIsDelete;
-use Pluf\Scion\Process\Http\IfMethodIsGet;
-use Pluf\Scion\Process\Http\IfMethodIsPost;
 use Psr\Http\Message\RequestInterface;
-use Pluf\Scion\Process\Http\IfMethodIsPut;
-use Pluf\Scion\Process\Http\IfMethodIs;
+
+use Pluf\Core\Process\Http\IfMethodIsDelete;
+use Pluf\Core\Process\Http\IfMethodIsGet;
+use Pluf\Core\Process\Http\IfMethodIsPost;
+use Pluf\Core\Process\Http\IfMethodIsPut;
+use Pluf\Core\Process\Http\IfMethodIs;
 
 /**
  * IfMethodIsDelete test case.

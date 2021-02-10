@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Pluf\Process\Http;
+namespace Pluf\Core\Process\Http;
 
 use Pluf\Scion\UnitTrackerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,25 +24,42 @@ use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use Pluf\Core\Exception;
 
 class ResponseBodyEncoder
 {
 
-    // 
+    //
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, StreamFactoryInterface $streamFactory, LoggerInterface $logger, UnitTrackerInterface $unitTracker)
     {
         $result = "";
+        $status = 200;
         try {
             $result = $unitTracker->next();
         } catch (Throwable $t) {
-            $response = $response->withStatus(500);
+            if (! ($t instanceof Exception)) {
+                $ex = new Exception\UnhandledException(
+                    message: $t->getMessage(), 
+                    previous: $t);
+            } else {
+                $ex = $t;
+            }
+
+            $status = $ex->getStatus();
+            // TODO: maso, 2021: enable exception json annotations
             $result = [
                 'message' => $t->getMessage()
             ];
         }
-        
+
+        // TODO: maso, 2021: support objectMapper
+        // $supportMime = $request->getHeader("Accepted");
         $resultEncode = json_encode($result);
-        return $response->withBody($streamFactory->createStream($resultEncode));
+        $contentType = 'application/json';
+
+        return $response->withStatus($status)
+            ->withHeader("Content-Type", $contentType)
+            ->withBody($streamFactory->createStream($resultEncode));
     }
 }
 

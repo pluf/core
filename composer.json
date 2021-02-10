@@ -41,7 +41,7 @@
 	],
 	"autoload" : {
 		"psr-4" : {
-			"Pluf\\" : "src/"
+			"Pluf\\Core\\" : "src/"
 		}
 	},
 	"autoload-dev" : {

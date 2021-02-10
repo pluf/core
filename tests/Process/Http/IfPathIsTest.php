@@ -21,7 +21,7 @@ namespace Pluf\Tests\Process\Http;
 use PHPUnit\Framework\TestCase;
 use Pluf\Http\UriFactory;
 use Pluf\Scion\UnitTrackerInterface;
-use Pluf\Scion\Process\Http\IfPathIs;
+use Pluf\Core\Process\Http\IfPathIs;
 use Psr\Http\Message\RequestInterface;
 
 /**

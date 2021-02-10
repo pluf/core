@@ -2,10 +2,10 @@
 namespace Pluf\Tests\Process\Http;
 
 use PHPUnit\Framework\TestCase;
+use Pluf\Core\Process\Http\FileToResponse;
 use Pluf\Http\ResponseFactory;
 use Pluf\Http\ServerRequestFactory;
 use Pluf\Scion\UnitTrackerInterface;
-use Pluf\Scion\Process\Http\FileToResponse;
 
 class FileToResponseTest extends TestCase
 {

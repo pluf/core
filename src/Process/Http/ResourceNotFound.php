@@ -16,7 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-namespace Pluf\Process\Http;
+namespace Pluf\Core\Process\Http;
+
+use Psr\Http\Message\ServerRequestInterface;
+use Pluf\Core\Exception\ResourceNotFoundException;
 
 /**
  * Throw exception and break to path
@@ -25,12 +28,16 @@ namespace Pluf\Process\Http;
  * @author maso (mostafa.barmshory@gmail.com)
  *        
  */
-class ResourceNotFoundException
+class ResourceNotFound
 {
 
-    public function __invoke()
+    public function __invoke(ServerRequestInterface $request)
     {
-        throw new \Exception("Resouce not found");
+        throw new ResourceNotFoundException("Requested resouce not found : {{resource}}",
+            status: 404,
+            params:[
+                "resource" => $request?->getUri()?->getPath()
+            ]);
     }
 }
 
