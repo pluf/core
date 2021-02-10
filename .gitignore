@@ -19,3 +19,4 @@ clover.xml
 
 # netbeans
 /nbproject/private/
+/.build/
