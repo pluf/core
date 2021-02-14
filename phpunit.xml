@@ -32,6 +32,9 @@
 		<var name="DB_SCHEMA" value="sqlite" />
 	</php>
 	<testsuites>
+		<testsuite name="core basics">
+			<directory>tests/Exceptions/</directory>
+		</testsuite>
 		<testsuite name="core process">
 			<directory>tests/Process/Http/</directory>
 		</testsuite>

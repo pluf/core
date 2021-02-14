@@ -19,8 +19,10 @@
 namespace Pluf\Core;
 
 use Throwable;
-use JsonSerializable;
 use RuntimeException;
+use Pluf\Orm\Attribute\Entity;
+use Pluf\Orm\Attribute\Column;
+use Pluf\Orm\Attribute\Transients;
 
 /**
  * Pluf root exception type
@@ -33,14 +35,19 @@ use RuntimeException;
  * @since Pluf6
  *       
  */
-class Exception extends RuntimeException implements JsonSerializable
+#[Entity]
+#[Transients(["line", "file", "string", "trace", "previous"])]
+class Exception extends RuntimeException
 {
 
+    #[Column('solutions')]
     private array $solutions = [];
 
+    #[Column('params')]
     private array $params = [];
 
-    private int $status = 500;
+    #[Column('status')]
+    private ?int $status = 500;
 
     /**
      * Crates new instance of the exception
@@ -60,7 +67,6 @@ class Exception extends RuntimeException implements JsonSerializable
      */
     public function __construct($message = '', ?int $code = null, ?Throwable $previous = null, ?int $status = 500, ?array $params = [], ?array $solutions = [])
     {
-        
         if (is_array($message)) {
             // message contain additional parameters
             $params = $message;
@@ -101,35 +107,6 @@ class Exception extends RuntimeException implements JsonSerializable
     {
         return $this->status;
     }
-
-    /**
-     *
-     * {@inheritdoc}
-     * @see JsonSerializable::jsonSerialize()
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'code' => $this->code,
-            'status' => $this->status,
-            'message' => $this->message,
-            'parmas' => $this->params,
-            'solutions' => $this->getSolutions()
-        ];
-    }
-    
-    public function jsonSerializeDebug(){
-        return [
-            'code' => $this->getCode(),
-            'status' => $this->getStatus(),
-            'message' => $this->getMessage(),
-            'parmas' => $this->getParams(),
-            'solutions' => $this->getSolutions(),
-            'file' => $this->getFile(),
-            'line' => $this->getLine(),
-            'stack' => $this->getTrace()
-        ];
-    }
     
     /**
      *
@@ -138,7 +115,7 @@ class Exception extends RuntimeException implements JsonSerializable
      */
     public function __toString(): string
     {
-        return json_encode($this->jsonSerialize(), JSON_PRETTY_PRINT);
+        return $this->getMessage();
     }
 }
 

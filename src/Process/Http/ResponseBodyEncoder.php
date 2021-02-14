@@ -18,19 +18,26 @@
  */
 namespace Pluf\Core\Process\Http;
 
+use Pluf\Core\Exception;
 use Pluf\Scion\UnitTrackerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Pluf\Core\Exception;
+use Pluf\Orm\ObjectMapper;
+use Throwable;
 
 class ResponseBodyEncoder
 {
 
     //
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, StreamFactoryInterface $streamFactory, LoggerInterface $logger, UnitTrackerInterface $unitTracker)
+    public function __invoke(
+        ServerRequestInterface $request, 
+        ResponseInterface $response, 
+        StreamFactoryInterface $streamFactory, 
+        LoggerInterface $logger,
+        ObjectMapper $objectMapperJson,
+        UnitTrackerInterface $unitTracker)
     {
         $result = "";
         $status = 200;
@@ -54,8 +61,8 @@ class ResponseBodyEncoder
 
         // TODO: maso, 2021: support objectMapper
         // $supportMime = $request->getHeader("Accepted");
-        $resultEncode = json_encode($result);
         $contentType = 'application/json';
+        $resultEncode = $objectMapperJson->writeValueAsString($result);
 
         return $response->withStatus($status)
             ->withHeader("Content-Type", $contentType)
