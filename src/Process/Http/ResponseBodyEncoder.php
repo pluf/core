@@ -51,7 +51,6 @@ class ResponseBodyEncoder
             } else {
                 $ex = $t;
             }
-
             $status = $ex->getStatus();
             // TODO: maso, 2021: enable exception json annotations
             $result = [

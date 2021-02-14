@@ -20,6 +20,7 @@ namespace Pluf\Core;
 
 use Throwable;
 use RuntimeException;
+
 use Pluf\Orm\Attribute\Entity;
 use Pluf\Orm\Attribute\Column;
 use Pluf\Orm\Attribute\Transients;
