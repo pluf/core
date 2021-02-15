@@ -41,13 +41,13 @@ use Pluf\Orm\Attribute\Transients;
 class Exception extends RuntimeException
 {
 
-    #[Column('solutions')]
+    
     private array $solutions = [];
 
-    #[Column('params')]
+    
     private array $params = [];
 
-    #[Column('status')]
+    
     private ?int $status = 500;
 
     /**
@@ -84,6 +84,7 @@ class Exception extends RuntimeException
      *
      * @return array
      */
+    #[Column('params')]
     public function getParams(): array
     {
         return $this->params;
@@ -94,6 +95,7 @@ class Exception extends RuntimeException
      *
      * @return array
      */
+    #[Column('solutions')]
     public function getSolutions(): array
     {
         return $this->solutions;
@@ -104,6 +106,7 @@ class Exception extends RuntimeException
      *
      * @return int
      */
+    #[Column('status')]
     public function getStatus(): int
     {
         return $this->status;

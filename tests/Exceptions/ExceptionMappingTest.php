@@ -37,8 +37,10 @@ class ExceptionMappingTest extends TestCase
         $json = $mapper->writeValueAsString($ex);
         $reverse = json_decode($json);
         $this->assertNotNull($reverse);
-
+        
         $this->assertStringContainsString($messge, $json);
+        $this->assertStringContainsString("params", $json);
+        $this->assertStringContainsString("solutions", $json);
     }
 }
 
