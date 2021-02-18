@@ -8,7 +8,7 @@ use Throwable;
 
 #[Entity]
 #[Transients(["line", "file", "string", "trace", "previous"])]
-class InvalidBodyContentException extends \Pluf\Core\Exception
+class InvalidArgumentException extends \Pluf\Core\Exception
 {
 }
 

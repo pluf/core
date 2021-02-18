@@ -44,20 +44,10 @@ class ResponseBodyEncoder
         try {
             $result = $unitTracker->next();
         } catch (Throwable $t) {
-            if (! ($t instanceof Exception)) {
-                $ex = new Exception\UnhandledException(
-                    message: $t->getMessage(), 
-                    previous: $t);
-            } else {
-                $ex = $t;
-            }
-            $status = $ex->getStatus();
-            // TODO: maso, 2021: enable exception json annotations
-            $result = [
-                'message' => $t->getMessage()
-            ];
+            $result = $this->convertToSerializable($t);
+            $status = $result->getStatus();
         }
-
+        
         // TODO: maso, 2021: support objectMapper
         // $supportMime = $request->getHeader("Accepted");
         $contentType = 'application/json';
@@ -66,6 +56,30 @@ class ResponseBodyEncoder
         return $response->withStatus($status)
             ->withHeader("Content-Type", $contentType)
             ->withBody($streamFactory->createStream($resultEncode));
+    }
+    
+    public function convertToSerializable(Throwable $t){
+        if ($t instanceof Exception) {
+            return $t;
+        }
+        $message = $t->getMessage();
+        $params = [];
+        $solutions = [];
+        $previous = $t;
+        if($t instanceof \Pluf\Orm\Exception){
+            $params = $t->getParams();
+            $solutions = $t->getSolutions();
+        } else if($t instanceof \atk4\core\Exception){
+            $params = $t->getParams();
+            $solutions = $t->getSolutions();
+        }
+        return new Exception\UnhandledException(
+            status: 500,
+            code: $t->getCode(),
+            message: $t->getMessage(),
+            params: $params,
+            previous: $previous,
+            solutions: $solutions);
     }
 }
 
