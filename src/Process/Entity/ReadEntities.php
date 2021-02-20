@@ -26,9 +26,9 @@ class ReadEntities
      */
     public function __invoke(EntityQuery $entityQuery): array
     {
-        return $entityQuery->entity($this->class)
-            ->mode('select')
-            ->exec();
+        return $entityQuery->entity($this->class, '_e')
+            ->mapper('_e')
+            ->select();
     }
         
 }
