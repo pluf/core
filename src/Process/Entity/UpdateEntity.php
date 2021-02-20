@@ -4,38 +4,41 @@ namespace Pluf\Core\Process\Entity;
 use Pluf\Core\Exception;
 use Pluf\Orm\AssertionTrait;
 use Pluf\Orm\EntityManager;
-use Pluf\Orm\EntityQuery;
 use Throwable;
+use Pluf\Orm\ModelDescriptionRepository;
 
-class ReadEntity
+class UpdateEntity
 {
     use AssertionTrait;
 
     private string $class;
+
 
     public function __construct(string $class)
     {
         $this->class = $class;
     }
 
-    /**
-     * Store list of cusomers into the repositoer
-     *
-     *
-     * @param EntityQuery $entityQuery
-     *            to perform on entities
-     * @return array of results
-     */
-    public function __invoke(EntityManager $entityManager, $itemId)
+    public function __invoke(EntityManager $entityManager, ModelDescriptionRepository $modelDescriptionRepository, $entity, $itemId)
     {
-        $result = $entityManager->find($this->class, $itemId);
-        $this->assertNotEmpty($result, 'Entity type {{type}} not found with ID {{itemId}', [
+        $md = $modelDescriptionRepository->get($this->class);
+        $id = $md->properties[$md->primaryKey];
+        
+        $oldentity = $entityManager->find($this->class, $itemId);
+        $this->assertTrue($oldentity, 'Entity type {{type}} with ID {{itemId} not found', [
             'type' => $this->class,
             'itemId' => $itemId
         ]);
-        return $result;
+        
+        $idValue = $id->getValue($oldentity);
+        $id->setValue($entity, $idValue);
+        $entity = $entityManager->merge​($entity);
+        
+        return $entity;
     }
-
+    
+    
+    
     /**
      * Creates new exception
      *
