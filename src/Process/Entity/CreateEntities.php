@@ -30,8 +30,8 @@ class CreateEntities
             ];
         }
         $resultList = [];
-        foreach ($entities as $customer) {
-            $item = $entityManager->persist​($customer);
+        foreach ($entities as $entity) {
+            $item = $entityManager->persist​($entity);
             $resultList[] = $item;
         }
         return $resultList;

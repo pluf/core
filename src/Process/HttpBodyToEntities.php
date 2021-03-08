@@ -11,9 +11,11 @@ class HttpBodyToEntities
 {
     use AssertionTrait;
 
-    private string $class;
-    private bool $multi;
-    private string $name = "entities";
+    protected string $class;
+
+    protected bool $multi;
+
+    protected string $name = "entities";
 
     public function __construct(string $class, bool $multi = true, string $name = "entities")
     {
@@ -22,12 +24,11 @@ class HttpBodyToEntities
         $this->name = $name;
     }
 
-    public function __invoke(
-        ModelDescriptionRepository $modelDescriptionRepository, 
-        ServerRequestInterface $request, 
-        UnitTrackerInterface $unitTracker)
+    public function __invoke(ModelDescriptionRepository $modelDescriptionRepository, ServerRequestInterface $request, UnitTrackerInterface $unitTracker)
     {
-        $this->assertEquals("POST", $request->getMethod(), "Unsupported method {{method}}", ["method" => $request->getMethod()]);
+        $this->assertEquals("POST", $request->getMethod(), "Unsupported method {{method}}", [
+            "method" => $request->getMethod()
+        ]);
 
         $type = $this->getContentType($request);
         $this->assertNotEmpty($type, "Content type is not specified.");
@@ -41,15 +42,28 @@ class HttpBodyToEntities
                 break;
         }
 
+        $res = [];
+        $res[$this->name] = $this->generateEntities($type, $modelDescriptionRepository, $data);
+        return $unitTracker->next($res);
+    }
+
+    /**
+     * Converts data based on type and model description
+     *
+     * @param unknown $type
+     * @param unknown $modelDescriptionRepository
+     * @param unknown $data
+     * @return unknown
+     */
+    public function generateEntities($type, $modelDescriptionRepository, $data)
+    {
         $builder = new ObjectMapperBuilder();
         $objectMapper = $builder->addType($type)
             ->setModelDescriptionRepository($modelDescriptionRepository)
             ->supportList($this->multi)
             ->build();
-        
-        $res = [];
-        $res[$this->name] = $objectMapper->readValue($data, $this->class, $this->multi);
-        return $unitTracker->next($res);
+
+        return $objectMapper->readValue($data, $this->class, $this->multi);
     }
 
     public function getContentType(ServerRequestInterface $request): string
