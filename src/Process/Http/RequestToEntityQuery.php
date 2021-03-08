@@ -23,7 +23,6 @@ class RequestToEntityQuery
         $collectionQuery = $objectMapperArray->readValue($request->getQueryParams(), CollectionQuery::class);
 
         // TODO: maso, 2021: validate the collection query
-        
         $query = $entityManager->query()
             ->limit($collectionQuery->count, $collectionQuery->start);
 

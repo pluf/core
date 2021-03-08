@@ -24,18 +24,23 @@ use Psr\Http\Message\RequestInterface;
 class IfPathAndMethodIs
 {
 
-    private string $regex;
+    private array $regex;
 
     private array $methods;
 
     private bool $removePrefix = true;
 
-    public function __construct(string $regex, array $methods = [
+    public function __construct(string|array $regex, array $methods = [
         'GET',
         'POST',
         'DELETE'
     ], bool $removePrefix = true)
     {
+        if (is_string($regex)) {
+            $regex = [
+                $regex
+            ];
+        }
         $this->regex = $regex;
         $this->methods = $methods;
         $this->removePrefix = $removePrefix;
@@ -47,7 +52,14 @@ class IfPathAndMethodIs
         $requestPath = $uri->getPath();
         $method = $request->getMethod();
         $match = [];
-        if (! in_array($method, $this->methods) || ! preg_match($this->regex, $requestPath, $match)) {
+        $matched = false;
+        foreach ($this->regex as $regex){
+            if(preg_match($regex, $requestPath, $match)){
+                $matched  = true;
+                break;
+            }
+        }
+        if (! in_array($method, $this->methods) || ! $matched) {
             return $unitTracker->jump();
         }
         if ($this->removePrefix) {
