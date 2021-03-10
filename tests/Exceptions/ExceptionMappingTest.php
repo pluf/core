@@ -32,7 +32,9 @@ class ExceptionMappingTest extends TestCase
     public function testEncoding($ex, $messge, $code, $pre, $status, $params, $solutions)
     {
         $builder = new ObjectMapperBuilder();
-        $mapper = $builder->setType('josn')->build();
+        $mapper = $builder->setType('json')
+            ->setSchema('json')
+            ->build();
 
         $json = $mapper->writeValueAsString($ex);
         $reverse = json_decode($json);
