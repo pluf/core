@@ -10,6 +10,7 @@ use Pluf\Http\UriFactory;
 use Pluf\Log\Logger;
 use Pluf\Scion\UnitTracker;
 use Pluf\Tests\Process\Http\Mock\ReturnRequestParsedBody;
+use Pluf\Orm\ObjectMapperBuilder;
 
 class ResponseBodyEncoderTest extends TestCase
 {
@@ -72,10 +73,14 @@ class ResponseBodyEncoderTest extends TestCase
         $uriFactory = new UriFactory();
         $requestFactory = new ServerRequestFactory();
 
+        $builder = new ObjectMapperBuilder();
+        $objectMapper = $builder->build();
+
         $request = $requestFactory->createServerRequest($requestMethod, $uriFactory->createUri("http://test.com/api"));
         $request = $request->withMethod($requestMethod)
             ->withBody($stream)
-            ->withAddedHeader("Content-Type", $contentType);
+            ->withAddedHeader("Content-Type", $contentType)
+            ->withAddedHeader("Accept", "application/json");
 
         // Mocking request
         $responseFactory = new ResponseFactory();
@@ -93,7 +98,8 @@ class ResponseBodyEncoderTest extends TestCase
             "request" => $request,
             "response" => $response,
             "streamFactory" => new StreamFactory(),
-            "logger" => $logger
+            "logger" => $logger,
+            "objectMapperJson" => $objectMapper
         ]);
         $this->assertNotNull($result);
         $this->assertEquals($statusCode, $result->getStatusCode());

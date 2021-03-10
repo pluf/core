@@ -18,48 +18,68 @@
  */
 namespace Pluf\Core\Process\Http;
 
+use Pluf\Core\Exception;
 use Pluf\Scion\UnitTrackerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Pluf\Core\Exception;
+use Pluf\Orm\ObjectMapper;
+use Throwable;
 
 class ResponseBodyEncoder
 {
 
     //
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, StreamFactoryInterface $streamFactory, LoggerInterface $logger, UnitTrackerInterface $unitTracker)
+    public function __invoke(
+        ServerRequestInterface $request, 
+        ResponseInterface $response, 
+        StreamFactoryInterface $streamFactory, 
+        LoggerInterface $logger,
+        ObjectMapper $objectMapperJson,
+        UnitTrackerInterface $unitTracker)
     {
         $result = "";
         $status = 200;
         try {
             $result = $unitTracker->next();
         } catch (Throwable $t) {
-            if (! ($t instanceof Exception)) {
-                $ex = new Exception\UnhandledException(
-                    message: $t->getMessage(), 
-                    previous: $t);
-            } else {
-                $ex = $t;
-            }
-
-            $status = $ex->getStatus();
-            // TODO: maso, 2021: enable exception json annotations
-            $result = [
-                'message' => $t->getMessage()
-            ];
+            $result = $this->convertToSerializable($t);
+            $status = $result->getStatus();
         }
-
+        
         // TODO: maso, 2021: support objectMapper
         // $supportMime = $request->getHeader("Accepted");
-        $resultEncode = json_encode($result);
         $contentType = 'application/json';
+        $resultEncode = $objectMapperJson->writeValueAsString($result);
 
         return $response->withStatus($status)
             ->withHeader("Content-Type", $contentType)
             ->withBody($streamFactory->createStream($resultEncode));
+    }
+    
+    public function convertToSerializable(Throwable $t){
+        if ($t instanceof Exception) {
+            return $t;
+        }
+        $message = $t->getMessage();
+        $params = [];
+        $solutions = [];
+        $previous = $t;
+        if($t instanceof \Pluf\Orm\Exception){
+            $params = $t->getParams();
+            $solutions = $t->getSolutions();
+        } else if($t instanceof \atk4\core\Exception){
+            $params = $t->getParams();
+            $solutions = $t->getSolutions();
+        }
+        return new Exception\UnhandledException(
+            status: 500,
+            code: $t->getCode(),
+            message: $t->getMessage(),
+            params: $params,
+            previous: $previous,
+            solutions: $solutions);
     }
 }
 
